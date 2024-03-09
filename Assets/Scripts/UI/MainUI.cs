@@ -5,6 +5,40 @@ using UnityEngine;
 
 public class MainUI : MonoBehaviour
 {
+    private enum Texts
+    {
+        LevelText,
+        APText,
+        GoldText,
+        DiamondText
+    }
+
+    private enum Buttons
+    {
+        CharacterButton,
+        OrganizationButton,
+        InventoryButton,
+        GachaButton,
+        ShopButton,
+        AdventureButton,
+        FriendButton,
+        MailButton,
+        NoticeButton,
+        MissionButton,
+        ProfileButtton,
+        SettingButton
+    }
+
+    private enum Images
+    {
+
+    }
+
+    private enum GameObjects
+    {
+
+    }
+
     public void Init()
     {
         // TODO
@@ -18,55 +52,55 @@ public class MainUI : MonoBehaviour
         // AP회복, 골드 획득, 다이아 충전, 레벨업 등
     }
 
-    private void OnClickCharacterBtn()
+    private void OnClickCharacterButton()
     {
-        Debug.Log("OnClickCharacterBtn");
+        Debug.Log("OnClickCharacterButton");
         // TODO
         // 버튼 클릭 사운드 출력 (SoundManager)
         // CharacterUI 생성 (UIManager)
     }
-    private void OnClickOrganizationBtn()
+    private void OnClickOrganizationButton()
     {
-        Debug.Log("OnClickOrganizationBtn");
+        Debug.Log("OnClickOrganizationButton");
     }
-    private void OnClickInventoryBtn()
+    private void OnClickInventoryButton()
     {
-        Debug.Log("OnClickInventoryBtn");
+        Debug.Log("OnClickInventoryButton");
     }
-    private void OnClickGachaBtn()
+    private void OnClickGachaButton()
     {
-        Debug.Log("OnClickGachaBtn");
+        Debug.Log("OnClickGachaButton");
     }
-    private void OnClickShopBtn()
+    private void OnClickShopButton()
     {
-        Debug.Log("OnClickShopBtn");
+        Debug.Log("OnClickShopButton");
     }
-    private void OnClickAdventureBtn()
+    private void OnClickAdventureButton()
     {
-        Debug.Log("OnClickAdventureBtn");
+        Debug.Log("OnClickAdventureButton");
     }
-    private void OnClickFriendBtn()
+    private void OnClickFriendButton()
     {
-        Debug.Log("OnClickFriendBtn");
+        Debug.Log("OnClickFriendButton");
     }
-    private void OnClickMailBtn()
+    private void OnClickMailButton()
     {
-        Debug.Log("OnClickMailBtn");
+        Debug.Log("OnClickMailButton");
     }
-    private void OnClickNoticeBtn()
+    private void OnClickNoticeButton()
     {
-        Debug.Log("OnClickNoticeBtn");
+        Debug.Log("OnClickNoticeButton");
     }
-    private void OnClickMissionBtn()
+    private void OnClickMissionButton()
     {
-        Debug.Log("OnClickMissionBtn");
+        Debug.Log("OnClickMissionButton");
     }
-    private void OnClickProfileBtn()
+    private void OnClickProfileButton()
     {
-        Debug.Log("OnClickProfileBtn");
+        Debug.Log("OnClickProfileButton");
     }
-    private void OnClickSettingBtn()
+    private void OnClickSettingButton()
     {
-        Debug.Log("OnClickSettingBtn");
+        Debug.Log("OnClickSettingButton");
     }
 }
