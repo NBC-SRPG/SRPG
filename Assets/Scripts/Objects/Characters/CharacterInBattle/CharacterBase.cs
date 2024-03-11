@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,21 @@ public class CharacterBase : MonoBehaviour
         Instantiate(character, gameObject.transform);
         character.InitSkills();
         character.InitPassive();
+
+        SetSkillOwner();
+    }
+
+    private void SetSkillOwner()
+    {
+        foreach(SkillBase skill in character.skillList)
+        {
+            skill.Init(this);
+        }
+
+        foreach(PassiveAbilityBase passive in character.passiveAbilityList)
+        {
+            passive.init(this);
+        }
     }
 
     public void CheckCurTile()

@@ -71,7 +71,7 @@ public class CharacterController : MonoBehaviour
                 curSelectedCharacter = null;
                 break;
             case PlayerPhase.MoveandAttack:
-                GetRangeTile();
+                GetMoveRangeTile();
                 movePath.Clear();
                 movePath.Add(curSelectedCharacter.curStandingTile);
                 break;
@@ -174,7 +174,7 @@ public class CharacterController : MonoBehaviour
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if (surroundPath.Contains(curTile))
+                if (surroundPath.Contains(curTile) && curTile.canClick)
                 {
                     movePath.Add(curTile);
                     ClearTile(surroundPath);
@@ -196,18 +196,31 @@ public class CharacterController : MonoBehaviour
 
         foreach (OverlayTile tile in movePath)
         {
-            tile.ShowAsPath();
+            tile.ShowAsScale();
         }
     }
 
 
-    private void GetRangeTile()
+    private void GetMoveRangeTile()
     {
         moveRangeTiles = rangeFinder.GetTilesInRangeInMove(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
 
         foreach (OverlayTile tile in moveRangeTiles)
         {
             tile.ShowTile();
+        }
+    }
+
+    private void GetAttackRangeTile()
+    {
+        attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
+
+        foreach (OverlayTile tile in attackRangeTiles)
+        {
+            if (!moveRangeTiles.Contains(tile))
+            {
+                tile.ShowAsAttack();
+            }
         }
     }
 

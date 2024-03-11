@@ -23,25 +23,47 @@ public class OverlayTile : MonoBehaviour
 
     public void ResetTile()
     {
-        defaultTile.SetActive(true);
-        movepathTile.SetActive(false);
-        moveTile.SetActive(false);
-        attackRangeTile.SetActive(false);
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+            movepathTile.SetActive(false);
+            moveTile.SetActive(false);
+            attackRangeTile.SetActive(false);
+        }
     }
 
     public void ShowTile()
     {
-        defaultTile.SetActive(true);
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+        }
     }
 
     public void ShowAsMove()
     {
-        moveTile.SetActive(true);
+        if (canClick)
+        {
+            moveTile.SetActive(true);
+        }
     }
 
-    public void ShowAsPath()
+    public void ShowAsScale()
     {
-        movepathTile.SetActive(true);
+        if (canClick)
+        {
+            moveTile.SetActive(false);
+            attackRangeTile.SetActive(false);
+            movepathTile.SetActive(true);
+        }
+    }
+
+    public void ShowAsAttack()
+    {
+        if (canClick)
+        {
+            attackRangeTile.SetActive(true);
+        }
     }
 
     public void HideTile()

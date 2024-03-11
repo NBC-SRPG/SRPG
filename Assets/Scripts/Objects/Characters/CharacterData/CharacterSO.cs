@@ -23,6 +23,7 @@ public class CharacterSO : ScriptableObject
     public int def;
     public int res;
     public int agi;
+    [Range(0, 10)]public int atk_range;
 
     [Header("Story")]
     public string characterName;
