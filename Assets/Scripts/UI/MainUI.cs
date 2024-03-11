@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 
-public class MainUI : MonoBehaviour
+public class MainUI : UIBase
 {
     private enum Texts
     {
@@ -41,15 +42,58 @@ public class MainUI : MonoBehaviour
 
     public void Init()
     {
-        // TODO
-        // 버튼 리스트를 받아와서 클릭 이벤트 추가
+        // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
+        BindText(typeof(Texts));
+        BindButton(typeof(Buttons));
+        BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
+
+        // 버튼에 클릭 이벤트 추가
+        GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickCharacterButton);
+        GetButton((int)Buttons.OrganizationButton).onClick.AddListener(OnClickOrganizationButton);
+        GetButton((int)Buttons.InventoryButton).onClick.AddListener(OnClickInventoryButton);
+        GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
+        GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
+        GetButton((int)Buttons.AdventureButton).onClick.AddListener(OnClickAdventureButton);
+        GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
+        GetButton((int)Buttons.MailButton).onClick.AddListener(OnClickMailButton);
+        GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
+        GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
+        GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
+        GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
+
+        RefreshUI();
+
+        // BGM 재생 (SoundManager)
+        // Managers.Sound(Sound.BGM, "BGM_Main");
     }
 
-    public void RefreshUI()
+    private void RefreshUI()
     {
-        // TODO
-        // 메인화면의 UI 업데이트
-        // AP회복, 골드 획득, 다이아 충전, 레벨업 등
+        RefreshLevel();
+        RefreshAP();
+        RefreshGold();
+        RefreshDiamond();
+    }
+    // Level 텍스트 업데이트
+    private void RefreshLevel()
+    {
+
+    }
+    // AP 텍스트 업데이트
+    private void RefreshAP()
+    {
+
+    }
+    // Gold 텍스트 업데이트
+    private void RefreshGold()
+    {
+
+    }
+    // Diamond 텍스트 업데이트
+    private void RefreshDiamond()
+    {
+
     }
 
     private void OnClickCharacterButton()
@@ -57,6 +101,7 @@ public class MainUI : MonoBehaviour
         Debug.Log("OnClickCharacterButton");
         // TODO
         // 버튼 클릭 사운드 출력 (SoundManager)
+        // Managers.Sound(Sound.Effect, "ButtonClick");
         // CharacterUI 생성 (UIManager)
     }
     private void OnClickOrganizationButton()
