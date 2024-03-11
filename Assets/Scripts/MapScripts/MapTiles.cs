@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -9,15 +9,15 @@ public class MapTiles : MonoBehaviour
     public List<CharacterBase> characters;
 
     public Tilemap gridTile;
-    public Tilemap startPosition;
+    public GameObject startPosition;
 
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
 
     private void Awake()
     {
-        //Managers.MapManager.Init();
-        //Managers.BattleManager.Init();
+        Managers.MapManager.Init();
+        Managers.BattleManager.Init();
     }
 
     private void Start()
@@ -29,7 +29,7 @@ public class MapTiles : MonoBehaviour
         InitiateCharacter();
     }
 
-    private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
+    private void InitiateMapTile()
     {
         BoundsInt bounds = gridTile.cellBounds;
 
@@ -71,7 +71,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    private void InitiateStartTile()// 캐릭터 시작 위치 설정
+    private void InitiateStartTile()
     {
         Tilemap[] tiles = startPosition.GetComponentsInChildren<Tilemap>();
 
@@ -84,7 +84,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성(BattleManager로 옮겨질 가능성 높음)
+    public void InitiateCharacter()
     {
         int i = 0;
         foreach (CharacterBase charac in Managers.BattleManager.characters)

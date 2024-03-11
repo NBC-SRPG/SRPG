@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFinder
 {
-    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)//다음 이동 가능한 위치 가져옴
+    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)
     {
         OverlayTile tile = newTile;
 
