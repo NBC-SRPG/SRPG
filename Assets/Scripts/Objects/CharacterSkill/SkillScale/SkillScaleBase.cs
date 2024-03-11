@@ -6,9 +6,11 @@ public class SkillScaleBase
 {
     protected List<OverlayTile> skillScale;
     protected int sclae;
+    protected CharacterBase character;
 
-    public SkillScaleBase(int scale)
+    public SkillScaleBase(CharacterBase character,int scale)
     {
+        this.character = character;
         this.sclae = scale;
     }
 
