@@ -7,8 +7,10 @@ public class Managers : MonoBehaviour
 
     private static ResourceManager s_resourceManager = new ResourceManager();
     private static SoundManager s_soundManager = new SoundManager();
+    private static UIManager s_uiManager = new UIManager();
     public static ResourceManager Resource { get { Init(); return s_resourceManager; } }
     public static SoundManager Sound { get { Init(); return s_soundManager; } }
+    public static UIManager UI { get {  Init(); return s_uiManager; } }
 
 
     private void Start()
@@ -46,6 +48,7 @@ public class Managers : MonoBehaviour
             // 들고있는 매니저들 Init
             s_resourceManager.Init();
             s_soundManager.Init();
+            s_uiManager.Init();
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
