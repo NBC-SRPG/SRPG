@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterBase : MonoBehaviour
 {
+    public Character character;
 
     public OverlayTile curStandingTile;
     public int leftWalkRange;
@@ -14,6 +15,9 @@ public class CharacterBase : MonoBehaviour
     private void Start()
     {
         Managers.MapManager.OnCompleteMove += CheckCurTile;
+        Instantiate(character, gameObject.transform);
+        character.InitSkills();
+        character.InitPassive();
     }
 
     public void CheckCurTile()
