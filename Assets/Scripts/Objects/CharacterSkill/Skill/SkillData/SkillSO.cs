@@ -16,9 +16,12 @@ public enum SkillDamageType
     PhysicalDamage
 }
 
-[CreateAssetMenu(menuName ="SkillData", fileName ="Skill_")]
+[CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="Skill_")]
 public class SkillSO : ScriptableObject
 {
+    [Header("Develope")]
+    public string skill_ID;
+
     [Header("Skill_description")]
     public string skillName;
     public string description;
