@@ -4,10 +4,11 @@ using UnityEngine;
 
 public enum SkillScaleType
 {
-    Cross,
-    Square,
-    Line,
-    Rhombus
+    None,// 대상 하나
+    Cross,// 십자형 범위
+    Square,// 사각형 범위
+    Line,// 직선 범위
+    Rhombus// 마름모 범위
 }
 
 public enum SkillDamageType

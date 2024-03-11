@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SkillScale_cross : SkillScaleBase
+public class SkillScale_Cross : SkillScaleBase
 {
-    public SkillScale_cross(int scale) : base(scale)
+    public SkillScale_Cross(CharacterBase character, int scale) : base(character, scale)
     {
     }
 
@@ -17,14 +17,14 @@ public class SkillScale_cross : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile, int scale)
+    public List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
         Vector2Int TileToCheck;
 
-        for (int i = 0; i < scale; i++)
+        for (int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(originTile.x + i, originTile.y);
+            TileToCheck = new Vector2Int(location.x + i, location.y);
             if (Managers.MapManager.map.ContainsKey(TileToCheck))
             {
                 if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
@@ -34,9 +34,9 @@ public class SkillScale_cross : SkillScaleBase
             }
         }
 
-        for (int i = 0; i < scale; i++)
+        for (int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(originTile.x - i, originTile.y);
+            TileToCheck = new Vector2Int(location.x - i, location.y);
             if (Managers.MapManager.map.ContainsKey(TileToCheck))
             {
                 if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
@@ -46,9 +46,9 @@ public class SkillScale_cross : SkillScaleBase
             }
         }
 
-        for (int i = 0; i < scale; i++)
+        for (int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(originTile.x, originTile.y + i);
+            TileToCheck = new Vector2Int(location.x, location.y + i);
             if (Managers.MapManager.map.ContainsKey(TileToCheck))
             {
                 if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
@@ -58,9 +58,9 @@ public class SkillScale_cross : SkillScaleBase
             }
         }
 
-        for (int i = 0; i < scale; i++)
+        for (int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(originTile.x, originTile.y - i);
+            TileToCheck = new Vector2Int(location.x, location.y - i);
             if (Managers.MapManager.map.ContainsKey(TileToCheck))
             {
                 if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
