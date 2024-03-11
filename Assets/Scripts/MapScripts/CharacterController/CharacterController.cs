@@ -66,9 +66,9 @@ public class CharacterController : MonoBehaviour
         switch (phase)
         {
             case PlayerPhase.CharacterSelect:
-                curSelectedCharacter = null;
-                ClearTile(moveRangeTiles, true);
                 ClearTile(movePath, true);
+                ClearTile(moveRangeTiles, true);
+                curSelectedCharacter = null;
                 break;
             case PlayerPhase.MoveandAttack:
                 GetRangeTile();
@@ -106,10 +106,12 @@ public class CharacterController : MonoBehaviour
                 }
             }
 
+            //마우스 오른쪽 클릭 시 행동 확정(임시) - 버튼 클릭으로 바꿀 예정
             if (Input.GetMouseButtonDown(1) && canClick)
             {
                 if (movePath[movePath.Count - 1].curStandingCharater == null)
                 {
+                    curSelectedCharacter.movePath = movePath;
                     canClick = false;
                     ClearTile(surroundPath);
                     isMoving = true;
@@ -122,24 +124,24 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    //캐릭터 이동
     private void MoveCharacter()
     {
-        if (movePath.Count > 1)
+        if (curSelectedCharacter.movePath.Count > 1)
         {
-            curSelectedCharacter.gameObject.transform.position = Vector2.MoveTowards(curSelectedCharacter.gameObject.transform.position, movePath[1].transform.position, 5 * Time.deltaTime);
-            curSelectedCharacter.gameObject.transform.position = new Vector3(curSelectedCharacter.gameObject.transform.position.x, curSelectedCharacter.gameObject.transform.position.y, movePath[0].transform.position.z);
+            curSelectedCharacter.gameObject.transform.position = Vector2.MoveTowards(curSelectedCharacter.gameObject.transform.position, curSelectedCharacter.movePath[1].transform.position, 5 * Time.deltaTime);
 
-            if (curSelectedCharacter.gameObject.transform.position == movePath[1].transform.position)
+            if (curSelectedCharacter.gameObject.transform.position == curSelectedCharacter.movePath[1].transform.position)
             {
-                movePath.RemoveAt(0);
-                curSelectedCharacter.MoveTile(movePath[0]);
+                curSelectedCharacter.movePath.RemoveAt(0);
+                curSelectedCharacter.MoveTile(curSelectedCharacter.movePath[0]);
                 Managers.MapManager.CompleteMove();
             }
         }
 
-        if (movePath.Count == 1 && isMoving)
+        if (curSelectedCharacter.movePath.Count <= 1 && isMoving)
         {
-            movePath.RemoveAt(0);
+            curSelectedCharacter.movePath.RemoveAt(0);
             ChangePhase(PlayerPhase.CharacterSelect);
             canClick = true;
             isMoving = false;
@@ -150,7 +152,7 @@ public class CharacterController : MonoBehaviour
     {
         surroundPath.Clear();
 
-        if (movePath.Count <= curSelectedCharacter.walkRange)
+        if (movePath.Count <= curSelectedCharacter.leftWalkRange)
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 
@@ -201,7 +203,7 @@ public class CharacterController : MonoBehaviour
 
     private void GetRangeTile()
     {
-        moveRangeTiles = rangeFinder.GetTilesInRangeInMove(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.walkRange);
+        moveRangeTiles = rangeFinder.GetTilesInRangeInMove(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
 
         foreach (OverlayTile tile in moveRangeTiles)
         {
