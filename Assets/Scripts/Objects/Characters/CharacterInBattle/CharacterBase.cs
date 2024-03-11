@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class CharacterBase : MonoBehaviour
 {
+
     public OverlayTile curStandingTile;
-    public int walkRange;
+    public int leftWalkRange;
+    [HideInInspector] public bool isDead;
+
+    public List<OverlayTile> movePath = new List<OverlayTile>();
 
     private void Start()
     {
@@ -26,4 +30,5 @@ public class CharacterBase : MonoBehaviour
         curStandingTile = newTile;
         curStandingTile.curStandingCharater = this;
     }
+
 }

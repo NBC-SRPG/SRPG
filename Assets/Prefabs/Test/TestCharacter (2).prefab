@@ -46,7 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curStandingTile: {fileID: 0}
-  walkRange: 6
+  leftWalkRange: 6
+  isDead: 0
+  movePath: []
+  attackRangeTiles: []
+  moveRangeTiles: []
 --- !u!1 &8404857797290927220
 GameObject:
   m_ObjectHideFlags: 0
