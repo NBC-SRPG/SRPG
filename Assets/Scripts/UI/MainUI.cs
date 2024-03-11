@@ -40,6 +40,18 @@ public class MainUI : UIBase
 
     }
 
+    private void Start()
+    {
+        Init();
+    }
+
+    private void Update()
+    {
+        // TODO
+        // AP가 MAX가 아니라면 타이머 작동
+        // AP, Gold, Diamond를 각 UI마다 둘 것인지? or AP, Gold, Diamond만 있는 UI 생성 후 가장 위에 두기
+    }
+
     public void Init()
     {
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
@@ -100,52 +112,88 @@ public class MainUI : UIBase
     {
         Debug.Log("OnClickCharacterButton");
         // TODO
+
         // 버튼 클릭 사운드 출력 (SoundManager)
         // Managers.Sound(Sound.Effect, "ButtonClick");
+
         // CharacterUI 생성 (UIManager)
+        // Managers.UI.ShowUI<CharacterUI>();
     }
     private void OnClickOrganizationButton()
     {
         Debug.Log("OnClickOrganizationButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<OrganizationUI>();
     }
     private void OnClickInventoryButton()
     {
         Debug.Log("OnClickInventoryButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<InventoryUI>();
     }
     private void OnClickGachaButton()
     {
         Debug.Log("OnClickGachaButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<GachaUI>();
     }
     private void OnClickShopButton()
     {
         Debug.Log("OnClickShopButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<ShopUI>();
     }
     private void OnClickAdventureButton()
     {
         Debug.Log("OnClickAdventureButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<AdventureUI>();
     }
     private void OnClickFriendButton()
     {
         Debug.Log("OnClickFriendButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<FriendUI>();
     }
     private void OnClickMailButton()
     {
         Debug.Log("OnClickMailButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<MailUI>();
     }
     private void OnClickNoticeButton()
     {
         Debug.Log("OnClickNoticeButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<NoticeUI>();
     }
     private void OnClickMissionButton()
     {
         Debug.Log("OnClickMissionButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<MissionUI>();
     }
     private void OnClickProfileButton()
     {
         Debug.Log("OnClickProfileButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<ProfileUI>();
     }
     private void OnClickSettingButton()
     {
         Debug.Log("OnClickSettingButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        // Managers.UI.ShowUI<SettingUI>();
     }
 }
