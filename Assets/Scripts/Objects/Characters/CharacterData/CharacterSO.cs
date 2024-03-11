@@ -14,6 +14,9 @@ public class CharacterSO : ScriptableObject
 {
     public AttackType attackType;
 
+    [Header("Develope")]
+    public string character_Id;
+
     [Header("Status")]
     public int health;
     public int atk;
@@ -22,8 +25,10 @@ public class CharacterSO : ScriptableObject
     public int agi;
 
     [Header("Story")]
+    public string characterName;
     public string story;
 
-    //[Header("SkillList")]
-
+    [Header("SkillList")]
+    public List<SkillSO> skills;
+    public List<PassiveSO> passives;
 }
