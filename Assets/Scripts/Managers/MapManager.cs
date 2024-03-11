@@ -91,4 +91,139 @@ public class MapManager
 
         return surroundingTiles;
     }
+
+    public List<OverlayTile> GetSurroundingAllTiles(Vector2Int originTile, bool clickable = false)
+    {
+        List<OverlayTile> surroundingTiles = new List<OverlayTile>();
+
+        Vector2Int TileToCheck = new Vector2Int(originTile.x + 1, originTile.y);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x - 1, originTile.y);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y + 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x, originTile.y - 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x + 1, originTile.y + 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x - 1, originTile.y + 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x + 1, originTile.y - 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        TileToCheck = new Vector2Int(originTile.x - 1, originTile.y - 1);
+        if (map.ContainsKey(TileToCheck))
+        {
+            if (clickable)
+            {
+                if (map[TileToCheck].canClick)
+                {
+                    surroundingTiles.Add(map[TileToCheck]);
+                }
+            }
+            else
+            {
+                surroundingTiles.Add(map[TileToCheck]);
+            }
+        }
+
+        return surroundingTiles;
+    }
 }
