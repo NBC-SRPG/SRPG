@@ -8,6 +8,12 @@ public class Managers : MonoBehaviour
     private static ResourceManager s_resourceManager = new ResourceManager();
     public static ResourceManager Resource { get { Init(); return s_resourceManager; } }
 
+    private static MapManager s_mapManager = new MapManager();
+    public static MapManager MapManager { get { Init(); return s_mapManager; } }
+
+    private static BattleManager s_battleManager = new BattleManager();
+    public static BattleManager BattleManager { get { Init(); return s_battleManager; } }
+
 
     private void Start()
     {
@@ -43,6 +49,8 @@ public class Managers : MonoBehaviour
             
             // 들고있는 매니저들 Init
             s_resourceManager.Init();
+            s_mapManager.Init();
+            s_battleManager.Init();
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
