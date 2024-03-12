@@ -16,8 +16,8 @@ public class MapTiles : MonoBehaviour
 
     private void Awake()
     {
-        Managers.MapManager.Init();
-        Managers.BattleManager.Init();
+        //Managers.MapManager.Init();
+        //Managers.BattleManager.Init();
     }
 
     private void Start()
@@ -29,7 +29,7 @@ public class MapTiles : MonoBehaviour
         InitiateCharacter();
     }
 
-    private void InitiateMapTile()
+    private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
     {
         BoundsInt bounds = gridTile.cellBounds;
 
@@ -71,7 +71,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    private void InitiateStartTile()
+    private void InitiateStartTile()// 캐릭터 시작 위치 설정
     {
         Tilemap[] tiles = startPosition.GetComponentsInChildren<Tilemap>();
 
@@ -84,7 +84,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    public void InitiateCharacter()
+    public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성(BattleManager로 옮겨질 가능성 높음)
     {
         int i = 0;
         foreach (CharacterBase charac in Managers.BattleManager.characters)

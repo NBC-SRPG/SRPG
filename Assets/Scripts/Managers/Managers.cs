@@ -6,7 +6,11 @@ public class Managers : MonoBehaviour
     public static Managers Instance { get { return s_instance; } }
 
     private static ResourceManager s_resourceManager = new ResourceManager();
+    private static SoundManager s_soundManager = new SoundManager();
+    private static UIManager s_uiManager = new UIManager();
     public static ResourceManager Resource { get { Init(); return s_resourceManager; } }
+    public static SoundManager Sound { get { Init(); return s_soundManager; } }
+    public static UIManager UI { get {  Init(); return s_uiManager; } }
 
     private static MapManager s_mapManager = new MapManager();
     public static MapManager MapManager { get { Init(); return s_mapManager; } }
@@ -49,6 +53,8 @@ public class Managers : MonoBehaviour
             
             // 들고있는 매니저들 Init
             s_resourceManager.Init();
+            s_soundManager.Init();
+            s_uiManager.Init();
             s_mapManager.Init();
             s_battleManager.Init();
 

@@ -17,55 +17,22 @@ public class SkillScale_Cross : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    public List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)
+    public List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)//십자형 범위 가져오기
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
         Vector2Int TileToCheck;
 
         for (int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(location.x + i, location.y);
-            if (Managers.MapManager.map.ContainsKey(TileToCheck))
+            for (int j = 0; j < 4; j++)
             {
-                if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
+                TileToCheck = new Vector2Int(location.x + (Managers.MapManager.direction[j].x * i), location.y + (Managers.MapManager.direction[j].y * i));
+                if (Managers.MapManager.map.ContainsKey(TileToCheck))
+                {
+                    if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
                     {
                         skillScale.Add(Managers.MapManager.map[TileToCheck]);
                     }
-            }
-        }
-
-        for (int i = 0; i <= scale; i++)
-        {
-            TileToCheck = new Vector2Int(location.x - i, location.y);
-            if (Managers.MapManager.map.ContainsKey(TileToCheck))
-            {
-                if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
-                {
-                    skillScale.Add(Managers.MapManager.map[TileToCheck]);
-                }
-            }
-        }
-
-        for (int i = 0; i <= scale; i++)
-        {
-            TileToCheck = new Vector2Int(location.x, location.y + i);
-            if (Managers.MapManager.map.ContainsKey(TileToCheck))
-            {
-                if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
-                {
-                    skillScale.Add(Managers.MapManager.map[TileToCheck]);
-                }
-            }
-        }
-
-        for (int i = 0; i <= scale; i++)
-        {
-            TileToCheck = new Vector2Int(location.x, location.y - i);
-            if (Managers.MapManager.map.ContainsKey(TileToCheck))
-            {
-                if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
-                {
-                    skillScale.Add(Managers.MapManager.map[TileToCheck]);
                 }
             }
         }

@@ -2,27 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerPhase
-{
-    Idle,
-    CharacterSelect,
-    ActingSelect,
-    MoveandAttack,
-    TargetSelect
-}
-
 public class CharacterController : MonoBehaviour
 {
+    private enum PlayerPhase
+    {
+        Idle,
+        CharacterSelect,
+        ActingSelect,
+        MoveandAttack,
+        TargetSelect
+    }
+
     private RangeFinder rangeFinder;
     private PathFinder pathFinder;
 
     [SerializeField] private List<OverlayTile> movePath = new List<OverlayTile>();
     private List<OverlayTile> attackRangeTiles = new List<OverlayTile>();
     private List<OverlayTile> moveRangeTiles = new List<OverlayTile>();
-    List<OverlayTile> surroundPath = new List<OverlayTile>();
+    private List<OverlayTile> surroundPath = new List<OverlayTile>();
 
     private bool nowPlayerTurn;
-    private bool canClick;
+    private bool canClick;//false일 때 터치 안되게
     private bool isMoving;
 
     private PlayerPhase phase;
@@ -59,7 +59,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void ChangePhase(PlayerPhase newPhase)
+    private void ChangePhase(PlayerPhase newPhase)// 페이즈 변환
     {
         phase = newPhase;
 
@@ -68,21 +68,28 @@ public class CharacterController : MonoBehaviour
             case PlayerPhase.CharacterSelect:
                 ClearTile(movePath, true);
                 ClearTile(moveRangeTiles, true);
+                ClearTile(attackRangeTiles, true);
                 curSelectedCharacter = null;
                 break;
             case PlayerPhase.MoveandAttack:
-                GetMoveRangeTile();
-                movePath.Clear();
+                ClearTile(movePath, true);
+                ClearTile(moveRangeTiles, true);
+                ClearTile(attackRangeTiles, true);
                 movePath.Add(curSelectedCharacter.curStandingTile);
                 break;
         }
 
     }
 
-    private void CharacterMoveandAttackPhase()
+    private void CharacterMoveandAttackPhase()// 캐릭터 이동 및 일반 공격
     {
-        if (!isMoving)
+        if (!curSelectedCharacter.isWalking)
         {
+            GetMoveRangeTile();
+            if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
+            {
+                GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);
+            }
             GetPathTile();
 
             RaycastHit2D hit;
@@ -114,45 +121,32 @@ public class CharacterController : MonoBehaviour
                     curSelectedCharacter.movePath = movePath;
                     canClick = false;
                     ClearTile(surroundPath);
-                    isMoving = true;
+                    curSelectedCharacter.isWalking = true;
+
+                    curSelectedCharacter.OnEndWalk += EndMove;
                 }
             }
         }
         else
         {
-            MoveCharacter();
+            curSelectedCharacter.MoveCharacter();
         }
     }
 
-    //캐릭터 이동
-    private void MoveCharacter()
+    private void EndMove()// 캐릭터의 이동이 끝났을 시
     {
-        if (curSelectedCharacter.movePath.Count > 1)
-        {
-            curSelectedCharacter.gameObject.transform.position = Vector2.MoveTowards(curSelectedCharacter.gameObject.transform.position, curSelectedCharacter.movePath[1].transform.position, 5 * Time.deltaTime);
+        curSelectedCharacter.OnEndWalk -= EndMove;
 
-            if (curSelectedCharacter.gameObject.transform.position == curSelectedCharacter.movePath[1].transform.position)
-            {
-                curSelectedCharacter.movePath.RemoveAt(0);
-                curSelectedCharacter.MoveTile(curSelectedCharacter.movePath[0]);
-                Managers.MapManager.CompleteMove();
-            }
-        }
-
-        if (curSelectedCharacter.movePath.Count <= 1 && isMoving)
-        {
-            curSelectedCharacter.movePath.RemoveAt(0);
-            ChangePhase(PlayerPhase.CharacterSelect);
-            canClick = true;
-            isMoving = false;
-        }
+        canClick = true;
+        ChangePhase(PlayerPhase.MoveandAttack);
     }
 
+    //이동 가능 위치 탐색
     private void GetPathTile()
     {
         surroundPath.Clear();
 
-        if (movePath.Count <= curSelectedCharacter.leftWalkRange)
+        if (movePath.Count <= curSelectedCharacter.leftWalkRange)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 
@@ -174,13 +168,13 @@ public class CharacterController : MonoBehaviour
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if (surroundPath.Contains(curTile) && curTile.canClick)
+                if (surroundPath.Contains(curTile) && curTile.canClick)//이동할 위치 선택 시
                 {
                     movePath.Add(curTile);
                     ClearTile(surroundPath);
                 }
 
-                if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)
+                if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//이미 선택된 타일 터치 시
                 {
                     int n = movePath.IndexOf(curTile);
                     List<OverlayTile> temp = movePath.GetRange(0, n + 1);
@@ -194,16 +188,16 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        foreach (OverlayTile tile in movePath)
+        foreach (OverlayTile tile in movePath)//선택된 이동 위치 표시
         {
             tile.ShowAsScale();
         }
     }
 
 
-    private void GetMoveRangeTile()
+    private void GetMoveRangeTile()// 이동 가능 거리 가져옴
     {
-        moveRangeTiles = rangeFinder.GetTilesInRangeInMove(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
+        moveRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange, true);
 
         foreach (OverlayTile tile in moveRangeTiles)
         {
@@ -211,9 +205,9 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void GetAttackRangeTile()
+    private void GetAttackRangeTile(int range)// 공격 가능 거리 가져옴
     {
-        attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
+        attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), range, false);
 
         foreach (OverlayTile tile in attackRangeTiles)
         {
