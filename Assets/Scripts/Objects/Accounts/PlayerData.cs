@@ -11,7 +11,7 @@ public class PlayerData : MonoBehaviour
     protected int ap;
     protected int maxAp = 160;
     protected int level = 1;
-    protected int maxLevel = 80;
+    protected int maxLevel = 90;
     protected int exp;
     protected int maxExp = 100;
     protected DateTime birthDay;
@@ -227,7 +227,7 @@ public class PlayerData : MonoBehaviour
             return false;
         }
     }
-    protected void SetLevel(int value) //레벨값을 직접 설정하는 메서드. 현재 레벨값에 따라 maxExp와 maxAp도 적절한 값으로 변경한다.
+    protected void SetLevel(int value) //계정 레벨값을 직접 설정하는 메서드. 현재 레벨값에 따라 maxExp와 maxAp도 적절한 값으로 변경한다. maxAp는 레벨당 2 증가하고 1레벨에 160, 41레벨에 240.
     {
         level = math.clamp(value, 1, maxLevel);
         maxExp = (level * 70);
