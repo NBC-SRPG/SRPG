@@ -9,9 +9,9 @@ public class OverlayTile : MonoBehaviour
     [SerializeField] private GameObject moveTile;
     [SerializeField] private GameObject attackRangeTile;
 
-    [HideInInspector] public bool canClick;
+    [HideInInspector] public bool canClick;//이동 가능 혹은 상호작용 가능한 타일
 
-    public Vector3Int gridLocation;
+    public Vector3Int gridLocation;//타일 위치(월드 위치랑 다름)
     public Vector2Int grid2DLocation { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
     public CharacterBase curStandingCharater;
@@ -23,28 +23,48 @@ public class OverlayTile : MonoBehaviour
 
     public void ResetTile()
     {
-        defaultTile.SetActive(true);
-        movepathTile.SetActive(false);
-        moveTile.SetActive(false);
-        attackRangeTile.SetActive(false);
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+            movepathTile.SetActive(false);
+            moveTile.SetActive(false);
+            attackRangeTile.SetActive(false);
+        }
     }
 
-    public void ShowTile()
+    public void ShowTile()//기본 타일 보기(하얀색)
     {
-        defaultTile.SetActive(true);
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+        }
     }
 
-    public void ShowAsMove()
+    public void ShowAsMove()//이동 타일 보기(노란색)
     {
-        moveTile.SetActive(true);
+        if (canClick)
+        {
+            moveTile.SetActive(true);
+        }
     }
 
-    public void ShowAsPath()
+    public void ShowAsScale()//범위 타일 보기(노란색)
     {
-        movepathTile.SetActive(true);
+        if (canClick)
+        {
+            movepathTile.SetActive(true);
+        }
     }
 
-    public void HideTile()
+    public void ShowAsAttack()//공격 타일 보기(빨간색)
+    {
+        if (canClick)
+        {
+            attackRangeTile.SetActive(true);
+        }
+    }
+
+    public void HideTile()//타일 전체 숨기기
     {
         defaultTile.SetActive(false);
         movepathTile.SetActive(false);

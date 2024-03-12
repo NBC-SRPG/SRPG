@@ -107,7 +107,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive?.OnEndTurn();
     }
 
-    public virtual void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
+    public virtual void OnPassAlly(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnPassAlly(allyCharacter);
     }
