@@ -2,23 +2,23 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class PlayerData : MonoBehaviour
+public class PlayerData
 {   //순서대로 UID, 닉네임, 다이아, 골드. AP, AP최대치, 계정 레벨, 계정 최대 레벨, 현재 경험치, 최대 경험치, 생일, 선호 캐릭터 목록, 캐릭터 아이콘, 지원 캐릭터
-    protected string uId;
-    protected string playerName;
-    protected int diamond;
-    protected int gold;
-    protected int ap;
-    protected int maxAp = 160;
-    protected int level = 1;
-    protected int maxLevel = 90;
-    protected int exp;
-    protected int maxExp = 100;
-    protected DateTime birthDay;
-    protected int[] favoriteCharacter;
-    protected int lobbyCharacter;
-    protected int characterIcon;
-    protected int supportCharacter;
+    private string uId;
+    private string playerName;
+    private int diamond;
+    private int gold;
+    private int ap;
+    private int maxAp = 160;
+    private int level = 1;
+    private int maxLevel = 90;
+    private int exp;
+    private int maxExp = 100;
+    private DateTime birthDay;
+    private int[] favoriteCharacter;
+    private int lobbyCharacter;
+    private int characterIcon;
+    private int supportCharacter;
 
     // 생성자 메서드
     public PlayerData( 
@@ -88,11 +88,11 @@ public class PlayerData : MonoBehaviour
         return level;
     }
 
-    public int Exp()
+    public int GetExp()
     {
         return exp;
     }
-    public int MaxExp()
+    public int GetMaxExp()
     {
         return maxExp;
     }
@@ -214,7 +214,7 @@ public class PlayerData : MonoBehaviour
         }
         exp = math.clamp(exp, 0, maxExp);
     }
-    protected bool LevelUp() //레벨업 메서드. 경험치값에서 최대 경험치값 만큼 차감하고 레벨을 1 올린다.
+    private bool LevelUp() //레벨업 메서드. 경험치값에서 최대 경험치값 만큼 차감하고 레벨을 1 올린다.
     {
         if ((level + 1) <= maxLevel)
         {
@@ -227,7 +227,7 @@ public class PlayerData : MonoBehaviour
             return false;
         }
     }
-    protected void SetLevel(int value) //계정 레벨값을 직접 설정하는 메서드. 현재 레벨값에 따라 maxExp와 maxAp도 적절한 값으로 변경한다. maxAp는 레벨당 2 증가하고 1레벨에 160, 41레벨에 240.
+    private void SetLevel(int value) //계정 레벨값을 직접 설정하는 메서드. 현재 레벨값에 따라 maxExp와 maxAp도 적절한 값으로 변경한다. maxAp는 레벨당 2 증가하고 1레벨에 160, 41레벨에 240.
     {
         level = math.clamp(value, 1, maxLevel);
         maxExp = (level * 70);

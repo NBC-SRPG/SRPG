@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AccountData : MonoBehaviour
+public class AccountData
 {
-    protected Dictionary<string, int> stageClearData;
-    protected Dictionary<int, CharacterSO> characterData;
-    protected PlayerData playerData;
-    protected Dictionary<int, bool> missionClearData;
-    protected Dictionary<ItemData, int> inventory;
-    protected Dictionary<int, string[]> friendData;
+    private Dictionary<string, int> stageClearData;
+    private Dictionary<int, CharacterSO> characterData;
+    private PlayerData playerData;
+    private Dictionary<int, bool> missionClearData;
+    private Dictionary<ItemData, int> inventory;
+    private Dictionary<int, string[]> friendData;
 
     // 매개변수를 받는 생성자 메서드
     public AccountData
