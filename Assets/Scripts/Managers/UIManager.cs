@@ -16,13 +16,13 @@ public class UIManager
             {
                 root = new GameObject { name = "@UI_Root" };
             }
-               
+
             return root;
         }
     }
     public void Init()
     {
-       
+
     }
     // UI 동적 생성
     public T ShowUI<T>(string name = null, Transform parent = null) where T : UIBase
@@ -75,7 +75,7 @@ public class UIManager
         return _uiStack.Peek() as T;
     }
     // UI 스택의 가장 위에 있는 UI 닫기
-    public void ClosePopupUI(UIBase ui)
+    public void ClosePopupUI(UIBase closeUi)
     {
         // 스택이 비어있으면 return
         if (_uiStack.Count == 0)
@@ -83,13 +83,14 @@ public class UIManager
             return;
         }
         // 가장 위에 있는 UI가 닫으려는 UI와 다르다면 Fail로그 출력 후 return
-        if (_uiStack.Peek() != ui)
+        if (_uiStack.Peek() != closeUi)
         {
             Debug.Log("Close ui Failed!");
             return;
         }
+
         // UI 스택에서 Pop & Destroy
-        UIBase ui = _uiStack.Pop();
-        Object.Destroy(ui.gameObject);
+        UIBase destroyUi = _uiStack.Pop();
+        Object.Destroy(destroyUi.gameObject);
     }
 }
