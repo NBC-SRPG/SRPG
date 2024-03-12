@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -9,7 +9,7 @@ public class MapTiles : MonoBehaviour
     public List<CharacterBase> characters;
 
     public Tilemap gridTile;
-    public GameObject startPosition;
+    public Tilemap startPosition;
 
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
@@ -29,7 +29,7 @@ public class MapTiles : MonoBehaviour
         InitiateCharacter();
     }
 
-    private void InitiateMapTile()// Å¸ÀÏ¸ÊÀ¸·ÎºÎÅÍ overlayTile »ı¼º
+    private void InitiateMapTile()// íƒ€ì¼ë§µìœ¼ë¡œë¶€í„° overlayTile ìƒì„±
     {
         BoundsInt bounds = gridTile.cellBounds;
 
@@ -71,7 +71,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    private void InitiateStartTile()// Ä³¸¯ÅÍ ½ÃÀÛ À§Ä¡ ¼³Á¤
+    private void InitiateStartTile()// ìºë¦­í„° ì‹œì‘ ìœ„ì¹˜ ì„¤ì •
     {
         Tilemap[] tiles = startPosition.GetComponentsInChildren<Tilemap>();
 
@@ -84,7 +84,7 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    public void InitiateCharacter()//Ä³¸¯ÅÍ ½ºÆùÀ§Ä¡¿¡ Ä³¸¯ÅÍ »ı¼º(BattleManager·Î ¿Å°ÜÁú °¡´É¼º ³ôÀ½)
+    public void InitiateCharacter()//ìºë¦­í„° ìŠ¤í°ìœ„ì¹˜ì— ìºë¦­í„° ìƒì„±(BattleManagerë¡œ ì˜®ê²¨ì§ˆ ê°€ëŠ¥ì„± ë†’ìŒ)
     {
         int i = 0;
         foreach (CharacterBase charac in Managers.BattleManager.characters)

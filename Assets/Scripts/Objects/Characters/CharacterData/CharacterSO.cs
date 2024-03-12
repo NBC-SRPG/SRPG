@@ -1,28 +1,28 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "CharacterData", fileName ="Character_")]
 public class CharacterSO : ScriptableObject
 {
-    public Constants.AttackType attackType;//°ø°İ Å¸ÀÔ
-    public Constants.CharacterAttribute characterAttribute;//Ä³¸¯ÅÍ ¼Ó¼º
+    public Constants.AttackType attackType;//ê³µê²© íƒ€ì…
+    public Constants.CharacterAttribute characterAttribute;//ìºë¦­í„° ì†ì„±
 
     [Header("Develope")]
-    public string character_Id;//Ä³¸¯ÅÍ ½Äº°ÀÚ
+    public string character_Id;//ìºë¦­í„° ì‹ë³„ì
 
-    [Header("Status")]//Ä³¸¯ÅÍ ´É·ÂÄ¡
+    [Header("Status")]//ìºë¦­í„° ëŠ¥ë ¥ì¹˜
     public int health;
     public int atk;
     public int def;
     public int res;
     public int mov;
-    [Range(0, 10)]public int atk_range;//°ø°İ »çÁ¤°Å¸®(±Ù°Å¸®ÀÇ °æ¿ì 0À¸·Î)
+    [Range(0, 10)]public int atk_range;//ê³µê²© ì‚¬ì •ê±°ë¦¬(ê·¼ê±°ë¦¬ì˜ ê²½ìš° 0ìœ¼ë¡œ)
 
     [Header("Story")]
-    public string characterName;//Ä³¸¯ÅÍ ÀÌ¸§
-    public string story;//Ä³¸¯ÅÍ ½ºÅä¸®
-    public Constants.Belonging belonging;//Ä³¸¯ÅÍ ¼Ò¼Ó
+    public string characterName;//ìºë¦­í„° ì´ë¦„
+    public string story;//ìºë¦­í„° ìŠ¤í† ë¦¬
+    public Constants.Belonging belonging;//ìºë¦­í„° ì†Œì†
 
     [Header("SkillList")]
     public SkillSO skill;

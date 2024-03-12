@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ public class SkillScale_Square : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    private void GetSurroundingTiles(Vector2Int location, int scale)//»ç°¢Çü ¹üÀ§ °¡Á®¿À±â
+    private void GetSurroundingTiles(Vector2Int location, int scale)//ì‚¬ê°í˜• ë²”ìœ„ ê°€ì ¸ì˜¤ê¸°
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
 
