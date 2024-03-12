@@ -61,7 +61,7 @@ public class CommonUI : UIBase
             // 타이머를 분, 초로 나누어서 텍스트 업데이트
             int minutes = (int)_recoveryTimer / 60;
             int seconds = (int)_recoveryTimer % 60;
-            GetText((int)Texts.ApTimerText).text = $"{minutes} : {seconds}";
+            GetText((int)Texts.ApTimerText).text = $"{minutes:D2} : {seconds:D2}";
         }
     }
     // Ap, Gold, Diamond 텍스트 업데이트
