@@ -4,7 +4,7 @@ using UnityEngine;
 public class ResourceManager
 {
     // Sprite 캐싱 딕셔너리
-    private Dictionary<string, Sprite> _sprites = new Dictionary<string, Sprite>();
+    private Dictionary<string, Sprite> spritesDic = new Dictionary<string, Sprite>();
 
     public void Init()
     {
@@ -15,7 +15,7 @@ public class ResourceManager
         if (typeof(T) == typeof(Sprite))
         {
             // 캐싱 값 존재 시 return
-            if (_sprites.TryGetValue(path, out Sprite sprite))
+            if (spritesDic.TryGetValue(path, out Sprite sprite))
             {
                 return sprite as T;
             }
@@ -23,7 +23,7 @@ public class ResourceManager
             // 없으면 Load 후 return
             Sprite sp = Resources.Load<Sprite>($"Sprites/{path}");
             // 딕셔너리 추가
-            _sprites.Add(path, sp);
+            spritesDic.Add(path, sp);
             return sp as T;
         }
 
