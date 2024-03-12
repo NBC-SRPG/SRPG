@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +11,7 @@ public class SkillBase
 
     public CharacterBase character;
 
-    //½ºÅ³ ½ÃÀüÀÚ ¼³Á¤
+    //ìŠ¤í‚¬ ì‹œì „ì ì„¤ì •
     public void Init(CharacterBase character)
     {
         this.character = character;
@@ -20,7 +20,7 @@ public class SkillBase
         InitSkillRange();
     }
 
-    //½ºÅ³ »ı¼ºÀÚ
+    //ìŠ¤í‚¬ ìƒì„±ì
     public SkillBase(SkillSO skillData)
     {
         this.skillData = skillData;
@@ -28,7 +28,7 @@ public class SkillBase
         InitSkillAbility();
     }
 
-    //½ºÅ³ Æ¯¼ö ´É·Â »ı¼ºÀÚ
+    //ìŠ¤í‚¬ íŠ¹ìˆ˜ ëŠ¥ë ¥ ìƒì„±ì
     private void InitSkillAbility()
     {
         Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
@@ -37,7 +37,7 @@ public class SkillBase
         skillAbility = obj as SkillAbilityBase;
     }
 
-    private void InitSkillRange()//½ºÅ³ ¹üÀ§ »ı¼ºÀÚ
+    private void InitSkillRange()//ìŠ¤í‚¬ ë²”ìœ„ ìƒì„±ì
     {
         SkillScaleType scaletype = skillData.scaleType;
         int scale = skillData.skillScale;

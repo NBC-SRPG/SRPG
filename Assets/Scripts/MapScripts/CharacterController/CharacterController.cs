@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +22,7 @@ public class CharacterController : MonoBehaviour
     private List<OverlayTile> surroundPath = new List<OverlayTile>();
 
     private bool nowPlayerTurn;
-    private bool canClick;//falseÀÏ ¶§ ÅÍÄ¡ ¾ÈµÇ°Ô
+    private bool canClick;//falseì¼ ë•Œ í„°ì¹˜ ì•ˆë˜ê²Œ
     private bool isMoving;
 
     private PlayerPhase phase;
@@ -59,7 +59,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void ChangePhase(PlayerPhase newPhase)// ÆäÀÌÁî º¯È¯
+    private void ChangePhase(PlayerPhase newPhase)// í˜ì´ì¦ˆ ë³€í™˜
     {
         phase = newPhase;
 
@@ -81,12 +81,12 @@ public class CharacterController : MonoBehaviour
 
     }
 
-    private void CharacterMoveandAttackPhase()// Ä³¸¯ÅÍ ÀÌµ¿ ¹× ÀÏ¹İ °ø°İ
+    private void CharacterMoveandAttackPhase()// ìºë¦­í„° ì´ë™ ë° ì¼ë°˜ ê³µê²©
     {
         if (!curSelectedCharacter.isWalking)
         {
             GetMoveRangeTile();
-            if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// ÇØ´ç Ä³¸¯ÅÍ°¡ ¿ø°Å¸®Çü Ä³¸¯ÅÍ°í °ø°İÇÏÁö ¾Ê¾ÒÀ» ¶§ 
+            if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// í•´ë‹¹ ìºë¦­í„°ê°€ ì›ê±°ë¦¬í˜• ìºë¦­í„°ê³  ê³µê²©í•˜ì§€ ì•Šì•˜ì„ ë•Œ 
             {
                 GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);
             }
@@ -113,7 +113,7 @@ public class CharacterController : MonoBehaviour
                 }
             }
 
-            //¸¶¿ì½º ¿À¸¥ÂÊ Å¬¸¯ ½Ã Çàµ¿ È®Á¤(ÀÓ½Ã) - ¹öÆ° Å¬¸¯À¸·Î ¹Ù²Ü ¿¹Á¤
+            //ë§ˆìš°ìŠ¤ ì˜¤ë¥¸ìª½ í´ë¦­ ì‹œ í–‰ë™ í™•ì •(ì„ì‹œ) - ë²„íŠ¼ í´ë¦­ìœ¼ë¡œ ë°”ê¿€ ì˜ˆì •
             if (Input.GetMouseButtonDown(1) && canClick)
             {
                 if (movePath[movePath.Count - 1].curStandingCharater == null)
@@ -133,7 +133,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void EndMove()// Ä³¸¯ÅÍÀÇ ÀÌµ¿ÀÌ ³¡³µÀ» ½Ã
+    private void EndMove()// ìºë¦­í„°ì˜ ì´ë™ì´ ëë‚¬ì„ ì‹œ
     {
         curSelectedCharacter.OnEndWalk -= EndMove;
 
@@ -141,12 +141,12 @@ public class CharacterController : MonoBehaviour
         ChangePhase(PlayerPhase.MoveandAttack);
     }
 
-    //ÀÌµ¿ °¡´É À§Ä¡ Å½»ö
+    //ì´ë™ ê°€ëŠ¥ ìœ„ì¹˜ íƒìƒ‰
     private void GetPathTile()
     {
         surroundPath.Clear();
 
-        if (movePath.Count <= curSelectedCharacter.leftWalkRange)// ¼±ÅÃÇÑ Ä³¸¯ÅÍÀÇ °ÉÀ½ È½¼ö°¡ ³²¾ÆÀÖ´Ù¸é 
+        if (movePath.Count <= curSelectedCharacter.leftWalkRange)// ì„ íƒí•œ ìºë¦­í„°ì˜ ê±¸ìŒ íšŸìˆ˜ê°€ ë‚¨ì•„ìˆë‹¤ë©´ 
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 
@@ -168,13 +168,13 @@ public class CharacterController : MonoBehaviour
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if (surroundPath.Contains(curTile) && curTile.canClick)//ÀÌµ¿ÇÒ À§Ä¡ ¼±ÅÃ ½Ã
+                if (surroundPath.Contains(curTile) && curTile.canClick)//ì´ë™í•  ìœ„ì¹˜ ì„ íƒ ì‹œ
                 {
                     movePath.Add(curTile);
                     ClearTile(surroundPath);
                 }
 
-                if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//ÀÌ¹Ì ¼±ÅÃµÈ Å¸ÀÏ ÅÍÄ¡ ½Ã
+                if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//ì´ë¯¸ ì„ íƒëœ íƒ€ì¼ í„°ì¹˜ ì‹œ
                 {
                     int n = movePath.IndexOf(curTile);
                     List<OverlayTile> temp = movePath.GetRange(0, n + 1);
@@ -188,14 +188,14 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        foreach (OverlayTile tile in movePath)//¼±ÅÃµÈ ÀÌµ¿ À§Ä¡ Ç¥½Ã
+        foreach (OverlayTile tile in movePath)//ì„ íƒëœ ì´ë™ ìœ„ì¹˜ í‘œì‹œ
         {
             tile.ShowAsScale();
         }
     }
 
 
-    private void GetMoveRangeTile()// ÀÌµ¿ °¡´É °Å¸® °¡Á®¿È
+    private void GetMoveRangeTile()// ì´ë™ ê°€ëŠ¥ ê±°ë¦¬ ê°€ì ¸ì˜´
     {
         moveRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange, true);
 
@@ -205,7 +205,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void GetAttackRangeTile(int range)// °ø°İ °¡´É °Å¸® °¡Á®¿È
+    private void GetAttackRangeTile(int range)// ê³µê²© ê°€ëŠ¥ ê±°ë¦¬ ê°€ì ¸ì˜´
     {
         attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), range, false);
 

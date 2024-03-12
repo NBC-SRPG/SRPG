@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class SkillScale_Rhombus : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    public void GetTilesInRange(Vector2Int location, int range)// ¸¶¸§¸ğÇü ¹üÀ§ °¡Á®¿À±â(ÀÌµ¿ °Å¸® °¡Á®¿À´Â ¾Ë°í¸®Áò°ú µ¿ÀÏ)
+    public void GetTilesInRange(Vector2Int location, int range)// ë§ˆë¦„ëª¨í˜• ë²”ìœ„ ê°€ì ¸ì˜¤ê¸°(ì´ë™ ê±°ë¦¬ ê°€ì ¸ì˜¤ëŠ” ì•Œê³ ë¦¬ì¦˜ê³¼ ë™ì¼)
     {
         OverlayTile startTile = Managers.MapManager.map[location];
 

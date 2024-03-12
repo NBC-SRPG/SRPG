@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,28 +6,28 @@ public abstract class SkillAbilityBase
 {
     CharacterBase character;
 
-    public virtual void init(CharacterBase character)// ½ºÅ³ ¼ÒÀ¯ÀÚ ¼³Á¤
+    public virtual void init(CharacterBase character)// ìŠ¤í‚¬ ì†Œìœ ì ì„¤ì •
     {
         this.character = character;
     }
 
-    public virtual void OnUseSkill(List<CharacterBase> target)// ½ºÅ³ »ç¿ë ½Ã 
+    public virtual void OnUseSkill(List<CharacterBase> target)// ìŠ¤í‚¬ ì‚¬ìš© ì‹œ 
     {
 
     }
 
-    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// ½ºÅ³ ÀûÁß ½Ã
+    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// ìŠ¤í‚¬ ì ì¤‘ ì‹œ
     {
 
     }
 
-    public virtual void OnEndSkill(List<CharacterBase> target)// ½ºÅ³ »ç¿ë Á¾·á ½Ã
+    public virtual void OnEndSkill(List<CharacterBase> target)// ìŠ¤í‚¬ ì‚¬ìš© ì¢…ë£Œ ì‹œ
     {
 
     }
 }
 
-public class SkillAbility_ : SkillAbilityBase // Å×½ºÆ®¿ë
+public class SkillAbility_ : SkillAbilityBase // í…ŒìŠ¤íŠ¸ìš©
 {
     public override void init(CharacterBase character)
     {

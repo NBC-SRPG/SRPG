@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class SkillScale_Cross : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    public List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)//½ÊÀÚÇü ¹üÀ§ °¡Á®¿À±â
+    public List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)//ì‹­ìí˜• ë²”ìœ„ ê°€ì ¸ì˜¤ê¸°
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
         Vector2Int TileToCheck;

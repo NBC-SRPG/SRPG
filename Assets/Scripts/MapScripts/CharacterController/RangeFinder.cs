@@ -1,11 +1,11 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class RangeFinder
 {
-    public List<OverlayTile> GetTilesInRange(Vector2Int location, int range, bool isformove)//¹üÀ§ °¡Á®¿À±â bool°ª true ½Ã ÀÌµ¿ °¡´É Å¸ÀÏÀÎÁö Ã¼Å©ÇÔ
+    public List<OverlayTile> GetTilesInRange(Vector2Int location, int range, bool isformove)//ë²”ìœ„ ê°€ì ¸ì˜¤ê¸° boolê°’ true ì‹œ ì´ë™ ê°€ëŠ¥ íƒ€ì¼ì¸ì§€ ì²´í¬í•¨
     {
         OverlayTile startTile = Managers.MapManager.map[location];
         List<OverlayTile> inRangeTile = new List<OverlayTile>();

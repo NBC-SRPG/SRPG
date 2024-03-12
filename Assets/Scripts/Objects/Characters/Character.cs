@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Playables;
@@ -21,7 +21,7 @@ public class Character : MonoBehaviour
     public int Resistacne { get; private set; }
     public int Mov { get; private set; }
 
-    //±âÃÊ ½ºÅÈ Àû¿ë
+    //ê¸°ì´ˆ ìŠ¤íƒ¯ ì ìš©
     public void CharacterInit()
     {
         CharacterAttackType = characterData.attackType;
@@ -34,13 +34,13 @@ public class Character : MonoBehaviour
         ApplyGrowStat();
     }
 
-    //¼ºÀå ½ºÅÈ Àû¿ë
+    //ì„±ì¥ ìŠ¤íƒ¯ ì ìš©
     private void ApplyGrowStat()
     {
         
     }
 
-    //½ºÅ³ ¼±¾ğ
+    //ìŠ¤í‚¬ ì„ ì–¸
     public SkillBase InitSkills()
     {
         skill = new SkillBase(characterData.skill);
@@ -48,7 +48,7 @@ public class Character : MonoBehaviour
         return skill;
     }
 
-    //ÆĞ½Ãºê ¼±¾ğ
+    //íŒ¨ì‹œë¸Œ ì„ ì–¸
     public PassiveAbilityBase InitPassive()
     {
         Type passiveType = Type.GetType("PassiveAbility_" + characterData.passive.passive_Id);
