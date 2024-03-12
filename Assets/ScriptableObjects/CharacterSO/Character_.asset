@@ -12,12 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36257601a5deb643a1aa8baf42377cf, type: 3}
   m_Name: Character_
   m_EditorClassIdentifier: 
-  attackType: 0
+  attackType: 1
+  characterAttribute: 0
+  character_Id: 
   health: 0
   atk: 0
   def: 0
   res: 0
-  agi: 0
+  mov: 5
+  atk_range: 8
+  characterName: 
   story: 
-  skills: []
-  passives: []
+  belonging: 0
+  skill: {fileID: 11400000, guid: 6d56a2deaadd25b4eba1c4f21307fba3, type: 2}
+  passive: {fileID: 11400000, guid: f9e4715c32248e4479fad552a190713c, type: 2}

@@ -14,8 +14,12 @@ public class CharacterBase : MonoBehaviour
     public OverlayTile curStandingTile;
     public int leftWalkRange;
     [HideInInspector] public bool isDead;
+    public bool isWalking;
+    public bool didAttack;
 
     public List<OverlayTile> movePath = new List<OverlayTile>();
+
+    public event Action OnEndWalk;
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
@@ -29,6 +33,13 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive = character.InitPassive();
 
         SetSkillOwner();
+
+        character.CharacterInit();
+        leftWalkRange = character.Mov;
+
+        isDead = false;
+        isWalking = false;
+        didAttack = false;
     }
 
     //스킬 및 패시브 시전자 설정
@@ -41,7 +52,7 @@ public class CharacterBase : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 이동 관련 함수
-    public void CheckCurTile()
+    public void CheckCurTile()//현재 타일에 있는 캐릭터 확인
     {
         if (curStandingTile.curStandingCharater == null)
         {
@@ -49,11 +60,33 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void MoveTile(OverlayTile newTile)
+    public void MoveTile(OverlayTile newTile)//타일 이동
     {
         curStandingTile.curStandingCharater = null;
         curStandingTile = newTile;
         curStandingTile.curStandingCharater = this;
+    }
+
+    public void MoveCharacter()
+    {
+        if (movePath.Count > 1)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, movePath[1].transform.position, 5 * Time.deltaTime);
+
+            if (transform.position == movePath[1].transform.position)
+            {
+                movePath.RemoveAt(0);
+                Managers.MapManager.CompleteMove();
+            }
+        }
+
+        if (movePath.Count <= 1 && isWalking)
+        {
+            MoveTile(movePath[0]);
+            movePath.RemoveAt(0);
+
+            OnEndMoving();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -64,6 +97,8 @@ public class CharacterBase : MonoBehaviour
     // 유틸 관련
     public void OnTurnStart()// 턴 시작 시
     {
+        isWalking = false;
+        didAttack = false;
         curCharacterPassive?.OnTurnStart();
     }
 
@@ -90,6 +125,8 @@ public class CharacterBase : MonoBehaviour
     public virtual void OnEndMoving()// 이동 끝난 직후
     {
         curCharacterPassive?.OnEndMoving();
+        OnEndWalk?.Invoke();
+        isWalking = false;
     }
 
     public virtual void OnEndActing()// 행동이 끝난 뒤

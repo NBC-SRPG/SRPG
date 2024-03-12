@@ -14,6 +14,7 @@ public class Character : MonoBehaviour
     public int level;
     public int exp;
 
+    public Constants.AttackType CharacterAttackType { get; private set; }
     public int Health { get; private set; }
     public int Attack { get; private set; }
     public int Defence { get; private set; }
@@ -23,6 +24,7 @@ public class Character : MonoBehaviour
     //기초 스탯 적용
     public void CharacterInit()
     {
+        CharacterAttackType = characterData.attackType;
         Health = characterData.health;
         Attack = characterData.atk;
         Defence = characterData.def;
@@ -38,6 +40,7 @@ public class Character : MonoBehaviour
         
     }
 
+    //스킬 선언
     public SkillBase InitSkills()
     {
         skill = new SkillBase(characterData.skill);
@@ -45,9 +48,10 @@ public class Character : MonoBehaviour
         return skill;
     }
 
+    //패시브 선언
     public PassiveAbilityBase InitPassive()
     {
-        Type passiveType = Type.GetType("PassiveAbillity_" + characterData.passive.passive_Id);
+        Type passiveType = Type.GetType("PassiveAbility_" + characterData.passive.passive_Id);
 
         object obj = Activator.CreateInstance(passiveType);
         passiveAbility = obj as PassiveAbilityBase;

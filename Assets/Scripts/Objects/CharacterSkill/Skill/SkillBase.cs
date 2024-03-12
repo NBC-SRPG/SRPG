@@ -20,6 +20,7 @@ public class SkillBase
         InitSkillRange();
     }
 
+    //스킬 생성자
     public SkillBase(SkillSO skillData)
     {
         this.skillData = skillData;
@@ -30,7 +31,7 @@ public class SkillBase
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {
-        Type skillAbillityType = Type.GetType("SkillAbillity_" + skillData.abilityID);
+        Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
 
         object obj = Activator.CreateInstance(skillAbillityType);
         skillAbility = obj as SkillAbilityBase;

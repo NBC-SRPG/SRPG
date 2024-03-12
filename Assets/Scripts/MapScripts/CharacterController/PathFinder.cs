@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PathFinder
 {
-    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)
+    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)//다음 이동 가능한 위치 가져옴
     {
         OverlayTile tile = newTile;
 

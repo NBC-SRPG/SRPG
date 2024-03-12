@@ -66,3 +66,8 @@ public class PassiveAbilityBase
 
     }
 }
+
+public class PassiveAbility_ : PassiveAbilityBase // 테스트용
+{
+
+}
