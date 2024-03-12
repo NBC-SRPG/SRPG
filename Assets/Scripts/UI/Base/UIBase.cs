@@ -40,6 +40,11 @@ public class UIBase : MonoBehaviour
         Bind<GameObject>(type); 
     }
 
+    protected void BindDropdown(Type type)
+    {
+        Bind<TMP_Dropdown>(type);
+    }
+
     protected void BindImage(Type type)
     {
         Bind<Image>(type); 
@@ -70,6 +75,11 @@ public class UIBase : MonoBehaviour
     protected GameObject GetObject(int idx) 
     {
         return Get<GameObject>(idx); 
+    }
+
+    protected TMP_Dropdown GetDropdown(int idx)
+    {
+        return Get<TMP_Dropdown>(idx);
     }
 
     protected TMP_Text GetText(int idx) 
