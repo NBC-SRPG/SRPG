@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,13 +22,13 @@ public class CharacterBase : MonoBehaviour
     public event Action OnEndWalk;
 
     //-----------------------------------------------------------------------------------------------------------------------
-    // ½ÃÀÛ ½Ã ¼³Á¤
+    // ì‹œì‘ ì‹œ ì„¤ì •
     private void Start()
     {
         Managers.MapManager.OnCompleteMove += CheckCurTile;
         Instantiate(character, gameObject.transform);
 
-        //Ä³¸¯ÅÍ Å¬·¡½º·Î ºÎÅÍ ½ºÅ³À» »ı¼ºÇØ¼­ ¹Ş¾Æ¿È
+        //ìºë¦­í„° í´ë˜ìŠ¤ë¡œ ë¶€í„° ìŠ¤í‚¬ì„ ìƒì„±í•´ì„œ ë°›ì•„ì˜´
         curCharacterSkill = character.InitSkills();
         curCharacterPassive = character.InitPassive();
 
@@ -42,7 +42,7 @@ public class CharacterBase : MonoBehaviour
         didAttack = false;
     }
 
-    //½ºÅ³ ¹× ÆĞ½Ãºê ½ÃÀüÀÚ ¼³Á¤
+    //ìŠ¤í‚¬ ë° íŒ¨ì‹œë¸Œ ì‹œì „ì ì„¤ì •
     private void SetSkillOwner()
     {
         curCharacterSkill.Init(this);
@@ -51,8 +51,8 @@ public class CharacterBase : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
-    // ÀÌµ¿ °ü·Ã ÇÔ¼ö
-    public void CheckCurTile()//ÇöÀç Å¸ÀÏ¿¡ ÀÖ´Â Ä³¸¯ÅÍ È®ÀÎ
+    // ì´ë™ ê´€ë ¨ í•¨ìˆ˜
+    public void CheckCurTile()//í˜„ì¬ íƒ€ì¼ì— ìˆëŠ” ìºë¦­í„° í™•ì¸
     {
         if (curStandingTile.curStandingCharater == null)
         {
@@ -60,7 +60,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void MoveTile(OverlayTile newTile)//Å¸ÀÏ ÀÌµ¿
+    public void MoveTile(OverlayTile newTile)//íƒ€ì¼ ì´ë™
     {
         curStandingTile.curStandingCharater = null;
         curStandingTile = newTile;
@@ -91,86 +91,86 @@ public class CharacterBase : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     //-----------------------------------------------------------------------------------------------------------------------
-    // ÀüÅõ °ü·Ã ÇÔ¼ö
+    // ì „íˆ¬ ê´€ë ¨ í•¨ìˆ˜
 
     //---------------------------------------------------------------------------
-    // À¯Æ¿ °ü·Ã
-    public void OnTurnStart()// ÅÏ ½ÃÀÛ ½Ã
+    // ìœ í‹¸ ê´€ë ¨
+    public void OnTurnStart()// í„´ ì‹œì‘ ì‹œ
     {
         isWalking = false;
         didAttack = false;
         curCharacterPassive?.OnTurnStart();
     }
 
-    public void OnTurnEnd()// ÅÏ Á¾·á ½Ã
+    public void OnTurnEnd()// í„´ ì¢…ë£Œ ì‹œ
     {
         curCharacterPassive?.OnEndTurn();
     }
 
-    public virtual void OnPassAlly(CharacterBase allyCharacter)// ¾Æ±º À§¸¦ Áö³ª°¬À» ¶§ ¹ßµ¿
+    public virtual void OnPassAlly(CharacterBase allyCharacter)// ì•„êµ° ìœ„ë¥¼ ì§€ë‚˜ê°”ì„ ë•Œ ë°œë™
     {
         curCharacterPassive?.OnPassAlly(allyCharacter);
     }
 
-    public virtual void OnAllyPassedMe(CharacterBase allyCharacter)// ¾Æ±ºÀÌ ÀÌ Ä³¸¯ÅÍ À§¸¦ Áö³ª°¬À» ¶§ ¹ßµ¿
+    public virtual void OnAllyPassedMe(CharacterBase allyCharacter)// ì•„êµ°ì´ ì´ ìºë¦­í„° ìœ„ë¥¼ ì§€ë‚˜ê°”ì„ ë•Œ ë°œë™
     {
         curCharacterPassive?.OnAllyPassedMe(allyCharacter);
     }
 
-    public virtual void OnStartMoving()// ÀÌµ¿ ½Ã
+    public virtual void OnStartMoving()// ì´ë™ ì‹œ
     {
         curCharacterPassive?.OnStartMoving();
     }
 
-    public virtual void OnEndMoving()// ÀÌµ¿ ³¡³­ Á÷ÈÄ
+    public virtual void OnEndMoving()// ì´ë™ ëë‚œ ì§í›„
     {
         curCharacterPassive?.OnEndMoving();
         OnEndWalk?.Invoke();
         isWalking = false;
     }
 
-    public virtual void OnEndActing()// Çàµ¿ÀÌ ³¡³­ µÚ
+    public virtual void OnEndActing()// í–‰ë™ì´ ëë‚œ ë’¤
     {
         curCharacterPassive?.OnEndActing();
     }
 
-    public virtual void OnEndTurn()// ÅÏÀÌ ³¡³¯ ¶§
+    public virtual void OnEndTurn()// í„´ì´ ëë‚  ë•Œ
     {
         curCharacterPassive?.OnEndTurn();
     }
 
     //---------------------------------------------------------------------------
-    // ÀÏ¹İ °ø°İ °ü·Ã
+    // ì¼ë°˜ ê³µê²© ê´€ë ¨
 
-    public void OnAttackStart(List<CharacterBase> enemy)// °ø°İ ½ÃÀÛ ½Ã
+    public void OnAttackStart(List<CharacterBase> enemy)// ê³µê²© ì‹œì‘ ì‹œ
     {
         curCharacterPassive?.OnStartAttack(enemy);
     }
 
-    public virtual void OnAttackSuccess(CharacterBase enemy, int damage)// °ø°İ ÀûÁß ½Ã
+    public virtual void OnAttackSuccess(CharacterBase enemy, int damage)// ê³µê²© ì ì¤‘ ì‹œ
     {
         curCharacterPassive?.OnAttackSuccess(enemy, damage);
     }
 
-    public virtual void OnEndAttack(List<CharacterBase> enemy)// °ø°İ Á¾·á ½Ã
+    public virtual void OnEndAttack(List<CharacterBase> enemy)// ê³µê²© ì¢…ë£Œ ì‹œ
     {
         curCharacterPassive?.OnEndAttack(enemy);
     }
 
-    public virtual void OnTakeDamage(CharacterBase enemy)// °ø°İ ¹Ş¾ÒÀ» ¶§
+    public virtual void OnTakeDamage(CharacterBase enemy)// ê³µê²© ë°›ì•˜ì„ ë•Œ
     {
         curCharacterPassive?.OnTakeDamage(enemy);
     }
 
     //---------------------------------------------------------------------------
-    // ½ºÅ³ °ü·Ã
+    // ìŠ¤í‚¬ ê´€ë ¨
 
-    public virtual void OnUseSkill(List<CharacterBase> target)// ½ºÅ³ »ç¿ë ½Ã 
+    public virtual void OnUseSkill(List<CharacterBase> target)// ìŠ¤í‚¬ ì‚¬ìš© ì‹œ 
     {
         curCharacterSkill.skillAbility?.OnUseSkill(target);
     }
 
-    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// ½ºÅ³ °ø°İ ÀûÁß ½Ã
+    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// ìŠ¤í‚¬ ê³µê²© ì ì¤‘ ì‹œ
     {
         if (curCharacterSkill.skillData.onhit)
         {
@@ -179,7 +179,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.skillAbility?.OnSkillAttackSuccess(target, damage);
     }
 
-    public virtual void OnEndSkill(List<CharacterBase> target)// ½ºÅ³ »ç¿ë Á¾·á ½Ã
+    public virtual void OnEndSkill(List<CharacterBase> target)// ìŠ¤í‚¬ ì‚¬ìš© ì¢…ë£Œ ì‹œ
     {
         curCharacterSkill.skillAbility?.OnEndSkill(target);
     }

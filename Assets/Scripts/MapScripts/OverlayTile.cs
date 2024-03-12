@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +9,9 @@ public class OverlayTile : MonoBehaviour
     [SerializeField] private GameObject moveTile;
     [SerializeField] private GameObject attackRangeTile;
 
-    [HideInInspector] public bool canClick;//ÀÌµ¿ °¡´É È¤Àº »óÈ£ÀÛ¿ë °¡´ÉÇÑ Å¸ÀÏ
+    [HideInInspector] public bool canClick;//ì´ë™ ê°€ëŠ¥ í˜¹ì€ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ íƒ€ì¼
 
-    public Vector3Int gridLocation;//Å¸ÀÏ À§Ä¡(¿ùµå À§Ä¡¶û ´Ù¸§)
+    public Vector3Int gridLocation;//íƒ€ì¼ ìœ„ì¹˜(ì›”ë“œ ìœ„ì¹˜ë‘ ë‹¤ë¦„)
     public Vector2Int grid2DLocation { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
     public CharacterBase curStandingCharater;
@@ -21,7 +21,7 @@ public class OverlayTile : MonoBehaviour
         HideTile();
     }
 
-    public void ResetTile()//±âº» Å¸ÀÏÀ» Á¦¿ÜÇÑ ´Ù¸¥ Å¸ÀÏ ¼û±â±â
+    public void ResetTile()//ê¸°ë³¸ íƒ€ì¼ì„ ì œì™¸í•œ ë‹¤ë¥¸ íƒ€ì¼ ìˆ¨ê¸°ê¸°
     {
         if (canClick)
         {
@@ -32,7 +32,7 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void ShowTile()//±âº» Å¸ÀÏ º¸±â(ÇÏ¾á»ö)
+    public void ShowTile()//ê¸°ë³¸ íƒ€ì¼ ë³´ê¸°(í•˜ì–€ìƒ‰)
     {
         if (canClick)
         {
@@ -40,7 +40,7 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void ShowAsMove()//ÀÌµ¿ Å¸ÀÏ º¸±â(³ë¶õ»ö)
+    public void ShowAsMove()//ì´ë™ íƒ€ì¼ ë³´ê¸°(ë…¸ë€ìƒ‰)
     {
         if (canClick)
         {
@@ -48,7 +48,7 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void ShowAsScale()//¹üÀ§ Å¸ÀÏ º¸±â(³ë¶õ»ö)
+    public void ShowAsScale()//ë²”ìœ„ íƒ€ì¼ ë³´ê¸°(ë…¸ë€ìƒ‰)
     {
         if (canClick)
         {
@@ -56,7 +56,7 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void ShowAsAttack()//°ø°İ Å¸ÀÏ º¸±â(»¡°£»ö)
+    public void ShowAsAttack()//ê³µê²© íƒ€ì¼ ë³´ê¸°(ë¹¨ê°„ìƒ‰)
     {
         if (canClick)
         {
@@ -64,7 +64,7 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void HideTile()//Å¸ÀÏ ÀüÃ¼ ¼û±â±â
+    public void HideTile()//íƒ€ì¼ ì „ì²´ ìˆ¨ê¸°ê¸°
     {
         defaultTile.SetActive(false);
         movepathTile.SetActive(false);

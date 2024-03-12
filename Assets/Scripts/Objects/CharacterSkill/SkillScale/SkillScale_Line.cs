@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +17,7 @@ public class SkillScale_Line : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    private void GetLineTiles(Vector2Int location, int scale)//Á÷¼± ÇüÅÂ ½ºÅ³ ¹üÀ§ °¡Á®¿À±â
+    private void GetLineTiles(Vector2Int location, int scale)//ì§ì„  í˜•íƒœ ìŠ¤í‚¬ ë²”ìœ„ ê°€ì ¸ì˜¤ê¸°
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
         Vector2 direction = GetDirection(location);
@@ -37,7 +37,7 @@ public class SkillScale_Line : SkillScaleBase
         }
     }
 
-    private Vector2 GetDirection(Vector2Int location)//¹æÇâ °¡Á®¿À±â
+    private Vector2 GetDirection(Vector2Int location)//ë°©í–¥ ê°€ì ¸ì˜¤ê¸°
     {
         Vector3 l = new Vector3(location.x, location.y, character.curStandingTile.transform.position.z);
         Vector2 direction = (l - character.curStandingTile.transform.position).normalized;

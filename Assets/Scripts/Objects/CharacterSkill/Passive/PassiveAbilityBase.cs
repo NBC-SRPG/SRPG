@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,68 +6,68 @@ public class PassiveAbilityBase
 {
     CharacterBase character;
 
-    public virtual void init(CharacterBase character)// ÆĞ½Ãºê ¼ÒÀ¯ÀÚ ¼³Á¤
+    public virtual void init(CharacterBase character)// íŒ¨ì‹œë¸Œ ì†Œìœ ì ì„¤ì •
     {
         this.character = character;
     }
 
-    public virtual void OnTurnStart()// ÅÏ ½ÃÀÛ ½Ã ¹ßµ¿
+    public virtual void OnTurnStart()// í„´ ì‹œì‘ ì‹œ ë°œë™
     {
 
     }
 
-    public virtual void OnPassAlly(CharacterBase allyCharacter)// ¾Æ±º À§¸¦ Áö³ª°¬À» ¶§ ¹ßµ¿
+    public virtual void OnPassAlly(CharacterBase allyCharacter)// ì•„êµ° ìœ„ë¥¼ ì§€ë‚˜ê°”ì„ ë•Œ ë°œë™
     {
 
     }
 
-    public virtual void OnAllyPassedMe(CharacterBase allyCharacter)// ¾Æ±ºÀÌ ÀÌ Ä³¸¯ÅÍ À§¸¦ Áö³ª°¬À» ¶§ ¹ßµ¿
+    public virtual void OnAllyPassedMe(CharacterBase allyCharacter)// ì•„êµ°ì´ ì´ ìºë¦­í„° ìœ„ë¥¼ ì§€ë‚˜ê°”ì„ ë•Œ ë°œë™
     {
 
     }
 
-    public virtual void OnStartAttack(List<CharacterBase> enemy)// °ø°İ ½ÃÀÛ ½Ã
+    public virtual void OnStartAttack(List<CharacterBase> enemy)// ê³µê²© ì‹œì‘ ì‹œ
     {
 
     }
 
-    public virtual void OnAttackSuccess(CharacterBase enemy, int damage)// °ø°İ ÀûÁß ½Ã
+    public virtual void OnAttackSuccess(CharacterBase enemy, int damage)// ê³µê²© ì ì¤‘ ì‹œ
     {
 
     }
 
-    public virtual void OnEndAttack(List<CharacterBase> enemy)// °ø°İ Á¾·á ½Ã
+    public virtual void OnEndAttack(List<CharacterBase> enemy)// ê³µê²© ì¢…ë£Œ ì‹œ
     {
 
     }
 
-    public virtual void OnTakeDamage(CharacterBase enemy)// °ø°İ ¹Ş¾ÒÀ» ¶§
+    public virtual void OnTakeDamage(CharacterBase enemy)// ê³µê²© ë°›ì•˜ì„ ë•Œ
     {
 
     }
 
-    public virtual void OnStartMoving()// ÀÌµ¿ ½Ã
+    public virtual void OnStartMoving()// ì´ë™ ì‹œ
     {
 
     }
 
-    public virtual void OnEndMoving()// ÀÌµ¿ ³¡³­ Á÷ÈÄ
+    public virtual void OnEndMoving()// ì´ë™ ëë‚œ ì§í›„
     {
 
     }
 
-    public virtual void OnEndActing()// Çàµ¿ÀÌ ³¡³­ µÚ
+    public virtual void OnEndActing()// í–‰ë™ì´ ëë‚œ ë’¤
     {
 
     }
 
-    public virtual void OnEndTurn()// ÅÏÀÌ ³¡³¯ ¶§
+    public virtual void OnEndTurn()// í„´ì´ ëë‚  ë•Œ
     {
 
     }
 }
 
-public class PassiveAbility_ : PassiveAbilityBase // Å×½ºÆ®¿ë
+public class PassiveAbility_ : PassiveAbilityBase // í…ŒìŠ¤íŠ¸ìš©
 {
 
 }

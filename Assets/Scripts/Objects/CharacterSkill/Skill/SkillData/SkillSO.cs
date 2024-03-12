@@ -1,14 +1,14 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum SkillScaleType
 {
-    None,// ´ë»ó ÇÏ³ª
-    Cross,// ½ÊÀÚÇü ¹üÀ§
-    Square,// »ç°¢Çü ¹üÀ§
-    Line,// Á÷¼± ¹üÀ§
-    Rhombus// ¸¶¸§¸ğ ¹üÀ§
+    None,// ëŒ€ìƒ í•˜ë‚˜
+    Cross,// ì‹­ìí˜• ë²”ìœ„
+    Square,// ì‚¬ê°í˜• ë²”ìœ„
+    Line,// ì§ì„  ë²”ìœ„
+    Rhombus// ë§ˆë¦„ëª¨ ë²”ìœ„
 }
 
 public enum SkillDamageType
@@ -28,24 +28,24 @@ public enum SkillTargetType
 public class SkillSO : ScriptableObject
 {
     [Header("Develope")]
-    public string skill_ID;//½ºÅ³ ½Äº°ÀÚ
+    public string skill_ID;//ìŠ¤í‚¬ ì‹ë³„ì
 
     [Header("Skill_description")]
     public string skillName;
     public string description;
 
     [Header("Skill_status")]
-    public SkillTargetType targetType;//½ºÅ³ »ç¿ë ´ë»ó
-    public SkillDamageType damageType;//µ¥¹ÌÁö Å¸ÀÔ
-    public int cost;//½ºÅ³ ÄÚ½ºÆ®
-    public float coefficient;//½ºÅ³ °è¼ö
-    public bool onhit;//½ºÅ³ÀÌ ±âº» °ø°İ ÀûÁß È¿°ú¸¦ ¹ßµ¿ ½ÃÅ°´Â Áö
+    public SkillTargetType targetType;//ìŠ¤í‚¬ ì‚¬ìš© ëŒ€ìƒ
+    public SkillDamageType damageType;//ë°ë¯¸ì§€ íƒ€ì…
+    public int cost;//ìŠ¤í‚¬ ì½”ìŠ¤íŠ¸
+    public float coefficient;//ìŠ¤í‚¬ ê³„ìˆ˜
+    public bool onhit;//ìŠ¤í‚¬ì´ ê¸°ë³¸ ê³µê²© ì ì¤‘ íš¨ê³¼ë¥¼ ë°œë™ ì‹œí‚¤ëŠ” ì§€
 
     [Header("Skill_Range")]
-    public int skillRange;//½ºÅ³ »çÁ¤°Å¸®(±Ù°Å¸® °ø°İ, Ä³¸¯ÅÍ ±âÁØ °ø°İÀÌ¸é 1)
-    public SkillScaleType scaleType;//½ºÅ³ ¹üÀ§ Á¾·ù(´ÜÀÏ ´ë»ó °ø°İ, ÀÚ½Å ´ë»ó ±â¼úÀÌ¸é None)
-    [Range(0, 10)] public int skillScale;//½ºÅ³ ¹üÀ§ Ä­ ¼ö(´ÜÀÏ ´ë»ó °ø°İÀÌ¸é 0)
+    public int skillRange;//ìŠ¤í‚¬ ì‚¬ì •ê±°ë¦¬(ê·¼ê±°ë¦¬ ê³µê²©, ìºë¦­í„° ê¸°ì¤€ ê³µê²©ì´ë©´ 1)
+    public SkillScaleType scaleType;//ìŠ¤í‚¬ ë²”ìœ„ ì¢…ë¥˜(ë‹¨ì¼ ëŒ€ìƒ ê³µê²©, ìì‹  ëŒ€ìƒ ê¸°ìˆ ì´ë©´ None)
+    [Range(0, 10)] public int skillScale;//ìŠ¤í‚¬ ë²”ìœ„ ì¹¸ ìˆ˜(ë‹¨ì¼ ëŒ€ìƒ ê³µê²©ì´ë©´ 0)
 
     [Header("Skill_abillity")]
-    public string abilityID;//Æ¯¼ö ´É·Â
+    public string abilityID;//íŠ¹ìˆ˜ ëŠ¥ë ¥
 }
