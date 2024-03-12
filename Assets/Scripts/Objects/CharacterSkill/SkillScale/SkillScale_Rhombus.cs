@@ -16,7 +16,8 @@ public class SkillScale_Rhombus : SkillScaleBase
 
         return base.GetSkillScale(location, scale);
     }
-    public void GetTilesInRange(Vector2Int location, int range)
+
+    public void GetTilesInRange(Vector2Int location, int range)// 마름모형 범위 가져오기(이동 거리 가져오는 알고리즘과 동일)
     {
         OverlayTile startTile = Managers.MapManager.map[location];
 

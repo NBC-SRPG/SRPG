@@ -197,7 +197,7 @@ public class CharacterController : MonoBehaviour
 
     private void GetMoveRangeTile()// 이동 가능 거리 가져옴
     {
-        moveRangeTiles = rangeFinder.GetTilesInRangeInMove(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange); ;
+        moveRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), curSelectedCharacter.leftWalkRange, true);
 
         foreach (OverlayTile tile in moveRangeTiles)
         {
@@ -207,7 +207,7 @@ public class CharacterController : MonoBehaviour
 
     private void GetAttackRangeTile(int range)// 공격 가능 거리 가져옴
     {
-        attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), range); ;
+        attackRangeTiles = rangeFinder.GetTilesInRange(new Vector2Int(curSelectedCharacter.curStandingTile.gridLocation.x, curSelectedCharacter.curStandingTile.gridLocation.y), range, false);
 
         foreach (OverlayTile tile in attackRangeTiles)
         {

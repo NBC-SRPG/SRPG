@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MapManager
 {
-    private Vector2Int[] direction = new Vector2Int[] 
+    public Vector2Int[] direction = new Vector2Int[] 
     {
         new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1),
         new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1),

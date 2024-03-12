@@ -21,7 +21,7 @@ public class OverlayTile : MonoBehaviour
         HideTile();
     }
 
-    public void ResetTile()
+    public void ResetTile()//기본 타일을 제외한 다른 타일 숨기기
     {
         if (canClick)
         {
