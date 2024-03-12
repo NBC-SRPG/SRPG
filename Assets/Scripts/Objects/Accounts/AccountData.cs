@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class AccountData
 {
-    private Dictionary<string, int> stageClearData;
-    private Dictionary<int, CharacterSO> characterData;
-    private PlayerData playerData;
-    private Dictionary<int, bool> missionClearData;
-    private Dictionary<ItemData, int> inventory;
-    private Dictionary<int, string[]> friendData;
-
+    public Dictionary<string, int> StageClearData { get; set; }
+    public Dictionary<int, CharacterSO> CharacterData { get; set; }
+    public PlayerData PlayerData { get; set; }
+    public Dictionary<int, bool> MissionClearData { get; set; }
+    public Dictionary<ItemData, int> Inventory { get; set; }
+    public Dictionary<int, string[]> FriendData { get; set; }
     // 매개변수를 받는 생성자 메서드
     public AccountData
         (
@@ -27,42 +26,5 @@ public class AccountData
         this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         this.inventory = inventory ?? new Dictionary<ItemData, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
-    }
-
-    // 각 데이터 필드에 대한 접근자 메서드
-    public Dictionary<string, int> StageClearData
-    {
-        get { return stageClearData; }
-        set { stageClearData = value; }
-    }
-
-    public Dictionary<int, CharacterSO> CharacterData
-    {
-        get { return characterData; }
-        set { characterData = value; }
-    }
-
-    public PlayerData PlayerData
-    {
-        get { return playerData; }
-        set {  playerData = value; }
-    }
-
-    public Dictionary<int, bool> MissionClearData
-    {
-        get { return missionClearData; }
-        set { missionClearData = value; }
-    }
-
-    public Dictionary<ItemData, int> Inventory
-    {
-        get { return inventory; }
-        set {  inventory = value; }
-    }
-
-    public Dictionary<int, string[]> FriendData
-    {
-        get { return friendData; }
-        set {  friendData = value; }
     }
 }

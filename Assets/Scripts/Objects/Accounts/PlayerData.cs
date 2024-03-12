@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class PlayerData
 {   //순서대로 UID, 닉네임, 다이아, 골드. AP, AP최대치, 계정 레벨, 계정 최대 레벨, 현재 경험치, 최대 경험치, 생일, 선호 캐릭터 목록, 캐릭터 아이콘, 지원 캐릭터
-    private string uId;
-    private string playerName;
-    private int diamond;
-    private int gold;
-    private int ap;
-    private int maxAp = 160;
-    private int level = 1;
-    private int maxLevel = 90;
-    private int exp;
-    private int maxExp = 100;
-    private string birthDay;
-    private int[] favoriteCharacter;
-    private int lobbyCharacter;
-    private int characterIcon;
-    private int supportCharacter;
+    public string UId { get; set; }
+    public string PlayerName { get; set; }
+    public int Diamond { get; set; }
+    public int Gold { get; set; }
+    public int Ap { get; set; }
+    public int MaxAp { get; set; } = 160;
+    public int Level { get; set; } = 1;
+    public int MaxLevel { get; set; } = 90;
+    public int Exp { get; set; }
+    public int MaxExp { get; set; } = 100;
+    public string BirthDay { get; set; }
+    public int[] FavoriteCharacter { get; set; }
+    public int LobbyCharacter { get; set; }
+    public int CharacterIcon { get; set; }
+    public int SupportCharacter { get; set; }
 
     // 생성자 메서드
     public PlayerData( 
