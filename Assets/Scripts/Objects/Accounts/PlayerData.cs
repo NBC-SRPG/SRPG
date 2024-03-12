@@ -1,27 +1,36 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
+using static Constants;
 
 public class PlayerData
 {   //순서대로 UID, 닉네임, 다이아, 골드. AP, AP최대치, 계정 레벨, 계정 최대 레벨, 현재 경험치, 최대 경험치, 생일, 선호 캐릭터 목록, 캐릭터 아이콘, 지원 캐릭터
-    public string UId { get; set; }
-    public string PlayerName { get; set; }
-    public int Diamond { get; set; }
-    public int Gold { get; set; }
-    public int Ap { get; set; }
-    public int MaxAp { get; set; } = 160;
-    public int Level { get; set; } = 1;
-    public int MaxLevel { get; set; } = 90;
-    public int Exp { get; set; }
-    public int MaxExp { get; set; } = 100;
-    public string BirthDay { get; set; }
-    public int[] FavoriteCharacter { get; set; }
-    public int LobbyCharacter { get; set; }
-    public int CharacterIcon { get; set; }
-    public int SupportCharacter { get; set; }
+    public string uId { get; private set; }
+    public string playerName { get; private set; }
+    public int diamond { get; private set; }
+    public int gold { get; private set; }
+    public int ap { get; private set; }
+    public int maxAp { get; private set; } = (int)PlayerCons.DefaltMaxAp;
+    private int level = (int)PlayerCons.DefaltLevel;
+    public int Level { get { return level; } 
+                       private set
+                        {
+                            level = math.clamp(value, (int)PlayerCons.DefaltLevel, maxLevel);
+                            maxExp = (level * 70);
+                            maxAp = math.clamp((160 + ((level - 1) * 2)), (int)PlayerCons.DefaltMaxAp, 240);
+                        }
+                     }
+    public int maxLevel { get; private set; } = (int)PlayerCons.MaxLevel;
+    public int exp { get; private set; }
+    public int maxExp { get; private set; } = (int)PlayerCons.DefaltMaxExp;
+    public string birthDay { get; private set; }
+    public int[] favoriteCharacter { get; private set; }
+    public int lobbyCharacter { get; private set; }
+    public int characterIcon { get; private set; }
+    public int supportCharacter { get; private set; }
 
-    // 생성자 메서드
-    public PlayerData( 
+    // Init 메서드
+    public void Init(
         string uId,
         string playerName,
         int diamond,
@@ -48,58 +57,8 @@ public class PlayerData
         this.maxExp = maxExp;
         this.birthDay = birthday;
         this.favoriteCharacter = favoriteCharacter ?? new int[3];
-        this.lobbyCharacter = lobbyCharacter; 
+        this.lobbyCharacter = lobbyCharacter;
         this.characterIcon = characterIcon;
-    }
-
-    // 각 데이터 필드에 대한 접근자 메서드
-    public string GetUId()
-    {
-        return uId;
-    }
-
-    public string GetPlayerName()
-    {
-        return playerName;
-    }
-
-    public int GetDiamond()
-    {
-        return diamond;
-    }
-
-    public int GetGold()
-    {
-        return gold;
-    }
-
-    public int GetAP()
-    {
-        return ap;
-    }
-
-    public int GetMaxAP()
-    {
-        return maxAp;
-    }
-
-    public int GetLevel()
-    {
-        return level;
-    }
-
-    public int GetExp()
-    {
-        return exp;
-    }
-    public int GetMaxExp()
-    {
-        return maxExp;
-    }
-
-    public string GetBirthday()
-    {
-        return birthDay;
     }
     public bool IsTodayBirthDayCheck() //오늘이 생일인지 체크하는 메서드
     {
@@ -123,26 +82,8 @@ public class PlayerData
         }
     }
 
-    public int[] GetFavoriteCharacter()
-    {
-        return favoriteCharacter;
-    }
-
-    public int GetLobbyCharacter()
-    {
-        return lobbyCharacter;
-    }
-    public int GetCharacterIcon()
-    {
-        return characterIcon;
-    }
-
-
-
 
     // 각 데이터 필드에 대한 설정자 메서드
-
-
     public bool SetPlayerName(string playerName) //닉네임 설정 시 사용하는 메서드.
     {
         if (playerName.Length <= 8)
@@ -156,51 +97,96 @@ public class PlayerData
         }
     }
 
-    public bool SetDiamond(int amount) //다이아 값 설정 시 사용하는 메서드.
+    public bool AddDiamond(int amount) //다이아 획득
     {
         int calcedDiamond = diamond + amount;
 
-        if (calcedDiamond >= 0 && calcedDiamond <= 999999)
+        if (amount < 0)
+        {
+            Debug.Log("더하려는 값이 음수값입니다.");
+            return false;
+        }
+        else if (calcedDiamond <= 999999)
         {
             diamond = calcedDiamond;
             return true;
         }
         else
         {
-            Debug.Log(calcedDiamond < 0 ? "다이아 잔액 부족" : "다이아 보유 한도 초과");
+            Debug.Log("다이아 보유 한도 초과");
             return false;
         }
     }
-    public bool SetGold(int amount) //골드값 설정 시 사용하는 메서드.
+
+    public bool ReduceDiamond(int amount) //다이아 지불
+    {
+        int calcedDiamond = diamond - amount;
+
+        if (calcedDiamond >= 0)
+        {
+            diamond = calcedDiamond;
+            return true;
+        }
+        else
+        {
+            Debug.Log("다이아 잔액 부족");
+            return false;
+        }
+    }
+
+    public bool AddGold(int amount) //골드 획득
     {
         int calcedGold = gold + amount;
-
-        if (calcedGold >= 0 && calcedGold <= 9999999)
+        if ( amount < 0)
+        {
+            Debug.Log("더하려는 값이 음수값입니다.");
+            return false;
+        }
+        else if (calcedGold <= 9999999)
         {
             gold = calcedGold;
             return true;
         }
         else
         {
-            Debug.Log(calcedGold < 0 ? "골드 잔액 부족" : "골드 보유 한도 초과");
+            Debug.Log("골드 보유 한도 초과");
             return false;
         }
     }
 
-    public bool SetAP(int value) //Ap를 사용/충전하는 경우 사용하는 메서드. 충전 시 최대치를 넘어서 충전 가능.
+    public bool ReduceGold(int amount) //골드 지불
     {
-            if ((ap + value) >= 0)
-            {
-                ap += value;
-                return true;
-            }
-            else
-            {
-                Debug.Log("AP 잔량 부족");
-                return false;
-            }
-    }
+        int calcedGold = gold - amount;
 
+        if (calcedGold >= 0)
+        {
+            gold = calcedGold;
+            return true;
+        }
+        else
+        {
+            Debug.Log("골드 잔액 부족");
+            return false;
+        }
+    }
+    public bool AddAP(int value) //Ap 충전. 충전에는 별도의 제한이 없음
+    {
+            ap += value;
+            return true;
+    }
+    public bool ReduceAP(int value) //Ap 차감
+    {
+        if ((ap - value) >= 0)
+        {
+            ap -= value;
+            return true;
+        }
+        else
+        {
+            Debug.Log("AP 잔량 부족");
+            return false;
+        }
+    }
     public void RegenAP() //Ap 리젠 시 사용 될 메서드. 리젠 Ap는 최대치를 넘어서 증가하지 않는다. 통상적으로 6분에 1씩, 1시간에 10 재생. 하루 총 재생량은 240.
     {
         if ((ap + 1) <= maxAp)
@@ -208,51 +194,49 @@ public class PlayerData
             ap += 1;
         }
     }
+
     public void AddExp(int value) //경험치값을 증가시킬 때 호출하는 메서드. 경험치가 최대 경험치 이상일 시 경험치가 maxExp 미만이 될 때까지 레벨업 메서드를 반복해서 실행한다.
     {
         exp += value;
-        if (exp >= maxExp && level < maxLevel)
+        while (exp >= maxExp && level < maxLevel)
         {
-            while (exp >= maxExp)
-            {
-                if(LevelUp() == false)
-                {
-                    break;
-                }
-            }
+            LevelUp();
         }
         exp = math.clamp(exp, 0, maxExp);
     }
-    private bool LevelUp() //레벨업 메서드. 경험치값에서 최대 경험치값 만큼 차감하고 레벨을 1 올린다.
+    private void LevelUp() //레벨업 메서드. 경험치값에서 최대 경험치값 만큼 차감하고 레벨을 1 올린다. 따로 메서드를 분리한 이유는 추후 레벨업 시 다른 추가 동작을 추가할 수도 있으므로.
     {
-        if ((level + 1) <= maxLevel)
+        exp -= maxExp;
+        Level += 1;
+    }
+    public bool SetBirthDay(string MMDD) //생일값 설정 메서드. 유효한 생일 값인지 검사한다.
+    {
+        // MMDD를 숫자로 변환
+        if (int.TryParse(MMDD, out int numericValue))
         {
-            exp -= maxExp;
-            SetLevel(level + 1);
-            return true;
+            // 날짜 유효성 확인
+            int month = numericValue / 100;
+            int day = numericValue % 100;
+
+            if (month >= 1 && month <= 12 && day >= 1 && day <= 31)
+            {
+                // 날짜가 유효하면 저장
+                birthDay = MMDD;
+                return true;
+            }
         }
-        else
-        {
-            return false;
-        }
+
+        Debug.Log("유효한 날짜 형식이 아닙니다.");
+        return false;
     }
-    private void SetLevel(int value) //계정 레벨값에 대한 설정자 메서드. 어떤 방식으로든 레벨값을 변동시킬 때 이 메서드를 사용하게끔 해서 레벨값에 대한 콜백을 용이하게 한다.
-    {
-        level = math.clamp(value, 1, maxLevel);
-        maxExp = (level * 70);
-        maxAp = math.clamp((160 + ((level - 1) * 2)), 160, 240);
-    }
-    public void SetBirthday(string MMDD) //생일값을 설정할 때 쓰는 메서드.
-    {
-        birthDay = MMDD;
-    }
-    public void SetFavoriteCharacter(int? a, int? b, int? c) //선호 캐릭터 설정
+
+    public void SetFavoriteCharacter(int? a, int? b, int? c) //선호 캐릭터 설정. null 체크
     {
         favoriteCharacter[0] = a ?? 0;
         favoriteCharacter[1] = b ?? 0;
         favoriteCharacter[2] = c ?? 0;
     }
-    public void SetLobbyCharacter(int? a) //로비 캐릭터 설정
+    public void SetLobbyCharacter(int? a) //로비 캐릭터 설정. null 체크
     {
         if (a != null)
         {
@@ -263,7 +247,7 @@ public class PlayerData
             lobbyCharacter = 0;
         }
     }
-    public void SetCharacterIcon(int? a) //아이콘 설정
+    public void SetCharacterIcon(int? a) //아이콘 설정. null 체크
     {
         if(a != null)
         {
@@ -275,7 +259,7 @@ public class PlayerData
         }
 
     }
-    public void SetSupportCharacter(int? a) //지원캐릭터 설정
+    public void SetSupportCharacter(int? a) //지원캐릭터 설정. null 체크
     {
         if (a != null)
         {

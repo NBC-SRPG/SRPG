@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class AccountData
 {
-    public Dictionary<string, int> StageClearData { get; set; }
-    public Dictionary<int, CharacterSO> CharacterData { get; set; }
-    public PlayerData PlayerData { get; set; }
-    public Dictionary<int, bool> MissionClearData { get; set; }
-    public Dictionary<ItemData, int> Inventory { get; set; }
-    public Dictionary<int, string[]> FriendData { get; set; }
-    // 매개변수를 받는 생성자 메서드
-    public AccountData
-        (
+    public Dictionary<string, int> stageClearData { get; set; }
+    public Dictionary<int, CharacterSO> characterData { get; set; }
+    public PlayerData playerData { get; set; }
+    public Dictionary<int, bool> missionClearData { get; set; }
+    public Dictionary<ItemData, int> inventory { get; set; }
+    public Dictionary<int, string[]> friendData { get; set; }
+
+    // Init 메서드
+    public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, CharacterSO> characterData,
         PlayerData playerData,
