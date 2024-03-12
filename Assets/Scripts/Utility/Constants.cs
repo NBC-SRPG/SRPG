@@ -10,4 +10,29 @@ public class Constants
         Effect,
         Max,
     }
+
+    public enum AttackType
+    {
+        Melee,
+        Range,
+        Mage
+    }
+
+    public enum CharacterAttribute
+    {
+        Fire,
+        Water,
+        Grass,
+        Bolt,
+        Dark,
+        Light
+    }
+
+    public enum Belonging
+    {
+        Demon,
+        League,
+        Order,
+        Vegabond
+    }
 }

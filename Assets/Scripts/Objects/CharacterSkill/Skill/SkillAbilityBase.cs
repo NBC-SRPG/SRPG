@@ -26,3 +26,12 @@ public abstract class SkillAbilityBase
 
     }
 }
+
+public class SkillAbility_ : SkillAbilityBase // 테스트용
+{
+    public override void init(CharacterBase character)
+    {
+        base.init(character);
+        Debug.Log("testSkill Init");
+    }
+}
