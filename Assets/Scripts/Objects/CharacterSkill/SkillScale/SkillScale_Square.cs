@@ -18,7 +18,7 @@ public class SkillScale_Square : SkillScaleBase
         return base.GetSkillScale(location, scale);
     }
 
-    private void GetSurroundingTiles(Vector2Int location, int scale)
+    private void GetSurroundingTiles(Vector2Int location, int scale)//사각형 범위 가져오기
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
 
