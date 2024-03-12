@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class UIBase : MonoBehaviour
 {
     // UI 캐싱용 딕셔너리
-    private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
+    private Dictionary<Type, UnityEngine.Object[]> objectsDic = new Dictionary<Type, UnityEngine.Object[]>();
 
     // 바인딩 할 오브젝트의 이름을 Enum타입으로 받아와 딕셔너리에 저장
     private void Bind<T>(Type type) where T : UnityEngine.Object
     {
         string[] names = Enum.GetNames(type);
         UnityEngine.Object[] objects = new UnityEngine.Object[names.Length];
-        _objects.Add(typeof(T), objects);
+        objectsDic.Add(typeof(T), objects);
 
         for (int i = 0; i < names.Length; i++)
         {
@@ -59,7 +59,7 @@ public class UIBase : MonoBehaviour
     private T Get<T>(int idx) where T : UnityEngine.Object
     {
         UnityEngine.Object[] objects = null;
-        if (_objects.TryGetValue(typeof(T), out objects) == false)
+        if (objectsDic.TryGetValue(typeof(T), out objects) == false)
         {
             return null;
         }
