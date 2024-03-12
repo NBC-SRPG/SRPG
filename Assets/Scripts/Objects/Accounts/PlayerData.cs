@@ -14,7 +14,7 @@ public class PlayerData
     private int maxLevel = 90;
     private int exp;
     private int maxExp = 100;
-    private DateTime birthDay;
+    private string birthDay;
     private int[] favoriteCharacter;
     private int lobbyCharacter;
     private int characterIcon;
@@ -31,7 +31,7 @@ public class PlayerData
         int level,
         int exp,
         int maxExp,
-        DateTime birthday,
+        string birthday,
         int[] favoriteCharacter,
         int lobbyCharacter,
         int characterIcon
@@ -97,16 +97,25 @@ public class PlayerData
         return maxExp;
     }
 
-    public DateTime GetBirthday()
+    public string GetBirthday()
     {
         return birthDay;
     }
-    public bool IsTodayBirthDay() //오늘이 생일인지 체크하는 메서드
+    public bool IsTodayBirthDayCheck() //오늘이 생일인지 체크하는 메서드
     {
-        // 생일의 월과 일이 오늘의 월과 일과 일치하는지 확인
-        if ((birthDay.Month == DateTime.Today.Month) && (birthDay.Day == DateTime.Today.Day))
+        DateTime dateBirthDay;       //저장된 생일 문자열을 MMdd 형식으로 파싱
+        if (DateTime.TryParseExact(birthDay, "MMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
         {
-            return true;
+            // 만약 파싱이 성공하면 연도를 현재 연도, 시간을 00:00으로 설정하여 저장
+            dateBirthDay = parsedDate.Date;
+            if ((dateBirthDay.Month == DateTime.Today.Month) && (dateBirthDay.Day == DateTime.Today.Day))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
@@ -199,7 +208,7 @@ public class PlayerData
             ap += 1;
         }
     }
-    public void SetExp(int value) //경험치값을 증가시킬 때 호출하는 메서드. 경험치가 최대 경험치 이상일 시 경험치가 maxExp 미만이 될 때까지 레벨업 메서드를 반복해서 실행한다.
+    public void AddExp(int value) //경험치값을 증가시킬 때 호출하는 메서드. 경험치가 최대 경험치 이상일 시 경험치가 maxExp 미만이 될 때까지 레벨업 메서드를 반복해서 실행한다.
     {
         exp += value;
         if (exp >= maxExp && level < maxLevel)
@@ -227,7 +236,7 @@ public class PlayerData
             return false;
         }
     }
-    private void SetLevel(int value) //계정 레벨값을 직접 설정하는 메서드. 현재 레벨값에 따라 maxExp와 maxAp도 적절한 값으로 변경한다. maxAp는 레벨당 2 증가하고 1레벨에 160, 41레벨에 240.
+    private void SetLevel(int value) //계정 레벨값에 대한 설정자 메서드. 어떤 방식으로든 레벨값을 변동시킬 때 이 메서드를 사용하게끔 해서 레벨값에 대한 콜백을 용이하게 한다.
     {
         level = math.clamp(value, 1, maxLevel);
         maxExp = (level * 70);
@@ -235,17 +244,7 @@ public class PlayerData
     }
     public void SetBirthday(string MMDD) //생일값을 설정할 때 쓰는 메서드.
     {
-        //입력받은 4자리 문자열을 MMdd 형식으로 파싱
-        if (DateTime.TryParseExact(MMDD, "MMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
-        {
-            // 만약 파싱이 성공하면 연도를 현재 연도, 시간을 00:00으로 설정하여 저장
-            birthDay = parsedDate.Date;
-            Debug.Log("생일이 설정되었습니다: " + birthDay.ToString("MM/dd"));
-        }
-        else
-        {
-            Debug.Log("올바른 날짜 형식이 아닙니다.");
-        }
+        birthDay = MMDD;
     }
     public void SetFavoriteCharacter(int? a, int? b, int? c) //선호 캐릭터 설정
     {
