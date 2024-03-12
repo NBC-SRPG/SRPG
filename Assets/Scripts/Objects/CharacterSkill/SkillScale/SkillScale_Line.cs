@@ -26,7 +26,7 @@ public class SkillScale_Line : SkillScaleBase
 
         for(int i = 0; i <= scale; i++)
         {
-            TileToCheck = new Vector2Int(location.x + ((int)direction.x * i), location.y + ((int)direction.y * i));
+            TileToCheck = new Vector2Int((int)character.curStandingTile.transform.position.x + ((int)direction.x * i), (int)character.curStandingTile.transform.position.y + ((int)direction.y * i));
             if (Managers.MapManager.map.ContainsKey(TileToCheck))
             {
                 if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))

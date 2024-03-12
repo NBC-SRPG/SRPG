@@ -8,8 +8,8 @@ public class Character : MonoBehaviour
 {
     public CharacterSO characterData;
 
-    public List<SkillBase> skillList;
-    public List<PassiveAbilityBase> passiveAbilityList;
+    public SkillBase skill;
+    public PassiveAbilityBase passiveAbility;
 
     public int level;
     public int exp;
@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     public int Attack { get; private set; }
     public int Defence { get; private set; }
     public int Resistacne { get; private set; }
-    public int Agility { get; private set; }
+    public int Mov { get; private set; }
 
     //기초 스탯 적용
     public void CharacterInit()
@@ -27,7 +27,7 @@ public class Character : MonoBehaviour
         Attack = characterData.atk;
         Defence = characterData.def;
         Resistacne = characterData.res;
-        Agility = characterData.agi;
+        Mov = characterData.mov;
 
         ApplyGrowStat();
     }
@@ -38,32 +38,20 @@ public class Character : MonoBehaviour
         
     }
 
-    public void InitSkills()
+    public SkillBase InitSkills()
     {
-        skillList = new List<SkillBase>();
+        skill = new SkillBase(characterData.skill);
 
-        foreach(SkillSO skills in characterData.skills)
-        {
-            SkillBase skill = new SkillBase(skills);
-
-            skillList.Add(skill);
-        }
+        return skill;
     }
 
-    public void InitPassive()
+    public PassiveAbilityBase InitPassive()
     {
-        passiveAbilityList = new List<PassiveAbilityBase>();
+        Type passiveType = Type.GetType("PassiveAbillity_" + characterData.passive.passive_Id);
 
-        foreach (PassiveSO passive in characterData.passives)
-        {
-            PassiveAbilityBase passiveAbility;
+        object obj = Activator.CreateInstance(passiveType);
+        passiveAbility = obj as PassiveAbilityBase;
 
-            Type passiveType = Type.GetType("PassiveAbillity_" + passive.passive_Id);
-
-            object obj = Activator.CreateInstance(passiveType);
-            passiveAbility = obj as PassiveAbilityBase;
-
-            passiveAbilityList.Add(passiveAbility);
-        }
+        return passiveAbility;
     }
 }
