@@ -35,6 +35,7 @@ public class CharacterButtonUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject, false);
         // TODO
         // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
         BindText(typeof(Texts));

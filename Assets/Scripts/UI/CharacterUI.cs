@@ -51,6 +51,7 @@ public class CharacterUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
         // TODO
         // 캐릭터 UI 생성 시 보유 캐릭터 정보를 가지고 초기화
         // 캐릭터 버튼 UI를 새로 만들기

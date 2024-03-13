@@ -35,6 +35,8 @@ public class CommonUI : UIBase
 
     private void Init()
     {
+        // Common UI는 항상 모든 UI의 위에 있어야 함
+        Managers.UI.SetCanvas(gameObject, false);
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));

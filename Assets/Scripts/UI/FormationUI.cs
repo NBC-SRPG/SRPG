@@ -47,6 +47,8 @@ public class FormationUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
+
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
