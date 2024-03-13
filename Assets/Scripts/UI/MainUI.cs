@@ -117,7 +117,7 @@ public class MainUI : UIBase
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
         // CharacterUI 생성 (UIManager)
-        // Managers.UI.ShowUI<CharacterUI>();
+        Managers.UI.ShowUI<CharacterUI>();
     }
     private void OnClickFormationButton()
     {
