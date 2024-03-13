@@ -17,7 +17,7 @@ public class MainUI : UIBase
     private enum Buttons
     {
         CharacterButton,
-        OrganizationButton,
+        FormationButton,
         InventoryButton,
         GachaButton,
         ShopButton,
@@ -62,7 +62,7 @@ public class MainUI : UIBase
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickCharacterButton);
-        GetButton((int)Buttons.OrganizationButton).onClick.AddListener(OnClickOrganizationButton);
+        GetButton((int)Buttons.FormationButton).onClick.AddListener(OnClickFormationButton);
         GetButton((int)Buttons.InventoryButton).onClick.AddListener(OnClickInventoryButton);
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
         GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
@@ -117,14 +117,14 @@ public class MainUI : UIBase
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
         // CharacterUI 생성 (UIManager)
-        // Managers.UI.ShowUI<CharacterUI>();
+        Managers.UI.ShowUI<CharacterUI>();
     }
-    private void OnClickOrganizationButton()
+    private void OnClickFormationButton()
     {
-        Debug.Log("OnClickOrganizationButton");
+        Debug.Log("OnClickFormationButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<OrganizationUI>();
+        // Managers.UI.ShowUI<FormationUI>();
     }
     private void OnClickInventoryButton()
     {
