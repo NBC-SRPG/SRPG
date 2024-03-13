@@ -13,15 +13,14 @@ public class MapManager
     };
 
     public Dictionary<Vector2Int, OverlayTile> map = new Dictionary<Vector2Int, OverlayTile>();
-    public Dictionary<int, List<Vector2Int>> startTiles = new Dictionary<int, List<Vector2Int>>();
-    //public List<Vector2Int> startTile = new List<Vector2Int>();
+    public List<Vector2Int> startTile = new List<Vector2Int>();
 
     public event Action OnCompleteMove;
 
     public void Init()// 모든 타일 초기화
     {
         map.Clear();
-        startTiles.Clear();
+        startTile.Clear();
     }
 
     public void CompleteMove()// 이동 완료 시 이벤트

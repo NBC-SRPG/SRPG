@@ -26,11 +26,6 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
     public virtual void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
 
@@ -74,9 +69,9 @@ public class PassiveAbilityBase
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 {
-    public override void OnEnemyPassesMe(CharacterBase enemy)
+    public override void OnTakeDamage(CharacterBase enemy)
     {
-        base.OnEnemyPassesMe(enemy);
+        base.OnTakeDamage(enemy);
         enemy.BlockMoving();//ZOC 테스트 
     }
 }
