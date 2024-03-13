@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,11 +40,12 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
-    public void ShowAsMove()//이동 타일 보기(노란색)
+    public void ShowAsMove()//이동 타일 보기(파란색)
     {
         if (canClick)
         {
             moveTile.SetActive(true);
+            defaultTile.SetActive(!moveTile.activeSelf);
         }
     }
 
@@ -53,6 +54,7 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             movepathTile.SetActive(true);
+            defaultTile.SetActive(!movepathTile.activeSelf);
         }
     }
 
@@ -61,6 +63,7 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             attackRangeTile.SetActive(true);
+            defaultTile?.SetActive(!attackRangeTile.activeSelf);
         }
     }
 

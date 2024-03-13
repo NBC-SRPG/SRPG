@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +13,8 @@ public class CharacterController : MonoBehaviour
         TargetSelect
     }
 
+    [field: SerializeField] public GamePlayer player;
+
     private RangeFinder rangeFinder;
     private PathFinder pathFinder;
 
@@ -23,7 +25,6 @@ public class CharacterController : MonoBehaviour
 
     private bool nowPlayerTurn;
     private bool canClick;//false일 때 터치 안되게
-    private bool isMoving;
 
     private PlayerPhase phase;
     public CharacterBase curSelectedCharacter;
@@ -40,7 +41,11 @@ public class CharacterController : MonoBehaviour
     {
         nowPlayerTurn = true;
         canClick = true;
-        isMoving = false;
+
+        if (!Managers.BattleManager.Players.Contains(player))
+        {
+            Managers.BattleManager.Players.Add(player);
+        }
     }
 
     private void Update()
@@ -124,12 +129,14 @@ public class CharacterController : MonoBehaviour
                     curSelectedCharacter.isWalking = true;
 
                     curSelectedCharacter.OnEndWalk += EndMove;
+
+                    StartCoroutine(curSelectedCharacter.MoveCharacter());
                 }
             }
         }
         else
         {
-            curSelectedCharacter.MoveCharacter();
+            
         }
     }
 
@@ -171,7 +178,7 @@ public class CharacterController : MonoBehaviour
                 if (surroundPath.Contains(curTile) && curTile.canClick)//이동할 위치 선택 시
                 {
                     movePath.Add(curTile);
-                    ClearTile(surroundPath);
+                    ClearTile(surroundPath, true);
                 }
 
                 if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//이미 선택된 타일 터치 시
@@ -179,10 +186,10 @@ public class CharacterController : MonoBehaviour
                     int n = movePath.IndexOf(curTile);
                     List<OverlayTile> temp = movePath.GetRange(0, n + 1);
 
-                    ClearTile(movePath);
+                    ClearTile(movePath, true);
                     movePath = temp;
 
-                    ClearTile(surroundPath);
+                    ClearTile(surroundPath, true);
 
                 }
             }
@@ -232,14 +239,6 @@ public class CharacterController : MonoBehaviour
         tileList.Clear();
     }
 
-    private void UpdateIdle()
-    {
-        if (nowPlayerTurn && canClick)
-        {
-            ChangePhase(PlayerPhase.CharacterSelect);
-        }
-    }
-
     private void SelectCharacterPhase()
     {
         RaycastHit2D hit;
@@ -258,10 +257,20 @@ public class CharacterController : MonoBehaviour
                 if (curTile.curStandingCharater != null)
                 {
                     curSelectedCharacter = curTile.curStandingCharater;
-                    ChangePhase(PlayerPhase.MoveandAttack);
+                    if (curSelectedCharacter.playerId == player.playerId)
+                    {
+                        ChangePhase(PlayerPhase.MoveandAttack);
+                    }
                 }
             }
         }
+    }
 
+    private void UpdateIdle()
+    {
+        if (nowPlayerTurn && canClick)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+        }
     }
 }
