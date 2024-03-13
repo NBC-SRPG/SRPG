@@ -15,7 +15,7 @@ public class Constants
     {
         Melee,
         Range,
-        Mage
+        //Mage
     }
 
     public enum CharacterAttribute
@@ -42,5 +42,11 @@ public class Constants
         DefaltMaxExp = 100,
         MaxLevel = 90,
         DefaltMaxAp = 160
+    }
+
+    public enum CharacterCons 
+    {
+        defaltCtr = 10, //기본 치확. 10%
+        defaltCtd = 120, //기본 치피. 통상의 1.2배 데미지.
     }
 }
