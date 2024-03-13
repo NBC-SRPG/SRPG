@@ -75,7 +75,7 @@ public class UIManager
         return _uiStack.Peek() as T;
     }
     // UI 스택의 가장 위에 있는 UI 닫기
-    public void ClosePopupUI(UIBase closeUi)
+    public void CloseUI(UIBase closeUi)
     {
         // 스택이 비어있으면 return
         if (_uiStack.Count == 0)
