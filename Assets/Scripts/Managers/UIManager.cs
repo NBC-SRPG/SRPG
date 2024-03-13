@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Diagnostics;
 public class UIManager
 {
+    private int order = -20;
     private Stack<UIBase> uiStack = new Stack<UIBase>();
     public GameObject Root
     {
@@ -24,6 +25,21 @@ public class UIManager
     {
 
     }
+    public void SetCanvas(GameObject go, bool sort = true)
+    {
+        Canvas canvas = go.GetComponent<Canvas>();
+
+        if (sort)
+        {
+            canvas.sortingOrder = order;
+            order++;
+        }
+        else
+        {
+            canvas.sortingOrder = 0;
+        }
+    }
+
     // UI 동적 생성
     public T ShowUI<T>(string name = null, Transform parent = null) where T : UIBase
     {
@@ -75,7 +91,7 @@ public class UIManager
         return uiStack.Peek() as T;
     }
     // UI 스택의 가장 위에 있는 UI 닫기
-    public void ClosePopupUI(UIBase closeUi)
+    public void CloseUI(UIBase ui)
     {
         // 스택이 비어있으면 return
         if (uiStack.Count == 0)
