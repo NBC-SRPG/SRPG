@@ -5,19 +5,28 @@ using UnityEngine;
 
 public class MissionData : MonoBehaviour
 {
-    protected int missionID;
-    protected string missionName;
-    protected string missionDescription;
-    protected bool isAchievement;
-    protected _MissionType missionType;
-    protected Dictionary<object, int> missionRewards;
-    protected struct missionConditions<T>
+    public Dictionary<MissionTrigger, int> missionTrigger { get; private set; } //미션 트리거. 트리거 타입 / 트리거 조건 값
+    public bool isActivate { get; private set; }
+    public int missionID { get; private set; }  //퀘스트 ID
+    public string missionName { get; private set; }  //UI에 표시될 퀘스트 이름 
+    public string missionDescription { get; private set; }  //UI에 표시될 퀘스트 설명
+    public bool isAchievement { get; set; }  //달성 여부. true → 달성 완료상태. false → 미달성 상태.
+    public MissionCategory missionCategory { get; private set; }  //퀘스트 분류. 일일 / 주간 / 업적 / 초보자
+    public Dictionary<object, int> missionRewards { get; private set; } //퀘스트 보상. object → 보상이 무엇인지. Int, string, enum, ItemData 등이 올 수 있음. int→ 보상의 양이 얼마인지.
+    public MissionData[] nextMissions { get; private set; } //이 퀘스트가 클리어 된다면 UnRock 되는 다음 퀘스트 목록
+    public struct missionConditions<T>
     {
         public T Number1 { get; set; } //매개변수 1
         public T Number2 { get; set; } //매개변수 2 또는 상수값
         public int Number3 { get; set; } //조건문 형식
     }
 
+    missionConditions<T> MissionConditions = new missionConditions<T>
+    {
+        Number1 = 0,
+        Number2 = 0,
+        Number3 = 0
+    };
 
     // 1. 매개변수 A와 B가 같은지.
     public bool IsEqual<T>(T a, T b) where T : IComparable<T>
@@ -31,7 +40,19 @@ public class MissionData : MonoBehaviour
         return a.CompareTo(b) == 1;
     }
 
-    public enum _MissionType
+    // 3. 매개변수 A가 B 이하인지.
+    public bool IsBelow<T>(T a, T b) where T : IComparable<T>
+    {
+        return a.CompareTo(b) == -1;
+    }
+
+    public enum MissionTrigger
+    {
+        FirstLogin,
+        TimeIn,
+        TriggerOn
+    }
+    public enum MissionCategory
     {
         Daily,
         Weekly,
@@ -39,19 +60,28 @@ public class MissionData : MonoBehaviour
         Newbie
     }
 
+
     // 생성자 메서드
     // 미션 조건 저장하는 방법 가이드 : T a에 매개변수 1, T b에 매개변수 1과 비교할 매개변수 또는 상수값, T c에 비교식 유형을 넣는다.
-    // 사용 예시 (아무 몬스터나 5회 처지 조건을 저장하고 싶은 경우 ) : a에 적 몬스터를 kill한 횟수 값을 가져다 넣는다(이벤트나 콜백을 통해 연결시켜 놓기). b에 상수 5를 입력한다. c에 1을 입력한다. 
-    protected MissionData CreateMission<T>(int missionID, string missionName, string missionDescription,
-                                      _MissionType missionType,
-                                      Dictionary<object, int> missionRewards, T a, T b, int c)
+
+    // 사용 예시 (아무 몬스터나 5회 처지 조건을 저장하고 싶은 경우 )
+    // a에 적 몬스터를 처치한 횟수를 담는 변수를 참조하게 한다. (이벤트 / 콜백을 통해 연결). b에 상수 5를 저장한다. 값이 같은지 체크하므로 c에 1을 입력한다. 
+    public MissionData CreateMission<T>(
+                                        Dictionary<MissionTrigger, int> missionTrigger,
+                                      int missionID, string missionName, string missionDescription,
+                                      MissionCategory missionCategory,
+                                      Dictionary<object, int> missionRewards, T a, T b, int c,
+                                         MissionData[] nextMissions
+                                        )
     {
         MissionData missionData = new MissionData();
+        missionData.missionTrigger = missionTrigger;
         missionData.missionID = missionID;
         missionData.missionName = missionName;
         missionData.missionDescription = missionDescription;
-        missionData.missionType = missionType;
+        missionData.missionCategory = missionCategory;
         missionData.missionRewards = missionRewards;
+        missionData.nextMissions = nextMissions;
 
         // missionConditions 구조체 초기화
         missionConditions<T> missionConditions = new missionConditions<T>
