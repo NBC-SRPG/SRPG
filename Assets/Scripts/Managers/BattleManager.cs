@@ -1,31 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleManager
 {
-    private enum NowPlayer
-    {
-        Ally,
-        Enemy,
-        Aid
-    }
 
-    public List<GamePlayer> Players = new List<GamePlayer>();
+    public List<GamePlayer> players = new List<GamePlayer>();
     public List<CharacterBase> charactersInBattle = new List<CharacterBase>();
+    public Dictionary<string, List<CharacterBase>> charactersAsTeam = new Dictionary<string, List<CharacterBase>>(); 
 
-    private NowPlayer nowPlayer;
+    public GamePlayer nowPlayer;
     private int nowPlayerNum;
 
     public void Init()
     {
-        Players.Clear();
+        players.Clear();
         charactersInBattle.Clear();
+        charactersAsTeam.Clear();
     }
 
     public void InitBattle()
     {
         nowPlayerNum = 0;
+
+        players = players.OrderByDescending(x => x.prioty).ToList();
+
+        StartRound();
     }
 
     public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
@@ -37,19 +38,17 @@ public class BattleManager
         }
         else
         {
-            Debug.Log(curCharacter.playerId);
-            Debug.Log(standingCharacter.playerId);
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)
             {
                 Attack(curCharacter, standingCharacter);
             }
+            standingCharacter.OnEnemyPassesMe(curCharacter);
         }
     }
 
     public void Attack(CharacterBase attacker, CharacterBase victim)
     {
         Debug.Log("attack");
-        attacker.isAttacking = true;
         attacker.OnStartAttack(victim);
 
         //---
@@ -65,21 +64,32 @@ public class BattleManager
     public void PlayerTurnEnd()
     {
         nowPlayerNum++;
-        if(nowPlayerNum >= Players.Count)
+
+        if(nowPlayerNum >= players.Count)
         {
-            EndTurn();
+            EndRound();
         }
+
+        StartRound();
     }
 
-    private void StartTurn()
+    public void PlayerTurnStart()
+    {
+        nowPlayer = players[nowPlayerNum];
+        Debug.Log("nowPlayer" + nowPlayer.playerId);
+    }
+
+    private void StartRound()
     {
         foreach (CharacterBase characters in charactersInBattle)
         {
             characters.OnStartTurn();
         }
+
+        PlayerTurnStart();
     }
 
-    private void EndTurn()
+    private void EndRound()
     {
         foreach(CharacterBase characters in charactersInBattle)
         {
@@ -87,7 +97,5 @@ public class BattleManager
         }
 
         nowPlayerNum = 0;
-
-        StartTurn();
     }
 }
