@@ -7,6 +7,7 @@ public class PlayerData
 {   //순서대로 UID, 닉네임, 다이아, 골드. AP, AP최대치, 계정 레벨, 계정 최대 레벨, 현재 경험치, 최대 경험치, 생일, 선호 캐릭터 목록, 캐릭터 아이콘, 지원 캐릭터
     public string uId { get; private set; }
     public string playerName { get; private set; }
+    public string playerComment { get; private set; }
     public int diamond { get; private set; }
     public int gold { get; private set; }
     public int ap { get; private set; }
@@ -33,6 +34,7 @@ public class PlayerData
     public void Init(
         string uId,
         string playerName,
+        string playerComment,
         int diamond,
         int gold,
         int ap,
@@ -48,6 +50,7 @@ public class PlayerData
     {
         this.uId = uId ?? "0000000"; // 임시 기본값
         this.playerName = playerName ?? "DefaultName";
+        this.playerComment = playerComment ?? "잘 부탁 드립니다.";
         this.diamond = diamond;
         this.gold = gold;
         this.ap = ap;
@@ -89,6 +92,18 @@ public class PlayerData
         if (playerName.Length <= 8)
         {
             this.playerName = playerName;
+            return true; // 글자 수 제한 조건을 만족하면 true 반환
+        }
+        else
+        {
+            return false; // 글자 수 제한 조건을 만족하지 않으면 false 반환
+        }
+    }
+    public bool SetPlayerComment(string playerComment) //플레이어 코멘트 설정 시 사용하는 메서드.
+    {
+        if (playerName.Length <= 40)
+        {
+            this.playerComment = playerComment;
             return true; // 글자 수 제한 조건을 만족하면 true 반환
         }
         else
