@@ -10,6 +10,7 @@ public class CharacterButtonUI : UIBase
     // 메인 -> 편성 -> 캐릭터 -> 클릭에서는 편성에 들어가야 함
     // 편성에서 클릭한 것인지 체크 변수
     public static bool isFormation;
+    public static int formationIndex;
     // 캐릭터 정보
 
     private enum Texts
