@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ public class CharacterSO : ScriptableObject
     public int atk;
     public int def;
     public int mov;
-    [Range(0, 10)]public int atk_range;/공격 사정거리(근거리의 경우 0으로)
+    [Range(0, 10)]public int atk_range;//공격 사정거리(근거리의 경우 0으로)
 
     [Header("GrowthStatus")]//캐릭터 성장 능력치. 1레벨 당 해당 value 값만큼 증가.
     public int growHealth;
