@@ -7,7 +7,7 @@ public class GridTile : MonoBehaviour
 {
     private MapTiles tiles;
     [SerializeField] private Tilemap gridTile;
-    [SerializeField] private Tilemap StartPosition;
+    [SerializeField] private List<Tilemap> StartPosition;
 
     private void Awake()
     {
