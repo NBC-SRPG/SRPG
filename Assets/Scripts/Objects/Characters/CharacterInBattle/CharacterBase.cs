@@ -20,12 +20,14 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool isAttacking;
 
     [HideInInspector] public bool didAttack;
+    [HideInInspector] public bool didWalk;
     [HideInInspector] public bool canActing;
 
     public List<OverlayTile> movePath = new List<OverlayTile>();
     public Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
     public event Action OnEndWalk;
+    public event Action OnEndAttacking;
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
@@ -48,6 +50,9 @@ public class CharacterBase : MonoBehaviour
         isWalking = false;
         didAttack = false;
         canActing = true;
+
+        Managers.BattleManager.charactersInBattle.Add(this);
+        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
     }
 
     //스킬 및 패시브 시전자 설정
@@ -77,6 +82,8 @@ public class CharacterBase : MonoBehaviour
 
     public IEnumerator MoveCharacter()//캐릭터 이동
     {
+        OnStartMoving();
+
         while (movePath.Count > 1)
         {
             while (transform.position != movePath[1].transform.position)
@@ -139,7 +146,10 @@ public class CharacterBase : MonoBehaviour
         isWalking = false;
         isAttacking = false;
         didAttack = false;
+        didWalk = false;
+        canActing = true;
         leftWalkRange = character.Mov;
+
         curCharacterPassive?.OnStartTurn();
     }
 
@@ -157,9 +167,15 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnAllyPassedMe(allyCharacter);
     }
+    public void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
+    {
+        curCharacterPassive?.OnEnemyPassesMe(enemyCharacter);
+    }
 
     public void OnStartMoving()// 이동 시
     {
+        isWalking = true;
+
         curCharacterPassive?.OnStartMoving();
     }
 
@@ -169,22 +185,49 @@ public class CharacterBase : MonoBehaviour
 
         curCharacterPassive?.OnEndMoving();
         OnEndWalk?.Invoke();
+
         isWalking = false;
-        if(character.characterData.attackType != Constants.AttackType.Range)
+        didWalk = true;
+        if(character.characterData.attackType == Constants.AttackType.Melee)
         {
             didAttack = true;
         }
         pathedTiles.Clear();
+        leftWalkRange = 0;
+
+        OnEndActing();
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
     {
         curCharacterPassive?.OnEndActing();
+
+        CheckingActing();
     }
 
     public void OnEndTurn()// 턴이 끝날 때
     {
         curCharacterPassive?.OnEndTurn();
+    }
+
+    private void CheckingActing()
+    {
+        if(didAttack && didWalk)
+        {
+            canActing = false;
+        }
+    }
+
+    public bool CheckEnenmy(CharacterBase target)
+    {
+        if(target.playerId != playerId)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //---------------------------------------------------------------------------
@@ -193,6 +236,7 @@ public class CharacterBase : MonoBehaviour
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         curCharacterPassive?.OnStartAttack(enemy);
+        isAttacking = true;
     }
 
     public void OnAttackSuccess(CharacterBase enemy, int damage)// 공격 적중 시
@@ -205,11 +249,19 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive?.OnEndAttack(enemy);
 
         Invoke(nameof(EndAttacking), 1f);
+
+        OnEndActing();
     }
 
     private void EndAttacking()
     {
         isAttacking = false;
+        if (character.CharacterAttackType == Constants.AttackType.Range)
+        {
+            didAttack = true;
+        }
+
+        OnEndAttacking?.Invoke();
     }
 
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
@@ -237,5 +289,9 @@ public class CharacterBase : MonoBehaviour
     public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
         curCharacterSkill.skillAbility?.OnEndSkill(target);
+
+        didWalk = true;
+        didAttack = true;
+        OnEndActing();
     }
 }
