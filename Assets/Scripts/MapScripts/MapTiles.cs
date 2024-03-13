@@ -9,7 +9,7 @@ public class MapTiles : MonoBehaviour
     public List<CharacterBase> characters;
 
     public Tilemap gridTile;
-    public GameObject startPosition;
+    public Tilemap startPosition;
 
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
@@ -17,19 +17,19 @@ public class MapTiles : MonoBehaviour
     private void Awake()
     {
         Managers.MapManager.Init();
-        Managers.BattleManager.Init();
+        //Managers.BattleManager.Init();
     }
 
     private void Start()
     {
-        Managers.BattleManager.characters = characters;
+        Managers.BattleManager.charactersInBattle = characters;
 
         InitiateMapTile();
         InitiateStartTile();
         InitiateCharacter();
     }
 
-    private void InitiateMapTile()
+    private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
     {
         BoundsInt bounds = gridTile.cellBounds;
 
@@ -71,23 +71,33 @@ public class MapTiles : MonoBehaviour
         }
     }
 
-    private void InitiateStartTile()
+    private void InitiateStartTile()// 캐릭터 시작 위치 설정
     {
-        Tilemap[] tiles = startPosition.GetComponentsInChildren<Tilemap>();
+        Tilemap tiles = startPosition;
 
-        foreach (Tilemap tile in tiles)
+        BoundsInt bounds = tiles.cellBounds;
+
+        for (int z = bounds.min.z; z <= bounds.max.z; z++)
         {
-            BoundsInt bound = tile.cellBounds;
+            for (int y = bounds.min.y; y <= bounds.max.y; y++)
+            {
+                for (int x = bounds.min.x; x <= bounds.max.x; x++)
+                {
+                    Vector3Int tileLocation = new Vector3Int(x, y, z);
 
-            Managers.MapManager.startTile.Add(new Vector2Int(bound.x, bound.y));
-
+                    if (tiles.HasTile(tileLocation))
+                    {
+                        Managers.MapManager.startTile.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
         }
     }
 
-    public void InitiateCharacter()
+    public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성(BattleManager로 옮겨질 가능성 높음)
     {
         int i = 0;
-        foreach (CharacterBase charac in Managers.BattleManager.characters)
+        foreach (CharacterBase charac in Managers.BattleManager.charactersInBattle)
         {
             if (i < Managers.MapManager.startTile.Count)
             {
