@@ -9,7 +9,7 @@ public class MainUI : UIBase
     private enum Texts
     {
         LevelText,
-        APText,
+        ApText,
         GoldText,
         DiamondText
     }
