@@ -10,4 +10,12 @@ public class Constants
         Effect,
         Max,
     }
+
+    public enum PlayerCons
+    {
+        DefaltLevel = 1,
+        DefaltMaxExp = 100,
+        MaxLevel = 90,
+        DefaltMaxAp = 160
+    }
 }
