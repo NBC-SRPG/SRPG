@@ -91,7 +91,7 @@ public class UIManager
         return uiStack.Peek() as T;
     }
     // UI 스택의 가장 위에 있는 UI 닫기
-    public void CloseUI(UIBase ui)
+    public void CloseUI(UIBase closeUi)
     {
         // 스택이 비어있으면 return
         if (uiStack.Count == 0)
@@ -106,7 +106,7 @@ public class UIManager
         }
 
         // UI 스택에서 Pop & Destroy
-        UIBase destroyUi = _uiStack.Pop();
+        UIBase destroyUi = uiStack.Pop();
         Object.Destroy(destroyUi.gameObject);
     }
 }
