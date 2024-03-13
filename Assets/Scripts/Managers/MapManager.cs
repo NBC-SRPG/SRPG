@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MapManager
 {
-    private Vector2Int[] direction = new Vector2Int[] 
+    public Vector2Int[] direction = new Vector2Int[] 
     {
         new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1),
         new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1),
@@ -18,18 +18,18 @@ public class MapManager
 
     public event Action OnCompleteMove;
 
-    public void Init()// ¸ğµç Å¸ÀÏ ÃÊ±âÈ­
+    public void Init()// ëª¨ë“  íƒ€ì¼ ì´ˆê¸°í™”
     {
         map.Clear();
         startTiles.Clear();
     }
 
-    public void CompleteMove()// ÀÌµ¿ ¿Ï·á ½Ã ÀÌº¥Æ®
+    public void CompleteMove()// ì´ë™ ì™„ë£Œ ì‹œ ì´ë²¤íŠ¸
     {
         OnCompleteMove?.Invoke();
     }
 
-    public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile, bool clickable = false)//4 ¹æÇâ Å¸ÀÏ °¡Á®¿À±â
+    public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile, bool clickable = false)//4 ë°©í–¥ íƒ€ì¼ ê°€ì ¸ì˜¤ê¸°
     {
         List<OverlayTile> surroundingTiles = new List<OverlayTile>();
         Vector2Int TileToCheck;
@@ -56,7 +56,7 @@ public class MapManager
         return surroundingTiles;
     }
 
-    public List<OverlayTile> GetSurroundingAllTiles(Vector2Int originTile, bool clickable = false)//8 ¹æÇâ Å¸ÀÏ °¡Á®¿À±â
+    public List<OverlayTile> GetSurroundingAllTiles(Vector2Int originTile, bool clickable = false)//8 ë°©í–¥ íƒ€ì¼ ê°€ì ¸ì˜¤ê¸°
     {
         List<OverlayTile> surroundingTiles = new List<OverlayTile>();
         Vector2Int TileToCheck;
