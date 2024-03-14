@@ -11,9 +11,6 @@ public class Character : MonoBehaviour
     public SkillBase skill;
     public PassiveAbilityBase passiveAbility;
 
-    public int skillLevel;
-    public int passiveLevel;
-
     public int level;
     public int maxLevel;
     public int exp;
@@ -40,7 +37,7 @@ public class Character : MonoBehaviour
     }
 
     //성장 스탯 적용
-    private void ApplyGrowStat()  //원본 캐릭터의 기본 스탯 + (원본 캐릭터의 성장 스탯 * 이 캐릭터 개체의 현재 레벨)
+    private void ApplyGrowStat()  //원본캐릭터의 기본 스탯 + (원본 캐릭터의 성장 스탯 * 이 캐릭터 개체의 현재 레벨)
     {
         Health = (characterData.health + (characterData.growHealth * level));
         Attack = (characterData.atk + (characterData.growAtk * level));
@@ -65,9 +62,4 @@ public class Character : MonoBehaviour
 
         return passiveAbility;
     }
-
-    //레벨업
-
-
-    //돌파
 }
