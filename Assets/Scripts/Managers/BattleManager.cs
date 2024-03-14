@@ -13,6 +13,9 @@ public class BattleManager
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
 
+    //-----------------------------------------------------------------------------------------------------------------------
+    //초기화 함수들
+
     public void Init()
     {
         players.Clear();
@@ -24,10 +27,11 @@ public class BattleManager
     {
         nowPlayerNum = 0;
 
-        players = players.OrderByDescending(x => x.prioty).ToList();
-
         StartRound();
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //전투 관련 함수들
 
     public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
@@ -61,6 +65,14 @@ public class BattleManager
         
     }
 
+    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    {
+
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //턴 관련 함수들
+
     public void PlayerTurnEnd()
     {
         nowPlayerNum++;
@@ -81,6 +93,8 @@ public class BattleManager
 
     private void StartRound()
     {
+        players = players.OrderByDescending(x => x.prioty).ToList();
+
         foreach (CharacterBase characters in charactersInBattle)
         {
             characters.OnStartTurn();
