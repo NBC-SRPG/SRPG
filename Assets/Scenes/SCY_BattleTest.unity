@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 1046312223}
   chaPrefabs: {fileID: 6138315053240153307, guid: f8fe4ac42f04acb4499c1d33b967a23e, type: 3}
+  targetTiles: {fileID: 2942906996224312592, guid: 70627d848b9a8254bb6ac057b9abe288, type: 3}
   player:
     playerId: 2
     playerNumber: 1
@@ -162,6 +163,7 @@ MonoBehaviour:
     party:
     - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
   movePath: []
+  nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}
   curTargetCharacter: {fileID: 0}
 --- !u!4 &145040346
@@ -429,6 +431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   button: {fileID: 1046312223}
   chaPrefabs: {fileID: 6138315053240153307, guid: f8fe4ac42f04acb4499c1d33b967a23e, type: 3}
+  targetTiles: {fileID: 2942906996224312592, guid: 70627d848b9a8254bb6ac057b9abe288, type: 3}
   player:
     playerId: 1
     playerNumber: 0
@@ -437,6 +440,7 @@ MonoBehaviour:
     party:
     - {fileID: 7562966821073230812, guid: 48a5101d420713641ab786df2432c183, type: 3}
   movePath: []
+  nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}
   curTargetCharacter: {fileID: 0}
 --- !u!4 &1071128365

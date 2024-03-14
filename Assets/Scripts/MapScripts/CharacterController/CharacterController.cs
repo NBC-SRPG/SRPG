@@ -19,7 +19,8 @@ public class CharacterController : MonoBehaviour
 
     public Button button;
 
-    public CharacterBase chaPrefabs;
+    [SerializeField] private CharacterBase chaPrefabs;
+    [SerializeField] private TargetTiles targetTiles;
 
     [field: SerializeField] public GamePlayer player;
 
@@ -32,7 +33,7 @@ public class CharacterController : MonoBehaviour
     private List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
     private List<OverlayTile> skillScale = new List<OverlayTile>();//스킬 범위 타일
 
-    private bool nowPlayerTurn;
+    [SerializeField] private bool nowPlayerTurn;
     private bool canClick;//false일 때 터치 안되게
 
     private PlayerPhase phase;
@@ -45,6 +46,8 @@ public class CharacterController : MonoBehaviour
         pathFinder = new PathFinder();
 
         phase = PlayerPhase.CharacterSetting;
+
+        targetTiles = Instantiate(targetTiles, transform);
     }
 
     private void Start()
@@ -58,20 +61,17 @@ public class CharacterController : MonoBehaviour
         }
         Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
+        Managers.BattleManager.TurnStart += GetPlayerTurn;
+
         //-----------------------------------------
-        button.onClick.AddListener((TurnEnd));
+        //button.onClick.AddListener(TurnEnd);
         //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
         //----------------------------------------
+
     }
 
     private void Update()
     {
-        if(Managers.BattleManager.nowPlayer.playerId == player.playerId)
-        {
-            canClick = true;
-            nowPlayerTurn = true;
-        }
-
         switch (phase)
         {
             case PlayerPhase.CharacterSetting:
@@ -92,6 +92,20 @@ public class CharacterController : MonoBehaviour
                 SkillTargetSelectPhase();
                 break;
         }
+
+        targetTiles.ShowSelectedTile(curSelectedCharacter);
+        targetTiles.ShowTargetTile(curTargetCharacter);
+    }
+
+    private void GetPlayerTurn()
+    {
+        if (Managers.BattleManager.nowPlayer.playerId == player.playerId)
+        {
+            canClick = true;
+            nowPlayerTurn = true;
+
+            button.onClick.AddListener(TurnEnd);
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -99,8 +113,6 @@ public class CharacterController : MonoBehaviour
     private void CharacterSet()
     {
         InitiateCharacter();
-
-        ChangePhase(PlayerPhase.Idle);
     }
 
     public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
@@ -110,9 +122,8 @@ public class CharacterController : MonoBehaviour
         {
             if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
             {
-                CharacterBase character = Instantiate(chaPrefabs);
-                character.character = charac;
-                character.playerId = player.playerId;
+                CharacterBase character = Instantiate(chaPrefabs, transform);
+                character.InitCharacter(charac, player.playerId);
 
                 character.curStandingTile = Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]];
                 character.curStandingTile.curStandingCharater = character;
@@ -121,6 +132,12 @@ public class CharacterController : MonoBehaviour
                 i++;
             }
         }
+        ChangePhase(PlayerPhase.Idle);
+
+        player.isReady = true;
+        Managers.BattleManager.GetReady();
+
+        Debug.Log(player.playerId + "character set");
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -205,13 +222,17 @@ public class CharacterController : MonoBehaviour
                     SelectCurCharacter(curTile.curStandingCharater);
                     if (curSelectedCharacter.canActing)// 해당 캐릭터가 아직 행동하지 않았을 때
                     {
-                        ChangePhase(PlayerPhase.SkillTargetSelect);
+                        ChangePhase(PlayerPhase.MoveandAttack);
                     }
                 }
                 else
                 {
                     SelectTargetCharacter(curTile.curStandingCharater);
                 }
+            }
+            else
+            {
+                SelectTargetCharacter(null);
             }
         }
     }
@@ -540,6 +561,9 @@ public class CharacterController : MonoBehaviour
         {
             ChangePhase(PlayerPhase.Idle);
 
+            button.onClick.RemoveListener((TurnEnd));
+            canClick = false;
+            nowPlayerTurn = false;
             Managers.BattleManager.PlayerTurnEnd();
         }
     }

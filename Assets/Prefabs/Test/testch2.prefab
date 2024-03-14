@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5380366162128608099
 SpriteRenderer:
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 10
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.4509804, g: 0.8980392, b: 0.5173573, a: 1}
   m_FlipX: 0
@@ -97,7 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f1d51220f3582b47b4ec220c4e7544b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerId: 2
   characterData: {fileID: 11400000, guid: 068842d9cf81972478f110e5ddce4f84, type: 2}
   level: 0
+  maxLevel: 0
   exp: 0
+  maxExp: 0

@@ -25,8 +25,6 @@ public class MapTiles : MonoBehaviour
         InitiateMapTile();
         InitiateStartTile();
         //InitiateCharacter();
-
-        Managers.BattleManager.InitBattle();
     }
 
     private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
