@@ -8,16 +8,13 @@ public class MainUI : UIBase
 {
     private enum Texts
     {
-        LevelText,
-        APText,
-        GoldText,
-        DiamondText
+        LevelText
     }
 
     private enum Buttons
     {
         CharacterButton,
-        OrganizationButton,
+        FormationButton,
         InventoryButton,
         GachaButton,
         ShopButton,
@@ -27,7 +24,6 @@ public class MainUI : UIBase
         NoticeButton,
         MissionButton,
         ProfileButtton,
-        SettingButton
     }
 
     private enum Images
@@ -54,6 +50,7 @@ public class MainUI : UIBase
 
     public void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
@@ -62,7 +59,7 @@ public class MainUI : UIBase
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickCharacterButton);
-        GetButton((int)Buttons.OrganizationButton).onClick.AddListener(OnClickOrganizationButton);
+        GetButton((int)Buttons.FormationButton).onClick.AddListener(OnClickFormationButton);
         GetButton((int)Buttons.InventoryButton).onClick.AddListener(OnClickInventoryButton);
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
         GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
@@ -72,7 +69,6 @@ public class MainUI : UIBase
         GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
-        GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
 
         RefreshUI();
 
@@ -83,30 +79,14 @@ public class MainUI : UIBase
     private void RefreshUI()
     {
         RefreshLevel();
-        RefreshAP();
-        RefreshGold();
-        RefreshDiamond();
     }
+
     // Level 텍스트 업데이트
     private void RefreshLevel()
     {
 
     }
-    // AP 텍스트 업데이트
-    private void RefreshAP()
-    {
 
-    }
-    // Gold 텍스트 업데이트
-    private void RefreshGold()
-    {
-
-    }
-    // Diamond 텍스트 업데이트
-    private void RefreshDiamond()
-    {
-
-    }
 
     private void OnClickCharacterButton()
     {
@@ -117,14 +97,14 @@ public class MainUI : UIBase
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
         // CharacterUI 생성 (UIManager)
-        // Managers.UI.ShowUI<CharacterUI>();
+        Managers.UI.ShowUI<CharacterUI>();
     }
-    private void OnClickOrganizationButton()
+    private void OnClickFormationButton()
     {
-        Debug.Log("OnClickOrganizationButton");
+        Debug.Log("OnClickFormationButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<OrganizationUI>();
+        // Managers.UI.ShowUI<FormationUI>();
     }
     private void OnClickInventoryButton()
     {
@@ -188,12 +168,5 @@ public class MainUI : UIBase
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ProfileUI>();
-    }
-    private void OnClickSettingButton()
-    {
-        Debug.Log("OnClickSettingButton");
-
-        // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<SettingUI>();
     }
 }
