@@ -11,7 +11,7 @@ public class UIBase : MonoBehaviour
     private Dictionary<Type, UnityEngine.Object[]> objectsDic = new Dictionary<Type, UnityEngine.Object[]>();
 
     // 바인딩 할 오브젝트의 이름을 Enum타입으로 받아와 딕셔너리에 저장
-    private void Bind<T>(Type type) where T : UnityEngine.Object
+    protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
         string[] names = Enum.GetNames(type);
         UnityEngine.Object[] objects = new UnityEngine.Object[names.Length];
@@ -39,11 +39,6 @@ public class UIBase : MonoBehaviour
     {
         Bind<GameObject>(type);
     }
-
-    protected void BindDropdown(Type type)
-    {
-        Bind<TMP_Dropdown>(type);
-    }
     protected void BindImage(Type type)
     {
         Bind<Image>(type);
@@ -60,7 +55,7 @@ public class UIBase : MonoBehaviour
     }
     // 캐싱 딕셔너리에서 T타입의 인덱스에 해당하는 값을 반환
     // Enum타입으로 저장하였으므로 Enum타입의 값을 int로 변환하여 사용 -> 가독성
-    private T Get<T>(int idx) where T : UnityEngine.Object
+    protected T Get<T>(int idx) where T : UnityEngine.Object
     {
         UnityEngine.Object[] objects = null;
         if (objectsDic.TryGetValue(typeof(T), out objects) == false)
@@ -74,11 +69,6 @@ public class UIBase : MonoBehaviour
     protected GameObject GetObject(int idx)
     {
         return Get<GameObject>(idx);
-    }
-
-    protected TMP_Dropdown GetDropdown(int idx)
-    {
-        return Get<TMP_Dropdown>(idx);
     }
     protected TMP_Text GetText(int idx)
     {

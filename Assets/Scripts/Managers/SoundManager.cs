@@ -10,6 +10,10 @@ public class SoundManager
     private Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
     // AudioSource 오브젝트의 부모 (빈 오브젝트)
     private GameObject soundRoot = null;
+    // 마스터 볼륨 값
+    private float masterVolume = 1f;
+    // BGM, Effect 볼륨 값
+    private Dictionary<Constants.Sound, float> soundVolumes = new Dictionary<Constants.Sound, float>();
 
     public void Init()
     {
@@ -36,6 +40,14 @@ public class SoundManager
                 }
                 // BGM AudioSource는 loop 효과
                 audioSources[(int)Constants.Sound.Bgm].loop = true;
+                // 볼륨 딕셔너리에 추가 후 볼륨 1로 세팅
+                foreach (Constants.Sound sound in Enum.GetValues(typeof(Constants.Sound)))
+                {
+                    if (sound != Constants.Sound.Max)
+                    {
+                        soundVolumes[sound] = 1f;
+                    }
+                }
             }
         }
     }
@@ -49,13 +61,12 @@ public class SoundManager
         }
         _audioClips.Clear();
     }
-    // Sound 타입, Sound 이름을 받아 재생, 필요 시 volume, pitch 값 설정 가능
-    public bool Play(Constants.Sound type, string path, float volume = 1.0f, float pitch = 1.0f)
+    // Sound 타입, Sound 이름을 받아 재생, 필요 시 pitch 값 설정 가능
+    public bool Play(Constants.Sound type, string path, float pitch = 1.0f)
     {
         // 타입에 맞는 AudioSource 선택
         AudioSource audioSource = audioSources[(int)type];            
-        // volume, pitch 설정
-        audioSource.volume = volume;
+        // pitch 설정
         audioSource.pitch = pitch;
 
         if (type == Constants.Sound.Bgm)
@@ -94,6 +105,64 @@ public class SoundManager
 
         return false;
     }
+    // 세팅에서 마스터 볼륨 설정 시 적용
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = volume;
+        ApplyVolume();
+    }
+    // 세팅에서 Bgm, Effect 볼륨 설정 시 적용
+    public void SetSoundVolume(Constants.Sound sound, float volume)
+    {
+        soundVolumes[sound] = volume;
+        ApplyVolume();
+    }
+    // 마스터 볼륨 음소거
+    public void MuteMasterVolume(bool mute)
+    {
+        // 음소거 시
+        if (mute)
+        {
+            // 모든 오디오소스 볼륨 0으로 세팅
+            foreach (Constants.Sound sound in Enum.GetValues(typeof(Constants.Sound)))
+            {
+                if (sound != Constants.Sound.Max)
+                {
+                    audioSources[(int)sound].volume = 0f;
+                }
+            }
+        }
+        else
+        {
+            // 음소거 해제 시 기존 값으로 적용
+            ApplyVolume();
+        }
+    }
+    // 사운드 볼륨 음소거
+    public void MuteSoundVolume(Constants.Sound sound, bool mute)
+    {
+        if (mute)
+        {
+            audioSources[(int)sound].volume = 0f;
+        }
+        else
+        {
+            ApplyVolume();
+        }
+    }
+
+    // 볼륨 적용
+    private void ApplyVolume()
+    {
+        foreach (Constants.Sound sound in Enum.GetValues(typeof(Constants.Sound)))
+        {
+            if (sound != Constants.Sound.Max)
+            {
+                audioSources[(int)sound].volume = masterVolume * soundVolumes[sound];
+            }
+        }
+    }
+        
     // Sound 타입을 받아 해당 타입의 AudioSource 중지
     public void Stop(Constants.Sound type)
     {

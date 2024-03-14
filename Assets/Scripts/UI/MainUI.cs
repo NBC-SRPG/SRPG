@@ -8,10 +8,7 @@ public class MainUI : UIBase
 {
     private enum Texts
     {
-        LevelText,
-        ApText,
-        GoldText,
-        DiamondText
+        LevelText
     }
 
     private enum Buttons
@@ -27,7 +24,6 @@ public class MainUI : UIBase
         NoticeButton,
         MissionButton,
         ProfileButtton,
-        SettingButton
     }
 
     private enum Images
@@ -73,7 +69,6 @@ public class MainUI : UIBase
         GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
-        GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
 
         RefreshUI();
 
@@ -84,30 +79,14 @@ public class MainUI : UIBase
     private void RefreshUI()
     {
         RefreshLevel();
-        RefreshAP();
-        RefreshGold();
-        RefreshDiamond();
     }
+
     // Level 텍스트 업데이트
     private void RefreshLevel()
     {
 
     }
-    // AP 텍스트 업데이트
-    private void RefreshAP()
-    {
 
-    }
-    // Gold 텍스트 업데이트
-    private void RefreshGold()
-    {
-
-    }
-    // Diamond 텍스트 업데이트
-    private void RefreshDiamond()
-    {
-
-    }
 
     private void OnClickCharacterButton()
     {
@@ -189,12 +168,5 @@ public class MainUI : UIBase
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ProfileUI>();
-    }
-    private void OnClickSettingButton()
-    {
-        Debug.Log("OnClickSettingButton");
-
-        // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<SettingUI>();
     }
 }

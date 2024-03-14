@@ -68,34 +68,34 @@ public class CharacterUI : UIBase
         // 3. 플레이어 데이터에서 가지고 있는 캐릭터 목록을 가져온다.
         // 4. 필터에 맞는 애들만 생성
 
-        BindDropdown(typeof(Dropdowns));
+        Bind<TMP_Dropdown>(typeof(Dropdowns));
         InitDropdown();
     }
 
     private void InitDropdown()
     {
         // 드랍다운 리스트 클리어
-        GetDropdown((int)Dropdowns.FilterDropdown).ClearOptions();
-        GetDropdown((int)Dropdowns.SortDropdown).ClearOptions();
+        Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).ClearOptions();
+        Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).ClearOptions();
         
         // 딕셔너리의 한글 목록 필터목록에 추가
         List<string> filterOptions = filterDic.Values.ToList();
-        GetDropdown((int)Dropdowns.FilterDropdown).AddOptions(filterOptions);
+        Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).AddOptions(filterOptions);
 
         // 딕셔너리의 한글 목록 정렬목록에 추가
         List<string> sortOptions = sortDic.Values.ToList();
-        GetDropdown((int)Dropdowns.SortDropdown).AddOptions(sortOptions);
+        Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).AddOptions(sortOptions);
 
         // 목록 아이템 선택 시 실행 할 함수 추가
-        GetDropdown((int)Dropdowns.FilterDropdown).onValueChanged.AddListener(delegate { FilterSelect(); });
-        GetDropdown((int)Dropdowns.SortDropdown).onValueChanged.AddListener(delegate { SortSelect(); });
+        Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).onValueChanged.AddListener(delegate { FilterSelect(); });
+        Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).onValueChanged.AddListener(delegate { SortSelect(); });
     }
 
     // 필터 선택
     private void FilterSelect()
     {
         // 현재 선택된 필터 타입 Get
-        FilterType filterType = (FilterType)GetDropdown((int)Dropdowns.FilterDropdown).value;
+        FilterType filterType = (FilterType)Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).value;
         // 필터 타입에 따라 필터 실행
         switch (filterType)
         {
@@ -112,7 +112,7 @@ public class CharacterUI : UIBase
     private void SortSelect()
     {
         // 현재 선택된 정렬 타입 Get
-        SortType sortType = (SortType)GetDropdown((int)Dropdowns.SortDropdown).value;
+        SortType sortType = (SortType)Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).value;
         // 정렬 타입에 따라 정렬 실행
         switch (sortType)
         {

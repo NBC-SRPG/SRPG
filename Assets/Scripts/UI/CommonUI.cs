@@ -22,7 +22,8 @@ public class CommonUI : UIBase
     {
         ApButton,
         GoldButton,
-        DiamondButton
+        DiamondButton,
+        SettingButton
     }
     private enum Images
     {
@@ -47,6 +48,7 @@ public class CommonUI : UIBase
         GetButton((int)Buttons.ApButton).onClick.AddListener(OnClickApButton);
         GetButton((int)Buttons.GoldButton).onClick.AddListener(OnClickGoldButton);
         GetButton((int)Buttons.DiamondButton).onClick.AddListener(OnClickDiamondButton);
+        GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
 
         // UI 업데이트
         RefreshAp();
@@ -117,5 +119,12 @@ public class CommonUI : UIBase
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<DiamondChargeUI>();
+    }
+    private void OnClickSettingButton()
+    {
+        Debug.Log("OnClickSettingButton");
+
+        // Managers.Sound(Sound.Effect, "ButtonClick");
+        Managers.UI.ShowUI<SettingUI>();
     }
 }
