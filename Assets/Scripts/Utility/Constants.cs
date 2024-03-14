@@ -46,7 +46,13 @@ public class Constants
 
     public enum CharacterCons 
     {
-        defaltCtr = 10, //±âº» Ä¡È®. 10%
-        defaltCtd = 120, //±âº» Ä¡ÇÇ. Åë»óÀÇ 1.2¹è µ¥¹ÌÁö.
+        defaltCtr = 10, //ï¿½âº» Ä¡È®. 10%
+        defaltCtd = 120, //ï¿½âº» Ä¡ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ 1.2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+    }
+
+    public enum GachaType
+    {
+        Common,
+        PickUp
     }
 }
