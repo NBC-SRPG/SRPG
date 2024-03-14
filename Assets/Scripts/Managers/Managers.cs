@@ -12,6 +12,12 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get { Init(); return soundManager; } }
     public static UIManager UI { get {  Init(); return uiManager; } }
 
+    private static MapManager s_mapManager = new MapManager();
+    public static MapManager MapManager { get { Init(); return s_mapManager; } }
+
+    private static BattleManager s_battleManager = new BattleManager();
+    public static BattleManager BattleManager { get { Init(); return s_battleManager; } }
+
 
     private void Start()
     {
@@ -49,6 +55,8 @@ public class Managers : MonoBehaviour
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();
+            s_mapManager.Init();
+            s_battleManager.Init();
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
