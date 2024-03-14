@@ -24,9 +24,9 @@ public class ClassSO : ScriptableObject
     public int increaseDef;
     public int increasecMov;
 
-    public int multiplyHealth;
-    public int multiplyAtk;
-    public int multiplyDef;
+    public float multiplyHealth = 1;
+    public float multiplyAtk = 1;
+    public float multiplyDef = 1;
 
     [Header("Trait_Status_addition")]
     public float increasecCtr; //Ä¡¸íÅ¸ È®·ü +

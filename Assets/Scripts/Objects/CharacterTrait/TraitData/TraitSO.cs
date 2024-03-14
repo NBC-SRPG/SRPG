@@ -25,9 +25,9 @@ public class TraitSO : ScriptableObject
     public int increaseDef;
     public int increasecMov;
 
-    public int multiplyHealth;
-    public int multiplyAtk;
-    public int multiplyDef;
+    public float multiplyHealth = 1;  //기본적으로 배율값은 전부 초기값이 1.
+    public float multiplyAtk = 1;
+    public float multiplyDef = 1;
 
     [Header("Trait_Status_addition")]
     public float increasecCtr; //치명타 확률 +

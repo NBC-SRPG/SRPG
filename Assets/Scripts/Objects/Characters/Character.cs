@@ -48,15 +48,15 @@ public class Character : MonoBehaviour
     public float TakenDamageRatio { get; private set; } = 1f;//입는 피해 비율 기본값은 1배.
 
 
-    //1차적으로 계산된 스탯. 특성, 클래스, 패시브 등에 영향을 받음.
-
-
-
-
-
-
-
-
+    //1차적으로 계산된 스탯. 특성, 클래스, 패시브 등 대체로 영구적으로 적용되는 능력치 증감이 계산된 값을 저장함.
+    public int CalcHealth;
+    public int CalcAtk;
+    public int CalcDef;
+    public int CalcMov;
+    public float CalcCrtRate;
+    public float CalcDMGRate;
+    public float CalcInflictDMGRatio;
+    public float CalcTakenDMGRatio;
 
     //기초 스탯 적용
     public void CharacterInit() //캐릭터 획득시 스테이터스 적용
@@ -83,6 +83,17 @@ public class Character : MonoBehaviour
         Defence = (characterData.def + (characterData.growDef * level));
     }
 
+    private void ApplyTraitStat() //계산식: (기초스탯 + 합연산 목록) * (곱연산 목록들의 합)
+    {
+        if(characterData.trait_Tier2[selectTrait_Tier2 - 1] != null)
+        {
+
+        }
+        CalcHealth = (int)((Health + characterData.trait_Tier1.increaseHealth)*(characterData.trait_Tier1.multiplyHealth));
+        CalcDef = (int)((Defence + characterData.trait_Tier1.multiplyDef) * (characterData.trait_Tier1.multiplyDef));
+    }
+
+
 
     //스킬 선언
     public SkillBase InitSkills()
@@ -104,8 +115,6 @@ public class Character : MonoBehaviour
     }
 
     //특성 적용
-    public 
-
     //클래스 적용
     
 }
