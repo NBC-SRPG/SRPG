@@ -21,6 +21,9 @@ public class Managers : MonoBehaviour
     private static AccountData s_accountData = new AccountData();
     public static AccountData AccountData { get { Init(); return s_accountData; } }
 
+    private static GachaManager s_gachamanager = new GachaManager();
+    public static GachaManager GachaManager { get { Init(); return s_gachamanager; } }
+
 
     private void Start()
     {
@@ -60,6 +63,7 @@ public class Managers : MonoBehaviour
             s_uiManager.Init();
             s_mapManager.Init();
             s_battleManager.Init();
+            s_gachamanager.Init();
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
