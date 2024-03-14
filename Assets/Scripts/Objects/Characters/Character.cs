@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEditor.Playables;
 using UnityEngine;
+using static Constants;
 
 public class Character : MonoBehaviour
 {
@@ -11,21 +13,53 @@ public class Character : MonoBehaviour
     public SkillBase skill;
     public PassiveAbilityBase passiveAbility;
 
-    public int level;
+    public int level = 1;
     public int maxLevel;
     public int exp;
     public int maxExp;
 
+    //선택 중인 특성 번호. ( 0 = None )
+    public int selectTrait_Tier1;
+    public int selectTrait_Tier2;
+    public int selectTrait_Tier3;
 
+    //선택 중인 기본 클래스, 상위 클래스 번호 ( 0 = None )
+    public int baseClass;
+    public int superialClass;
+
+
+    public Star star { get; private set; }
+
+
+    //기본 스탯. 즉, Base 스탯. 캐릭터 레벨에 영향을 받음.
     public Constants.AttackType CharacterAttackType { get; private set; }
     public int Health { get; private set; }
+
     public int TotalHealth { get { return Health; } }
     public int Attack { get; private set; }
     public int Defence { get; private set; }
     public int Mov { get; private set; }
 
+    private float criticalRate = 0.1f; //치명타 확률. 기본값은 0.1배. (10% 확률)
+    public float CriticalRate { get { return criticalRate; } private set { criticalRate = math.clamp(value + criticalRate, 0, 1f); } }  //치확은 0%~100%로만 설정되도록 범위 제한.
+    public float CriticalDMG { get; private set; } = 1.2f;  //치명타 피해. 기본값은 1.2배.
+
+    public float InflictDamageRatio { get; private set; } = 1f;//가하는 피해 비율. 기본값은 1배.
+    public float TakenDamageRatio { get; private set; } = 1f;//입는 피해 비율 기본값은 1배.
+
+
+    //1차적으로 계산된 스탯. 특성, 클래스, 패시브 등에 영향을 받음.
+
+
+
+
+
+
+
+
+
     //기초 스탯 적용
-    public void CharacterInit()
+    public void CharacterInit() //캐릭터 획득시 스테이터스 적용
     {
         CharacterAttackType = characterData.attackType;
         Health = characterData.health;
@@ -33,7 +67,11 @@ public class Character : MonoBehaviour
         Defence = characterData.def;
         //Resistacne = characterData.res;
         Mov = characterData.mov;
+        
+        star = characterData.defaltStar; //캐릭터의 성급은 획득 시 기본 성급.
+        maxLevel = (int)star; //최대 레벨은 기본 성급에 의해 정해짐.
 
+        //selectTrait_Tier1 = characterData.trait_Tier1;
         ApplyGrowStat();
     }
 
@@ -44,6 +82,7 @@ public class Character : MonoBehaviour
         Attack = (characterData.atk + (characterData.growAtk * level));
         Defence = (characterData.def + (characterData.growDef * level));
     }
+
 
     //스킬 선언
     public SkillBase InitSkills()
@@ -63,4 +102,10 @@ public class Character : MonoBehaviour
 
         return passiveAbility;
     }
+
+    //특성 적용
+    public 
+
+    //클래스 적용
+    
 }

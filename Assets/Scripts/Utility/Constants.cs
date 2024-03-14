@@ -44,9 +44,30 @@ public class Constants
         DefaltMaxAp = 160
     }
 
-    public enum CharacterCons 
+
+    public enum TraitType
     {
-        defaltCtr = 10, //기본 치확. 10%
-        defaltCtd = 120, //기본 치피. 통상의 1.2배 데미지.
+        Stat, //단순히 스탯 (체력/방어력/공격력, MOV, 치확, 치피, 뎀증, 받피감) 수치만 상승시킨다.
+        Special //스탯 외에 부가적인 특수 메커니즘을 추가하거나 변경 시킨다. 
+    }
+    public enum BaseClass //기본 클래스 5종.
+    {
+        Warrior,
+        Shooter,
+        Assassin,
+        Caster,
+        Priests
+    }
+    public enum Star // 성급 & 한계돌파
+    {
+        Star_1 = 30,
+        Star_2 = 40,
+        Star_3 = 50,
+        Star_4 = 60,
+        Star_5 = 70,
+        LimitBreak_1 = 75,
+        LimitBreak_2 = 80,
+        LimitBreak_3 = 85,
+        LimitBreak_4 = 90
     }
 }

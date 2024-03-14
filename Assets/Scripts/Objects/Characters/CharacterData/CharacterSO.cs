@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 [CreateAssetMenu(menuName = "CharacterData", fileName ="Character_")]
 public class CharacterSO : ScriptableObject
@@ -32,6 +33,15 @@ public class CharacterSO : ScriptableObject
     public SkillSO skill;
     public PassiveSO passive;
 
+    [Header("Trait")]
+    public TraitSO trait_Tier1;
+    public TraitSO[] trait_Tier2;
+    public TraitSO[] trait_Tier3;
+
+    [Header("Class")]
+    public ClassSO basicClass;
+    public ClassSO[] superiorClass;
+
     [Header("Star")]
-    public int defaltStar; //기본 성급
+    public Star defaltStar; //기본 성급
 }
