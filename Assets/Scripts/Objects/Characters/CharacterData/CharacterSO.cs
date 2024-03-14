@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class CharacterSO : ScriptableObject
     [Header("Develope")]
     public string character_Id;//캐릭터 식별자
 
-    [Header("Status")]//캐릭터 능력치
+    [Header("Status")]///캐릭터 능력치
     public int health;
     public int atk;
     public int def;

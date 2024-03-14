@@ -1,10 +1,10 @@
-ï»¿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFinder
 {
-    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)//ë‹¤ìŒ ì´ë™ ê°€ëŠ¥í•œ ìœ„ì¹˜ ê°€ì ¸ì˜´
+    public List<OverlayTile> MakePath(OverlayTile newTile, List<OverlayTile> prevTiles)//´ÙÀ½ ÀÌµ¿ °¡´ÉÇÑ À§Ä¡ °¡Á®¿È
     {
         OverlayTile tile = newTile;
 

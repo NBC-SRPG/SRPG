@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Playables;
@@ -19,6 +19,7 @@ public class Character : MonoBehaviour
 
     public Constants.AttackType CharacterAttackType { get; private set; }
     public int Health { get; private set; }
+    public int TotalHealth { get { return Health; } }
     public int Attack { get; private set; }
     public int Defence { get; private set; }
     public int Mov { get; private set; }

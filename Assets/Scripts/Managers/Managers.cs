@@ -17,6 +17,9 @@ public class Managers : MonoBehaviour
 
     private static BattleManager s_battleManager = new BattleManager();
     public static BattleManager BattleManager { get { Init(); return s_battleManager; } }
+    
+    private static AccountData s_accountData = new AccountData();
+    public static AccountData AccountData { get { Init(); return s_accountData; } }
 
 
     private void Start()
