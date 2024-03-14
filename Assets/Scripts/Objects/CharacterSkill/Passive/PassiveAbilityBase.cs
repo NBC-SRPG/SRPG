@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ public class PassiveAbilityBase
         this.character = character;
     }
 
-    public virtual void OnTurnStart()// 턴 시작 시 발동
+    public virtual void OnStartTurn()// 턴 시작 시 발동
     {
 
     }
@@ -26,7 +26,12 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnStartAttack(List<CharacterBase> enemy)// 공격 시작 시
+    public virtual void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
+    {
+
+    }
+
+    public virtual void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
 
     }
@@ -36,7 +41,7 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnEndAttack(List<CharacterBase> enemy)// 공격 종료 시
+    public virtual void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {
 
     }
@@ -69,5 +74,9 @@ public class PassiveAbilityBase
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 {
-
+    public override void OnEnemyPassesMe(CharacterBase enemy)
+    {
+        base.OnEnemyPassesMe(enemy);
+        enemy.BlockMoving();//ZOC 테스트 
+    }
 }
