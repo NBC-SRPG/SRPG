@@ -8,10 +8,12 @@ public class AccountData
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
     public Dictionary<int, bool> missionClearData { get; set; }
-    //public Dictionary<ItemData, int> inventory { get; set; }  Todo: ¾ÆÀÌÅÛ µ¥ÀÌÅÍ Ãß°¡ ½Ã È°¼ºÈ­ ÇÊ¿ä
+    //public Dictionary<ItemData, int> inventory { get; set; }  Todo: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ È°ï¿½ï¿½È­ ï¿½Ê¿ï¿½
     public Dictionary<int, string[]> friendData { get; set; }
 
-    // Init ¸Þ¼­µå
+    public int gachaPoint { get; set; } = 0;
+
+    // Init ï¿½Þ¼ï¿½ï¿½ï¿½
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
