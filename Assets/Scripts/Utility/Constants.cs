@@ -46,11 +46,13 @@ public class Constants
         Rhombus// 마름모 범위
     }
 
+    /* //데미지 타입은 기획안에서 더이상 사용하지 않기로 했으므로 일단 주석처리했습니다.
     public enum SkillDamageType
     {
         MagicalDamage,
         PhysicalDamage
     }
+    */
 
     public enum SkillTargetType
     {

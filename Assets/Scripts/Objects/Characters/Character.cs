@@ -10,6 +10,9 @@ public class Character : MonoBehaviour
     public SkillBase skill;
     public PassiveAbilityBase passiveAbility;
 
+    public float ExSkillLevel { get; private set; } = 1; //Ex스킬 레벨 //Todo: 스킬 레벨업 메서드 만들기. 스킬 레벨에 따라 스킬 계수 적용시키기. 실제 인게임에서 스킬 레벨에 따라 효과 달라지게 하기.
+    public float PassiveSkillLevel { get; private set; } = 1; //패시브 스킬 레벨 //계수가 있는 패시브 스킬은 계수를 올리면 되는데, 계수가 없는 패시브 스킬은 어떻게 할지, 패시브 스킬 레벨에 관한 의논 필요.
+
     private int level = 1;
     public int Level
     {
@@ -21,7 +24,7 @@ public class Character : MonoBehaviour
             maxExp = (level * 100 + maxLevel*level*20); //임의로 최대 경험치값(레벨업하는데 필요한 경험치 값)을 설정. 
             }
     }
-    public int maxLevel;
+    public int maxLevel { get; private set; }
     private int exp;
     public int Exp
     {
@@ -38,17 +41,17 @@ public class Character : MonoBehaviour
         }
     }
 
-    public int maxExp;
+    public int maxExp { get; private set; }
 
     //선택 중인 특성 번호. ( 0 = None )
     //이 변수들을 설정해 배열의 index 번호를 지정한다. 2, 3티어 특성 및 상위 클래스는 CharacterSO의 필드에 해당 SO의 배열 형식으로 저장되어있음.
-    public int selectTrait_Tier1;
-    public int selectTrait_Tier2;
-    public int selectTrait_Tier3;
+    public int selectTrait_Tier1 { get; private set; }
+    public int selectTrait_Tier2 { get; private set; }
+    public int selectTrait_Tier3 { get; private set; }
 
     //선택 중인 기본 클래스, 상위 클래스 번호 ( 0 = None )
-    public int baseClass;
-    public int selectSuperialClass;
+    public int baseClass { get; private set; }
+    public int selectSuperialClass { get; private set; }
 
 
     public Star star { get; private set; }
@@ -75,14 +78,14 @@ public class Character : MonoBehaviour
 
 
     //Calc 스탯 : 1차적으로 계산된 스탯. 특성, 클래스, 패시브 등 대체로 상시 적용되는 능력치 증감이 계산된 값을 저장함.
-    public int CalcHealth;
-    public int CalcAtk;
-    public int CalcDef;
-    public int CalcMov;
+    public int CalcHealth { get; private set; }
+    public int CalcAtk { get; private set; }
+    public int CalcDef { get; private set; }
+    public int CalcMov { get; private set; }
     private float calcCrtRate;
     public float CalcCrtRate { get { return calcCrtRate; } private set { calcCrtRate = math.clamp(value + calcCrtRate, 0, 1f); } }  //치확은 0%~100%로만 설정되도록 범위 제한.
-    public float CalcCrtDMG;
-    public float CalcInflictDMGRatio;
+    public float CalcCrtDMG { get; private set; }
+    public float CalcInflictDMGRatio { get; private set; }
     private float calcTakenDMGRatio;
     public float CalcTakenDMGRatio { get { return calcTakenDMGRatio; } private set { calcTakenDMGRatio = math.clamp(value, 0, 1f); } }
 

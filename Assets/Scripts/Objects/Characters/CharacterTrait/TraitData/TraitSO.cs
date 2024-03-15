@@ -7,7 +7,7 @@ using static Constants;
 public class TraitSO : ScriptableObject
 {
     [Header("Develope")]
-    public string trait_Id;//캐릭터 식별자
+    public string trait_Id;//특성 식별자
     public TraitType traitType; //특성 분류
 
     [Header("Trait_description")]

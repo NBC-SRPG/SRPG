@@ -35,7 +35,7 @@ public class CharacterSO : ScriptableObject
 
     [Header("Trait")] //특성SO.
     public TraitSO trait_Tier1;
-    public TraitSO[] trait_Tier2; //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스'를 배열로 저장. Character에서 인덱스 값으로 특성 / 클래스를 선택하는 구조.
+    public TraitSO[] trait_Tier2; //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장. Character에서 인덱스 값으로 특성 / 클래스를 선택하는 구조.
     public TraitSO[] trait_Tier3;
 
     [Header("Class")] //클래스SO.
