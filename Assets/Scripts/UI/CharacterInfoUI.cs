@@ -42,7 +42,8 @@ public class CharacterInfoUI : UIBase
         TraitTab,
         ClassTab,
         SkillInfoUI,
-        TraitInfoUI
+        TraitInfoUI,
+        EquipmentUpgradeUI
     }
 
     private void Start()
@@ -65,6 +66,8 @@ public class CharacterInfoUI : UIBase
 
         // 스킬, 특성 팝업 UI 비활성화 상태로 두기
         GetObject((int)GameObjects.SkillInfoUI).SetActive(false);
+        GetObject((int)GameObjects.TraitInfoUI).SetActive(false);
+        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
 
         // 스킬, 특성, 클래스 탭 보여주기
         GetButton((int)Buttons.SkillButton).onClick.AddListener(() => ShowTab(PlayTab.Skill));
@@ -154,6 +157,7 @@ public class CharacterInfoUI : UIBase
 
         GetObject((int)GameObjects.SkillInfoUI).SetActive(true);
     }
+    // TODO 고유 스킬 UI는 따로 할 것인지?
     private void OnPointerUpPassiveSkill()
     {
         Debug.Log("OnPointerUpPassiveSkill");

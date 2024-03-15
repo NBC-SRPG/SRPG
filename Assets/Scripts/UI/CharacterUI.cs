@@ -8,6 +8,10 @@ using UnityEngine.UI;
 
 public class CharacterUI : UIBase
 {
+    private enum Buttons
+    {
+        BackButton
+    }
     private enum Dropdowns
     {
         FilterDropdown,
@@ -67,9 +71,12 @@ public class CharacterUI : UIBase
         // 2. UI를 밀어버리고
         // 3. 플레이어 데이터에서 가지고 있는 캐릭터 목록을 가져온다.
         // 4. 필터에 맞는 애들만 생성
+        BindButton(typeof(Buttons));
 
         Bind<TMP_Dropdown>(typeof(Dropdowns));
         InitDropdown();
+
+        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
     }
 
     private void InitDropdown()
@@ -89,6 +96,13 @@ public class CharacterUI : UIBase
         // 목록 아이템 선택 시 실행 할 함수 추가
         Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).onValueChanged.AddListener(delegate { FilterSelect(); });
         Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).onValueChanged.AddListener(delegate { SortSelect(); });
+    }
+
+    private void OnClickBackButton()
+    {
+        Debug.Log("OnClickBackButton");
+        // TODO 버튼 클릭 효과음
+        Managers.UI.CloseUI(this);
     }
 
     // 필터 선택
