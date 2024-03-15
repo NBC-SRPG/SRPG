@@ -99,6 +99,7 @@ public class CommonUI : UIBase
     // Ap, Gold, Diamond 버튼 눌렀을 때 구매 or 충전 페이지가 열리도록 하기
     // ApChargeUI, GoldChargeUI, DiamondChargeUI로 나누어져 있지 않고 하나의 페이지에서 탭만 다르게 하기
     // or 인게임 재화인 Ap, Gold는 같은 UI 다른 탭, 현금 재화인 다이아는 다른 UI로 하기
+    
     private void OnClickApButton()
     {
         Debug.Log("OnClickApButton");
@@ -123,6 +124,12 @@ public class CommonUI : UIBase
     private void OnClickSettingButton()
     {
         Debug.Log("OnClickSettingButton");
+
+        // 이미 열려 있다면 return
+        if (Managers.UI.FindUI<SettingUI>() != null)
+        {
+            return;
+        }
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         Managers.UI.ShowUI<SettingUI>();

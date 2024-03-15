@@ -68,7 +68,7 @@ public class UIManager
         return ui;
     }
     // UI 스택에서 T타입의 UI를 return
-    public T FindPopup<T>() where T : UIBase
+    public T FindUI<T>() where T : UIBase
     {
         foreach (var item in uiStack)
         {

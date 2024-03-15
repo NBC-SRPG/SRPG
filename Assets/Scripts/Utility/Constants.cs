@@ -46,7 +46,13 @@ public class Constants
 
     public enum CharacterCons 
     {
-        defaltCtr = 10, //±âº» Ä¡È®. 10%
-        defaltCtd = 120, //±âº» Ä¡ÇÇ. Åë»óÀÇ 1.2¹è µ¥¹ÌÁö.
+        defaltCtr = 10, //ê¸°ë³¸ ì¹˜í™•. 10%
+        defaltCtd = 120, //ê¸°ë³¸ ì¹˜í”¼. í†µìƒì˜ 1.2ë°° ë°ë¯¸ì§€.
+    }
+
+    public enum UIEvent
+    {
+        PointerDown,
+        PointerUp
     }
 }
