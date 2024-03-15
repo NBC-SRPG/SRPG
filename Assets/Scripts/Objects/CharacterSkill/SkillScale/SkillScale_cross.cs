@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +12,7 @@ public class SkillScale_Cross : SkillScaleBase
     public override List<OverlayTile> GetSkillScale(Vector2Int location, int scale)
     {
         skillScale = new List<OverlayTile>();
-        GetSurroundingTiles(location, scale);
+        skillScale = GetSurroundingTiles(location, scale);
 
         return base.GetSkillScale(location, scale);
     }

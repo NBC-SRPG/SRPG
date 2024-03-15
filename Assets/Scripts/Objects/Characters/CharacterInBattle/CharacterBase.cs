@@ -32,8 +32,12 @@ public class CharacterBase : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
-    private void Start()
+
+    public void InitCharacter(Character charac, string id)
     {
+        character = charac;
+        playerId = id;
+
         character.CharacterInit();
 
         Managers.MapManager.OnCompleteMove += CheckCurTile;
@@ -50,7 +54,7 @@ public class CharacterBase : MonoBehaviour
         isDead = false;
         isWalking = false;
         didAttack = false;
-        canActing = true;
+        canActing = false;
 
         Managers.BattleManager.charactersInBattle.Add(this);
         Managers.BattleManager.charactersAsTeam[playerId].Add(this);
@@ -250,8 +254,6 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive?.OnEndAttack(enemy);
 
         Invoke(nameof(EndAttacking), 1f);
-
-        OnEndActing();
     }
 
     private void EndAttacking()
@@ -263,6 +265,8 @@ public class CharacterBase : MonoBehaviour
         }
 
         OnEndAttacking?.Invoke();
+
+        OnEndActing();
     }
 
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
