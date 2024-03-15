@@ -71,6 +71,12 @@ public class Constants
     public enum CharacterCons 
     {
         defaltCtr = 10, //기본 치확. 10%
-        defaltCtd = 120, //기본 치피. 통상의 1.2배 데미지.
+        defaltCtd = 120, //기본 치피. 통상의 1.2배 데미지
+    }
+
+    public enum GachaType
+    {
+        Common,
+        PickUp
     }
 }

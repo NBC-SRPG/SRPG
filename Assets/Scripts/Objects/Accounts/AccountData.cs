@@ -10,8 +10,10 @@ public class AccountData
     public Dictionary<int, bool> missionClearData { get; set; }
     //public Dictionary<ItemData, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
+    public VersionData versionData { get; set; }
+    public int gachaPoint { get; set; }
 
-    // Init 硫
+    // Init �޼���
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
