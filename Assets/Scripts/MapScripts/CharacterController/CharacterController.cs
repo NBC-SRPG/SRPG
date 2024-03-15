@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
@@ -33,12 +35,16 @@ public class CharacterController : MonoBehaviour
     private List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
     private List<OverlayTile> skillScale = new List<OverlayTile>();//스킬 범위 타일
 
+    private List<CharacterBase> skillTargets = new List<CharacterBase>();
+
     [SerializeField] private bool nowPlayerTurn;
     private bool canClick;//false일 때 터치 안되게
 
     private PlayerPhase phase;
     public CharacterBase curSelectedCharacter;
     public CharacterBase curTargetCharacter;
+
+    private BattleUI Ui;
 
     private void Awake()
     {
@@ -63,10 +69,7 @@ public class CharacterController : MonoBehaviour
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
 
-        //-----------------------------------------
-        //button.onClick.AddListener(TurnEnd);
-        //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
-        //----------------------------------------
+        Ui = Managers.UI.FindPopup<BattleUI>();
 
     }
 
@@ -84,6 +87,7 @@ public class CharacterController : MonoBehaviour
                 SelectCharacterPhase();
                 break;
             case PlayerPhase.ActingSelect:
+                ActingSelectPhase();
                 break;
             case PlayerPhase.MoveandAttack:
                 CharacterMoveandAttackPhase();
@@ -104,7 +108,21 @@ public class CharacterController : MonoBehaviour
             canClick = true;
             nowPlayerTurn = true;
 
-            button.onClick.AddListener(TurnEnd);
+            //-----------------------------------------
+
+            Ui.OnClickTurnEndButton += TurnEnd;
+
+            Ui.OnClickCancelButton += OnClickCancelButton;
+
+            Ui.OnClickMoveAndAttackButton += OnClickMoveAndAttack;
+            Ui.OnClickUseSkillButton += OnClickUseSkill;
+
+            Ui.OnClickAttackButton += AttackTarget;
+            Ui.OnClickMoveButton += MoveCharacter;
+
+            Ui.OnClickSkillConFirmButton += UseSkill;
+            //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
+            //----------------------------------------
         }
     }
 
@@ -147,32 +165,36 @@ public class CharacterController : MonoBehaviour
     {
         phase = newPhase;
 
+        ClearAllTile();
+
+        SelectTargetCharacter(null);
+
+        skillTargets.Clear();
+
+        Ui.ResetButtons();
+
         switch (phase)
         {
             case PlayerPhase.Idle:
-                ClearAllTile();
+                SelectCurCharacter(null);
                 nowPlayerTurn = false;
                 canClick = false;
-                SelectCurCharacter(null);
-                SelectTargetCharacter(null);
                 break;
             case PlayerPhase.CharacterSelect:
-                ClearAllTile();
                 SelectCurCharacter(null);
-                SelectTargetCharacter(null);
+
+                Ui.ShowAtCharacterSelectPhase();
                 break;
             case PlayerPhase.ActingSelect:
-                ClearAllTile();
-                SelectTargetCharacter(null);
+                Ui.ShowAtActingSelectPhase();
                 break;
             case PlayerPhase.MoveandAttack:
-                ClearAllTile();
                 movePath.Add(curSelectedCharacter.curStandingTile);
-                SelectTargetCharacter(null);
+
+                Ui.ShowAtMoveAndAttackPhase();
                 break;
             case PlayerPhase.SkillTargetSelect:
-                ClearAllTile();
-                SelectTargetCharacter(null);
+                Ui.ShowAtSkillTargetPhase();
                 break;
         }
 
@@ -209,7 +231,7 @@ public class CharacterController : MonoBehaviour
     // 캐릭터 선택 페이즈
     private void SelectCharacterPhase()
     {
-        RaycastHit2D hit = GetTouchDown();
+        RaycastHit2D hit = GetTouchOnce();
 
         if (hit)
         {
@@ -217,15 +239,16 @@ public class CharacterController : MonoBehaviour
 
             if (curTile.curStandingCharater != null)
             {
-                if (curTile.curStandingCharater.playerId == player.playerId)// 해당 캐릭터가 내 캐릭터일 때
+                if (curTile.curStandingCharater.playerId == player.playerId && curTile.curStandingCharater != curSelectedCharacter)// 해당 캐릭터가 내 캐릭터일 때
                 {
                     SelectCurCharacter(curTile.curStandingCharater);
                     if (curSelectedCharacter.canActing)// 해당 캐릭터가 아직 행동하지 않았을 때
                     {
-                        ChangePhase(PlayerPhase.MoveandAttack);
+                        ChangePhase(PlayerPhase.ActingSelect);
                     }
                 }
-                else
+                
+                if(curTile.curStandingCharater.playerId != player.playerId)
                 {
                     SelectTargetCharacter(curTile.curStandingCharater);
                 }
@@ -250,16 +273,62 @@ public class CharacterController : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
+    //ActingSelectPhase 관련
+
+    private void ActingSelectPhase()
+    {
+        RaycastHit2D hit = GetTouchOnce();
+
+        if (hit)
+        {
+            OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
+
+            if (curTile.curStandingCharater != null)
+            {
+                if (curTile.curStandingCharater.playerId == player.playerId && curTile.curStandingCharater != curSelectedCharacter)// 해당 캐릭터가 내 캐릭터일 때
+                {
+                    SelectCurCharacter(curTile.curStandingCharater);
+                    if (curSelectedCharacter.canActing)// 해당 캐릭터가 아직 행동하지 않았을 때
+                    {
+                        ChangePhase(PlayerPhase.ActingSelect);
+                    }
+                }
+                
+                if(curTile.curStandingCharater.playerId != player.playerId)
+                {
+                    SelectTargetCharacter(curTile.curStandingCharater);
+                }
+            }
+            else
+            {
+                SelectTargetCharacter(null);
+            }
+        }
+
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill);
+    }
+
+    private void OnClickMoveAndAttack()
+    {
+        if(curSelectedCharacter != null)
+        {
+            ChangePhase(PlayerPhase.MoveandAttack);
+        }
+    }
+
+    private void OnClickUseSkill()
+    {
+        if(curSelectedCharacter != null)
+        {
+            ChangePhase(PlayerPhase.SkillTargetSelect);
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
     //CharacterMoveandAttackPhase 관련
 
     private void CharacterMoveandAttackPhase()// 캐릭터 이동 및 일반 공격 페이즈
     {
-        if (!curSelectedCharacter.canActing)
-        {
-            ChangePhase(PlayerPhase.CharacterSelect);
-            return;
-        }
-
         if (!curSelectedCharacter.isWalking)// 캐릭터가 이동중이 아닐 때
         {
             if (!curSelectedCharacter.didWalk)// 아직 한번도 이동하지 않았다면, 이동 범위 가져옴
@@ -272,28 +341,14 @@ public class CharacterController : MonoBehaviour
                 GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);// 공격 가능 범위 가져옴
             }
 
-            RaycastHit2D hit = GetTouchDown();
+            RaycastHit2D hit = GetTouchOnce();
 
             if (hit)
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if (curTile.curStandingCharater == curSelectedCharacter)// 현재 캐릭터 클릭 시 취소(취소 버튼으로 바꿀 예정)
+                if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
                 {
-                    ChangePhase(PlayerPhase.CharacterSelect);
-                    return;
-                }
-
-                //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
-                if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && attackRangeTiles.Contains(curTile)
-                   && curTile.curStandingCharater != null && curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
-                {
-                    if (!curSelectedCharacter.didWalk && movePath.Count > 1)
-                    {
-                        ClearTile(movePath);
-                        ClearTile(surroundPath);
-                        movePath.Add(curSelectedCharacter.curStandingTile);
-                    }
                     SelectTargetCharacter(curTile.curStandingCharater);
                 }
                 else
@@ -302,17 +357,14 @@ public class CharacterController : MonoBehaviour
                 }
             }
 
-            //마우스 오른쪽 클릭 시 행동 확정(임시) - 버튼 클릭으로 바꿀 예정
-            if (Input.GetMouseButtonDown(1) && canClick)
-            {
-                AttackTarget();
+            //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
+            Ui.ShowMove(movePath.Count > 1 && curTargetCharacter == null);
+            Ui.ShowAttack(movePath.Count <= 1 && curTargetCharacter != null && attackRangeTiles.Contains(curTargetCharacter.curStandingTile) && curTargetCharacter.CheckEnenmy(curSelectedCharacter));
 
-                MoveCharacter();
-            }
         }
     }
 
-    private void AttackTarget()
+    private void AttackTarget()// 캐릭터 공격
     {
         if (curTargetCharacter != null)
         {
@@ -323,7 +375,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void MoveCharacter()
+    private void MoveCharacter()// 캐릭터 이동
     {
         if (movePath[movePath.Count - 1].curStandingCharater == null)
         {
@@ -342,6 +394,12 @@ public class CharacterController : MonoBehaviour
 
         canClick = true;
         ChangePhase(PlayerPhase.MoveandAttack);
+
+        if (!curSelectedCharacter.canActing)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
     }
 
     private void EndAttack()// 캐릭터의 공격이 끝났을 시
@@ -350,6 +408,12 @@ public class CharacterController : MonoBehaviour
 
         canClick = true;
         ChangePhase(PlayerPhase.MoveandAttack);
+
+        if (!curSelectedCharacter.canActing)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -365,48 +429,109 @@ public class CharacterController : MonoBehaviour
 
         GetAttackRangeTile(curSelectedCharacter.curCharacterSkill.skillData.skillRange);
 
-        if (curSelectedCharacter.curCharacterSkill.skillData.scaleType != Constants.SkillScaleType.None)// 단일 지정 스킬이 아닐 때
+        if (curSelectedCharacter.curCharacterSkill.skillData.scaleType == Constants.SkillScaleType.Self)// 자신에게 사용하는 스킬의 경우
         {
-            RaycastHit2D hit = GetTouching();
-
-            if (hit)
-            {
-                OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
-
-                if (attackRangeTiles.Contains(curTile))
-                {
-
-                    ClearTile(skillScale, true);
-
-                    GetSkillScaleTile(curTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);
-                }
-            }
+            GetSkillScaleTile(curSelectedCharacter.curStandingTile.grid2DLocation, 0);
         }
         else
         {
-            RaycastHit2D hit = GetTouchDown();
+            RaycastHit2D hit;
 
-            if (hit)
+            if (curSelectedCharacter.curCharacterSkill.skillData.scaleType != Constants.SkillScaleType.None)// 단일 지정 스킬이 아닐 때
             {
-                OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
+                hit = GetTouching();
 
-                //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
-                if (attackRangeTiles.Contains(curTile) && curTile.curStandingCharater != null)
+                if (hit)
                 {
-                    if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                    OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
+
+                    if (attackRangeTiles.Contains(curTile))
                     {
-                        SelectTargetCharacter(curTile.curStandingCharater);
+
+                        ClearTile(skillScale, true);
+
+                        GetSkillScaleTile(curTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);
                     }
-                    else if(curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
-                    {
-                        SelectTargetCharacter(curTile.curStandingCharater);
-                    }
-                }
-                else
-                {
-                    SelectTargetCharacter(null);
                 }
             }
+            else
+            {
+                hit = GetTouchOnce();
+
+                if (hit)
+                {
+                    OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
+
+                    //캐릭터가 공격 가능한 범위 내에 있는 캐릭터 터치 시
+                    if (attackRangeTiles.Contains(curTile) && curTile.curStandingCharater != null)
+                    {
+                        if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        {
+                            SelectTargetCharacter(curTile.curStandingCharater);
+                            GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
+                        }
+                        else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        {
+                            SelectTargetCharacter(curTile.curStandingCharater);
+                            GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
+                        }
+                    }
+                    else
+                    {
+                        SelectTargetCharacter(null);
+                    }
+                }
+
+            }
+        }
+
+        Ui.SetCanConfirm(skillScale.Count > 0);
+    }
+
+    private void UseSkill()// 스킬 사용
+    {
+        canClick = false;
+        curSelectedCharacter.OnEndUseSkill += EndSkill;
+
+        switch (curSelectedCharacter.curCharacterSkill.skillData.targetType)
+        {
+            case Constants.SkillTargetType.Me:
+                skillTargets.Add(curSelectedCharacter);
+                break;
+            case Constants.SkillTargetType.Enemy:
+                GetSkillTarget(true);
+                break;
+            case Constants.SkillTargetType.Ally:
+                GetSkillTarget(false);
+                break;
+        }
+
+        Managers.BattleManager.UseSkill(curSelectedCharacter, skillTargets);
+    }
+
+    private void EndSkill()// 캐릭터의 공격이 끝났을 시
+    {
+        curSelectedCharacter.OnEndUseSkill -= EndSkill;
+
+        canClick = true;
+        ChangePhase(PlayerPhase.CharacterSelect);
+    }
+
+    private void GetSkillTarget(bool enemy)// 스킬 타겟 가져오기
+    {
+        List<OverlayTile> temp = new List<OverlayTile>();
+        if (enemy)
+        {
+           temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
+        }
+        else
+        {
+            temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
+        }
+
+        foreach(OverlayTile scale in temp)
+        {
+            skillTargets.Add(scale.curStandingCharater);
         }
     }
 
@@ -514,16 +639,20 @@ public class CharacterController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
-    public RaycastHit2D GetTouchDown()// 한번 클릭
+    public RaycastHit2D GetTouchOnce()// 한번 클릭
     {
         RaycastHit2D hit = new RaycastHit2D();
 
-        if (Input.GetMouseButtonDown(0) && canClick)
+        if (EventSystem.current.IsPointerOverGameObject() == false)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            if (Input.GetMouseButtonDown(0) && canClick)
+            {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
-            hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+                hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+            }
         }
 
         return hit;
@@ -533,12 +662,16 @@ public class CharacterController : MonoBehaviour
     {
         RaycastHit2D hit = new RaycastHit2D();
 
-        if (Input.GetMouseButton(0) && canClick)
+        if (EventSystem.current.IsPointerOverGameObject() == false)
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+            if (Input.GetMouseButton(0) && canClick)
+            {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
-            hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+                hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+
+            }
         }
 
         return hit;
@@ -548,6 +681,9 @@ public class CharacterController : MonoBehaviour
     {
         switch (phase)
         {
+            case PlayerPhase.ActingSelect:
+                ChangePhase(PlayerPhase.CharacterSelect);
+                break;
             case PlayerPhase.MoveandAttack:
             case PlayerPhase.SkillTargetSelect:
                 ChangePhase(PlayerPhase.ActingSelect);
@@ -561,7 +697,18 @@ public class CharacterController : MonoBehaviour
         {
             ChangePhase(PlayerPhase.Idle);
 
-            button.onClick.RemoveListener((TurnEnd));
+            Ui.OnClickTurnEndButton -= TurnEnd;
+
+            Ui.OnClickCancelButton -= OnClickCancelButton;
+
+            Ui.OnClickMoveAndAttackButton -= OnClickMoveAndAttack;
+            Ui.OnClickUseSkillButton -= OnClickUseSkill;
+
+            Ui.OnClickAttackButton -= AttackTarget;
+            Ui.OnClickMoveButton -= MoveCharacter;
+
+            Ui.OnClickSkillConFirmButton -= UseSkill;
+
             canClick = false;
             nowPlayerTurn = false;
             Managers.BattleManager.PlayerTurnEnd();
