@@ -59,8 +59,8 @@ public class GachaUI : UIBase
         GetButton((int)Buttons.PercentageInfoButton).onClick.AddListener(OnPercentageInfoButton);
         GetButton((int)Buttons.CharacterInfoButton).onClick.AddListener(OnCharacterInfoButton);
         GetButton((int)Buttons.PointExchangeButton).onClick.AddListener(OnPointExchangeButton);
-        GetButton((int)Buttons.CommonBannerButton).onClick.AddListener(OnCommonBannerButton);
-        GetButton((int)Buttons.PickUpBannerButton).onClick.AddListener(OnPickUpBannerButton);
+        GetButton((int)Buttons.CommonBanner).onClick.AddListener(OnCommonBannerButton);
+        GetButton((int)Buttons.PickUpBanner).onClick.AddListener(OnPickUpBannerButton);
 
         gachaType = Constants.GachaType.Common;
         gachaList = Managers.AccountData.versionData.curGacha;

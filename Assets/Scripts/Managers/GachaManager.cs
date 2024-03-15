@@ -63,7 +63,7 @@ public class GachaManager : MonoBehaviour
         Result(result);
         if (gachaType == Constants.GachaType.PickUp)
         {
-            Managers.AccountData.gachaPoint += 1;
+            Managers.AccountData.versionData.curGachaPoint += 1;
         }
 
         return result;
@@ -88,7 +88,7 @@ public class GachaManager : MonoBehaviour
 
         if (gachaType == Constants.GachaType.PickUp)
         {
-            Managers.AccountData.gachaPoint += 1;
+            Managers.AccountData.versionData.curGachaPoint += 1;
         }
 
         return queue;
