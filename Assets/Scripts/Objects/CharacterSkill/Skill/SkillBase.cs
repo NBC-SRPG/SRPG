@@ -44,6 +44,7 @@ public class SkillBase
 
         switch (scaletype)
         {
+            case Constants.SkillScaleType.Self:
             case Constants.SkillScaleType.None:
                 skillScaleClass = new SkillScale_None(character, scale);
                 break;

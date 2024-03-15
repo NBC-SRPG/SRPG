@@ -18,6 +18,7 @@ public class MapTiles : MonoBehaviour
     {
         Managers.MapManager.Init();
         Managers.BattleManager.Init();
+        Managers.UI.ShowUI<BattleUI>();
     }
 
     private void Start()
@@ -29,43 +30,37 @@ public class MapTiles : MonoBehaviour
 
     private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
     {
-        BoundsInt bounds = gridTile.cellBounds;
 
-        for (int z = bounds.min.z; z <= bounds.max.z; z++)
+        foreach (Vector3Int pos in gridTile.cellBounds.allPositionsWithin)
         {
-            for(int y = bounds.min.y; y <= bounds.max.y; y++)
+            Vector3Int tileLocation = new Vector3Int(pos.x, pos.y, pos.z);
+            Vector2Int tileKey = new Vector2Int(pos.x, pos.y);
+
+            if (gridTile.HasTile(tileLocation))
             {
-                for(int x = bounds.min.x; x <= bounds.max.x; x++)
+                if (!Managers.MapManager.map.ContainsKey(tileKey))
                 {
-                    Vector3Int tileLocation = new Vector3Int(x, y, z);
-                    Vector2Int tileKey = new Vector2Int(x, y);
+                    GameObject overlayTile = Instantiate(overlayPrefabs, overlayContainer.transform);
+                    Vector3 cellWorldPosition = gridTile.GetCellCenterWorld(tileLocation);
 
-                    if (gridTile.HasTile(tileLocation))
+                    overlayTile.transform.position = cellWorldPosition;
+
+                    OverlayTile tile = overlayTile.GetComponent<OverlayTile>();
+                    tile.gridLocation = tileLocation;
+
+                    Managers.MapManager.map.Add(tileKey, tile);
+
+                    if (pos.z >= 1)
                     {
-                        if (!Managers.MapManager.map.ContainsKey(tileKey))
-                        {
-                            GameObject overlayTile = Instantiate(overlayPrefabs, overlayContainer.transform);
-                            Vector3 cellWorldPosition = gridTile.GetCellCenterWorld(tileLocation);
-
-                            overlayTile.transform.position = cellWorldPosition;
-                            
-                            OverlayTile tile = overlayTile.GetComponent<OverlayTile>();
-                            tile.gridLocation = tileLocation;
-
-                            Managers.MapManager.map.Add(tileKey, tile);
-
-                            if(z >= 1)
-                            {
-                                tile.canClick = false;
-                            }
-                            else
-                            {
-                                tile.canClick = true;
-                            }
-                        }
+                        tile.canClick = false;
+                    }
+                    else
+                    {
+                        tile.canClick = true;
                     }
                 }
             }
+
         }
     }
 
@@ -77,22 +72,15 @@ public class MapTiles : MonoBehaviour
             Tilemap tiles = st;
             List<Vector2Int> positions = new List<Vector2Int>();
 
-            BoundsInt bounds = tiles.cellBounds;
-
-            for (int z = bounds.min.z; z <= bounds.max.z; z++)
+            foreach (Vector3Int pos in tiles.cellBounds.allPositionsWithin)
             {
-                for (int y = bounds.min.y; y <= bounds.max.y; y++)
-                {
-                    for (int x = bounds.min.x; x <= bounds.max.x; x++)
-                    {
-                        Vector3Int tileLocation = new Vector3Int(x, y, z);
+                Vector3Int tileLocation = new Vector3Int(pos.x, pos.y, pos.z);
 
-                        if (tiles.HasTile(tileLocation))
-                        {
-                            positions.Add(new Vector2Int(x, y));
-                        }
-                    }
+                if (tiles.HasTile(tileLocation))
+                {
+                    positions.Add(new Vector2Int(pos.x, pos.y));
                 }
+
             }
 
             Managers.MapManager.startTiles.Add(i, positions);
