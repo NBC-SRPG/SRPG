@@ -21,6 +21,9 @@ public class CharacterBase : MonoBehaviour
 
     [HideInInspector] public bool didAttack;
     [HideInInspector] public bool didWalk;
+    [HideInInspector] public bool didUseSkill;
+
+    [HideInInspector] public bool canSkill;
     [HideInInspector] public bool canActing;
 
 
@@ -29,6 +32,7 @@ public class CharacterBase : MonoBehaviour
 
     public event Action OnEndWalk;
     public event Action OnEndAttacking;
+    public event Action OnEndUseSkill;
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
@@ -53,7 +57,12 @@ public class CharacterBase : MonoBehaviour
 
         isDead = false;
         isWalking = false;
+
         didAttack = false;
+        didWalk = false;
+        didUseSkill = false;
+
+        canSkill = false;
         canActing = false;
 
         Managers.BattleManager.charactersInBattle.Add(this);
@@ -150,9 +159,14 @@ public class CharacterBase : MonoBehaviour
     {
         isWalking = false;
         isAttacking = false;
+
         didAttack = false;
         didWalk = false;
+        didUseSkill = false;
+
+        canSkill = true;
         canActing = true;
+
         leftWalkRange = character.Mov;
 
         curCharacterPassive?.OnStartTurn();
@@ -172,6 +186,12 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnAllyPassedMe(allyCharacter);
     }
+
+    public void OnPassEnemy(CharacterBase enemyCharacter)// 적군 위를 지나갔을 때 발동
+    {
+        curCharacterPassive?.OnPassEnemy(enemyCharacter);
+    }
+
     public void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnEnemyPassesMe(enemyCharacter);
@@ -189,7 +209,6 @@ public class CharacterBase : MonoBehaviour
         Managers.MapManager.CompleteMove();
 
         curCharacterPassive?.OnEndMoving();
-        OnEndWalk?.Invoke();
 
         isWalking = false;
         didWalk = true;
@@ -201,6 +220,8 @@ public class CharacterBase : MonoBehaviour
         leftWalkRange = 0;
 
         OnEndActing();
+
+        OnEndWalk?.Invoke();
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
@@ -215,15 +236,21 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive?.OnEndTurn();
     }
 
-    private void CheckingActing()
+    private void CheckingActing()// 행동 가능 횟수 확인
     {
-        if(didAttack && didWalk)
+        if(didAttack || didWalk)
         {
+            canSkill = false;
+        }
+
+        if((didAttack && didWalk) || didUseSkill)
+        {
+            canSkill = false;
             canActing = false;
         }
     }
 
-    public bool CheckEnenmy(CharacterBase target)
+    public bool CheckEnenmy(CharacterBase target)// 적인지 확인
     {
         if(target.playerId != playerId)
         {
@@ -256,7 +283,7 @@ public class CharacterBase : MonoBehaviour
         Invoke(nameof(EndAttacking), 1f);
     }
 
-    private void EndAttacking()
+    private void EndAttacking()// 공격 끝내기(컷씬 등의 재생 이후)
     {
         isAttacking = false;
         if (character.CharacterAttackType == Constants.AttackType.Range)
@@ -264,9 +291,9 @@ public class CharacterBase : MonoBehaviour
             didAttack = true;
         }
 
-        OnEndAttacking?.Invoke();
-
         OnEndActing();
+
+        OnEndAttacking?.Invoke();
     }
 
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
@@ -295,8 +322,15 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterSkill.skillAbility?.OnEndSkill(target);
 
-        didWalk = true;
-        didAttack = true;
+        Invoke(nameof(EndUseSkill), 1f);
+    }
+
+    private void EndUseSkill()// 스킬 끝내기(컷씬 등의 재생 이후)
+    {
+        didUseSkill = true;
+
         OnEndActing();
+
+        OnEndUseSkill?.Invoke();
     }
 }

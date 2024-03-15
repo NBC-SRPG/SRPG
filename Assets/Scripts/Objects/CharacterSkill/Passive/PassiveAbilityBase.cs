@@ -26,6 +26,11 @@ public class PassiveAbilityBase
 
     }
 
+    public virtual void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
+    {
+
+    }
+
     public virtual void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
     {
 

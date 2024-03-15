@@ -39,6 +39,7 @@ public class Constants
     public enum SkillScaleType
     {
         None,// 대상 하나
+        Self,// 자신
         Cross,// 십자형 범위
         Square,// 사각형 범위
         Line,// 직선 범위
