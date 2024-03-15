@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GachaManager : MonoBehaviour
+public class GachaManager
 {
     private Constants.GachaType gachaType;
 
@@ -79,7 +79,7 @@ public class GachaManager : MonoBehaviour
             queue.Enqueue(GetRandomCharacterFromTable(tableName));
         }
         // 2성 이상만 나오는 테이블
-        queue.Enqueue(GetRandomCharacterFromTable(tableName + "2"));
+        queue.Enqueue(GetRandomCharacterFromTable(tableName + "Upper_2"));
 
         foreach (var id in queue)
         {
@@ -88,7 +88,7 @@ public class GachaManager : MonoBehaviour
 
         if (gachaType == Constants.GachaType.PickUp)
         {
-            Managers.AccountData.versionData.curGachaPoint += 1;
+            Managers.AccountData.versionData.curGachaPoint += 10;
         }
 
         return queue;
