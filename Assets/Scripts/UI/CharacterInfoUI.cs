@@ -5,6 +5,9 @@ using static Constants;
 
 public class CharacterInfoUI : UIBase
 {
+    // 캐릭터 정보
+    public Character character;
+
     private PlayTab playTab = PlayTab.None;
 
     private enum PlayTab
@@ -17,10 +20,15 @@ public class CharacterInfoUI : UIBase
     private enum Texts
     {
         NameText,
-        EXSkillText,
+        ExSkillText,
         ExSkillDescriptionText,
         PassiveSkillText,
-        PassiveSkillDescriptionText
+        PassiveSkillDescriptionText,
+        HpText,
+        AtkText,
+        DefText,
+        LevelText,
+        ExpText
     }
     private enum Buttons
     {
@@ -34,7 +42,8 @@ public class CharacterInfoUI : UIBase
     {
         IllustrationImage,
         ExSkillImage,
-        PassiveSkillImage
+        PassiveSkillImage,
+        ExpFrontImage
     }
     private enum GameObjects
     {
@@ -43,11 +52,20 @@ public class CharacterInfoUI : UIBase
         ClassTab,
         SkillInfoUI,
         TraitInfoUI,
-        EquipmentUpgradeUI
+        EquipmentUpgradeUI,
+        Star
     }
-
+    /*
     private void Start()
     {
+        Init();
+    }
+    */
+
+    public void SetCharacter(Character character)
+    {
+        this.character = character;
+        Debug.Log(character);
         Init();
     }
 
@@ -78,6 +96,67 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
 
         ShowTab(PlayTab.Skill);
+
+        // 테스트 데이터
+        InitSkillTab();
+        InitTraitTab();
+        InitClassTab();
+        InitCharacterInfo();
+    }
+
+    private void InitSkillTab()
+    {
+        // 데이터에 스킬 레벨이 없음??
+        GetText((int)Texts.ExSkillText).text = $"{character.characterData.skill.skillName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.ExSkillDescriptionText).text = $"{character.characterData.skill.description}";
+        GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.skill.skill_ID}");
+
+        GetText((int)Texts.PassiveSkillText).text = $"{character.characterData.passive.PassiveName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.characterData.passive.description}";
+        GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.passive.passive_Id}");
+    }
+
+    private void InitTraitTab()
+    {
+
+    }
+
+    private void InitClassTab()
+    {
+
+    }
+
+    private void InitCharacterInfo()
+    {
+        GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.character_Id}");
+        GetText((int)Texts.NameText).text = $"{character.characterData.characterName}";
+
+        int numberOfStars = character.characterData.defaltStar; // 별의 개수
+        float starWidth = 100f; // 별 이미지의 너비
+        float spacing = 10f; // 별 사이의 간격
+
+        // 별 이미지들의 총 너비 계산
+        float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
+
+        // 첫 번째 별 이미지의 시작 위치 계산
+        float startX = -(totalWidth / 2) + (starWidth / 2);
+
+        for (int i = 0; i < character.characterData.defaltStar; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.Star).transform);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+
+        GetText((int)Texts.HpText).text = $"{character.characterData.health + character.level * character.characterData.growHealth}";
+        GetText((int)Texts.AtkText).text = $"{character.characterData.atk + character.level * character.characterData.growAtk}";
+        GetText((int)Texts.DefText).text = $"{character.characterData.def + character.level * character.characterData.growDef}";
+        GetText((int)Texts.LevelText).text = $"Lv. {character.level} / {character.maxLevel}";
+        GetText((int)Texts.ExpText).text = $"{character.exp} / {character.maxExp}";
+        GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.exp / character.maxExp;
+        
+        // TODO
+        // 장비 정보는 아직 없는 듯?
     }
 
     private void ShowTab(PlayTab tab)

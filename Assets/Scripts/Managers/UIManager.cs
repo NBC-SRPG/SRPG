@@ -28,6 +28,7 @@ public class UIManager
     public void SetCanvas(GameObject go, bool sort = true)
     {
         Canvas canvas = go.GetComponent<Canvas>();
+        canvas.overrideSorting = true;
 
         if (sort)
         {

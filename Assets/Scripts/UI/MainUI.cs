@@ -104,7 +104,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickFormationButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<FormationUI>();
+        Managers.UI.ShowUI<FormationUI>();
     }
     private void OnClickInventoryButton()
     {

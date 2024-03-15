@@ -11,6 +11,9 @@ public class AccountData
     //public Dictionary<ItemData, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
 
+    // TODO
+    // 편성에 대한 데이터 필요
+
     // Init 硫
     public void Init(
         Dictionary<string, int> stageClearData,

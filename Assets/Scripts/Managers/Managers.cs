@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 public class Managers : MonoBehaviour
@@ -20,7 +21,6 @@ public class Managers : MonoBehaviour
     
     private static AccountData s_accountData = new AccountData();
     public static AccountData AccountData { get { Init(); return s_accountData; } }
-
 
     private void Start()
     {
@@ -60,6 +60,16 @@ public class Managers : MonoBehaviour
             uiManager.Init();
             s_mapManager.Init();
             s_battleManager.Init();
+
+            // 테스트용 데이터
+            s_accountData.Init(new Dictionary<string, int>(), new Dictionary<int, Character>(), new PlayerData(), new Dictionary<int, bool>(), new Dictionary<int, string[]>());
+
+            Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
+            Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
+            Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
+            s_accountData.characterData.Add(int.Parse(testChatacter1.characterData.character_Id), testChatacter1);
+            s_accountData.characterData.Add(int.Parse(testChatacter2.characterData.character_Id), testChatacter2);
+            s_accountData.characterData.Add(int.Parse(testChatacter3.characterData.character_Id), testChatacter3);
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;

@@ -12,10 +12,12 @@ public class CharacterButtonUI : UIBase
     public static bool isFormation;
     public static int formationIndex;
     // 캐릭터 정보
+    public Character character;
 
     private enum Texts
     {
-        NameText
+        CharacterNameText,
+        CharacterLevelText
     }
     // CharacterButton 이름이 겹침 -> 변경 or private니 그냥 넘김
     private enum Buttons
@@ -35,14 +37,20 @@ public class CharacterButtonUI : UIBase
 
     private void Init()
     {
-        Managers.UI.SetCanvas(gameObject, false);
-        // TODO
-        // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
+        //Managers.UI.SetCanvas(gameObject, false);
+
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
 
         GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickButton);
+
+        // TODO
+        // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
+        // 테스트 데이터
+        GetImage((int)Images.CharacterImage).sprite = Managers.Resource.Load<Sprite>(character.characterData.character_Id);
+        GetText((int)Texts.CharacterLevelText).text = $"{character.level} / {character.maxLevel}";
+        GetText((int)Texts.CharacterNameText).text = $"{character.characterData.characterName}";
     }
 
     private void OnClickButton()
@@ -64,7 +72,9 @@ public class CharacterButtonUI : UIBase
     {
         Debug.Log("ShowCharacterInfo");
 
-        // Managers.UI.ShowUI<CharacterInfoUI>;
+        CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
+
+        ui.SetCharacter(character);
     }
     // 편성에 추가하기
     private void AddCharacterToFormation()

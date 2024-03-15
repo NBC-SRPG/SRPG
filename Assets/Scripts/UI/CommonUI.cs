@@ -5,10 +5,10 @@ using UnityEngine;
 public class CommonUI : UIBase
 {
     // 테스트용 임시 변수들
-    private int maxAp = 120;
-    private int curAp = 96;
-    private int curGold = 32000;
-    private int curDiamond = 1600;
+    private int maxAp;
+    private int curAp;
+    private int curGold;
+    private int curDiamond;
     private int recoveryApTime = 1 * 10;
     private float recoveryTimer = 1 * 10;
     private enum Texts
@@ -50,10 +50,23 @@ public class CommonUI : UIBase
         GetButton((int)Buttons.DiamondButton).onClick.AddListener(OnClickDiamondButton);
         GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
 
+        // PlayerData에서 데이터 가져오기
+        LoadData();
+
         // UI 업데이트
         RefreshAp();
         RefreshGold();
         RefreshDiamond();
+    }
+
+    private void LoadData()
+    {
+        curAp = Managers.AccountData.playerData.ap;
+        maxAp = Managers.AccountData.playerData.maxAp;
+        curGold = Managers.AccountData.playerData.gold;
+        curDiamond = Managers.AccountData.playerData.diamond;
+        // TODO
+        // 게임을 종료하기 전 시간을 저장하고 게임을 새로 시작했을 때와의 시간과 비교하여 Ap 타이머 세팅 & 지급
     }
 
     private void Update()

@@ -17,6 +17,10 @@ public class CharacterUI : UIBase
         FilterDropdown,
         SortDropdown
     }
+    private enum GameObjects
+    {
+        Content
+    }
     // 필터 타입
     private enum FilterType
     {
@@ -72,11 +76,20 @@ public class CharacterUI : UIBase
         // 3. 플레이어 데이터에서 가지고 있는 캐릭터 목록을 가져온다.
         // 4. 필터에 맞는 애들만 생성
         BindButton(typeof(Buttons));
+        BindObject(typeof(GameObjects));
 
         Bind<TMP_Dropdown>(typeof(Dropdowns));
         InitDropdown();
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+
+        // 테스트 데이터
+        foreach (var character in Managers.AccountData.characterData)
+        {
+            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterButtonUI");
+            go.GetComponent<CharacterButtonUI>().character = character.Value;
+            Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
+        }
     }
 
     private void InitDropdown()

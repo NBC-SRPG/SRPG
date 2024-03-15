@@ -25,7 +25,8 @@ public class FormationUI : UIBase
         RightArrowButton,
         PartyNameButton,
         ResetButton,
-        SaveButton
+        SaveButton,
+        BackButton
     }
     private enum Images
     {
@@ -68,6 +69,7 @@ public class FormationUI : UIBase
         GetButton((int)Buttons.PartyNameButton).onClick.AddListener(OnClickPartyNameButton);
         GetButton((int)Buttons.ResetButton).onClick.AddListener(OnClickResetButton);
         GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
+        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
         presetIndex = 1;
     }
@@ -164,5 +166,11 @@ public class FormationUI : UIBase
         Debug.Log("OnClickSaveButton");
         // TODO
         // 편성 저장
+    }
+    private void OnClickBackButton()
+    {
+        Debug.Log("OnClickBackButton");
+
+        Managers.UI.CloseUI(this);
     }
 }
