@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +13,12 @@ public class SkillScale_Square : SkillScaleBase
     public override List<OverlayTile> GetSkillScale(Vector2Int location, int scale)
     {
         skillScale = new List<OverlayTile>();
-        GetSurroundingTiles(location, scale);
+        skillScale = GetSurroundingTiles(location, scale);
 
         return base.GetSkillScale(location, scale);
     }
 
-    private void GetSurroundingTiles(Vector2Int location, int scale)//사각형 범위 가져오기
+    private List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)//사각형 범위 가져오기
     {
         List<OverlayTile> skillScale = new List<OverlayTile>();
 
@@ -45,6 +45,6 @@ public class SkillScale_Square : SkillScaleBase
             stepCount++;
         }
 
-        skillScale.Distinct().ToList();
+        return skillScale.Distinct().ToList();
     }
 }
