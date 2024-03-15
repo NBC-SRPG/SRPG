@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -25,9 +23,9 @@ public class TraitSO : ScriptableObject
     public int increaseDef;
     public int increasecMov;
 
-    public float multiplyHealth = 1;  //기본적으로 배율값은 전부 초기값이 1.
-    public float multiplyAtk = 1;
-    public float multiplyDef = 1;
+    public float multiplyHealth; //곱연산은 계산할 때 1을 더하고 시작하므로, 이 특성으로 10%를 증가시키고 싶다면 0.1로 설정하는 방식으로 설정하면 됩니다.
+    public float multiplyAtk;
+    public float multiplyDef;
 
     [Header("Trait_Status_addition")]
     public float increasecCtr; //치명타 확률 +
@@ -37,5 +35,6 @@ public class TraitSO : ScriptableObject
 
 
     [Header("Trait_special")]
-    public string speciaID;//특성의 별도 고유 효과
+    public string speciaID;//특성의 별도 고유 효과. 세부로직 미구현.
+                           //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
 }

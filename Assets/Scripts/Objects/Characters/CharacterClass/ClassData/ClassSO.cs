@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -24,9 +22,9 @@ public class ClassSO : ScriptableObject
     public int increaseDef;
     public int increasecMov;
 
-    public float multiplyHealth = 1;
-    public float multiplyAtk = 1;
-    public float multiplyDef = 1;
+    public float multiplyHealth;
+    public float multiplyAtk;
+    public float multiplyDef;
 
     [Header("Trait_Status_addition")]
     public float increasecCtr; //치명타 확률 +
@@ -35,5 +33,6 @@ public class ClassSO : ScriptableObject
     public float reducedTakenDamage; //받는 최종 피해 감소 -
 
     [Header("Class_unique")]
-    public string uniqueID;//클래스의 별도 고유 효과
+    public string uniqueID;//클래스의 별도 고유 효과. 세부로직 미구현.
+                           //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
 }

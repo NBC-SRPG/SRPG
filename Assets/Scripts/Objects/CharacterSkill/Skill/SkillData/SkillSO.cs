@@ -17,6 +17,7 @@ public class SkillSO : ScriptableObject
     public Constants.SkillDamageType damageType;//데미지 타입
     public int cost;//스킬 코스트
     public float coefficient;//스킬 계수
+    public float growthCoefficient; //레벨 당 증가하는 스킬 계수
     public bool onhit;//스킬이 기본 공격 적중 효과를 발동 시키는 지
 
     [Header("Skill_Range")]
