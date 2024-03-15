@@ -10,8 +10,7 @@ public class AccountData
     public Dictionary<int, bool> missionClearData { get; set; }
     //public Dictionary<ItemData, int> inventory { get; set; }  Todo: ������ ������ �߰� �� Ȱ��ȭ �ʿ�
     public Dictionary<int, string[]> friendData { get; set; }
-
-    public int gachaPoint { get; set; } = 0;
+    public VersionData versionData { get; set; }
 
     // Init �޼���
     public void Init(
