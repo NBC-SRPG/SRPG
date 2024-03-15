@@ -32,7 +32,7 @@ public class Character : MonoBehaviour
         set //경험치 설정자에 자체적으로 레벨업 기능을 배치했습니다.
         { 
             exp = value; 
-            while ( exp >= maxExp && level != maxLevel) 
+            while ( exp >= maxExp && level < maxLevel && level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
             {
                 exp -= maxExp;
                 level += 1;
