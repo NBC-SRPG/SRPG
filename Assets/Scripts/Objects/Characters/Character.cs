@@ -83,7 +83,7 @@ public class Character : MonoBehaviour
         Defence = (characterData.def + (characterData.growDef * level));
     }
 
-    private void ApplyTraitStat() //계산식: (기초스탯 + 합연산 목록) * (곱연산 목록들의 합)
+    private void ApplyTraitStat() //계산식: (기초스탯 + 합연산 목록들의 합) * (곱연산 목록들의 합)
     {
         if(characterData.trait_Tier2[selectTrait_Tier2 - 1] != null)
         {
