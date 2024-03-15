@@ -39,6 +39,8 @@ public class SettingUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
+
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 

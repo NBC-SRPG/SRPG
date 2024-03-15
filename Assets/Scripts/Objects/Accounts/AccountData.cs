@@ -10,6 +10,7 @@ public class AccountData
     public Dictionary<int, bool> missionClearData { get; set; }
     //public Dictionary<ItemData, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
+    public Dictionary<int, Dictionary<int, Character>> formationData { get; set; } 
 
     // TODO
     // 편성에 대한 데이터 필요
@@ -21,7 +22,8 @@ public class AccountData
         PlayerData playerData,
         Dictionary<int, bool> missionClearData,
         //Dictionary<ItemData, int> inventory,
-        Dictionary<int, string[]> friendData
+        Dictionary<int, string[]> friendData,
+        Dictionary<int, Dictionary<int, Character>> formationData
         )
     {
         this.stageClearData = stageClearData ?? new Dictionary<string, int>();
@@ -30,5 +32,6 @@ public class AccountData
         this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         //this.inventory = inventory ?? new Dictionary<ItemData, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
+        this.formationData = formationData ?? new Dictionary<int, Dictionary<int, Character>>();
     }
 }

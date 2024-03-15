@@ -96,7 +96,8 @@ public class MainUI : UIBase
         // 버튼 클릭 사운드 출력 (SoundManager)
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
-        // CharacterUI 생성 (UIManager)
+        // 메인UI -> 캐릭터UI 접근임을 알림
+        CharacterButtonUI.isFormation = false;
         Managers.UI.ShowUI<CharacterUI>();
     }
     private void OnClickFormationButton()

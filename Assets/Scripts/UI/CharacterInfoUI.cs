@@ -71,6 +71,8 @@ public class CharacterInfoUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
+
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
@@ -141,7 +143,7 @@ public class CharacterInfoUI : UIBase
         // 첫 번째 별 이미지의 시작 위치 계산
         float startX = -(totalWidth / 2) + (starWidth / 2);
 
-        for (int i = 0; i < character.characterData.defaltStar; i++)
+        for (int i = 0; i < numberOfStars; i++)
         {
             GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.Star).transform);
             RectTransform rt = star.GetComponent<RectTransform>();

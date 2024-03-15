@@ -83,5 +83,13 @@ public class CharacterButtonUI : UIBase
         // TODO
         // 편성에 추가
         // 편성에 어떻게 추가하지? -> 버튼을 누르면 바로 추가 or 버튼 누르면 정보창이 뜨고 거기에서 추가
+        // 이미 편성에 추가된 캐릭터는 추가 할 수 없음을 보여주어야 함
+
+        // 편성 UI 뽑아서 formationIndex에 해당하는 곳에 캐릭터 정보 전달
+        FormationUI ui = Managers.UI.FindUI<FormationUI>();
+        Managers.AccountData.formationData[ui.presetIndex][formationIndex] = character;
+        ui.UpdateFormationMember(formationIndex);
+
+        Managers.UI.CloseUI(Managers.UI.PeekUI<CharacterUI>());
     }
 }
