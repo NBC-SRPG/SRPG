@@ -36,6 +36,29 @@ public class Constants
         Vegabond
     }
 
+    public enum SkillScaleType
+    {
+        None,// ëŒ€ìƒ í•˜ë‚˜
+        Cross,// ì‹­ìí˜• ë²”ìœ„
+        Square,// ì‚¬ê°í˜• ë²”ìœ„
+        Line,// ì§ì„  ë²”ìœ„
+        Rhombus// ë§ˆë¦„ëª¨ ë²”ìœ„
+    }
+
+    public enum SkillDamageType
+    {
+        MagicalDamage,
+        PhysicalDamage
+    }
+
+    public enum SkillTargetType
+    {
+        Me,
+        Enemy,
+        Ally
+    }
+
+
     public enum PlayerCons
     {
         DefaltLevel = 1,
@@ -44,30 +67,9 @@ public class Constants
         DefaltMaxAp = 160
     }
 
-
-    public enum TraitType
+    public enum CharacterCons 
     {
-        Stat, //´Ü¼øÈ÷ ½ºÅÈ (Ã¼·Â/¹æ¾î·Â/°ø°İ·Â, MOV, Ä¡È®, Ä¡ÇÇ, µ©Áõ, ¹ŞÇÇ°¨) ¼öÄ¡¸¸ »ó½Â½ÃÅ²´Ù.
-        Special //½ºÅÈ »Ó¸¸ ¾Æ´Ï¶ó ºÎ°¡ÀûÀÎ Æ¯¼ö ¸ŞÄ¿´ÏÁòÀ» Ãß°¡ÇÏ°Å³ª º¯°æ ½ÃÅ²´Ù. 
-    }
-    public enum BaseClass //±âº» Å¬·¡½º 5Á¾.
-    {
-        Warrior,
-        Shooter,
-        Assassin,
-        Caster,
-        Priests
-    }
-    public enum Star // ¼º±Ş & ÇÑ°èµ¹ÆÄ
-    {
-        Star_1 = 30,
-        Star_2 = 40,
-        Star_3 = 50,
-        Star_4 = 60,
-        Star_5 = 70,
-        LimitBreak_1 = 75,
-        LimitBreak_2 = 80,
-        LimitBreak_3 = 85,
-        LimitBreak_4 = 90
+        defaltCtr = 10, //ê¸°ë³¸ ì¹˜í™•. 10%
+        defaltCtd = 120, //ê¸°ë³¸ ì¹˜í”¼. í†µìƒì˜ 1.2ë°° ë°ë¯¸ì§€.
     }
 }
