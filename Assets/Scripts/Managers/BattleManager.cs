@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ public class BattleManager
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
 
+    public event Action TurnStart;
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //초기화 함수들
+
     public void Init()
     {
         players.Clear();
@@ -20,31 +26,47 @@ public class BattleManager
         charactersAsTeam.Clear();
     }
 
+    public void GetReady()
+    {
+        if (players.FindAll(x => x.isReady).Count == players.Count)
+        {
+            InitBattle();
+        }
+    }
+
     public void InitBattle()
     {
         nowPlayerNum = 0;
 
-        players = players.OrderByDescending(x => x.prioty).ToList();
-
         StartRound();
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------
+    //전투 관련 함수들
+
+    //---------------------------------------------------------------------------
+    // 이동 관련
     public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
-        if (curCharacter.playerId == standingCharacter.playerId)
+        if (curCharacter.playerId == standingCharacter.playerId)// 아군 위를 지나갔을 때
         {
             curCharacter.OnPassAlly(standingCharacter);
             standingCharacter.OnAllyPassedMe(curCharacter);
         }
-        else
+        else// 적군 위를 지나갔을 때
         {
-            if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)
+            if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
                 Attack(curCharacter, standingCharacter);
             }
+            curCharacter.OnPassEnemy(standingCharacter);
             standingCharacter.OnEnemyPassesMe(curCharacter);
         }
     }
+
+    //---------------------------------------------------------------------------
+    // 공격 관련
 
     public void Attack(CharacterBase attacker, CharacterBase victim)
     {
@@ -52,14 +74,33 @@ public class BattleManager
         attacker.OnStartAttack(victim);
 
         //---
-        //victim.takedamage
+        //victim.takedamage// characterBase에 attack함수로 이동시킬까 생각 중
         //attacker.OnAttackSuccess(victim, damage);
-        victim.OnTakeDamage(attacker);
+        //victim.OnTakeDamage(attacker);// takedamage 내로 이동
         //---
 
         attacker.OnEndAttack(victim);
         
     }
+
+    //---------------------------------------------------------------------------
+    // 스킬 관련
+
+    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    {
+        Debug.Log("useSkill");
+        skillUser.OnUseSkill(target);
+
+        foreach(var t in target)
+        {
+            Debug.Log(t + " take skill");
+        }
+
+        skillUser.OnEndSkill(target);
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //턴 관련 함수들
 
     public void PlayerTurnEnd()
     {
@@ -68,19 +109,24 @@ public class BattleManager
         if(nowPlayerNum >= players.Count)
         {
             EndRound();
+            return;
         }
 
-        StartRound();
+        PlayerTurnStart();
     }
 
     public void PlayerTurnStart()
     {
         nowPlayer = players[nowPlayerNum];
+
+        TurnStart?.Invoke();
         Debug.Log("nowPlayer" + nowPlayer.playerId);
     }
 
     private void StartRound()
     {
+        players = players.OrderByDescending(x => x.prioty).ToList();
+
         foreach (CharacterBase characters in charactersInBattle)
         {
             characters.OnStartTurn();
@@ -97,5 +143,7 @@ public class BattleManager
         }
 
         nowPlayerNum = 0;
+
+        StartRound();
     }
 }

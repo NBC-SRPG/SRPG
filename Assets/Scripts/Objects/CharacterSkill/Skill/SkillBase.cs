@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +7,7 @@ public class SkillBase
 {
     public SkillSO skillData;
     public SkillAbilityBase skillAbility;
-    public SkillScaleBase skillScale;
+    public SkillScaleBase skillScaleClass;
 
     public CharacterBase character;
 
@@ -39,25 +39,26 @@ public class SkillBase
 
     private void InitSkillRange()//스킬 범위 생성자
     {
-        SkillScaleType scaletype = skillData.scaleType;
+        Constants.SkillScaleType scaletype = skillData.scaleType;
         int scale = skillData.skillScale;
 
         switch (scaletype)
         {
-            case SkillScaleType.None:
-                skillScale = new SkillScale_None(character, scale);
+            case Constants.SkillScaleType.Self:
+            case Constants.SkillScaleType.None:
+                skillScaleClass = new SkillScale_None(character, scale);
                 break;
-            case SkillScaleType.Line:
-                skillScale = new SkillScale_Line(character, scale);
+            case Constants.SkillScaleType.Line:
+                skillScaleClass = new SkillScale_Line(character, scale);
                 break;
-            case SkillScaleType.Square:
-                skillScale = new SkillScale_Square(character, scale);
+            case Constants.SkillScaleType.Square:
+                skillScaleClass = new SkillScale_Square(character, scale);
                 break;
-            case SkillScaleType.Cross:
-                skillScale = new SkillScale_Cross(character, scale);
+            case Constants.SkillScaleType.Cross:
+                skillScaleClass = new SkillScale_Cross(character, scale);
                 break;
-            case SkillScaleType.Rhombus:
-                skillScale = new SkillScale_Rhombus(character, scale);
+            case Constants.SkillScaleType.Rhombus:
+                skillScaleClass = new SkillScale_Rhombus(character, scale);
                 break;
         }
     }
