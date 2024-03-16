@@ -63,7 +63,7 @@ public class GachaManager
         Result(result);
         if (gachaType == Constants.GachaType.PickUp)
         {
-            Managers.AccountData.curGachaPoint += 1;
+            Managers.AccountData.gachaPoint += 1;
         }
 
         return result;
@@ -88,7 +88,7 @@ public class GachaManager
 
         if (gachaType == Constants.GachaType.PickUp)
         {
-            Managers.AccountData.curGachaPoint += 10;
+            Managers.AccountData.gachaPoint += 10;
         }
 
         return queue;
