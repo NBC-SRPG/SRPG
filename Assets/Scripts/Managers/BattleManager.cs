@@ -16,6 +16,8 @@ public class BattleManager
 
     public event Action TurnStart;
 
+    public bool isShowAnimation;
+
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
 
@@ -24,6 +26,8 @@ public class BattleManager
         players.Clear();
         charactersInBattle.Clear();
         charactersAsTeam.Clear();
+
+        isShowAnimation = false;
     }
 
     public void GetReady()
@@ -78,6 +82,8 @@ public class BattleManager
         //attacker.OnAttackSuccess(victim, damage);
         //victim.OnTakeDamage(attacker);// takedamage 내로 이동
         //---
+
+        AnimationController.instance.StartAttackAnimation(attacker, victim);
 
         attacker.OnEndAttack(victim);
         

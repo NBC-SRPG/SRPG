@@ -8,6 +8,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class CharacterBase : MonoBehaviour
 {
     public Character character;
+    public CharAnimBase characterAnim;
     public string playerId;
 
     public SkillBase curCharacterSkill;
@@ -37,6 +38,8 @@ public class CharacterBase : MonoBehaviour
     public event Action OnEndAttacking;
     public event Action OnEndUseSkill;
 
+    private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
+
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
@@ -45,10 +48,13 @@ public class CharacterBase : MonoBehaviour
         character = charac;
         playerId = id;
 
+        Managers.MapManager.OnCompleteMove += CheckCurTile;
+        character = Instantiate(character, gameObject.transform);
+
         character.CharacterInit();
 
-        Managers.MapManager.OnCompleteMove += CheckCurTile;
-        Instantiate(character, gameObject.transform);
+        characterAnim = GetComponentInChildren<CharAnimBase>();
+        characterAnim.Init(this);
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
         curCharacterSkill = character.InitSkills();
@@ -106,6 +112,7 @@ public class CharacterBase : MonoBehaviour
             while (transform.position != movePath[1].transform.position)
             {
                 transform.position = Vector2.MoveTowards(transform.position, movePath[1].transform.position, 5 * Time.deltaTime);
+                characterAnim.FlipCharacter(movePath[1].transform.position, false);
 
                 yield return null;
             }
@@ -118,9 +125,14 @@ public class CharacterBase : MonoBehaviour
                 if (movePath[0].curStandingCharater != null)
                 {
                     target = movePath[0].curStandingCharater;
+                    MoveTile(movePath[0]);
                     Managers.BattleManager.OnPassCharacter(this, target);
 
-                    yield return new WaitWhile(() => isAttacking);
+                    yield return animationWait;
+                }
+                else
+                {
+                    MoveTile(movePath[0]);
                 }
             }
         }
@@ -130,12 +142,15 @@ public class CharacterBase : MonoBehaviour
             while (transform.position != movePath[0].transform.position)
             {
                 transform.position = Vector2.MoveTowards(transform.position, movePath[0].transform.position, 20 * Time.deltaTime);
+                characterAnim.FlipCharacter(movePath[0].transform.position, true);
+
                 yield return null;
             }
-
             MoveTile(movePath[0]);
+
             OnEndMoving();
         }
+
     }
 
     public void BlockMoving()
@@ -204,6 +219,7 @@ public class CharacterBase : MonoBehaviour
     public void OnStartMoving()// 이동 시
     {
         isWalking = true;
+        characterAnim.PlayMoveAnimation();
 
         curCharacterPassive?.OnStartMoving();
     }
@@ -223,6 +239,7 @@ public class CharacterBase : MonoBehaviour
         pathedTiles.Clear();
         leftWalkRange = 0;
 
+        characterAnim.PlayMoveAnimation();
         OnEndActing();
 
         OnEndWalk?.Invoke();
@@ -292,11 +309,13 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnEndAttack(enemy);
 
-        Invoke(nameof(EndAttacking), 1f);
+        StartCoroutine(nameof(EndAttacking));
     }
 
-    private void EndAttacking()// 공격 끝내기(컷씬 등의 재생 이후)
+    private IEnumerator EndAttacking()// 공격 끝내기(컷씬 등의 재생 이후)
     {
+        yield return animationWait;
+
         isAttacking = false;
         if (character.CharacterAttackType == Constants.AttackType.Range)
         {
@@ -311,6 +330,18 @@ public class CharacterBase : MonoBehaviour
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
     {
         curCharacterPassive?.OnTakeDamage(enemy);
+    }
+
+    private void GetAttackTarget()// 공격 타겟 가져오기
+    {
+        List<OverlayTile> temp = new List<OverlayTile>();
+
+        temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+
+        foreach (OverlayTile scale in temp)
+        {
+            targets.Add(scale.curStandingCharater);
+        }
     }
 
     //---------------------------------------------------------------------------

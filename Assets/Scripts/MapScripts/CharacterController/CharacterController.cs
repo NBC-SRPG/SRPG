@@ -154,8 +154,6 @@ public class CharacterController : MonoBehaviour
 
         player.isReady = true;
         Managers.BattleManager.GetReady();
-
-        Debug.Log(player.playerId + "character set");
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
