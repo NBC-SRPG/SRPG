@@ -400,7 +400,8 @@ public class CharacterController : MonoBehaviour
             canClick = false;
             curSelectedCharacter.OnEndAttacking += EndAttack;
 
-            Managers.BattleManager.Attack(curSelectedCharacter, curTargetCharacter);
+            curSelectedCharacter.target = curTargetCharacter;
+            curSelectedCharacter.AttackTarget();
         }
     }
 
@@ -468,6 +469,12 @@ public class CharacterController : MonoBehaviour
 
             if (curSelectedCharacter.curCharacterSkill.skillData.scaleType != Constants.SkillScaleType.None)// 단일 지정 스킬이 아닐 때
             {
+                if(skillScale.Count == 0)
+                {
+                    GetSkillScaleTile(curSelectedCharacter.curStandingTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);// 처음 한번은 캐릭터 기준으로 가져옴
+                }
+
+
                 hit = GetTouching();
 
                 if (hit)
@@ -523,20 +530,8 @@ public class CharacterController : MonoBehaviour
         canClick = false;
         curSelectedCharacter.OnEndUseSkill += EndSkill;
 
-        switch (curSelectedCharacter.curCharacterSkill.skillData.targetType)
-        {
-            case Constants.SkillTargetType.Me:
-                skillTargets.Add(curSelectedCharacter);
-                break;
-            case Constants.SkillTargetType.Enemy:
-                GetSkillTarget(true);
-                break;
-            case Constants.SkillTargetType.Ally:
-                GetSkillTarget(false);
-                break;
-        }
-
-        Managers.BattleManager.UseSkill(curSelectedCharacter, skillTargets);
+        curSelectedCharacter.targets = skillTargets;
+        curSelectedCharacter.UseSkill();
     }
 
     private void EndSkill()// 캐릭터의 공격이 끝났을 시
@@ -547,23 +542,6 @@ public class CharacterController : MonoBehaviour
         ChangePhase(PlayerPhase.CharacterSelect);
     }
 
-    private void GetSkillTarget(bool enemy)// 스킬 타겟 가져오기
-    {
-        List<OverlayTile> temp = new List<OverlayTile>();
-        if (enemy)
-        {
-           temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
-        }
-        else
-        {
-            temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
-        }
-
-        foreach(OverlayTile scale in temp)
-        {
-            skillTargets.Add(scale.curStandingCharater);
-        }
-    }
 
     //-----------------------------------------------------------------------------------------------------------------------
     //거리 탐색 함수들
@@ -663,6 +641,8 @@ public class CharacterController : MonoBehaviour
         {
             tile.ShowAsScale();
         }
+
+        curSelectedCharacter.skillScale = skillScale;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

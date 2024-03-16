@@ -26,9 +26,12 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool canSkill;
     [HideInInspector] public bool canActing;
 
+    [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
+    [HideInInspector] public List<OverlayTile> movePath = new List<OverlayTile>();
+    private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
-    public List<OverlayTile> movePath = new List<OverlayTile>();
-    public Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
+    public List<CharacterBase> targets = new List<CharacterBase>();
+    public CharacterBase target;
 
     public event Action OnEndWalk;
     public event Action OnEndAttacking;
@@ -114,7 +117,8 @@ public class CharacterBase : MonoBehaviour
 
                 if (movePath[0].curStandingCharater != null)
                 {
-                    Managers.BattleManager.OnPassCharacter(this, movePath[0].curStandingCharater);
+                    target = movePath[0].curStandingCharater;
+                    Managers.BattleManager.OnPassCharacter(this, target);
 
                     yield return new WaitWhile(() => isAttacking);
                 }
@@ -228,6 +232,9 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnEndActing();
 
+        target = null;
+        targets.Clear();
+
         CheckingActing();
     }
 
@@ -265,6 +272,11 @@ public class CharacterBase : MonoBehaviour
     //---------------------------------------------------------------------------
     // 일반 공격 관련
 
+    public void AttackTarget()// 캐릭터 공격
+    {
+         Managers.BattleManager.Attack(this, target);
+    }
+
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         curCharacterPassive?.OnStartAttack(enemy);
@@ -289,9 +301,9 @@ public class CharacterBase : MonoBehaviour
         if (character.CharacterAttackType == Constants.AttackType.Range)
         {
             didAttack = true;
-        }
 
-        OnEndActing();
+            OnEndActing();
+        }
 
         OnEndAttacking?.Invoke();
     }
@@ -303,6 +315,42 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 스킬 관련
+
+    public void UseSkill()// 스킬 사용
+    {
+        GetSkillTarget();
+
+        Managers.BattleManager.UseSkill(this, targets);
+    }
+
+    private void GetSkillTarget()// 스킬 타겟 가져오기
+    {
+        List<OverlayTile> temp = new List<OverlayTile>();
+
+        switch (curCharacterSkill.skillData.targetType)
+        {
+            case Constants.SkillTargetType.Me:
+                targets.Add(this);
+                break;
+            case Constants.SkillTargetType.Enemy:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                break;
+            case Constants.SkillTargetType.Ally:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                break;
+            case Constants.SkillTargetType.All:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null);
+                break;
+            case Constants.SkillTargetType.AllExceptME:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater != this);
+                break;
+        }
+
+        foreach (OverlayTile scale in temp)
+        {
+            targets.Add(scale.curStandingCharater);
+        }
+    }
 
     public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
