@@ -10,17 +10,16 @@ public class CharAnim_Test : CharAnimBase
 
     }
 
-    public void HitEnemy()
+    public override void HitEnemy(int scale)
     {
-        targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBack(transform.position, 5);
+        base.HitEnemy(scale);
     }
 
     public void MoveToPosition()
     {
-        Vector2 moveTarget = new Vector2(
+        Vector3 moveTarget = new Vector3(
             (targetCharacter.transform.position.x - (Getdirection(targetCharacter.transform.position).x)),
-            targetCharacter.transform.position.y);
+            targetCharacter.transform.position.y, targetCharacter.transform.position.z);
 
         StartCoroutine(MoveToTarget(moveTarget));
     }

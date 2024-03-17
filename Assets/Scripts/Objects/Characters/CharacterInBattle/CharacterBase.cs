@@ -126,7 +126,7 @@ public class CharacterBase : MonoBehaviour
                 {
                     target = movePath[0].curStandingCharater;
                     MoveTile(movePath[0]);
-                    Managers.BattleManager.OnPassCharacter(this, target);
+                    StartCoroutine(Managers.BattleManager.OnPassCharacter(this, target));
 
                     yield return animationWait;
                 }
@@ -239,7 +239,7 @@ public class CharacterBase : MonoBehaviour
         pathedTiles.Clear();
         leftWalkRange = 0;
 
-        characterAnim.PlayMoveAnimation();
+        characterAnim.EndAnimation();
         OnEndActing();
 
         OnEndWalk?.Invoke();
@@ -351,7 +351,7 @@ public class CharacterBase : MonoBehaviour
     {
         GetSkillTarget();
 
-        Managers.BattleManager.UseSkill(this, targets);
+        StartCoroutine(Managers.BattleManager.UseSkill(this, targets));
     }
 
     private void GetSkillTarget()// 스킬 타겟 가져오기

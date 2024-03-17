@@ -45,12 +45,21 @@ public class CharAnimBase : MonoBehaviour
     public virtual void PlayDefendAnimation(CharacterBase targetCharacter)
     {
         this.targetCharacter = targetCharacter;
+
+        targetCharacter.transform.position = new Vector3(character.transform.position.x - 3f, character.transform.position.y, character.transform.position.z);
+
         Animator.SetTrigger(defend);
+    }
+
+    public virtual void HitEnemy(int scale)
+    {
+        targetCharacter.characterAnim.PlayHitAnimation();
+        targetCharacter.characterAnim.GetKnockBack(transform.position, scale);
     }
 
     public void PlayMoveAnimation()
     {
-        Animator.SetBool(Move, character.isWalking);
+        Animator.SetBool(Move, true);
     }
 
     public void PlayHitAnimation()
@@ -60,12 +69,13 @@ public class CharAnimBase : MonoBehaviour
 
     public void EndAnimation()
     {
+        Animator.SetBool(Move, false);
         Animator.SetBool(Hit, false);
     }
 
-    protected Vector2 Getdirection(Vector2 target)
+    protected Vector2 Getdirection(Vector3 target)
     {
-        Vector2 direction = (target - (Vector2)character.transform.position).normalized;
+        Vector2 direction = (target - character.transform.position).normalized;
 
         return direction;
     }
@@ -101,17 +111,17 @@ public class CharAnimBase : MonoBehaviour
     public void GetKnockBack(Vector2 target, int scale)
     {
         Vector2 knockBackDirection = ((Vector2)character.transform.position - target).normalized * scale;
-        Vector2 targetposition = new Vector2(character.transform.position.x + knockBackDirection.x, character.transform.position.y);
+        Vector3 targetposition = new Vector3(character.transform.position.x + knockBackDirection.x, character.transform.position.y, character.transform.position.z);
 
         StartCoroutine(MoveToTarget(targetposition));
     }
 
-    protected IEnumerator MoveToTarget(Vector2 targetPosition)
+    protected IEnumerator MoveToTarget(Vector3 targetPosition)
     {
 
-        while((Vector2)character.transform.position != targetPosition)
+        while(character.transform.position != targetPosition)
         {
-            character.transform.position = Vector2.MoveTowards(character.transform.position, targetPosition, 80f * Time.deltaTime);
+            character.transform.position = Vector3.MoveTowards(character.transform.position, targetPosition, 80f * Time.deltaTime);
 
             yield return null;
         }

@@ -17,6 +17,7 @@ public class BattleManager
     public event Action TurnStart;
 
     public bool isShowAnimation;
+    private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
@@ -51,7 +52,7 @@ public class BattleManager
 
     //---------------------------------------------------------------------------
     // 이동 관련
-    public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
+    public IEnumerator OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
         if (curCharacter.playerId == standingCharacter.playerId)// 아군 위를 지나갔을 때
         {
@@ -63,6 +64,7 @@ public class BattleManager
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
                 Attack(curCharacter, standingCharacter);
+                yield return animationWait;
             }
             curCharacter.OnPassEnemy(standingCharacter);
             standingCharacter.OnEnemyPassesMe(curCharacter);
@@ -92,7 +94,7 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 스킬 관련
 
-    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    public IEnumerator UseSkill(CharacterBase skillUser, List<CharacterBase> target)
     {
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
@@ -101,6 +103,8 @@ public class BattleManager
         {
             Debug.Log(t + " take skill");
         }
+
+        yield return animationWait;
 
         skillUser.OnEndSkill(target);
     }
