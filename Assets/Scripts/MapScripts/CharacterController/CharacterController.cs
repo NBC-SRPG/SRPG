@@ -201,12 +201,23 @@ public class CharacterController : MonoBehaviour
     }
 
     //타일 지우기
-    private void ClearTile(List<OverlayTile> tileList, bool unable = false)
+    private void ClearTile(List<OverlayTile> tileList)
     {
         foreach (OverlayTile tile in tileList)
         {
             tile.ResetTile();
-            if (unable)
+            tile.HideTile();
+        }
+
+        tileList.Clear();
+    }
+
+    private void ResetTileOnMove(List<OverlayTile> tileList)
+    {
+        foreach (OverlayTile tile in tileList)
+        {
+            tile.ResetTile();
+            if (!moveRangeTiles.Contains(tile))
             {
                 tile.HideTile();
             }
@@ -215,14 +226,24 @@ public class CharacterController : MonoBehaviour
         tileList.Clear();
     }
 
+    private void ResetTileOnSkill(List<OverlayTile> tileList)
+    {
+        foreach (OverlayTile tile in tileList)
+        {
+            tile.HideScale();
+        }
+
+        tileList.Clear();
+    }
+
     //모든 타일 지우기
     private void ClearAllTile()
     {
-        ClearTile(movePath, true);
-        ClearTile(moveRangeTiles, true);
-        ClearTile(attackRangeTiles, true);
-        ClearTile(surroundPath, true);
-        ClearTile(skillScale, true);
+        ClearTile(movePath);
+        ClearTile(moveRangeTiles);
+        ClearTile(attackRangeTiles);
+        ClearTile(surroundPath);
+        ClearTile(skillScale);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -350,6 +371,13 @@ public class CharacterController : MonoBehaviour
                 if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
                 {
                     SelectTargetCharacter(curTile.curStandingCharater);
+
+                    if (movePath.Count > 1)
+                    {
+                        ResetTileOnMove(movePath);
+                        ResetTileOnMove(surroundPath);
+                        movePath.Add(curSelectedCharacter.curStandingTile);
+                    }
                 }
                 else
                 {
@@ -357,11 +385,12 @@ public class CharacterController : MonoBehaviour
                 }
             }
 
-            //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
-            Ui.ShowMove(movePath.Count > 1 && curTargetCharacter == null);
-            Ui.ShowAttack(movePath.Count <= 1 && curTargetCharacter != null && attackRangeTiles.Contains(curTargetCharacter.curStandingTile) && curTargetCharacter.CheckEnenmy(curSelectedCharacter));
-
         }
+
+        //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
+        Ui.ShowMove(movePath.Count > 1 && curTargetCharacter == null && !curSelectedCharacter.isWalking);
+        Ui.ShowAttack(movePath.Count <= 1 && curTargetCharacter != null && attackRangeTiles.Contains(curTargetCharacter.curStandingTile)
+            && curTargetCharacter.CheckEnenmy(curSelectedCharacter) && !curSelectedCharacter.isAttacking);
     }
 
     private void AttackTarget()// 캐릭터 공격
@@ -380,7 +409,7 @@ public class CharacterController : MonoBehaviour
         if (movePath[movePath.Count - 1].curStandingCharater == null)
         {
             canClick = false;
-            ClearTile(surroundPath);
+            ResetTileOnMove(surroundPath);
 
             curSelectedCharacter.OnEndWalk += EndMove;
 
@@ -448,7 +477,7 @@ public class CharacterController : MonoBehaviour
                     if (attackRangeTiles.Contains(curTile))
                     {
 
-                        ClearTile(skillScale, true);
+                        ResetTileOnSkill(skillScale);
 
                         GetSkillScaleTile(curTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);
                     }
@@ -479,6 +508,7 @@ public class CharacterController : MonoBehaviour
                     else
                     {
                         SelectTargetCharacter(null);
+                        ResetTileOnSkill(skillScale);
                     }
                 }
 
@@ -562,7 +592,7 @@ public class CharacterController : MonoBehaviour
             {
                 SelectTargetCharacter(null);
                 movePath.Add(curTile);
-                ClearTile(surroundPath, true);
+                ResetTileOnMove(surroundPath);
             }
 
             if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//이미 선택된 타일 터치 시
@@ -570,10 +600,10 @@ public class CharacterController : MonoBehaviour
                 int n = movePath.IndexOf(curTile);
                 List<OverlayTile> temp = movePath.GetRange(0, n + 1);
 
-                ClearTile(movePath, true);
+                ResetTileOnMove(movePath);
                 movePath = temp;
 
-                ClearTile(surroundPath, true);
+                ResetTileOnMove(surroundPath);
 
             }
         }
@@ -589,6 +619,11 @@ public class CharacterController : MonoBehaviour
 
     private void GetMoveRangeTile()// 이동 가능 거리 가져옴
     {
+        if(moveRangeTiles.Count > 0)
+        {
+            return;
+        }
+
         moveRangeTiles = rangeFinder.GetTilesInRange(curSelectedCharacter.curStandingTile.grid2DLocation, curSelectedCharacter.character.Mov, true);
 
         foreach (OverlayTile tile in moveRangeTiles)
@@ -599,6 +634,11 @@ public class CharacterController : MonoBehaviour
 
     private void GetAttackRangeTile(int range)// 공격 가능 거리 가져옴
     {
+        if (attackRangeTiles.Count > 0)
+        {
+            return;
+        }
+
         attackRangeTiles = rangeFinder.GetTilesInRange(curSelectedCharacter.curStandingTile.grid2DLocation, range, false);
 
         foreach (OverlayTile tile in attackRangeTiles)

@@ -5,8 +5,8 @@ using UnityEngine;
 public class OverlayTile : MonoBehaviour
 {
     [SerializeField] private GameObject defaultTile;
-    [SerializeField] private GameObject movepathTile;
-    [SerializeField] private GameObject moveTile;
+    [SerializeField] private GameObject scaleTile;
+    [SerializeField] private GameObject canMoveTile;
     [SerializeField] private GameObject attackRangeTile;
 
     [HideInInspector] public bool canClick;//이동 가능 혹은 상호작용 가능한 타일
@@ -26,8 +26,8 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             defaultTile.SetActive(true);
-            movepathTile.SetActive(false);
-            moveTile.SetActive(false);
+            scaleTile.SetActive(false);
+            canMoveTile.SetActive(false);
             attackRangeTile.SetActive(false);
         }
     }
@@ -44,8 +44,8 @@ public class OverlayTile : MonoBehaviour
     {
         if (canClick)
         {
-            moveTile.SetActive(true);
-            defaultTile.SetActive(!moveTile.activeSelf);
+            canMoveTile.SetActive(true);
+            defaultTile.SetActive(!canMoveTile.activeSelf);
         }
     }
 
@@ -53,8 +53,8 @@ public class OverlayTile : MonoBehaviour
     {
         if (canClick)
         {
-            movepathTile.SetActive(true);
-            defaultTile.SetActive(!movepathTile.activeSelf);
+            scaleTile.SetActive(true);
+            defaultTile.SetActive(!scaleTile.activeSelf);
         }
     }
 
@@ -70,8 +70,13 @@ public class OverlayTile : MonoBehaviour
     public void HideTile()//타일 전체 숨기기
     {
         defaultTile.SetActive(false);
-        movepathTile.SetActive(false);
-        moveTile.SetActive(false);
+        scaleTile.SetActive(false);
+        canMoveTile.SetActive(false);
         attackRangeTile.SetActive(false);
+    }
+
+    public void HideScale()
+    {
+        scaleTile.SetActive(false);
     }
 }

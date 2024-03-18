@@ -95,8 +95,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultTile: {fileID: 8060961577447857548}
-  movepathTile: {fileID: 4746439771341492732}
-  moveTile: {fileID: 8339875392935133875}
+  scaleTile: {fileID: 4746439771341492732}
+  canMoveTile: {fileID: 8339875392935133875}
   attackRangeTile: {fileID: 3414371154208852960}
   canClick: 0
   gridLocation: {x: 0, y: 0, z: 0}
@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 8815859466757223315}
   - component: {fileID: 7507307517698099141}
   m_Layer: 0
-  m_Name: MovePath
+  m_Name: Scale
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

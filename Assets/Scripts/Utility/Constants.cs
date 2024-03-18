@@ -76,6 +76,13 @@ public class Constants
         Stat, //단순히 스탯 (체력/방어력/공격력, MOV, 치확, 치피, 뎀증, 받피감) 수치만 상승시킨다.
         Special //스탯 뿐만 아니라 부가적인 특수 메커니즘을 추가하거나 변경 시킨다. 
     }
+
+    public enum GachaType
+    {
+        Common,
+        PickUp
+    }
+    
     public enum BaseClass //기본 클래스 5종.
     {
         Warrior,
