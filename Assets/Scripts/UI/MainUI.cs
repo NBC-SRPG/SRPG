@@ -147,7 +147,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickMailButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<MailUI>();
+        Managers.UI.ShowUI<MailUI>();
     }
     private void OnClickNoticeButton()
     {

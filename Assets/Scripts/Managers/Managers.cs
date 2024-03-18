@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 public class Managers : MonoBehaviour
@@ -73,6 +75,40 @@ public class Managers : MonoBehaviour
             s_accountData.characterData.Add(int.Parse(testChatacter1.characterData.character_Id), testChatacter1);
             s_accountData.characterData.Add(int.Parse(testChatacter2.characterData.character_Id), testChatacter2);
             s_accountData.characterData.Add(int.Parse(testChatacter3.characterData.character_Id), testChatacter3);
+
+            MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
+            mailSO.id = "1";
+            mailSO.title = "테스트 메일입니다.";
+            mailSO.sender = "테스트운영자";
+            mailSO.dateSent = new DateTime(2024, 03, 15);
+            DateTime expireDate = mailSO.dateSent.AddDays(14);
+            mailSO.remainingTime = expireDate - DateTime.Now;
+            if (expireDate <= DateTime.Now)
+            {
+                mailSO.remainingTime = TimeSpan.Zero;
+            }
+            else
+            {
+                mailSO.remainingTime = expireDate - DateTime.Now;
+            }
+            s_accountData.mailBox.Add(mailSO);
+            
+            mailSO = ScriptableObject.CreateInstance<MailSO>();
+            mailSO.id = "2";
+            mailSO.title = "테스트 메일입니다.";
+            mailSO.sender = "테스트운영자";
+            mailSO.dateSent = new DateTime(2024, 03, 17);
+            expireDate = mailSO.dateSent.AddDays(14);
+            mailSO.remainingTime = expireDate - DateTime.Now;
+            if (expireDate <= DateTime.Now)
+            {
+                mailSO.remainingTime = TimeSpan.Zero;
+            }
+            else
+            {
+                mailSO.remainingTime = expireDate - DateTime.Now;
+            }
+            s_accountData.mailBox.Add(mailSO);
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;

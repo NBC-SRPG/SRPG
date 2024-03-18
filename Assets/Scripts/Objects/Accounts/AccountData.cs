@@ -13,6 +13,7 @@ public class AccountData
     public Dictionary<int, Dictionary<int, Character>> formationData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
+    public List<MailSO> mailBox { get; set; }
 
     // Init �޼���
     public void Init(
@@ -32,5 +33,6 @@ public class AccountData
         //this.inventory = inventory ?? new Dictionary<ItemData, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
         this.formationData = formationData ?? new Dictionary<int, Dictionary<int, Character>>();
+        this.mailBox = mailBox ?? new List<MailSO>();
     }
 }
