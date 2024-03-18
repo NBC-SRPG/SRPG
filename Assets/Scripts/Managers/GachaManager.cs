@@ -12,7 +12,8 @@ public class GachaManager
 
     public void Init()
     {
-        tables.Clear();
+        //tables.Clear();
+        tables = new Dictionary<string, Dictionary<int, float>>();
         gachaType = Constants.GachaType.Common;
     }
 

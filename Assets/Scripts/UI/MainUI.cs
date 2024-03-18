@@ -140,7 +140,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickFriendButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<FriendUI>();
+        Managers.UI.ShowUI<FriendUI>();
     }
     private void OnClickMailButton()
     {
