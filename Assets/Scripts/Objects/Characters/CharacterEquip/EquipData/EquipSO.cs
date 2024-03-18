@@ -6,16 +6,12 @@ using static Constants;
 [CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
 public class EquipSO : ScriptableObject
 {
-    [Header("Develope")]
-    public string equip_Id;//특성 식별자
-    public TraitType equipType; //특성 분류
-
     [Header("Equip_description")]
-    public string equipName;//특성 이름
-    public string equipDescription;//특성 설명
+    public string equipName;//장비 이름
+    public string equipDescription;//장비 설명
     
     [Header("Image")]
-    public Sprite equipSprite;//특성 스프라이트(=썸네일or아이콘)
+    public Sprite equipSprite;//장비 스프라이트(=썸네일or아이콘)
 
     [Header("Equip_Status_basic")] //increase = 깡스탯 증가량(합연산). multiply = 배율(%) 증가량(곱연산)
     public int increaseHealth;
@@ -35,6 +31,10 @@ public class EquipSO : ScriptableObject
 
 
     [Header("Equip_special")]
-    public string speciaID;//특성의 별도 고유 효과. 세부로직 미구현.
+    public string speciaID;//장비의 별도 고유 효과. 세부로직 미구현.
                            //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
+
+    [Header("Develope")]
+    public string equip_Id;//장비 식별자
+    public EquipType equipType; //장비 타입
 }

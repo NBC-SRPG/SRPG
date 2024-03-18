@@ -105,4 +105,38 @@ public class Constants
         LimitBreak_4 = 90
     }
 
+    public enum EquipType
+    {
+        Weapon,
+        Armor
+    }
+
+    public enum WeaponType //(무기 종류는 임의로 설정함)
+    {
+        One_Hand_Blade, //한손 무기 계열
+        Two_Hand_Blade, //양손 무기 계열
+        Spear, //장병기 계열
+        Knuckles, //너클/주먹 계열
+
+        Bow, //활 계열
+        Cannon, //대포 계열
+        Gun, //총기 계열
+
+        Wand, //완드
+        Staff, //지팡이
+        Orb //오브
+    }
+
+    public enum ArmorType //(방어구 종류는 임의로 설정함)
+    {
+        Full_Plate_Armor, //전신 갑옷
+        Shield, //방패
+
+        Feather_Hat, //깃털 모자
+        Chain_Mail, //사슬 갑옷
+
+        Magic_Hat, //마법사 모자
+        Robe //로브
+    }
+
 }

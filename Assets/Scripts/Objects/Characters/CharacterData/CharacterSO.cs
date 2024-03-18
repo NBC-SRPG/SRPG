@@ -42,6 +42,10 @@ public class CharacterSO : ScriptableObject
     public ClassSO basicClass;
     public ClassSO[] superiorClass;
 
+    [Header("Equip")] //장비SO
+    public WeaponSO weapon;
+    public ArmorSO armor;
+
     [Header("Star")]
     public Star defaltStar; //기본 성급
 }
