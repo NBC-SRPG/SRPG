@@ -158,9 +158,9 @@ public class FormationUI : UIBase
         Debug.Log($"OnClickFormationButton {index}");
         //Managers.Sound.Play(Constants.Sound.Effect, "ButtonClick");
         // 편성에서 클릭한 것이라고 알려주기
-        CharacterButtonUI.isFormation = true;
+        CharacterEntryUI.isFormation = true;
         // 1번째 버튼이라고 알려주기
-        CharacterButtonUI.formationIndex = index;
+        CharacterEntryUI.formationIndex = index;
         // 캐릭터 UI 띄우기
         Managers.UI.ShowUI<CharacterUI>();
     }

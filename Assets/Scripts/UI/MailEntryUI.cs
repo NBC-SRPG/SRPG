@@ -78,6 +78,8 @@ public class MailEntryUI : UIBase
         // 아이템 인벤토리에 수령
         Managers.AccountData.mailBox.Remove(mailSO);
         Managers.UI.PeekUI<MailUI>().ReceiveTextUpdate();
+        // TODO
+        // 수령 완료 팝업
         Destroy(gameObject);
     }
 }

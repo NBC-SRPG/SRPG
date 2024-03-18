@@ -97,7 +97,7 @@ public class MainUI : UIBase
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
         // 메인UI -> 캐릭터UI 접근임을 알림
-        CharacterButtonUI.isFormation = false;
+        CharacterEntryUI.isFormation = false;
         Managers.UI.ShowUI<CharacterUI>();
     }
     private void OnClickFormationButton()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterButtonUI : UIBase
+public class CharacterEntryUI : UIBase
 {
     // 메인 -> 캐릭터 -> 클릭 에서는 정보창이 나와야 함
     // 메인 -> 편성 -> 캐릭터 -> 클릭에서는 편성에 들어가야 함
