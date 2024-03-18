@@ -168,6 +168,6 @@ public class MainUI : UIBase
         Debug.Log("OnClickProfileButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<ProfileUI>();
+        Managers.UI.ShowUI<ProfileUI>();
     }
 }

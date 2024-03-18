@@ -4,7 +4,7 @@ using UnityEngine;
 using static Constants;
 
 public class PlayerData
-{   //¼ø¼­´ë·Î UID, ´Ğ³×ÀÓ, ´ÙÀÌ¾Æ, °ñµå. AP, APÃÖ´ëÄ¡, °èÁ¤ ·¹º§, °èÁ¤ ÃÖ´ë ·¹º§, ÇöÀç °æÇèÄ¡, ÃÖ´ë °æÇèÄ¡, »ıÀÏ, ¼±È£ Ä³¸¯ÅÍ ¸ñ·Ï, Ä³¸¯ÅÍ ¾ÆÀÌÄÜ, Áö¿ø Ä³¸¯ÅÍ
+{   //ìˆœì„œëŒ€ë¡œ UID, ë‹‰ë„¤ì„, ë‹¤ì´ì•„, ê³¨ë“œ. AP, APìµœëŒ€ì¹˜, ê³„ì • ë ˆë²¨, ê³„ì • ìµœëŒ€ ë ˆë²¨, í˜„ì¬ ê²½í—˜ì¹˜, ìµœëŒ€ ê²½í—˜ì¹˜, ìƒì¼, ì„ í˜¸ ìºë¦­í„° ëª©ë¡, ìºë¦­í„° ì•„ì´ì½˜, ì§€ì› ìºë¦­í„°
     public string uId { get; private set; }
     public string playerName { get; private set; }
     public string playerComment { get; private set; }
@@ -24,13 +24,13 @@ public class PlayerData
     public int maxLevel { get; private set; } = (int)PlayerCons.MaxLevel;
     public int exp { get; private set; }
     public int maxExp { get; private set; } = (int)PlayerCons.DefaltMaxExp;
-    public string birthDay { get; private set; }
+    public string birthday { get; private set; }
     public int[] favoriteCharacter { get; private set; }
     public int lobbyCharacter { get; private set; }
     public int characterIcon { get; private set; }
     public int supportCharacter { get; private set; }
 
-    // Init ¸Ş¼­µå
+    // Init ë©”ì„œë“œ
     public void Init(
         string uId,
         string playerName,
@@ -48,9 +48,9 @@ public class PlayerData
         int characterIcon
         )
     {
-        this.uId = uId ?? "0000000"; // ÀÓ½Ã ±âº»°ª
+        this.uId = uId ?? "0000000"; // ì„ì‹œ ê¸°ë³¸ê°’
         this.playerName = playerName ?? "DefaultName";
-        this.playerComment = playerComment ?? "Àß ºÎÅ¹ µå¸³´Ï´Ù.";
+        this.playerComment = playerComment ?? "ì˜ ë¶€íƒ ë“œë¦½ë‹ˆë‹¤.";
         this.diamond = diamond;
         this.gold = gold;
         this.ap = ap;
@@ -58,17 +58,17 @@ public class PlayerData
         this.level = level;
         this.exp = exp;
         this.maxExp = maxExp;
-        this.birthDay = birthday;
+        this.birthday = birthday;
         this.favoriteCharacter = favoriteCharacter ?? new int[3];
         this.lobbyCharacter = lobbyCharacter;
         this.characterIcon = characterIcon;
     }
-    public bool IsTodayBirthDayCheck() //¿À´ÃÀÌ »ıÀÏÀÎÁö Ã¼Å©ÇÏ´Â ¸Ş¼­µå
+    public bool IsTodayBirthDayCheck() //ì˜¤ëŠ˜ì´ ìƒì¼ì¸ì§€ ì²´í¬í•˜ëŠ” ë©”ì„œë“œ
     {
-        DateTime dateBirthDay;       //ÀúÀåµÈ »ıÀÏ ¹®ÀÚ¿­À» MMdd Çü½ÄÀ¸·Î ÆÄ½Ì
-        if (DateTime.TryParseExact(birthDay, "MMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
+        DateTime dateBirthDay;       //ì €ì¥ëœ ìƒì¼ ë¬¸ìì—´ì„ MMdd í˜•ì‹ìœ¼ë¡œ íŒŒì‹±
+        if (DateTime.TryParseExact(birthday, "MMdd", null, System.Globalization.DateTimeStyles.None, out DateTime parsedDate))
         {
-            // ¸¸¾à ÆÄ½ÌÀÌ ¼º°øÇÏ¸é ¿¬µµ¸¦ ÇöÀç ¿¬µµ, ½Ã°£À» 00:00À¸·Î ¼³Á¤ÇÏ¿© ÀúÀå
+            // ë§Œì•½ íŒŒì‹±ì´ ì„±ê³µí•˜ë©´ ì—°ë„ë¥¼ í˜„ì¬ ì—°ë„, ì‹œê°„ì„ 00:00ìœ¼ë¡œ ì„¤ì •í•˜ì—¬ ì €ì¥
             dateBirthDay = parsedDate.Date;
             if ((dateBirthDay.Month == DateTime.Today.Month) && (dateBirthDay.Day == DateTime.Today.Day))
             {
@@ -86,39 +86,39 @@ public class PlayerData
     }
 
 
-    // °¢ µ¥ÀÌÅÍ ÇÊµå¿¡ ´ëÇÑ ¼³Á¤ÀÚ ¸Ş¼­µå
-    public bool SetPlayerName(string playerName) //´Ğ³×ÀÓ ¼³Á¤ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå.
+    // ê° ë°ì´í„° í•„ë“œì— ëŒ€í•œ ì„¤ì •ì ë©”ì„œë“œ
+    public bool SetPlayerName(string playerName) //ë‹‰ë„¤ì„ ì„¤ì • ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ.
     {
         if (playerName.Length <= 8)
         {
             this.playerName = playerName;
-            return true; // ±ÛÀÚ ¼ö Á¦ÇÑ Á¶°ÇÀ» ¸¸Á·ÇÏ¸é true ¹İÈ¯
+            return true; // ê¸€ì ìˆ˜ ì œí•œ ì¡°ê±´ì„ ë§Œì¡±í•˜ë©´ true ë°˜í™˜
         }
         else
         {
-            return false; // ±ÛÀÚ ¼ö Á¦ÇÑ Á¶°ÇÀ» ¸¸Á·ÇÏÁö ¾ÊÀ¸¸é false ¹İÈ¯
+            return false; // ê¸€ì ìˆ˜ ì œí•œ ì¡°ê±´ì„ ë§Œì¡±í•˜ì§€ ì•Šìœ¼ë©´ false ë°˜í™˜
         }
     }
-    public bool SetPlayerComment(string playerComment) //ÇÃ·¹ÀÌ¾î ÄÚ¸àÆ® ¼³Á¤ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå.
+    public bool SetPlayerComment(string playerComment) //í”Œë ˆì´ì–´ ì½”ë©˜íŠ¸ ì„¤ì • ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ.
     {
         if (playerName.Length <= 40)
         {
             this.playerComment = playerComment;
-            return true; // ±ÛÀÚ ¼ö Á¦ÇÑ Á¶°ÇÀ» ¸¸Á·ÇÏ¸é true ¹İÈ¯
+            return true; // ê¸€ì ìˆ˜ ì œí•œ ì¡°ê±´ì„ ë§Œì¡±í•˜ë©´ true ë°˜í™˜
         }
         else
         {
-            return false; // ±ÛÀÚ ¼ö Á¦ÇÑ Á¶°ÇÀ» ¸¸Á·ÇÏÁö ¾ÊÀ¸¸é false ¹İÈ¯
+            return false; // ê¸€ì ìˆ˜ ì œí•œ ì¡°ê±´ì„ ë§Œì¡±í•˜ì§€ ì•Šìœ¼ë©´ false ë°˜í™˜
         }
     }
 
-    public bool AddDiamond(int amount) //´ÙÀÌ¾Æ È¹µæ
+    public bool AddDiamond(int amount) //ë‹¤ì´ì•„ íšë“
     {
         int calcedDiamond = diamond + amount;
 
         if (amount < 0)
         {
-            Debug.Log("´õÇÏ·Á´Â °ªÀÌ À½¼ö°ªÀÔ´Ï´Ù.");
+            Debug.Log("ë”í•˜ë ¤ëŠ” ê°’ì´ ìŒìˆ˜ê°’ì…ë‹ˆë‹¤.");
             return false;
         }
         else if (calcedDiamond <= 999999)
@@ -128,12 +128,12 @@ public class PlayerData
         }
         else
         {
-            Debug.Log("´ÙÀÌ¾Æ º¸À¯ ÇÑµµ ÃÊ°ú");
+            Debug.Log("ë‹¤ì´ì•„ ë³´ìœ  í•œë„ ì´ˆê³¼");
             return false;
         }
     }
 
-    public bool ReduceDiamond(int amount) //´ÙÀÌ¾Æ ÁöºÒ
+    public bool ReduceDiamond(int amount) //ë‹¤ì´ì•„ ì§€ë¶ˆ
     {
         int calcedDiamond = diamond - amount;
 
@@ -144,17 +144,17 @@ public class PlayerData
         }
         else
         {
-            Debug.Log("´ÙÀÌ¾Æ ÀÜ¾× ºÎÁ·");
+            Debug.Log("ë‹¤ì´ì•„ ì”ì•¡ ë¶€ì¡±");
             return false;
         }
     }
 
-    public bool AddGold(int amount) //°ñµå È¹µæ
+    public bool AddGold(int amount) //ê³¨ë“œ íšë“
     {
         int calcedGold = gold + amount;
         if ( amount < 0)
         {
-            Debug.Log("´õÇÏ·Á´Â °ªÀÌ À½¼ö°ªÀÔ´Ï´Ù.");
+            Debug.Log("ë”í•˜ë ¤ëŠ” ê°’ì´ ìŒìˆ˜ê°’ì…ë‹ˆë‹¤.");
             return false;
         }
         else if (calcedGold <= 9999999)
@@ -164,12 +164,12 @@ public class PlayerData
         }
         else
         {
-            Debug.Log("°ñµå º¸À¯ ÇÑµµ ÃÊ°ú");
+            Debug.Log("ê³¨ë“œ ë³´ìœ  í•œë„ ì´ˆê³¼");
             return false;
         }
     }
 
-    public bool ReduceGold(int amount) //°ñµå ÁöºÒ
+    public bool ReduceGold(int amount) //ê³¨ë“œ ì§€ë¶ˆ
     {
         int calcedGold = gold - amount;
 
@@ -180,16 +180,16 @@ public class PlayerData
         }
         else
         {
-            Debug.Log("°ñµå ÀÜ¾× ºÎÁ·");
+            Debug.Log("ê³¨ë“œ ì”ì•¡ ë¶€ì¡±");
             return false;
         }
     }
-    public bool AddAP(int value) //Ap ÃæÀü. ÃæÀü¿¡´Â º°µµÀÇ Á¦ÇÑÀÌ ¾øÀ½
+    public bool AddAP(int value) //Ap ì¶©ì „. ì¶©ì „ì—ëŠ” ë³„ë„ì˜ ì œí•œì´ ì—†ìŒ
     {
             ap += value;
             return true;
     }
-    public bool ReduceAP(int value) //Ap Â÷°¨
+    public bool ReduceAP(int value) //Ap ì°¨ê°
     {
         if ((ap - value) >= 0)
         {
@@ -198,11 +198,11 @@ public class PlayerData
         }
         else
         {
-            Debug.Log("AP ÀÜ·® ºÎÁ·");
+            Debug.Log("AP ì”ëŸ‰ ë¶€ì¡±");
             return false;
         }
     }
-    public void RegenAP() //Ap ¸®Á¨ ½Ã »ç¿ë µÉ ¸Ş¼­µå. ¸®Á¨ Ap´Â ÃÖ´ëÄ¡¸¦ ³Ñ¾î¼­ Áõ°¡ÇÏÁö ¾Ê´Â´Ù. Åë»óÀûÀ¸·Î 6ºĞ¿¡ 1¾¿, 1½Ã°£¿¡ 10 Àç»ı. ÇÏ·ç ÃÑ Àç»ı·®Àº 240.
+    public void RegenAP() //Ap ë¦¬ì   ì‹œ ì‚¬ìš© ë  ë©”ì„œë“œ. ë¦¬ì   ApëŠ” ìµœëŒ€ì¹˜ë¥¼ ë„˜ì–´ì„œ ì¦ê°€í•˜ì§€ ì•ŠëŠ”ë‹¤. í†µìƒì ìœ¼ë¡œ 6ë¶„ì— 1ì”©, 1ì‹œê°„ì— 10 ì¬ìƒ. í•˜ë£¨ ì´ ì¬ìƒëŸ‰ì€ 240.
     {
         if ((ap + 1) <= maxAp)
         {
@@ -210,7 +210,7 @@ public class PlayerData
         }
     }
 
-    public void AddExp(int value) //°æÇèÄ¡°ªÀ» Áõ°¡½ÃÅ³ ¶§ È£ÃâÇÏ´Â ¸Ş¼­µå. °æÇèÄ¡°¡ ÃÖ´ë °æÇèÄ¡ ÀÌ»óÀÏ ½Ã °æÇèÄ¡°¡ maxExp ¹Ì¸¸ÀÌ µÉ ¶§±îÁö ·¹º§¾÷ ¸Ş¼­µå¸¦ ¹İº¹ÇØ¼­ ½ÇÇàÇÑ´Ù.
+    public void AddExp(int value) //ê²½í—˜ì¹˜ê°’ì„ ì¦ê°€ì‹œí‚¬ ë•Œ í˜¸ì¶œí•˜ëŠ” ë©”ì„œë“œ. ê²½í—˜ì¹˜ê°€ ìµœëŒ€ ê²½í—˜ì¹˜ ì´ìƒì¼ ì‹œ ê²½í—˜ì¹˜ê°€ maxExp ë¯¸ë§Œì´ ë  ë•Œê¹Œì§€ ë ˆë²¨ì—… ë©”ì„œë“œë¥¼ ë°˜ë³µí•´ì„œ ì‹¤í–‰í•œë‹¤.
     {
         exp += value;
         while (exp >= maxExp && level < maxLevel)
@@ -219,39 +219,39 @@ public class PlayerData
         }
         exp = math.clamp(exp, 0, maxExp);
     }
-    private void LevelUp() //·¹º§¾÷ ¸Ş¼­µå. °æÇèÄ¡°ª¿¡¼­ ÃÖ´ë °æÇèÄ¡°ª ¸¸Å­ Â÷°¨ÇÏ°í ·¹º§À» 1 ¿Ã¸°´Ù. µû·Î ¸Ş¼­µå¸¦ ºĞ¸®ÇÑ ÀÌÀ¯´Â ÃßÈÄ ·¹º§¾÷ ½Ã ´Ù¸¥ Ãß°¡ µ¿ÀÛÀ» Ãß°¡ÇÒ ¼öµµ ÀÖÀ¸¹Ç·Î.
+    private void LevelUp() //ë ˆë²¨ì—… ë©”ì„œë“œ. ê²½í—˜ì¹˜ê°’ì—ì„œ ìµœëŒ€ ê²½í—˜ì¹˜ê°’ ë§Œí¼ ì°¨ê°í•˜ê³  ë ˆë²¨ì„ 1 ì˜¬ë¦°ë‹¤. ë”°ë¡œ ë©”ì„œë“œë¥¼ ë¶„ë¦¬í•œ ì´ìœ ëŠ” ì¶”í›„ ë ˆë²¨ì—… ì‹œ ë‹¤ë¥¸ ì¶”ê°€ ë™ì‘ì„ ì¶”ê°€í•  ìˆ˜ë„ ìˆìœ¼ë¯€ë¡œ.
     {
         exp -= maxExp;
         Level += 1;
     }
-    public bool SetBirthDay(string MMDD) //»ıÀÏ°ª ¼³Á¤ ¸Ş¼­µå. À¯È¿ÇÑ »ıÀÏ °ªÀÎÁö °Ë»çÇÑ´Ù.
+    public bool SetBirthDay(string MMDD) //ìƒì¼ê°’ ì„¤ì • ë©”ì„œë“œ. ìœ íš¨í•œ ìƒì¼ ê°’ì¸ì§€ ê²€ì‚¬í•œë‹¤.
     {
-        // MMDD¸¦ ¼ıÀÚ·Î º¯È¯
+        // MMDDë¥¼ ìˆ«ìë¡œ ë³€í™˜
         if (int.TryParse(MMDD, out int numericValue))
         {
-            // ³¯Â¥ À¯È¿¼º È®ÀÎ
+            // ë‚ ì§œ ìœ íš¨ì„± í™•ì¸
             int month = numericValue / 100;
             int day = numericValue % 100;
 
             if (month >= 1 && month <= 12 && day >= 1 && day <= 31)
             {
-                // ³¯Â¥°¡ À¯È¿ÇÏ¸é ÀúÀå
-                birthDay = MMDD;
+                // ë‚ ì§œê°€ ìœ íš¨í•˜ë©´ ì €ì¥
+                birthday = MMDD;
                 return true;
             }
         }
 
-        Debug.Log("À¯È¿ÇÑ ³¯Â¥ Çü½ÄÀÌ ¾Æ´Õ´Ï´Ù.");
+        Debug.Log("ìœ íš¨í•œ ë‚ ì§œ í˜•ì‹ì´ ì•„ë‹™ë‹ˆë‹¤.");
         return false;
     }
 
-    public void SetFavoriteCharacter(int? a, int? b, int? c) //¼±È£ Ä³¸¯ÅÍ ¼³Á¤. null Ã¼Å©
+    public void SetFavoriteCharacter(int? a, int? b, int? c) //ì„ í˜¸ ìºë¦­í„° ì„¤ì •. null ì²´í¬
     {
         favoriteCharacter[0] = a ?? 0;
         favoriteCharacter[1] = b ?? 0;
         favoriteCharacter[2] = c ?? 0;
     }
-    public void SetLobbyCharacter(int? a) //·Îºñ Ä³¸¯ÅÍ ¼³Á¤. null Ã¼Å©
+    public void SetLobbyCharacter(int? a) //ë¡œë¹„ ìºë¦­í„° ì„¤ì •. null ì²´í¬
     {
         if (a != null)
         {
@@ -262,7 +262,7 @@ public class PlayerData
             lobbyCharacter = 0;
         }
     }
-    public void SetCharacterIcon(int? a) //¾ÆÀÌÄÜ ¼³Á¤. null Ã¼Å©
+    public void SetCharacterIcon(int? a) //ì•„ì´ì½˜ ì„¤ì •. null ì²´í¬
     {
         if(a != null)
         {
@@ -274,7 +274,7 @@ public class PlayerData
         }
 
     }
-    public void SetSupportCharacter(int? a) //Áö¿øÄ³¸¯ÅÍ ¼³Á¤. null Ã¼Å©
+    public void SetSupportCharacter(int? a) //ì§€ì›ìºë¦­í„° ì„¤ì •. null ì²´í¬
     {
         if (a != null)
         {
