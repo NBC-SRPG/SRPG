@@ -19,6 +19,10 @@ public class BattleUI : UIBase
         //ShowCharacterStatusButton,
         //ShowCharacterSkillButton
     }
+    private enum Images
+    {
+        JoyStick
+    }
 
     //charactercontroller가 보내주는 캐릭터를 받아옴
     public CharacterBase curSelectedCharacter;
@@ -32,6 +36,7 @@ public class BattleUI : UIBase
     public event Action OnClickAttackButton;
     public event Action OnClickSkillConFirmButton;
 
+    public VirtualJoyStick joyStick;
 
     private void Start()
     {
@@ -51,7 +56,7 @@ public class BattleUI : UIBase
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         //BindText(typeof(Texts));
         BindButton(typeof(Buttons));
-        //BindImage(typeof(Images));
+        BindImage(typeof(Images));
         //BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
@@ -62,6 +67,9 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.MoveButton).onClick.AddListener(OnClickMove);
         GetButton((int)Buttons.AttackButton).onClick.AddListener(OnClickAttack);
         GetButton((int)Buttons.SkillConFirmButton).onClick.AddListener(OnClickSkillConfirm);
+
+        //조이스틱 가져오기
+        joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
 
         RefreshUI();
     }
@@ -162,4 +170,5 @@ public class BattleUI : UIBase
     {
         GetButton((int)Buttons.SkillConFirmButton).interactable = isTarget;
     }
+
 }

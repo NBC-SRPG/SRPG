@@ -154,8 +154,6 @@ public class CharacterController : MonoBehaviour
 
         player.isReady = true;
         Managers.BattleManager.GetReady();
-
-        Debug.Log(player.playerId + "character set");
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -172,6 +170,7 @@ public class CharacterController : MonoBehaviour
         skillTargets.Clear();
 
         Ui.ResetButtons();
+        CameraController.instance.ResetCamera();
 
         switch (phase)
         {
@@ -191,7 +190,9 @@ public class CharacterController : MonoBehaviour
             case PlayerPhase.MoveandAttack:
                 movePath.Add(curSelectedCharacter.curStandingTile);
 
+                GetMoveAndAttackTiles();
                 Ui.ShowAtMoveAndAttackPhase();
+                CameraController.instance.SetCameraOnSelected();
                 break;
             case PlayerPhase.SkillTargetSelect:
                 Ui.ShowAtSkillTargetPhase();
@@ -283,14 +284,30 @@ public class CharacterController : MonoBehaviour
 
     private void SelectCurCharacter(CharacterBase character)
     {
+        if (character == null && curSelectedCharacter != null)
+        {
+            CameraController.instance.RemoveGroup(curSelectedCharacter);
+        }
+
         curSelectedCharacter = character;
         //이후 ui에 캐릭터 정보를 보내줌
+        Ui.curSelectedCharacter = curSelectedCharacter;
+
+        CameraController.instance.AddGroup(curSelectedCharacter);
     }
 
     private void SelectTargetCharacter(CharacterBase character)
     {
+        if(character == null && curTargetCharacter != null)
+        {
+            CameraController.instance.RemoveGroup(curTargetCharacter);
+        }
+
         curTargetCharacter = character;
         //이후 ui에 캐릭터 정보를 보내줌
+        Ui.curTargetCharacter = curTargetCharacter;
+
+        CameraController.instance.AddGroup(curTargetCharacter);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -348,19 +365,23 @@ public class CharacterController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //CharacterMoveandAttackPhase 관련
 
+    private void GetMoveAndAttackTiles()
+    {
+        if (!curSelectedCharacter.didWalk)// 아직 한번도 이동하지 않았다면, 이동 범위 가져옴
+        {
+            GetMoveRangeTile();
+        }
+        if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
+        {
+            GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);// 공격 가능 범위 가져옴
+        }
+    }
+
     private void CharacterMoveandAttackPhase()// 캐릭터 이동 및 일반 공격 페이즈
     {
         if (!curSelectedCharacter.isWalking)// 캐릭터가 이동중이 아닐 때
         {
-            if (!curSelectedCharacter.didWalk)// 아직 한번도 이동하지 않았다면, 이동 범위 가져옴
-            {
-                GetMoveRangeTile();
-                GetPathTile();
-            }
-            if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
-            {
-                GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);// 공격 가능 범위 가져옴
-            }
+            GetPathTile();
 
             RaycastHit2D hit = GetTouchOnce();
 
@@ -371,6 +392,7 @@ public class CharacterController : MonoBehaviour
                 if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
                 {
                     SelectTargetCharacter(curTile.curStandingCharater);
+                    CameraController.instance.SetCameraOnSelected();
 
                     if (movePath.Count > 1)
                     {
@@ -400,7 +422,8 @@ public class CharacterController : MonoBehaviour
             canClick = false;
             curSelectedCharacter.OnEndAttacking += EndAttack;
 
-            Managers.BattleManager.Attack(curSelectedCharacter, curTargetCharacter);
+            curSelectedCharacter.target = curTargetCharacter;
+            curSelectedCharacter.AttackTarget();
         }
     }
 
@@ -410,6 +433,7 @@ public class CharacterController : MonoBehaviour
         {
             canClick = false;
             ResetTileOnMove(surroundPath);
+            Ui.ResetButtons();
 
             curSelectedCharacter.OnEndWalk += EndMove;
 
@@ -461,6 +485,7 @@ public class CharacterController : MonoBehaviour
         if (curSelectedCharacter.curCharacterSkill.skillData.scaleType == Constants.SkillScaleType.Self)// 자신에게 사용하는 스킬의 경우
         {
             GetSkillScaleTile(curSelectedCharacter.curStandingTile.grid2DLocation, 0);
+            CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
         }
         else
         {
@@ -468,6 +493,13 @@ public class CharacterController : MonoBehaviour
 
             if (curSelectedCharacter.curCharacterSkill.skillData.scaleType != Constants.SkillScaleType.None)// 단일 지정 스킬이 아닐 때
             {
+                if(skillScale.Count == 0)
+                {
+                    GetSkillScaleTile(curSelectedCharacter.curStandingTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);// 처음 한번은 캐릭터 기준으로 가져옴
+                    CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
+                }
+
+
                 hit = GetTouching();
 
                 if (hit)
@@ -480,6 +512,7 @@ public class CharacterController : MonoBehaviour
                         ResetTileOnSkill(skillScale);
 
                         GetSkillScaleTile(curTile.grid2DLocation, curSelectedCharacter.curCharacterSkill.skillData.skillScale);
+                        CameraController.instance.SetCameraOnTile(curTile);
                     }
                 }
             }
@@ -498,11 +531,13 @@ public class CharacterController : MonoBehaviour
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
+                            CameraController.instance.SetCameraOnSelected();
                         }
                         else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
+                            CameraController.instance.SetCameraOnSelected();
                         }
                     }
                     else
@@ -523,20 +558,8 @@ public class CharacterController : MonoBehaviour
         canClick = false;
         curSelectedCharacter.OnEndUseSkill += EndSkill;
 
-        switch (curSelectedCharacter.curCharacterSkill.skillData.targetType)
-        {
-            case Constants.SkillTargetType.Me:
-                skillTargets.Add(curSelectedCharacter);
-                break;
-            case Constants.SkillTargetType.Enemy:
-                GetSkillTarget(true);
-                break;
-            case Constants.SkillTargetType.Ally:
-                GetSkillTarget(false);
-                break;
-        }
-
-        Managers.BattleManager.UseSkill(curSelectedCharacter, skillTargets);
+        curSelectedCharacter.targets = skillTargets;
+        curSelectedCharacter.UseSkill();
     }
 
     private void EndSkill()// 캐릭터의 공격이 끝났을 시
@@ -547,23 +570,6 @@ public class CharacterController : MonoBehaviour
         ChangePhase(PlayerPhase.CharacterSelect);
     }
 
-    private void GetSkillTarget(bool enemy)// 스킬 타겟 가져오기
-    {
-        List<OverlayTile> temp = new List<OverlayTile>();
-        if (enemy)
-        {
-           temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
-        }
-        else
-        {
-            temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(curSelectedCharacter)).ToList();
-        }
-
-        foreach(OverlayTile scale in temp)
-        {
-            skillTargets.Add(scale.curStandingCharater);
-        }
-    }
 
     //-----------------------------------------------------------------------------------------------------------------------
     //거리 탐색 함수들
@@ -571,7 +577,7 @@ public class CharacterController : MonoBehaviour
     //이동 가능 위치 탐색
     private void GetPathTile()
     {
-        if (movePath.Count <= curSelectedCharacter.character.Mov)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
+        if (movePath.Count <= curSelectedCharacter.character.Mov && !curSelectedCharacter.didWalk)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 
@@ -593,6 +599,8 @@ public class CharacterController : MonoBehaviour
                 SelectTargetCharacter(null);
                 movePath.Add(curTile);
                 ResetTileOnMove(surroundPath);
+
+                CameraController.instance.SetCameraOnTile(movePath.Last());
             }
 
             if (movePath.Contains(curTile) && movePath.Count > 0 && movePath[movePath.Count - 1] != curTile)//이미 선택된 타일 터치 시
@@ -605,6 +613,7 @@ public class CharacterController : MonoBehaviour
 
                 ResetTileOnMove(surroundPath);
 
+                CameraController.instance.SetCameraOnTile(movePath.Last());
             }
         }
 
@@ -630,6 +639,7 @@ public class CharacterController : MonoBehaviour
         {
             tile.ShowTile();
         }
+
     }
 
     private void GetAttackRangeTile(int range)// 공격 가능 거리 가져옴
@@ -648,6 +658,7 @@ public class CharacterController : MonoBehaviour
                 tile.ShowAsAttack();
             }
         }
+
     }
 
     private void GetSkillScaleTile(Vector2Int location, int scale)// 스킬 범위 가져오기
@@ -663,6 +674,8 @@ public class CharacterController : MonoBehaviour
         {
             tile.ShowAsScale();
         }
+
+        curSelectedCharacter.skillScale = skillScale;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

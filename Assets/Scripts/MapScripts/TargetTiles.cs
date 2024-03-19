@@ -12,7 +12,7 @@ public class TargetTiles : MonoBehaviour
         curSelectedTile.SetActive(curCharacter);
         if (curCharacter)
         {
-            curSelectedTile.transform.position = curCharacter.transform.position;
+            curSelectedTile.transform.position = curCharacter.curStandingTile.transform.position;
         }
     }
 
@@ -21,7 +21,7 @@ public class TargetTiles : MonoBehaviour
         curTargetTile.SetActive(curTarget);
         if (curTarget)
         {
-            curTargetTile.transform.position = curTarget.transform.position;
+            curTargetTile.transform.position = curTarget.curStandingTile.transform.position;
         }
     }
 }
