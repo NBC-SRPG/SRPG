@@ -35,7 +35,7 @@ public class GachaManager
             return GetTableFromDB(tableName);
         }
     }
-    
+
     // 테이블에서 확률에 따라 캐릭터 id를 하나 반환
     private int GetRandomCharacterFromTable(string tableName)
     {
