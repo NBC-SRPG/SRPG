@@ -86,7 +86,7 @@ public class CharacterUI : UIBase
         // 테스트 데이터
         foreach (var character in Managers.AccountData.characterData)
         {
-            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterButtonUI");
+            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterEntryUI");
             go.GetComponent<CharacterEntryUI>().character = character.Value;
             Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
         }
