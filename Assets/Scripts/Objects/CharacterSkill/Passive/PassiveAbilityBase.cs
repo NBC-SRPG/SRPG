@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PassiveAbilityBase
 {
-    CharacterBase character;
+    protected CharacterBase character;
 
     public virtual void init(CharacterBase character)// 패시브 소유자 설정
     {
@@ -83,5 +83,7 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
     {
         base.OnEnemyPassesMe(enemy);
         enemy.BlockMoving();//ZOC 테스트 
+
+        AnimationController.instance.StartDefendAnimation(enemy, character);
     }
 }

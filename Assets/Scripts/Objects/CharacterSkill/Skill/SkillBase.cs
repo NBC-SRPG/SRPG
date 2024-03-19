@@ -11,6 +11,8 @@ public class SkillBase
 
     public CharacterBase character;
 
+    public List<OverlayTile> targetTiles;
+
     //스킬 시전자 설정
     public void Init(CharacterBase character)
     {

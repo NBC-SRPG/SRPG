@@ -56,9 +56,11 @@ public class Constants
 
     public enum SkillTargetType
     {
-        Me,
-        Enemy,
-        Ally
+        Me, // 대상을 지정할 필요 없음
+        Enemy, // 적군 대상
+        Ally, // 아군 대상
+        All, //피아 미식별
+        AllExceptME //피아 미식별 대신 자신은 제외
     }
 
 

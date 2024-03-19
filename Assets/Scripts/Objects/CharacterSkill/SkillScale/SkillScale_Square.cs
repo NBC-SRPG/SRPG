@@ -6,45 +6,19 @@ using UnityEngine;
 
 public class SkillScale_Square : SkillScaleBase
 {
+    RangeFinder rangeFinder;
+
     public SkillScale_Square(CharacterBase character, int scale) : base(character, scale)
     {
+        rangeFinder = new RangeFinder();
     }
 
     public override List<OverlayTile> GetSkillScale(Vector2Int location, int scale)
     {
         skillScale = new List<OverlayTile>();
-        skillScale = GetSurroundingTiles(location, scale);
+        skillScale = rangeFinder.GetTilesInRangeAll(location, scale, false);//사각형 범위 가져오기
 
         return base.GetSkillScale(location, scale);
     }
 
-    private List<OverlayTile> GetSurroundingTiles(Vector2Int location, int scale)//사각형 범위 가져오기
-    {
-        List<OverlayTile> skillScale = new List<OverlayTile>();
-
-        OverlayTile startTile = Managers.MapManager.map[location];
-        List<OverlayTile> surroundTiles = new List<OverlayTile>();
-        int stepCount = 0;
-
-        skillScale.Add(startTile);
-
-        List<OverlayTile> tilesForPreviousStep = new List<OverlayTile>();
-        tilesForPreviousStep.Add(startTile);
-
-        while (stepCount < scale)
-        {
-            surroundTiles.Clear();
-
-            foreach (OverlayTile tile in tilesForPreviousStep)
-            {
-                surroundTiles.AddRange(Managers.MapManager.GetSurroundingAllTiles(new Vector2Int(tile.gridLocation.x, tile.gridLocation.y)));
-            }
-
-            skillScale.AddRange(surroundTiles);
-            tilesForPreviousStep = surroundTiles.Distinct().ToList();
-            stepCount++;
-        }
-
-        return skillScale.Distinct().ToList();
-    }
 }
