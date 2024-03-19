@@ -14,7 +14,7 @@ public class CharacterInfoUI : UIBase
     {
         None,
         Skill,
-        Trait,
+        Talent,
         Class
     }
     private enum Texts
@@ -33,7 +33,7 @@ public class CharacterInfoUI : UIBase
     private enum Buttons
     {
         SkillButton,
-        TraitButton,
+        TalentButton,
         ClassButton,
         BackButton,
         ExSkillLevelUpButton
@@ -48,10 +48,10 @@ public class CharacterInfoUI : UIBase
     private enum GameObjects
     {
         SkillTab,
-        TraitTab,
+        TalentTab,
         ClassTab,
         SkillInfoUI,
-        TraitInfoUI,
+        TalentInfoUI,
         EquipmentUpgradeUI,
         Star
     }
@@ -86,12 +86,12 @@ public class CharacterInfoUI : UIBase
 
         // 스킬, 특성 팝업 UI 비활성화 상태로 두기
         GetObject((int)GameObjects.SkillInfoUI).SetActive(false);
-        GetObject((int)GameObjects.TraitInfoUI).SetActive(false);
+        GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
 
         // 스킬, 특성, 클래스 탭 보여주기
         GetButton((int)Buttons.SkillButton).onClick.AddListener(() => ShowTab(PlayTab.Skill));
-        GetButton((int)Buttons.TraitButton).onClick.AddListener(() => ShowTab(PlayTab.Trait));
+        GetButton((int)Buttons.TalentButton).onClick.AddListener(() => ShowTab(PlayTab.Talent));
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
@@ -101,7 +101,7 @@ public class CharacterInfoUI : UIBase
 
         // 테스트 데이터
         InitSkillTab();
-        InitTraitTab();
+        InitTalentTab();
         InitClassTab();
         InitCharacterInfo();
     }
@@ -118,7 +118,7 @@ public class CharacterInfoUI : UIBase
         GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.passive.passive_Id}");
     }
 
-    private void InitTraitTab()
+    private void InitTalentTab()
     {
 
     }
@@ -174,7 +174,7 @@ public class CharacterInfoUI : UIBase
         // 모든 탭 끄기
         // 프리팹에서는 모든 탭이 켜져있어야 Bind 가능
         GetObject((int)GameObjects.SkillTab).SetActive(false);
-        GetObject((int)GameObjects.TraitTab).SetActive(false);
+        GetObject((int)GameObjects.TalentTab).SetActive(false);
         GetObject((int)GameObjects.ClassTab).SetActive(false);
 
         // TODO
@@ -190,9 +190,9 @@ public class CharacterInfoUI : UIBase
                 // 해당 버튼 이미지 변경 (클릭한 버튼임을 보여주기)
                 break;
 
-            case PlayTab.Trait:
+            case PlayTab.Talent:
 
-                GetObject((int)GameObjects.TraitTab).SetActive(true);
+                GetObject((int)GameObjects.TalentTab).SetActive(true);
                 break;
 
             case PlayTab.Class:
@@ -252,17 +252,17 @@ public class CharacterInfoUI : UIBase
 
         GetObject((int)GameObjects.SkillInfoUI).SetActive(true);
     }
-    private void OnPointerUpTrait()
+    private void OnPointerUpTalent()
     {
-        Debug.Log("OnPointerUpTrait");
+        Debug.Log("OnPointerUpTalent");
 
-        GetObject((int)GameObjects.TraitInfoUI).SetActive(false);
+        GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
     }
 
-    private void OnPointerDownTrait()
+    private void OnPointerDownTalent()
     {
-        Debug.Log("OnPointerDownTrait");
+        Debug.Log("OnPointerDownTalent");
 
-        GetObject((int)GameObjects.TraitInfoUI).SetActive(true);
+        GetObject((int)GameObjects.TalentInfoUI).SetActive(true);
     }
 }
