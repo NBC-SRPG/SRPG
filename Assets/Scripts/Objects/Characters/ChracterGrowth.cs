@@ -12,15 +12,15 @@ public class CharacterGrowth : MonoBehaviour
 
     //'현재 선택중인 특성 번호' ( 0 = None )
     //이 변수들을 설정해 배열의 index 번호를 지정한다.
-    public int selectTrait_Tier2 { get; private set; }
-    public int selectTrait_Tier3 { get; private set; }
+    public int selectTalent_Tier2 { get; private set; }
+    public int selectTalent_Tier3 { get; private set; }
     public int selectSuperialClass { get; private set; }
 
 
     //'현재 선택 중인 특성 번호의 특성/클래스의 SO 를 참조함' 
-    public TraitSO trait_Tier1 { get; private set; }
-    public TraitSO trait_Tier2 { get; private set; }
-    public TraitSO trait_Tier3 { get; private set; }
+    public TalentSO talent_Tier1 { get; private set; }
+    public TalentSO talent_Tier2 { get; private set; }
+    public TalentSO talent_Tier3 { get; private set; }
 
     public ClassSO basicClass { get; private set; }
     public ClassSO superiorClass { get; private set; }
@@ -81,9 +81,9 @@ public class CharacterGrowth : MonoBehaviour
     public void Init(Character _character)
     {
         character = _character;
-        trait_Tier1 = character.characterData.trait_Tier1;
-        trait_Tier2 = character.characterData.trait_Tier2[selectTrait_Tier2 -1];
-        trait_Tier3 = character.characterData.trait_Tier3[selectTrait_Tier3 -1];
+        talent_Tier1 = character.characterData.talent_Tier1;
+        talent_Tier2 = character.characterData.talent_Tier2[selectTalent_Tier2 -1];
+        talent_Tier3 = character.characterData.talent_Tier3[selectTalent_Tier3 -1];
 
         basicClass = character.characterData.basicClass;
         superiorClass = character.characterData.superiorClass[selectSuperialClass -1];
@@ -104,13 +104,13 @@ public class CharacterGrowth : MonoBehaviour
     }
 
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
-    public bool SelectTrait_tier2(int select)
+    public bool SelectTalent_tier2(int select)
     {
-        if (select > 0 && select <= character.characterData.trait_Tier2.Length - 1)
+        if (select > 0 && select <= character.characterData.talent_Tier2.Length - 1)
         {
             if (Level >= 50)
             {
-                selectTrait_Tier2 = select;
+                selectTalent_Tier2 = select;
                 ApplyAdditionStat();
                 return true;
             }
@@ -128,13 +128,13 @@ public class CharacterGrowth : MonoBehaviour
     }
 
     //3티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
-    public bool SelectTrait_tier3(int select)
+    public bool SelectTalent_tier3(int select)
     {
-        if (select > 0 && select <= character.characterData.trait_Tier3.Length - 1)
+        if (select > 0 && select <= character.characterData.talent_Tier3.Length - 1)
         {
-            if (level >= 70 && selectTrait_Tier2 != 0)
+            if (level >= 70 && selectTalent_Tier2 != 0)
             {
-                selectTrait_Tier3 = select;
+                selectTalent_Tier3 = select;
                 ApplyAdditionStat();
                 return true;
             }
@@ -215,69 +215,69 @@ public class CharacterGrowth : MonoBehaviour
     public void ApplyAdditionStat() //캐릭터 특성 / 클래스 / 장비 스탯 적용 메서드, 계산한 뒤 값을 Character의 Calc 스탯에 저장한다. 
     {
         //특성으로 올라가는 능력치들의 합계를 저장할 변수를 선언한다.
-        int traitIncrHp_sum = 0; //체력 상수 증가치 합계
-        int traitIncrDef_sum = 0; //방어력
-        int traitIncrAtk_sum = 0; //공격력
-        int traitIncrMov_sum = 0; //이동거리
+        int talentIncrHp_sum = 0; //체력 상수 증가치 합계
+        int talentIncrDef_sum = 0; //방어력
+        int talentIncrAtk_sum = 0; //공격력
+        int talentIncrMov_sum = 0; //이동거리
 
-        float traitIncrCtr_sum = 0; //치명타 확률 ( 수치 0.1 = 치명타 확률 10%증가)
-        float traitIncrCtd_sum = 0; //치명타 피해
-        float traitIncrInfD_sum = 0; //주는 데미지 증가
-        float traitIncrTakenD_sum = 0; //받는 피해 감소
+        float talentIncrCtr_sum = 0; //치명타 확률 ( 수치 0.1 = 치명타 확률 10%증가)
+        float talentIncrCtd_sum = 0; //치명타 피해
+        float talentIncrInfD_sum = 0; //주는 데미지 증가
+        float talentIncrTakenD_sum = 0; //받는 피해 감소
 
-        float traitMultiplHp_sum = 0; //체력 배율 증가치 합계
-        float traitMultiplDef_sum = 0; //방어력 배율 증가치 합계
-        float traitMultiplAtk_sum = 0; //공격력 배율 증가치 합계
+        float talentMultiplHp_sum = 0; //체력 배율 증가치 합계
+        float talentMultiplDef_sum = 0; //방어력 배율 증가치 합계
+        float talentMultiplAtk_sum = 0; //공격력 배율 증가치 합계
 
         if (level >= 30) //레벨이 30 이상이어서 1차 특성이 해금되었는지 확인한다.
         {
             //티어1 특성은 하나 뿐이므로, 캐릭터SO가 가진 1티어 특성의 증가값을 가져와 합계에 저장한다.
-            traitIncrHp_sum = trait_Tier1.increaseHealth;
-            traitIncrDef_sum = trait_Tier1.increaseDef;
-            traitIncrAtk_sum = trait_Tier1.increaseAtk;
-            traitIncrMov_sum = trait_Tier1.increasecMov;
+            talentIncrHp_sum = talent_Tier1.increaseHealth;
+            talentIncrDef_sum = talent_Tier1.increaseDef;
+            talentIncrAtk_sum = talent_Tier1.increaseAtk;
+            talentIncrMov_sum = talent_Tier1.increasecMov;
 
-            traitIncrCtr_sum = trait_Tier1.increasecCtr;
-            traitIncrCtd_sum = trait_Tier1.increasecCtd;
-            traitIncrInfD_sum = trait_Tier1.increaseInflictDamage;
-            traitIncrTakenD_sum = trait_Tier1.reducedTakenDamage;
+            talentIncrCtr_sum = talent_Tier1.increasecCtr;
+            talentIncrCtd_sum = talent_Tier1.increasecCtd;
+            talentIncrInfD_sum = talent_Tier1.increaseInflictDamage;
+            talentIncrTakenD_sum = talent_Tier1.reducedTakenDamage;
 
-            traitMultiplHp_sum = trait_Tier1.multiplyHealth;
-            traitMultiplDef_sum = trait_Tier1.multiplyDef;
-            traitMultiplAtk_sum = trait_Tier1.multiplyAtk;
+            talentMultiplHp_sum = talent_Tier1.multiplyHealth;
+            talentMultiplDef_sum = talent_Tier1.multiplyDef;
+            talentMultiplAtk_sum = talent_Tier1.multiplyAtk;
 
-            if (trait_Tier2 != null) //'선택한 2티어 특성'값이 0이라면 특성이 개방되지 않았거나 아직 선택하지 않은 경우.
+            if (talent_Tier2 != null) //'선택한 2티어 특성'값이 0이라면 특성이 개방되지 않았거나 아직 선택하지 않은 경우.
             {
                 //selectTrait_Tier 값이 0이 아니라면 특성을 선택했다는 뜻. 캐릭터SO가 가진 '선택가능한 티어 2 특성 배열'에서 일치하는 특성을 가져와 그 증가값을 합계에 더한다. 
-                traitIncrHp_sum += trait_Tier2.increaseHealth;
-                traitIncrDef_sum += trait_Tier2.increaseDef;
-                traitIncrAtk_sum += trait_Tier2.increaseAtk;
-                traitIncrMov_sum += trait_Tier2.increasecMov;
+                talentIncrHp_sum += talent_Tier2.increaseHealth;
+                talentIncrDef_sum += talent_Tier2.increaseDef;
+                talentIncrAtk_sum += talent_Tier2.increaseAtk;
+                talentIncrMov_sum += talent_Tier2.increasecMov;
 
-                traitIncrCtr_sum += trait_Tier2.increasecCtr;
-                traitIncrCtd_sum += trait_Tier2.increasecCtd;
-                traitIncrInfD_sum += trait_Tier2.increaseInflictDamage;
-                traitIncrTakenD_sum += trait_Tier2.reducedTakenDamage;
+                talentIncrCtr_sum += talent_Tier2.increasecCtr;
+                talentIncrCtd_sum += talent_Tier2.increasecCtd;
+                talentIncrInfD_sum += talent_Tier2.increaseInflictDamage;
+                talentIncrTakenD_sum += talent_Tier2.reducedTakenDamage;
 
-                traitMultiplHp_sum += trait_Tier2.multiplyHealth;
-                traitMultiplDef_sum += trait_Tier2.multiplyDef;
-                traitMultiplAtk_sum += trait_Tier2.multiplyAtk;
-                if (trait_Tier3 != null)
+                talentMultiplHp_sum += talent_Tier2.multiplyHealth;
+                talentMultiplDef_sum += talent_Tier2.multiplyDef;
+                talentMultiplAtk_sum += talent_Tier2.multiplyAtk;
+                if (talent_Tier3 != null)
                 {
                     //3티어 특성도 마찬가지로 적용된다.
-                    traitIncrHp_sum += trait_Tier3.increaseHealth;
-                    traitIncrDef_sum += trait_Tier3.increaseDef;
-                    traitIncrAtk_sum += trait_Tier3.increaseAtk;
-                    traitIncrMov_sum += trait_Tier3.increasecMov;
+                    talentIncrHp_sum += talent_Tier3.increaseHealth;
+                    talentIncrDef_sum += talent_Tier3.increaseDef;
+                    talentIncrAtk_sum += talent_Tier3.increaseAtk;
+                    talentIncrMov_sum += talent_Tier3.increasecMov;
 
-                    traitIncrCtr_sum += trait_Tier3.increasecCtr;
-                    traitIncrCtd_sum += trait_Tier3.increasecCtd;
-                    traitIncrInfD_sum += trait_Tier3.increaseInflictDamage;
-                    traitIncrTakenD_sum += trait_Tier3.reducedTakenDamage;
+                    talentIncrCtr_sum += talent_Tier3.increasecCtr;
+                    talentIncrCtd_sum += talent_Tier3.increasecCtd;
+                    talentIncrInfD_sum += talent_Tier3.increaseInflictDamage;
+                    talentIncrTakenD_sum += talent_Tier3.reducedTakenDamage;
 
-                    traitMultiplHp_sum += trait_Tier2.multiplyHealth;
-                    traitMultiplDef_sum += trait_Tier2.multiplyDef;
-                    traitMultiplAtk_sum += trait_Tier2.multiplyAtk;
+                    talentMultiplHp_sum += talent_Tier2.multiplyHealth;
+                    talentMultiplDef_sum += talent_Tier2.multiplyDef;
+                    talentMultiplAtk_sum += talent_Tier2.multiplyAtk;
                 }
             }
         }
@@ -333,15 +333,15 @@ public class CharacterGrowth : MonoBehaviour
         //이렇게 저장한 합계치를 Calc 스탯에 계산해서 저장한다.
         //계산식 간략히 : Calc 스탯 = (기본 스탯값 + 합연산 상수 수치값의 합) *(곱연산 배율 수치값의 합)
         //계산식 상세 : Calc 스탯 = (int)(  (기본 스탯값 + 특성으로 증가하는 스탯 합계치 + 클래스로 증가하는 스탯 합계치) * ( 1 + 특성으로 증가하는 스탯 배율 + 클래스로 증가하는 스탯 배율)  )
-        character.CalcHealth = (int)((character.Health + traitIncrHp_sum + classincrHp_sum + armorincrHp_sum) * (1 + traitMultiplHp_sum + classMultiplHp_sum + armorMultiplHp_sum));
-        character.CalcDef = (int)((character.Defence + traitIncrDef_sum + classincrDef_sum + armorincrDef_sum) * (1 + traitMultiplDef_sum + classMultiplDef_sum + armorMultiplDef_sum));
-        character.CalcAtk = (int)((character.Attack + traitIncrAtk_sum + classincrAtk_sum + weaponincrAtk_sum) * (1 + traitMultiplAtk_sum + classMultiplAtk_sum + weaponMultiplAtk_sum));
-        character.CalcMov = ((character.Mov + traitIncrMov_sum + classincrMov_sum));
+        character.CalcHealth = (int)((character.Health + talentIncrHp_sum + classincrHp_sum + armorincrHp_sum) * (1 + talentMultiplHp_sum + classMultiplHp_sum + armorMultiplHp_sum));
+        character.CalcDef = (int)((character.Defence + talentIncrDef_sum + classincrDef_sum + armorincrDef_sum) * (1 + talentMultiplDef_sum + classMultiplDef_sum + armorMultiplDef_sum));
+        character.CalcAtk = (int)((character.Attack + talentIncrAtk_sum + classincrAtk_sum + weaponincrAtk_sum) * (1 + talentMultiplAtk_sum + classMultiplAtk_sum + weaponMultiplAtk_sum));
+        character.CalcMov = ((character.Mov + talentIncrMov_sum + classincrMov_sum));
 
-        character.CalcCrtRate = (character.CriticalRate + traitIncrCtr_sum + classIncrCtr_sum + weaponIncrCtr_sum);
-        character.CalcCrtDMG = (character.CriticalDMG + traitIncrCtd_sum + classIncrCtd_sum + weaponIncrCtd_sum);
-        character.CalcInflictDMGRatio = (character.InflictDamageRatio + traitIncrInfD_sum + classIncrInfD_sum + weaponIncrInfD_sum);
-        character.CalcTakenDMGRatio = (character.TakenDamageRatio + traitIncrTakenD_sum + classIncrTakenD_sum + armorIncrTakenD_sum);
+        character.CalcCrtRate = (character.CriticalRate + talentIncrCtr_sum + classIncrCtr_sum + weaponIncrCtr_sum);
+        character.CalcCrtDMG = (character.CriticalDMG + talentIncrCtd_sum + classIncrCtd_sum + weaponIncrCtd_sum);
+        character.CalcInflictDMGRatio = (character.InflictDamageRatio + talentIncrInfD_sum + classIncrInfD_sum + weaponIncrInfD_sum);
+        character.CalcTakenDMGRatio = (character.TakenDamageRatio + talentIncrTakenD_sum + classIncrTakenD_sum + armorIncrTakenD_sum);
         //기본 스탯 값과 Calc 스탯값이 분리되어있으므로, 실제 인게임 전투에서는 Calc스탯을 사용해주세요.
     }
 
