@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class MailUI : UIBase
 {
-    private List<MailEntryUI> mails = new List<MailEntryUI>();
     private enum Texts
     {
         WaitingReceiveText
@@ -42,9 +41,8 @@ public class MailUI : UIBase
         // 테스트 데이터
         foreach (var mail in Managers.AccountData.mailBox)
         {
-            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/MailEntryUI");
-            go.GetComponent<MailEntryUI>().mailSO = mail;
-            mails.Add(Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform).GetComponent<MailEntryUI>());
+            GameObject go = Managers.Resource.Instantiate("UI/MailEntryUI", GetObject((int)GameObjects.Content).transform);
+            go.GetComponent<MailEntryUI>().SetMailSO(mail);
         }
     }
 
@@ -55,18 +53,20 @@ public class MailUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
+    // 모두 수령
     private void OnClickAllReceiveButton()
     {
         Debug.Log("OnClickAllReceiveButton");
-
-        // 모든 메일 순회하며 아이템 인벤토리에 수령
-        foreach (var mail in mails)
+        // Content 오브젝트 아래에 있는 메일을 순회하며 수령
+        foreach (Transform child in GetObject((int)GameObjects.Content).transform)
         {
-            mail.OnClickReceiveButton();
+            MailEntryUI mailEntryUI = child.GetComponent<MailEntryUI>();
+            mailEntryUI.OnClickReceiveButton();
         }
     }
 
-    public void ReceiveTextUpdate()
+    // 수령 후 남은 메일 건수 텍스트 업데이트
+    public void UpdateReceiveText()
     {
         GetText((int)Texts.WaitingReceiveText).text = $"수령대기 {Managers.AccountData.mailBox.Count}건";
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MailEntryUI : UIBase
 {
-    public MailSO mailSO; // 메일 정보
+    private MailSO mailSO; // 메일 정보
     private DateTime expireDate; // 메일 만료 날짜
     private string formattedTime; // 날짜 -> 일 시 분 포맷 변경용
     private int curMin; // 현재 시간
@@ -70,16 +70,20 @@ public class MailEntryUI : UIBase
         GetButton((int)Buttons.ReceiveButton).onClick.AddListener(OnClickReceiveButton);
     }
 
+    public void SetMailSO(MailSO mailSO)
+    {
+        this.mailSO = mailSO;
+    }
+
     public void OnClickReceiveButton()
     {
         Debug.Log("OnClickReceiveButton");
 
         // TODO
         // 아이템 인벤토리에 수령
-        Managers.AccountData.mailBox.Remove(mailSO);
-        Managers.UI.PeekUI<MailUI>().ReceiveTextUpdate();
-        // TODO
         // 수령 완료 팝업
+        Managers.AccountData.mailBox.Remove(mailSO);
+        Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
         Destroy(gameObject);
     }
 }
