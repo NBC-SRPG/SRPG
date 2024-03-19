@@ -133,7 +133,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickAdventureButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<AdventureUI>();
+        Managers.UI.ShowUI<AdventureUI>();
     }
     private void OnClickFriendButton()
     {
