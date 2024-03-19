@@ -8,16 +8,19 @@ public class CharAnimBase : MonoBehaviour
 
     protected CharacterBase character;
     protected CharacterBase targetCharacter;
+    protected List<CharacterBase> targetList;
 
     private string idleParameter = "idle";
     private string moveParameter = "move";
     private string attackParameter = "attack";
+    private string skillParameter = "skill";
     private string hitParameter = "hit";
     private string defendParameter = "defend";
 
     public int Idle { get; private set; }
     public int Move { get; private set; }
     public int Attack { get; private set; }
+    public int Skill { get; private set; }
     public int Hit { get; private set; }
     public int defend { get; private set; }
 
@@ -30,6 +33,7 @@ public class CharAnimBase : MonoBehaviour
         Idle = Animator.StringToHash(idleParameter);
         Move = Animator.StringToHash(moveParameter);
         Attack = Animator.StringToHash(attackParameter);
+        Skill = Animator.StringToHash(skillParameter);
         Hit = Animator.StringToHash(hitParameter);
         defend = Animator.StringToHash(defendParameter);
 
@@ -40,6 +44,12 @@ public class CharAnimBase : MonoBehaviour
     {
         this.targetCharacter = targetCharacter;
         Animator.SetTrigger(Attack);
+    }
+
+    public virtual void PlaySkillAnimation(List<CharacterBase> targets)
+    {
+        this.targetList = targets;
+        Animator.SetTrigger(Skill);
     }
 
     public virtual void PlayDefendAnimation(CharacterBase targetCharacter)
@@ -65,6 +75,12 @@ public class CharAnimBase : MonoBehaviour
     public void PlayHitAnimation()
     {
         Animator.SetBool(Hit, true);
+    }
+
+    public void ReleaseTargets()
+    {
+        targetCharacter = null;
+        targetList = null;
     }
 
     public void EndAnimation()

@@ -31,6 +31,7 @@ public class BattleManager
         isShowAnimation = false;
     }
 
+    //플레이어가 준비되었는지 확인
     public void GetReady()
     {
         if (players.FindAll(x => x.isReady).Count == players.Count)
@@ -39,6 +40,7 @@ public class BattleManager
         }
     }
 
+    //전투 시작
     public void InitBattle()
     {
         nowPlayerNum = 0;
@@ -52,6 +54,9 @@ public class BattleManager
 
     //---------------------------------------------------------------------------
     // 이동 관련
+
+    // 애니메이션 처리하는 동안 딜레이를 주기 위해 코루틴으로 작성
+    // 서버에 올라가면 어떻게 될지 모르겠음
     public IEnumerator OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
         if (curCharacter.playerId == standingCharacter.playerId)// 아군 위를 지나갔을 때
@@ -64,7 +69,7 @@ public class BattleManager
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
                 Attack(curCharacter, standingCharacter);
-                yield return animationWait;
+                yield return animationWait;// 애니메이션이 끝날 때 까지 대기
             }
             curCharacter.OnPassEnemy(standingCharacter);
             standingCharacter.OnEnemyPassesMe(curCharacter);
@@ -76,7 +81,6 @@ public class BattleManager
 
     public void Attack(CharacterBase attacker, CharacterBase victim)
     {
-        Debug.Log("attack");
         attacker.OnStartAttack(victim);
 
         //---
@@ -104,7 +108,7 @@ public class BattleManager
             Debug.Log(t + " take skill");
         }
 
-        yield return animationWait;
+        yield return animationWait;// 애니메이션이 끝날 때 까지 대기
 
         skillUser.OnEndSkill(target);
     }
@@ -112,7 +116,7 @@ public class BattleManager
     //-----------------------------------------------------------------------------------------------------------------------
     //턴 관련 함수들
 
-    public void PlayerTurnEnd()
+    public void PlayerTurnEnd()//플레이어 턴 끝
     {
         nowPlayerNum++;
 
@@ -125,7 +129,7 @@ public class BattleManager
         PlayerTurnStart();
     }
 
-    public void PlayerTurnStart()
+    public void PlayerTurnStart()//플레이어 턴 시작
     {
         nowPlayer = players[nowPlayerNum];
 
@@ -133,7 +137,7 @@ public class BattleManager
         Debug.Log("nowPlayer" + nowPlayer.playerId);
     }
 
-    private void StartRound()
+    private void StartRound()//라운드 시작
     {
         players = players.OrderByDescending(x => x.prioty).ToList();
 
@@ -145,7 +149,7 @@ public class BattleManager
         PlayerTurnStart();
     }
 
-    private void EndRound()
+    private void EndRound()//라운드 끝
     {
         foreach(CharacterBase characters in charactersInBattle)
         {

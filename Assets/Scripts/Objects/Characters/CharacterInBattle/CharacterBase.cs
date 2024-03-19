@@ -106,6 +106,7 @@ public class CharacterBase : MonoBehaviour
     public IEnumerator MoveCharacter()//캐릭터 이동
     {
         OnStartMoving();
+        CameraController.instance.SetCameraOnCharacter(this);
 
         while (movePath.Count > 1)
         {
@@ -357,6 +358,7 @@ public class CharacterBase : MonoBehaviour
     private void GetSkillTarget()// 스킬 타겟 가져오기
     {
         List<OverlayTile> temp = new List<OverlayTile>();
+        curCharacterSkill.targetTiles = skillScale;
 
         switch (curCharacterSkill.skillData.targetType)
         {

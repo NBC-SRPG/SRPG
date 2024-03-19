@@ -31,7 +31,10 @@ public class AnimationController : MonoBehaviour
 
     public bool isAnimationPlaying;
 
-    private void CharacterSetting(CharacterBase attacker, List<CharacterBase> victims)
+    //-----------------------------------------------------------------------------------------------------------------------
+    //캐릭터 위치 조정
+
+    private void CharacterSetting(CharacterBase attacker, List<CharacterBase> victims)// 캐릭터 위치 지정
     {
         this.attacker = attacker;
         this.victims = victims;
@@ -54,15 +57,17 @@ public class AnimationController : MonoBehaviour
             group.AddMember(victims[i].transform, 1, 5);
         }
 
+        CameraController.instance.SetCharacterCameraMove(1);
     }
 
-    private void CharacterRelease()
+    private void CharacterRelease() // 캐릭터 제자리로
     {
         attacker.transform.position = attacker.curStandingTile.transform.position;
         attacker.transform.localScale = new Vector3(1, 1, 0);
         attacker.character.gameObject.layer = 0;
         group.RemoveMember(attacker.transform);
 
+        attacker.characterAnim.ReleaseTargets();
         attacker = null;
 
         for (int i = 0; i < victims.Count; i++)
@@ -75,7 +80,11 @@ public class AnimationController : MonoBehaviour
         }
         victims.Clear();
 
+        CameraController.instance.SetCharacterCameraMove(0);
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //공격 애니메이션
 
     public void StartAttackAnimation(CharacterBase attacker, CharacterBase victim)
     {
@@ -109,6 +118,43 @@ public class AnimationController : MonoBehaviour
             yield return null;
         }
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //공격 애니메이션
+
+    public void StartSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)
+    {
+        isAnimationPlaying = true;
+
+        CharacterSetting(attacker, victims);
+
+        StartCoroutine(PlaySkillAnimation(victims));
+    }
+
+    private IEnumerator PlaySkillAnimation(List<CharacterBase> victim)
+    {
+        attacker.characterAnim.PlaySkillAnimation(victim);
+
+        while (true)
+        {
+            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+            {
+                float animTime = attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+                if (animTime > 0.9f)
+                {
+                    CharacterRelease();
+                    isAnimationPlaying = false;
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    // 방어 애니메이션
 
     public void StartDefendAnimation(CharacterBase attacker, CharacterBase defender)
     {
