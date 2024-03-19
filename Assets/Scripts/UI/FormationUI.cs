@@ -91,14 +91,8 @@ public class FormationUI : UIBase
 
         presetIndex = index;
 
-        if (!Managers.AccountData.formationData.ContainsKey(presetIndex))
-        {
-            // presetIndex에 해당하는 딕셔너리가 없을 경우, 새로운 딕셔너리를 생성 및 할당
-            Managers.AccountData.formationData[presetIndex] = new Dictionary<int, Character>();
-        }
-
         // 바뀐 프리셋 편성 데이터 업데이트
-        for (int i = 1; i <= 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             UpdateFormationMember(i);
         }
@@ -107,25 +101,25 @@ public class FormationUI : UIBase
     // 편성의 index에 해당하는 부분 업데이트
     public void UpdateFormationMember(int index)
     {
-        // 해당 index값 존재 시 세팅
-        if (Managers.AccountData.formationData[presetIndex].ContainsKey(index))
+        // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
+        if (Managers.AccountData.formationData[presetIndex, index] == 0)
         {
             switch (index)
             {
+                case 0:
+                    GetImage((int)Images.FormationImage1).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
+                    break;
                 case 1:
-                    GetImage((int)Images.FormationImage1).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex][index].characterData.character_Id}");
+                    GetImage((int)Images.FormationImage2).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
                     break;
                 case 2:
-                    GetImage((int)Images.FormationImage2).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex][index].characterData.character_Id}");
+                    GetImage((int)Images.FormationImage3).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
                     break;
                 case 3:
-                    GetImage((int)Images.FormationImage3).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex][index].characterData.character_Id}");
+                    GetImage((int)Images.FormationImage4).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
                     break;
                 case 4:
-                    GetImage((int)Images.FormationImage4).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex][index].characterData.character_Id}");
-                    break;
-                case 5:
-                    GetImage((int)Images.FormationImage5).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex][index].characterData.character_Id}");
+                    GetImage((int)Images.FormationImage5).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
                     break;
             }
         }
@@ -134,19 +128,19 @@ public class FormationUI : UIBase
         {
             switch (index)
             {
-                case 1:
+                case 0:
                     GetImage((int)Images.FormationImage1).sprite = null;
                     break;
-                case 2:
+                case 1:
                     GetImage((int)Images.FormationImage2).sprite = null;
                     break;
-                case 3:
+                case 2:
                     GetImage((int)Images.FormationImage3).sprite = null;
                     break;
-                case 4:
+                case 3:
                     GetImage((int)Images.FormationImage4).sprite = null;
                     break;
-                case 5:
+                case 4:
                     GetImage((int)Images.FormationImage5).sprite = null;
                     break;
             }
@@ -206,7 +200,10 @@ public class FormationUI : UIBase
         Debug.Log("OnClickResetButton");
         // TODO
         // 편성 초기화
-        Managers.AccountData.formationData[presetIndex].Clear();
+        for (int i = 0; i < 5; i++)
+        {
+            Managers.AccountData.formationData[presetIndex, i] = 0;
+        }
         UpdateFormationToPreset(presetIndex);
     }
 

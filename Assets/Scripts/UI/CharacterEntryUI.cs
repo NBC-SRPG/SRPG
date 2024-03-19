@@ -87,7 +87,7 @@ public class CharacterEntryUI : UIBase
 
         // 편성 UI 뽑아서 formationIndex에 해당하는 곳에 캐릭터 정보 전달
         FormationUI ui = Managers.UI.FindUI<FormationUI>();
-        Managers.AccountData.formationData[ui.presetIndex][formationIndex] = character;
+        Managers.AccountData.formationData[ui.presetIndex, formationIndex] = int.Parse(character.characterData.character_Id);
         ui.UpdateFormationMember(formationIndex);
 
         Managers.UI.CloseUI(Managers.UI.PeekUI<CharacterUI>());

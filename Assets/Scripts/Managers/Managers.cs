@@ -67,7 +67,13 @@ public class Managers : MonoBehaviour
             s_gachamanager.Init();
 
             // 테스트용 데이터
-            s_accountData.Init(new Dictionary<string, int>(), new Dictionary<int, Character>(), new PlayerData(), new Dictionary<int, bool>(), new Dictionary<int, string[]>(), new Dictionary<int, Dictionary<int, Character>>());
+            s_accountData.Init(new Dictionary<string, int>(), 
+                new Dictionary<int, Character>(), 
+                new PlayerData(), 
+                new Dictionary<int, bool>(), 
+                new Dictionary<int, string[]>(), 
+                new int[5,5],
+                new List<MailSO>());
 
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
             Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
