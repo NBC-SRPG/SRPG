@@ -86,7 +86,7 @@ public class AccountData
         }
     }
 
-    // 인벤토리에서 아이템을 사용할 때 보유량을 확인하고 사용할 수 있는지 여부를 반환하는 메서드
+    // 인벤토리에서 아이템을 사용할 때 보유량을 확인하고, 보유량이 충분하다면 그 갯수만큼 아이템 갯수를 차감하고, bool값을 반환하는 메서드
     public bool UseItem(ItemData item, int requiredQuantity)
     {
         if (inventory.ContainsKey(item))
