@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e36257601a5deb643a1aa8baf42377cf, type: 3}
   m_Name: Character_
   m_EditorClassIdentifier: 
-  attackType: 1
+  attackType: 0
   characterAttribute: 0
   character_Id: 
-  health: 0
-  atk: 0
+  health: 20
+  atk: 5
   def: 0
-  mov: 9
-  atk_range: 10
+  mov: 14
+  atk_range: 4
   growHealth: 0
   growAtk: 0
   growDef: 0
@@ -28,4 +28,11 @@ MonoBehaviour:
   belonging: 0
   skill: {fileID: 11400000, guid: 6d56a2deaadd25b4eba1c4f21307fba3, type: 2}
   passive: {fileID: 11400000, guid: f9e4715c32248e4479fad552a190713c, type: 2}
+  talent_Tier1: {fileID: 11400000, guid: 53481c334e0f1404ca7c091e331d98d2, type: 2}
+  talent_Tier2: []
+  talent_Tier3: []
+  basicClass: {fileID: 11400000, guid: e0e2e27dfead46d4e9b7052f80fd38b6, type: 2}
+  superiorClass: []
+  weapon: {fileID: 11400000, guid: 42d4b942c01e04649828f8b3456b98e9, type: 2}
+  armor: {fileID: 11400000, guid: 94b24aef6286e634980d31b7008a1c58, type: 2}
   defaltStar: 0
