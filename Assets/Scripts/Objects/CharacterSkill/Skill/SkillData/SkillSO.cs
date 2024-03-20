@@ -6,7 +6,7 @@ using UnityEngine;
 public class SkillSO : ScriptableObject
 {
     [Header("Develope")]
-    public string skill_ID;//스킬 식별자
+    public int skill_ID;//스킬 식별자
 
     [Header("Skill_description")]
     public string skillName;
@@ -29,5 +29,5 @@ public class SkillSO : ScriptableObject
     [Range(0, 10)] public int skillScale;//스킬 범위 칸 수(단일 대상 공격이면 0)
 
     [Header("Skill_abillity")]
-    public string abilityID;//특수 능력
+    public int abilityID;//특수 능력
 }

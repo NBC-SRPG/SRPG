@@ -10,5 +10,5 @@ public class PassiveSO : ScriptableObject
     public string description;
 
     [Header("Develope")]
-    public string passive_Id;
+    public int passive_Id;
 }

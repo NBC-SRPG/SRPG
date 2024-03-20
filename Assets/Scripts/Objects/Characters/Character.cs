@@ -67,8 +67,9 @@ public class Character : MonoBehaviour
     //스탯 최신화 메서드. 
     public void StatRefresh() 
     {
-        characterGrowth.ApplyGrowStat();
-        characterGrowth.ApplyAdditionStat();
+        Managers.CharacterGrowthManager.Init(this);
+        Managers.CharacterGrowthManager.ApplyGrowStat();
+        Managers.CharacterGrowthManager.ApplyAdditionStat();
     }
 
     //스킬 선언

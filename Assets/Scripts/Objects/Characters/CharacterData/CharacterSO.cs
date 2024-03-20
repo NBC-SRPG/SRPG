@@ -10,7 +10,7 @@ public class CharacterSO : ScriptableObject
     public Constants.CharacterAttribute characterAttribute;//캐릭터 속성
 
     [Header("Develope")]
-    public string character_Id;//캐릭터 식별자
+    public int character_Id;//캐릭터 식별자
 
     [Header("Status")]///캐릭터 능력치
     public int health;
@@ -47,5 +47,5 @@ public class CharacterSO : ScriptableObject
     public ArmorSO armor;
 
     [Header("Star")]
-    public Star defaltStar; //기본 성급
+    public int basicStar = 1; //기본 성급
 }

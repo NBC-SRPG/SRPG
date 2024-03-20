@@ -94,18 +94,14 @@ public class Constants
         Priests
     }
 
-    public enum Star // 성급 & 한계돌파. (정수값 = 해당 성급의 최대 레벨)
-    {
-        Star_1 = 30,
-        Star_2 = 40,
-        Star_3 = 50,
-        Star_4 = 60,
-        Star_5 = 70,
+    public enum LimitBreak // 성급 & 한계돌파. (정수값 = 해당 성급의 최대 레벨)
+    { 
         LimitBreak_1 = 75,
         LimitBreak_2 = 80,
         LimitBreak_3 = 85,
         LimitBreak_4 = 90
     }
+
 
     public enum EquipType
     {
@@ -140,5 +136,4 @@ public class Constants
         Magic_Hat, //마법사 모자
         Robe //로브
     }
-
 }
