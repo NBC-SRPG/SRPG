@@ -9,7 +9,7 @@ public class ClassSO : ScriptableObject
     public string class_Id;//클래스 식별자
     public BaseClass bassClass; //뿌리 클래스
 
-    [Header("Trait_description")]
+    [Header("Class_description")]
     public string className;//클래스 이름
     public string classDescription;//클래스 설명
 
@@ -26,7 +26,7 @@ public class ClassSO : ScriptableObject
     public float multiplyAtk;
     public float multiplyDef;
 
-    [Header("Trait_Status_addition")]
+    [Header("Class_Status_addition")]
     public float increasecCtr; //치명타 확률 +
     public float increasecCtd; //치명타 피해 +
     public float increaseInflictDamage; //주는 최종 피해 증가 +

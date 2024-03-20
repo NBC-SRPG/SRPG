@@ -148,11 +148,12 @@ public class Constants
         Ticket, //캐릭터 뽑기 티켓류 
         Piece, //캐릭터 조각류
         Token, //토큰류 = 이벤트 상점 교환 재화
-        Consumable, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권 등
+        Consumable, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
         RankUp_character, //캐릭터 돌파에 필요한 아이템류. 일단은 조각이 그 역할을 하므로 더미 데이터.
         ExpUp_character, //캐릭터 경험치를 상승시켜주는 아이템류. 캐릭터 육성 창에서 사용 가능
         RankUp_skill, //캐릭터 스킬 레벨업에 필요한 아이템류.
-        RankUp_equip, //장비 등급 상승에 필요한 아이템류.
+        RankUp_equip_weapon, //장비 등급 상승에 필요한 아이템류.
+        RankUp_equip_armor,
         ExpUp_equip, //장비 경험치 상승에 필요한 아이템류.
         Gift, //호감도 상승에 필요한 아이템류. 선물.
         Keepsake, //특별한 기능은 없지만 보관 자체로 의미가 있는 기념품/중요한 아이템류. = 트로피, 훈장, 스토리에서 중요한 의미를 가진 아이템 등.
@@ -164,5 +165,14 @@ public class Constants
         Rare, //=파란색
         Epic, //=보라색
         Legend //=백금색
+    }
+
+    public enum Rewards //보상이 될 수 있는 것들
+    {
+        AP,
+        Gold,
+        Diamond,
+        Character,
+        Item
     }
 }
