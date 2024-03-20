@@ -18,6 +18,6 @@ public class ItemData : ScriptableObject
     public ItemType itemType; //아이템 분류
     public ItemRank itemRank; //아이템 등급
     public int maxReservesNumbers; //아이템 보유 갯수 최대치
-    public int reservesNumbers; //아이템을 현재 보유하고 있는 갯수
+    //public int reservesNumbers; //아이템을 현재 보유하고 있는 갯수
 }
 
