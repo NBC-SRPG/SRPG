@@ -40,7 +40,7 @@ public class CameraController : MonoBehaviour
 
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
-        Ui = Managers.UI.FindPopup<BattleUI>();
+        Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
     }
 

@@ -82,6 +82,13 @@ public class Managers : MonoBehaviour
             s_accountData.characterData.Add(int.Parse(testChatacter2.characterData.character_Id), testChatacter2);
             s_accountData.characterData.Add(int.Parse(testChatacter3.characterData.character_Id), testChatacter3);
 
+            testChatacter1.CharacterInit();
+            testChatacter2.CharacterInit();
+            testChatacter3.CharacterInit();
+            testChatacter1.characterGrowth.InitialInit();
+            testChatacter2.characterGrowth.InitialInit();
+            testChatacter3.characterGrowth.InitialInit();
+
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
             mailSO.id = "1";
             mailSO.title = "테스트 메일입니다.";

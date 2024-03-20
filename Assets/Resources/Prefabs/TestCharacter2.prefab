@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5914839925192003798}
   - component: {fileID: 7054565446883743626}
+  - component: {fileID: -4194493815513024287}
   m_Layer: 0
   m_Name: TestCharacter2
   m_TagString: Untagged
@@ -45,7 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData: {fileID: 11400000, guid: c7b1e79d6dd80db49be1a9151ac7f9f1, type: 2}
-  level: 20
-  maxLevel: 50
-  exp: 10
-  maxExp: 40
+  characterGrowth: {fileID: -4194493815513024287}
+--- !u!114 &-4194493815513024287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2838245463484793630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 884dbbf9cada7124f91f783587e6e027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

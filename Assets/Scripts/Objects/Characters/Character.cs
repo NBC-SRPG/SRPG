@@ -23,7 +23,8 @@ public class Character : MonoBehaviour
     public Constants.AttackType CharacterAttackType { get; private set; }
     public int Health { get; set; }
 
-    public int TotalHealth { get { return Health; } }
+    // 임시 변수 -> 지금은 필요 x
+    //public int TotalHealth { get { return Health; } }
     public int Attack { get; set; }
     public int Defence { get; set; }
     public int Mov { get; set; }
@@ -53,7 +54,6 @@ public class Character : MonoBehaviour
     private float calcTakenDMGRatio;
     public float CalcTakenDMGRatio { get { return calcTakenDMGRatio; } set { calcTakenDMGRatio = math.clamp(value, 0, 1f); } }
     //=======Calc 스탯=======// 
-
 
 
 
