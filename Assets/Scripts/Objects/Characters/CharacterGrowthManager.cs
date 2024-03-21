@@ -172,17 +172,17 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         //장비 스탯.
         //무기로 획득할 수 있는 스탯 = 공격력, 치확, 치피, 주는 피해증가
         //방어구로 획득할 수 있는 스탯 = 체력, 방어력, 받는 피해 감소
-        int weaponincrAtk_sum = (character.characterData.weapon.increaseAtk * character.characterGrowth.weaponLevel);
-        float weaponMultiplAtk_sum = (character.characterData.weapon.multiplyAtk * character.characterGrowth.weaponLevel);
-        float weaponIncrCtr_sum = (character.characterData.weapon.increasecCtr * character.characterGrowth.weaponLevel);
-        float weaponIncrCtd_sum = (character.characterData.weapon.increasecCtd * character.characterGrowth.weaponLevel);
-        float weaponIncrInfD_sum = (character.characterData.weapon.increaseInflictDamage * character.characterGrowth.weaponLevel);
+        int weaponincrAtk_sum = (character.characterGrowth.weapon.increaseAtk * character.characterGrowth.weaponEnhance);
+        float weaponMultiplAtk_sum = (character.characterGrowth.weapon.multiplyAtk * character.characterGrowth.weaponEnhance);
+        float weaponIncrCtr_sum = (character.characterGrowth.weapon.increasecCtr * character.characterGrowth.weaponEnhance);
+        float weaponIncrCtd_sum = (character.characterGrowth.weapon.increasecCtd * character.characterGrowth.weaponEnhance);
+        float weaponIncrInfD_sum = (character.characterGrowth.weapon.increaseInflictDamage * character.characterGrowth.weaponEnhance);
 
-        int armorincrHp_sum = (character.characterData.armor.increaseHealth * character.characterGrowth.armorLevel);
-        int armorincrDef_sum = (character.characterData.armor.increaseDef * character.characterGrowth.armorLevel);
-        float armorMultiplHp_sum = (character.characterData.armor.multiplyHealth * character.characterGrowth.armorLevel);
-        float armorMultiplDef_sum = (character.characterData.armor.multiplyDef * character.characterGrowth.armorLevel);
-        float armorIncrTakenD_sum = (character.characterData.armor.reducedTakenDamage * character.characterGrowth.armorLevel);
+        int armorincrHp_sum = (character.characterGrowth.armor.increaseHealth * character.characterGrowth.armorEnhance);
+        int armorincrDef_sum = (character.characterGrowth.armor.increaseDef * character.characterGrowth.armorEnhance);
+        float armorMultiplHp_sum = (character.characterGrowth.armor.multiplyHealth * character.characterGrowth.armorEnhance);
+        float armorMultiplDef_sum = (character.characterGrowth.armor.multiplyDef * character.characterGrowth.armorEnhance);
+        float armorIncrTakenD_sum = (character.characterGrowth.armor.reducedTakenDamage * character.characterGrowth.armorEnhance);
 
 
         //이렇게 저장한 합계치를 Calc 스탯에 계산해서 저장한다.
@@ -200,25 +200,40 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         //기본 스탯 값과 Calc 스탯값이 분리되어있으므로, 실제 인게임 전투에서는 Calc스탯을 사용해주세요.
     }
 
-    public bool WeaponLevelUp(int ingredient)
+    public bool WeaponRankUp()
     {
-        if (ingredient >= character.characterGrowth.weaponLevel && character.characterGrowth.weaponLevel < character.characterGrowth.Level)
+        // rankUpMaterials의 모든 요소에 대해 반복
+        foreach (var kvp in character.characterGrowth.weapon.rankUpMaterials)
         {
-            character.characterGrowth.weaponLevel += 1;
-            //Todo : 재료 소모
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }//임시로 구조만 만들어둔 무기 레벨업 메서드. //Todo: 장비 레벨업 방식 및 요구 아이템. 장비 등급 상승, 장비 레벨업 시 스탯 관련 논의 필요.
+            int requiredItemId = kvp.Key; // 요구되는 아이템의 아이디
+            int requiredItemCount = kvp.Value; // 요구되는 아이템의 갯수
 
-    public bool ArmorLevelUp(int ingredient)
+            // 인벤토리에 해당 아이템이 존재하는지 확인
+            if (Managers.AccountData.inventory.ContainsKey(requiredItemId))
+            {
+                // 인벤토리에 있는 아이템의 갯수가 요구되는 갯수 이상인지 확인
+                if (inventory[requiredItemId] < requiredItemCount)
+                {
+                    // 요구되는 갯수보다 적은 경우 false 반환
+                    return false;
+                }
+            }
+            else
+            {
+                // 인벤토리에 해당 아이템이 없는 경우 false 반환
+                return false;
+            }
+        }
+
+        // 모든 요구사항을 만족하는 경우 true 반환
+        return true;
+    }
+
+    public bool ArmorRankUp()
     {
-        if (ingredient >= character.characterGrowth.weaponLevel && character.characterGrowth.weaponLevel < character.characterGrowth.Level)
+        if (true)
         {
-            character.characterGrowth.armorLevel += 1;
+            character.characterGrowth.armorEnhance += 1;
             //Todo : 재료 소모
             return true;
         }

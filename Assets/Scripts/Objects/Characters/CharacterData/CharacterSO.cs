@@ -43,8 +43,10 @@ public class CharacterSO : ScriptableObject
     public ClassSO[] superiorClass;
 
     [Header("Equip")] //장비SO
-    public WeaponSO weapon;
-    public ArmorSO armor;
+    public WeaponType weaponType;
+    public ArmorType armorType;
+    public WeaponSO[] weapon; // 캐릭터가 장착 가능한 티어별 무기 SO의 배열. 예시) 인덱스 0 = common 한손검, 1 = rare 한손검, 2 = epic 한손검...
+    public ArmorSO[] armor; // 무기와 같은 구조
 
     [Header("Star")]
     public int basicStar = 1; //기본 성급

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -36,4 +37,6 @@ public class EquipSO : ScriptableObject
     [Header("Develope")]
     public int equip_Id;//장비 식별자
     public EquipType equipType; //장비 타입
+    public ItemType ItemType;
+    public Dictionary<int, int> rankUpMaterials; //돌파하는데 필요한 소재 아이템의 ID값 / 필요한 갯수 딕셔너리
 }
