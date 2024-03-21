@@ -9,7 +9,7 @@ public class AccountData
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
     public Dictionary<int, bool> missionClearData { get; set; }
-    public Dictionary<ItemData, int> inventory { get; set; }  //인벤토리 = 아이템 데이터, 보유 갯수
+    public Dictionary<ItemData, int> inventory { get; set; }  //인벤토리 = 아이템 데이터, 보유 갯수. //Todo : 아이템 DB 작업 완료 후 ItemData → int itemId로 바꾸고 메서드 수정하기.
     public Dictionary<int, string[]> friendData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
