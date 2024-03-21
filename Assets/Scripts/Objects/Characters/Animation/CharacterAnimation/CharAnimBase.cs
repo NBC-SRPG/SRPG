@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class CharAnimBase : MonoBehaviour
     private string attackParameter = "attack";
     private string skillParameter = "skill";
     private string hitParameter = "hit";
+    private string dieParameter = "die";
     private string defendParameter = "defend";
 
     public int Idle { get; private set; }
@@ -22,7 +24,10 @@ public class CharAnimBase : MonoBehaviour
     public int Attack { get; private set; }
     public int Skill { get; private set; }
     public int Hit { get; private set; }
+    public int Die { get; private set; }
     public int defend { get; private set; }
+
+    protected int damage;
 
     public void Init(CharacterBase thisCharacter)
     {
@@ -35,9 +40,15 @@ public class CharAnimBase : MonoBehaviour
         Attack = Animator.StringToHash(attackParameter);
         Skill = Animator.StringToHash(skillParameter);
         Hit = Animator.StringToHash(hitParameter);
+        Die = Animator.StringToHash(dieParameter);
         defend = Animator.StringToHash(defendParameter);
 
         Debug.Log("animator init");
+    }
+
+    public void SetDamage(int damage)
+    {
+        this.damage = damage;
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
@@ -77,6 +88,11 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetBool(Hit, true);
     }
 
+    public void PlayDieAnimation()
+    {
+        Animator.SetTrigger(Die);
+    }
+
     public void ReleaseTargets()
     {
         targetCharacter = null;
@@ -85,7 +101,7 @@ public class CharAnimBase : MonoBehaviour
 
     public void EndAnimation()
     {
-        Animator.SetBool(Move, false);
+        Animator.SetBool(Move, character.isWalking);
         Animator.SetBool(Hit, false);
     }
 
@@ -128,6 +144,8 @@ public class CharAnimBase : MonoBehaviour
     {
         Vector2 knockBackDirection = ((Vector2)character.transform.position - target).normalized * scale;
         Vector3 targetposition = new Vector3(character.transform.position.x + knockBackDirection.x, character.transform.position.y, character.transform.position.z);
+
+        FlipCharacter(knockBackDirection, true);
 
         StartCoroutine(MoveToTarget(targetposition));
     }

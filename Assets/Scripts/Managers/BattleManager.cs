@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BattleManager
 {
@@ -59,40 +60,91 @@ public class BattleManager
     // 서버에 올라가면 어떻게 될지 모르겠음
     public IEnumerator OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
-        if (curCharacter.playerId == standingCharacter.playerId)// 아군 위를 지나갔을 때
+        if (!curCharacter.CheckEnenmy(standingCharacter))// 아군 위를 지나갔을 때
         {
             curCharacter.OnPassAlly(standingCharacter);
             standingCharacter.OnAllyPassedMe(curCharacter);
         }
         else// 적군 위를 지나갔을 때
         {
+            curCharacter.OnPassEnemy(standingCharacter);
+
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
-                Attack(curCharacter, standingCharacter);
+                curCharacter.AttackTarget(standingCharacter);
                 yield return animationWait;// 애니메이션이 끝날 때 까지 대기
             }
-            curCharacter.OnPassEnemy(standingCharacter);
-            standingCharacter.OnEnemyPassesMe(curCharacter);
+
+            if (!curCharacter.isDead && !standingCharacter.isDead)
+            {
+                standingCharacter.OnEnemyPassesMe(curCharacter);
+            }
         }
     }
 
     //---------------------------------------------------------------------------
     // 공격 관련
 
-    public void Attack(CharacterBase attacker, CharacterBase victim)
+    public IEnumerator Attack(CharacterBase attacker, CharacterBase victim)// 공격
     {
         attacker.OnStartAttack(victim);
 
-        //---
-        //victim.takedamage// characterBase에 attack함수로 이동시킬까 생각 중
-        //attacker.OnAttackSuccess(victim, damage);
-        //victim.OnTakeDamage(attacker);// takedamage 내로 이동
-        //---
+        //------
+        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+        //다른 클라이언트는 서버가 준 데미지를 받아옴
+        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
+        //------
+        
+        attacker.characterAnim.SetDamage(damage);
+
+        victim.health.TakeDamage(damage);
+        Debug.Log("take damage : " + damage);
+
+        attacker.OnAttackSuccess(victim, damage);
+
+        victim.OnTakeDamage(attacker);
+        if (!victim.isDead && victim.doCounterAttack)// 피해를 받은 캐릭터가 반격이 활성화 되어 있다면,
+        {
+            victim.CounterAttack(attacker);
+        }
 
         AnimationController.instance.StartAttackAnimation(attacker, victim);
+        yield return animationWait;
 
         attacker.OnEndAttack(victim);
-        
+
+        if (victim.isDead)
+        {
+            victim.OnDieInBattle(attacker);
+        }
+
+    }
+
+    public IEnumerator CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
+    {
+        attacker.OnStartAttack(victim);
+
+        //------
+        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+        //다른 클라이언트는 서버가 준 데미지를 받아옴
+        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
+        //------
+
+        attacker.characterAnim.SetDamage(damage);
+
+        victim.health.TakeDamage(damage);
+
+        attacker.OnAttackSuccess(victim, damage);
+
+        victim.OnTakeDamage(attacker);
+        yield return animationWait;
+
+        attacker.OnEndAttack(victim);
+
     }
 
     //---------------------------------------------------------------------------

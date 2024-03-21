@@ -10,7 +10,7 @@ public class TargetTiles : MonoBehaviour
     public void ShowSelectedTile(CharacterBase curCharacter)
     {
         curSelectedTile.SetActive(curCharacter);
-        if (curCharacter)
+        if (curCharacter && curCharacter.curStandingTile)
         {
             curSelectedTile.transform.position = curCharacter.curStandingTile.transform.position;
         }

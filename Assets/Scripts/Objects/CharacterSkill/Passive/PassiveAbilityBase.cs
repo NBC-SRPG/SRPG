@@ -75,15 +75,39 @@ public class PassiveAbilityBase
     {
 
     }
+
+    public virtual void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
+    {
+
+    }
+
+    public virtual void OnDie()// 사망 시
+    {
+
+    }
 }
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 {
+    public override void OnEndTurn()
+    {
+        base.OnEndTurn();
+
+        character.doCounterAttack = false;
+    }
+
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {
         base.OnEnemyPassesMe(enemy);
         enemy.BlockMoving();//ZOC 테스트 
 
         AnimationController.instance.StartDefendAnimation(enemy, character);
+    }
+
+    public override void OnTakeDamage(CharacterBase enemy)// 반격 테스트
+    {
+        base.OnTakeDamage(enemy);
+
+        character.doCounterAttack = true;
     }
 }
