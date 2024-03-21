@@ -23,6 +23,9 @@ public class Managers : MonoBehaviour
 
     private static GachaManager s_gachamanager = new GachaManager();
     public static GachaManager GachaManager { get { Init(); return s_gachamanager; } }
+    
+    private static CharacterGrowthManager s_characterGrowthManager = new CharacterGrowthManager();
+    public static CharacterGrowthManager CharacterGrowthManager { get { Init();return s_characterGrowthManager; } }
 
 
     private void Start()

@@ -31,10 +31,9 @@ public class EquipSO : ScriptableObject
 
 
     [Header("Equip_special")]
-    public string speciaID;//장비의 별도 고유 효과. 세부로직 미구현.
-                           //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
+    public int speciaID;//장비의 별도 고유 효과. 세부로직 미구현.
 
     [Header("Develope")]
-    public string equip_Id;//장비 식별자
+    public int equip_Id;//장비 식별자
     public EquipType equipType; //장비 타입
 }

@@ -7,7 +7,7 @@ using static Constants;
 public class TalentSO : ScriptableObject
 {
     [Header("Develope")]
-    public string talent_Id;//특성 식별자
+    public int talent_Id;//특성 식별자
     public TalentType talentType; //특성 분류
 
     [Header("Talent_description")]
@@ -35,6 +35,6 @@ public class TalentSO : ScriptableObject
 
 
     [Header("Talent_special")]
-    public string speciaID;//특성의 별도 고유 효과. 세부로직 미구현.
+    public int speciaID;//특성의 별도 고유 효과. 세부로직 미구현.
                            //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
 }

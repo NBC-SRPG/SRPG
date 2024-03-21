@@ -6,7 +6,7 @@ using static Constants;
 public class ClassSO : ScriptableObject
 {
     [Header("Develope")]
-    public string class_Id;//클래스 식별자
+    public int class_Id;//클래스 식별자
     public BaseClass bassClass; //뿌리 클래스
 
     [Header("Class_description")]
@@ -33,6 +33,6 @@ public class ClassSO : ScriptableObject
     public float reducedTakenDamage; //받는 최종 피해 감소 -
 
     [Header("Class_unique")]
-    public string uniqueID;//클래스의 별도 고유 효과. 세부로직 미구현.
+    public int uniqueID;//클래스의 별도 고유 효과. 세부로직 미구현.
                            //Todo: 특성이 스탯 증가 외에 특수 기능을 구현하고 적용할 수 있도록 로직 설계 / 구현
 }
