@@ -44,7 +44,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭�
     {
         get
         {
-            if (Limit > 1)
+            if (Limit >= 1)
             {
                 switch (limit)
                 {
@@ -89,10 +89,10 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭�
         private set //경험치 설정자에 자체적으로 레벨업 기능을 배치.
         {
             exp = value;
-            while (exp >= maxExp && level < maxLevel && level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
+            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
             {
                 exp -= maxExp;
-                level += 1;
+                Level += 1;
             }
             exp = math.clamp(exp, 0, maxExp);
         }
