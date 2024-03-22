@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 43117314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 2.6000001, z: -350}
+  m_LocalPosition: {x: 0.5, y: 6.8, z: -350}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 4
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -351,6 +351,7 @@ MonoBehaviour:
     prioty: 2
     isReady: 0
     party:
+    - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
     - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
   movePath: []
   nowPlayerTurn: 0
@@ -483,7 +484,7 @@ MonoBehaviour:
   m_Follow: {fileID: 465384797}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 3
+    OrthographicSize: 10
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -508,7 +509,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 377462589}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 2.6000001, z: -350}
+  m_LocalPosition: {x: 0.5, y: 6.8, z: -350}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -626,7 +627,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.52
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -818,7 +819,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 660331261}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4, y: -1.5, z: -20}
+  m_LocalPosition: {x: -7.5, y: -1.5, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -973,7 +974,7 @@ MonoBehaviour:
   m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 6.52
+    OrthographicSize: 10
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -1076,7 +1077,7 @@ MonoBehaviour:
   m_MaximumDistance: 5000
   m_MinimumFOV: 3
   m_MaximumFOV: 60
-  m_MinimumOrthoSize: 1
+  m_MinimumOrthoSize: 10
   m_MaximumOrthoSize: 5000
 --- !u!1 &1071128363
 GameObject:
@@ -1306,7 +1307,7 @@ Grid:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204701913}
   m_Enabled: 1
-  m_CellSize: {x: 1, y: 1, z: 0}
+  m_CellSize: {x: 2, y: 2, z: 0}
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
@@ -1369,7 +1370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1278061657}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4, y: -1.5, z: -20}
+  m_LocalPosition: {x: 7.5, y: -1.5, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1405,6 +1406,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86071a70d66552c40bf1cadcc6ac9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battaleCamera: {fileID: 43117316}
   mainCamera: {fileID: 751383549}
   followingCharacterCamera: {fileID: 115323944}
   followingTileCamera: {fileID: 1763497507}
@@ -1547,7 +1549,7 @@ MonoBehaviour:
   m_MaximumDistance: 5000
   m_MinimumFOV: 3
   m_MaximumFOV: 60
-  m_MinimumOrthoSize: 5
+  m_MinimumOrthoSize: 8
   m_MaximumOrthoSize: 5000
 --- !u!1 &1647785836
 GameObject:
@@ -1813,7 +1815,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763497505}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.00000023841858, y: 0.00000023841858, z: -10}
+  m_LocalPosition: {x: -0.00000047683716, y: 0.00000047683716, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1843,7 +1845,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1739334758}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 4
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -1916,7 +1918,6 @@ MonoBehaviour:
   battleCanvas: {fileID: 602190366}
   group: {fileID: 465384796}
   isAnimationPlaying: 0
-  doCounter: 0
 --- !u!1001 &4152555576456634301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1925,9 +1926,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1204701915}
     m_Modifications:
+    - target: {fileID: 477287839699738834, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 477287839699738834, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 477287839699738834, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1752962521781309133, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Name
       value: Map_Test
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038148061607328802, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038148061607328802, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2038148061607328802, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4863905185406093458, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4863905185406093458, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_ChunkCullingBounds.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5414486514157042662, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_RootOrder
@@ -1972,6 +2005,46 @@ PrefabInstance:
     - target: {fileID: 5414486514157042662, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[0].first.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[1].first.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[1].first.y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_TileAssetArray.Array.data[0].m_RefCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_TileColorArray.Array.data[0].m_RefCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_TileMatrixArray.Array.data[0].m_RefCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_TileSpriteArray.Array.data[0].m_RefCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[1].second.m_AllTileFlags
+      value: 1073741825
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[1].second.m_TileObjectToInstantiateIndex
+      value: 65535
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -10,12 +10,9 @@ public class CharAnim_Test : CharAnimBase
 
     }
 
-    public override void HitEnemy(int scale)
+    public override void AttackEnemy()
     {
-        base.HitEnemy(scale);
-
-        Debug.Log(damage);
-        targetCharacter.health.TakeDamageHealthBar(damage);
+        base.AttackEnemy();
     }
 
     public void MoveToPosition()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ public class HealthSystem : MonoBehaviour
     [field:SerializeField] public int CurHealth {  get; set; }
 
     public event Action Die;
+
+    private TextMeshProUGUI text;
 
     public void SetHealth(int health)
     {
@@ -59,11 +62,15 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamageHealthBar(int n)// 데미지 입힘
     {
         healthBar.fillAmount -= ((float)n / (float)MaxHealth);
+
+        Managers.UI.FindPopup<BattleUI>().ShowDamageText(n, transform);
     }
 
     public void HealHealthBar(int n)// 체력 회복함
     {
         healthBar.fillAmount += ((float)n / (float)MaxHealth);
+
+        Managers.UI.FindPopup<BattleUI>().ShowDamageText(n, transform, true);
     }
 
     public void SetHealthBar()// 체력바 실제 수치랑 맞추기
