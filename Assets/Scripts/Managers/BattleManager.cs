@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
@@ -97,7 +98,7 @@ public class BattleManager
         int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
         //------
         
-        attacker.characterAnim.SetDamage(damage);
+        victim.characterAnim.SetDamage(damage);
 
         victim.health.TakeDamage(damage);
         Debug.Log("take damage : " + damage);
@@ -134,7 +135,7 @@ public class BattleManager
         int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
         //------
 
-        attacker.characterAnim.SetDamage(damage);
+        victim.characterAnim.SetDamage(damage);
 
         victim.health.TakeDamage(damage);
 
@@ -165,11 +166,64 @@ public class BattleManager
         skillUser.OnEndSkill(target);
     }
 
+    public IEnumerator SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
+    {
+        foreach(CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            int damage = skillUser.curCharacterSkill.SkillFigure - victim.character.Defence;
+            //------
+
+            victim.characterAnim.SetDamage(damage);
+
+            victim.health.TakeDamage(damage);
+
+            skillUser.OnSkillAttackSuccess(victim, damage);
+        }
+
+        AnimationController.instance.StartSkillAnimation(skillUser, target);
+        yield return animationWait;
+
+    }
+
+    public IEnumerator SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
+    {
+        foreach (CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            int figure = skillUser.curCharacterSkill.SkillFigure;
+            //------
+
+            victim.characterAnim.SetDamage(figure);
+
+            victim.health.HealHealth(figure);
+
+            skillUser.OnSkillAttackSuccess(victim, figure);
+        }
+
+        AnimationController.instance.StartSkillAnimation(skillUser, target);
+        yield return animationWait;
+
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //턴 관련 함수들
 
     public void PlayerTurnEnd()//플레이어 턴 끝
     {
+        foreach (CharacterBase characters in charactersInBattle)
+        {
+            characters.OnEndPlayerTurn();
+        }
+
         nowPlayerNum++;
 
         if(nowPlayerNum >= players.Count)

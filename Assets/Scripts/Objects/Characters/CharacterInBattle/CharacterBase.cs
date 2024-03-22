@@ -122,7 +122,7 @@ public class CharacterBase : MonoBehaviour
         {
             while (transform.position != movePath[1].transform.position)
             {
-                transform.position = Vector2.MoveTowards(transform.position, movePath[1].transform.position, 5 * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(transform.position, movePath[1].transform.position, 15 * Time.deltaTime);
                 characterAnim.FlipCharacter(movePath[1].transform.position, false);
 
                 yield return animationWait;
@@ -274,6 +274,11 @@ public class CharacterBase : MonoBehaviour
         CheckingActing();
     }
 
+    public void OnEndPlayerTurn()
+    {
+        characterAnim.Activate();
+    }
+
     public void OnEndTurn()// 턴이 끝날 때
     {
         curCharacterPassive?.OnEndTurn();
@@ -290,7 +295,10 @@ public class CharacterBase : MonoBehaviour
         {
             canSkill = false;
             canActing = false;
+
+            characterAnim.DeActivate();
         }
+
     }
 
     public bool CheckEnenmy(CharacterBase target)// 적인지 확인
