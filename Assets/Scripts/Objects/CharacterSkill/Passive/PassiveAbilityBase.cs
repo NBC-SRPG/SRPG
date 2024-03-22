@@ -104,10 +104,10 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
         AnimationController.instance.StartDefendAnimation(enemy, character);
     }
 
-    public override void OnTakeDamage(CharacterBase enemy)// 반격 테스트
-    {
-        base.OnTakeDamage(enemy);
+    //public override void OnTakeDamage(CharacterBase enemy)// 반격 테스트
+    //{
+    //    base.OnTakeDamage(enemy);
 
-        character.doCounterAttack = true;
-    }
+    //    character.doCounterAttack = true;
+    //}
 }

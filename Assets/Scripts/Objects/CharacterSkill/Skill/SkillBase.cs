@@ -13,6 +13,11 @@ public class SkillBase
 
     public List<OverlayTile> targetTiles;
 
+    public int SkillFigure
+    {
+        get { return (int)(skillData.coefficient * character.character.Attack); }
+    }
+
     //스킬 시전자 설정
     public void Init(CharacterBase character)
     {

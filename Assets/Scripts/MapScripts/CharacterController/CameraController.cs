@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
+    public Camera battaleCamera;
+
     private Transform emptyCamera;
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterCamera;
@@ -68,14 +70,14 @@ public class CameraController : MonoBehaviour
 
         if (Input.mouseScrollDelta.y > 0)
         {
-            if (mainCamera.m_Lens.OrthographicSize > 4)
+            if (mainCamera.m_Lens.OrthographicSize > 5)
             {
                 mainCamera.m_Lens.OrthographicSize -= 0.2f;
             }
         }
         if (Input.mouseScrollDelta.y < 0)
         {
-            if (mainCamera.m_Lens.OrthographicSize < 6.52)
+            if (mainCamera.m_Lens.OrthographicSize < 12)
             {
                 mainCamera.m_Lens.OrthographicSize += 0.2f;
             }

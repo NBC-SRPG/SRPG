@@ -33,7 +33,6 @@ public class AnimationController : MonoBehaviour
     private List<CharacterBase> victims;
 
     public bool isAnimationPlaying;
-    public bool doCounter;
 
     //-----------------------------------------------------------------------------------------------------------------------
     //캐릭터 위치 조정
@@ -51,18 +50,23 @@ public class AnimationController : MonoBehaviour
         attacker.characterObject.layer = 31;
 
         attacker.HealthBar.layer = 31;
-        attacker.GetComponentInChildren<SpriteRenderer>().flipX = true;
+        attacker.characterAnim.FlipCharacterDirection(Vector2.right);
 
         group.AddMember(attacker.transform, 1, 5);
 
         for (int i = 0; i < victims.Count; i++)
         {
+            if (victims[i] == attacker)
+            {
+                continue;
+            }
+
             victims[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
             victims[i].transform.localScale = new Vector3(4, 4, 0);
             victims[i].characterObject.layer = 31;
 
             victims[i].HealthBar.layer = 31;
-            victims[i].GetComponentInChildren<SpriteRenderer>().flipX = false;
+            victims[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
 
             group.AddMember(victims[i].transform, 1, 5);
@@ -104,6 +108,13 @@ public class AnimationController : MonoBehaviour
         victims.Clear();
 
         CameraController.instance.SetCharacterCameraMove(0);
+
+        isAnimationPlaying = false;
+    }
+
+    public void EndAimation()
+    {
+        isAnimationPlaying = false;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -135,13 +146,11 @@ public class AnimationController : MonoBehaviour
                     if (!victim.isDead && victim.doCounterAttack)
                     {
                         StartCoroutine(PlayCounterAttackAnimation(victim, attacker));
-                        doCounter = false;
                         break;
                     }
                     else
                     {
                         CharacterRelease();
-                        isAnimationPlaying = false;
                         break;
                     }
                 }
@@ -153,6 +162,7 @@ public class AnimationController : MonoBehaviour
 
     private IEnumerator PlayCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)
     {
+        Managers.UI.FindPopup<BattleUI>().ShowCounterText(attacker.transform);
         attacker.characterAnim.PlayAttackAnimation(victim);
 
         while (true)
@@ -164,7 +174,6 @@ public class AnimationController : MonoBehaviour
                 if (animTime > 0.9f)
                 {
                     CharacterRelease();
-                    isAnimationPlaying = false;
                     break;
                 }
             }
@@ -182,6 +191,12 @@ public class AnimationController : MonoBehaviour
 
         CharacterSetting(attacker, victims);
 
+        if(victims.Count == 0)
+        {
+            CharacterRelease();
+            return;
+        }
+
         StartCoroutine(PlaySkillAnimation(victims));
     }
 
@@ -198,7 +213,6 @@ public class AnimationController : MonoBehaviour
                 if (animTime > 0.9f)
                 {
                     CharacterRelease();
-                    isAnimationPlaying = false;
                     break;
                 }
             }
@@ -234,7 +248,6 @@ public class AnimationController : MonoBehaviour
                 if (animTime > 0.9f)
                 {
                     CharacterRelease();
-                    isAnimationPlaying = false;
                     break;
                 }
             }

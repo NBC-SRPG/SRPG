@@ -10,6 +10,10 @@ public class CharAnimBase : MonoBehaviour
     protected CharacterBase character;
     protected CharacterBase targetCharacter;
     protected List<CharacterBase> targetList;
+    protected SpriteRenderer sprite;
+    private Color color;
+    protected Rigidbody2D rb;
+    protected Particles particles;
 
     private string idleParameter = "idle";
     private string moveParameter = "move";
@@ -43,7 +47,21 @@ public class CharAnimBase : MonoBehaviour
         Die = Animator.StringToHash(dieParameter);
         defend = Animator.StringToHash(defendParameter);
 
-        Debug.Log("animator init");
+        sprite = GetComponent<SpriteRenderer>();
+        color = sprite.color;
+
+        rb = GetComponentInParent<Rigidbody2D>();
+        particles = GetComponentInParent<Particles>();
+    }
+
+    public void DeActivate()
+    {
+        sprite.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+    }
+
+    public void Activate()
+    {
+        sprite.color = color;
     }
 
     public void SetDamage(int damage)
@@ -51,11 +69,19 @@ public class CharAnimBase : MonoBehaviour
         this.damage = damage;
     }
 
+    public virtual void ShowDamage()
+    {
+        targetCharacter.health.TakeDamageHealthBar(targetCharacter.characterAnim.damage);
+        Debug.Log(targetCharacter.characterAnim.damage);
+
+    }
+
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
     {
         this.targetCharacter = targetCharacter;
         Animator.SetTrigger(Attack);
     }
+
 
     public virtual void PlaySkillAnimation(List<CharacterBase> targets)
     {
@@ -72,10 +98,26 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(defend);
     }
 
-    public virtual void HitEnemy(int scale)
+    public virtual void ShowDefend()
+    {
+        Managers.UI.FindPopup<BattleUI>().ShowDefendText(targetCharacter.transform);
+    }
+
+    public virtual void AttackEnemy()
+    {
+        targetCharacter.characterAnim.PlayHitAnimation();
+        targetCharacter.characterAnim.ShowHitParticle();
+    }
+
+    public virtual void KnockBackEnemy(int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
         targetCharacter.characterAnim.GetKnockBack(transform.position, scale);
+    }
+
+    public void ShowHitParticle()
+    {
+        particles.PlayHitParticle();
     }
 
     public void PlayMoveAnimation()
@@ -112,6 +154,18 @@ public class CharAnimBase : MonoBehaviour
         return direction;
     }
 
+    public void FlipCharacterDirection(Vector2 direction)
+    {
+        if(direction == Vector2.right)
+        {
+            transform.localScale = new Vector2(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        }
+        else if(direction == Vector2.left)
+        {
+            transform.localScale = new Vector2(1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        }
+    }
+
     public void FlipCharacter(Vector2 targetPosiition, bool back)
     {
         Vector2 direction = Getdirection(targetPosiition);
@@ -120,22 +174,22 @@ public class CharAnimBase : MonoBehaviour
         {
             if (back)
             {
-                transform.GetComponent<SpriteRenderer>().flipX = false;
+                FlipCharacterDirection(Vector2.left);
             }
             else
             {
-                transform.GetComponent<SpriteRenderer>().flipX = true;
+                FlipCharacterDirection(Vector2.right);
             }
         }
         else if(direction.x == Vector2.left.x)
         {
             if (back)
             {
-                transform.GetComponent<SpriteRenderer>().flipX = true;
+                FlipCharacterDirection(Vector2.right);
             }
             else
             {
-                transform.GetComponent<SpriteRenderer>().flipX = false;
+                FlipCharacterDirection(Vector2.left);
             }
         }
     }
@@ -147,7 +201,25 @@ public class CharAnimBase : MonoBehaviour
 
         FlipCharacter(knockBackDirection, true);
 
+        //StartCoroutine(KnockBack(knockBackDirection));
         StartCoroutine(MoveToTarget(targetposition));
+    }
+
+    protected IEnumerator KnockBack(Vector2 direction)
+    {
+        float timeSet = 0;
+        while (true)
+        {
+            rb.AddRelativeForce(direction / 2, ForceMode2D.Impulse);
+            timeSet += Time.deltaTime;
+            if (timeSet > 0.25f)
+            {
+                Debug.Log("111");
+                rb.velocity = Vector2.zero;
+                break;
+            }
+            yield return null;
+        }
     }
 
     protected IEnumerator MoveToTarget(Vector3 targetPosition)
@@ -155,7 +227,7 @@ public class CharAnimBase : MonoBehaviour
 
         while(character.transform.position != targetPosition)
         {
-            character.transform.position = Vector3.MoveTowards(character.transform.position, targetPosition, 80f * Time.deltaTime);
+            character.transform.position = Vector3.MoveTowards(character.transform.position, targetPosition, 100f * Time.deltaTime);
 
             yield return null;
         }

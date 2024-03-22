@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +12,11 @@ public abstract class SkillAbilityBase
     }
 
     public virtual void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    {
+
+    }
+
+    public virtual void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
     {
 
     }
