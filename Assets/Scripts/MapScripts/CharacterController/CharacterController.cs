@@ -421,8 +421,7 @@ public class CharacterController : MonoBehaviour
             canClick = false;
             curSelectedCharacter.OnEndAttacking += EndAttack;
 
-            curSelectedCharacter.target = curTargetCharacter;
-            curSelectedCharacter.AttackTarget();
+            curSelectedCharacter.AttackTarget(curTargetCharacter);
         }
     }
 
