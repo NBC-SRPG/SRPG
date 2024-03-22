@@ -14,8 +14,6 @@ public class TalentSO : ScriptableObject
     public string talentName;//특성 이름
     public string talentDescription;//특성 설명
     
-    [Header("Image")]
-    public Sprite talentSprite;//특성 스프라이트(=썸네일or아이콘)
 
     [Header("Talent_Status_basic")] //increase = 깡스탯 증가량(합연산). multiply = 배율(%) 증가량(곱연산)
     public int increaseHealth;

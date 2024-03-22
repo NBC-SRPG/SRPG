@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using static Constants;
 
 public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 계산 메서드 등 데이터가 아닌 메서드만을 따로 저장하는 클래스.
 {
@@ -172,17 +174,17 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         //장비 스탯.
         //무기로 획득할 수 있는 스탯 = 공격력, 치확, 치피, 주는 피해증가
         //방어구로 획득할 수 있는 스탯 = 체력, 방어력, 받는 피해 감소
-        int weaponincrAtk_sum = (character.characterGrowth.weapon.increaseAtk * character.characterGrowth.weaponEnhance);
-        float weaponMultiplAtk_sum = (character.characterGrowth.weapon.multiplyAtk * character.characterGrowth.weaponEnhance);
-        float weaponIncrCtr_sum = (character.characterGrowth.weapon.increasecCtr * character.characterGrowth.weaponEnhance);
-        float weaponIncrCtd_sum = (character.characterGrowth.weapon.increasecCtd * character.characterGrowth.weaponEnhance);
-        float weaponIncrInfD_sum = (character.characterGrowth.weapon.increaseInflictDamage * character.characterGrowth.weaponEnhance);
+        int weaponincrAtk_sum = (character.characterGrowth.weapon.increaseAtk * (character.characterGrowth.weaponEnhance + 1));
+        float weaponMultiplAtk_sum = (character.characterGrowth.weapon.multiplyAtk * (character.characterGrowth.weaponEnhance + 1));
+        float weaponIncrCtr_sum = (character.characterGrowth.weapon.increasecCtr * (character.characterGrowth.weaponEnhance + 1));
+        float weaponIncrCtd_sum = (character.characterGrowth.weapon.increasecCtd * (character.characterGrowth.weaponEnhance + 1));
+        float weaponIncrInfD_sum = (character.characterGrowth.weapon.increaseInflictDamage * (character.characterGrowth.weaponEnhance + 1));
 
-        int armorincrHp_sum = (character.characterGrowth.armor.increaseHealth * character.characterGrowth.armorEnhance);
-        int armorincrDef_sum = (character.characterGrowth.armor.increaseDef * character.characterGrowth.armorEnhance);
-        float armorMultiplHp_sum = (character.characterGrowth.armor.multiplyHealth * character.characterGrowth.armorEnhance);
-        float armorMultiplDef_sum = (character.characterGrowth.armor.multiplyDef * character.characterGrowth.armorEnhance);
-        float armorIncrTakenD_sum = (character.characterGrowth.armor.reducedTakenDamage * character.characterGrowth.armorEnhance);
+        int armorincrHp_sum = (character.characterGrowth.armor.increaseHealth * (character.characterGrowth.armorEnhance + 1));
+        int armorincrDef_sum = (character.characterGrowth.armor.increaseDef * (character.characterGrowth.armorEnhance + 1));
+        float armorMultiplHp_sum = (character.characterGrowth.armor.multiplyHealth * (character.characterGrowth.armorEnhance + 1));
+        float armorMultiplDef_sum = (character.characterGrowth.armor.multiplyDef * (character.characterGrowth.armorEnhance + 1));
+        float armorIncrTakenD_sum = (character.characterGrowth.armor.reducedTakenDamage * (character.characterGrowth.armorEnhance + 1));
 
 
         //이렇게 저장한 합계치를 Calc 스탯에 계산해서 저장한다.
@@ -200,48 +202,135 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         //기본 스탯 값과 Calc 스탯값이 분리되어있으므로, 실제 인게임 전투에서는 Calc스탯을 사용해주세요.
     }
 
-    public bool WeaponRankUp()
+    public void WeaponRankUp()
     {
+        //장비 강화 조건
+        //0~4강은 캐릭터가 어떤 레벨이든 강화 가능
+        //4강에서 +1강 하는 것은 다음 등급 장비로 전환을 의미함.
+        //캐릭터 0~30레벨 : 커먼 등급 이하 장비 착용 가능
+        //캐릭터 30~50레벨 : 레어 등급 이하 장비 착용 가능
+        //캐릭터 50~70레벨 : 에픽 등급 이하 장비 착용 가능
+        //캐릭터 70~90레벨 : 레전드 등급 이하 장비 착용 가능.
+        //따라서, 강화 단계가 4일 때에는 캐릭터 레벨이 적정 레벨 이상이어야 다음 등급 장비로 강화할 수 있다.
+
+        if(character.characterGrowth.weaponTier >= (int)ItemRank.Legend) //레전드 등급 이상일 경우 강화 불가. (전용무기는 Myth 등급이지만 구현예정 x)
+        {
+            return;
+        }
+
+        if (character.characterGrowth.weaponEnhance >= 4) //캐릭터의 장비 강화 정도가 4 이상일 경우
+        {
+            if (character.characterGrowth.Level < (character.characterGrowth.weaponTier * 20 + 30)) //적정 레벨인지 체크하는 조건문. 현재 장비 등급이 0티어(커먼)일 때 캐릭터 레벨이 30 미만이면 강화 불가.
+            {
+                return;
+            }
+        }
+
         // rankUpMaterials의 모든 요소에 대해 반복
         foreach (var kvp in character.characterGrowth.weapon.rankUpMaterials)
         {
             int requiredItemId = kvp.Key; // 요구되는 아이템의 아이디
-            int requiredItemCount = kvp.Value; // 요구되는 아이템의 갯수
+            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // 요구되는 아이템의 갯수 = 강화 정도마다 요구량이 증가한다.
 
-            // 인벤토리에 해당 아이템이 존재하는지 확인
-            if (Managers.AccountData.inventory.ContainsKey(requiredItemId))
+            // 인벤토리에 해당 아이템이 없거나 갯수가 요구되는 갯수보다 적은 경우
+            if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
+                currentItemCount < requiredItemCount)
             {
-                // 인벤토리에 있는 아이템의 갯수가 요구되는 갯수 이상인지 확인
-                if (inventory[requiredItemId] < requiredItemCount)
-                {
-                    // 요구되는 갯수보다 적은 경우 false 반환
-                    return false;
-                }
-            }
-            else
-            {
-                // 인벤토리에 해당 아이템이 없는 경우 false 반환
-                return false;
+                // 요구 사항을 만족하지 못하면 종료
+                return;
             }
         }
 
-        // 모든 요구사항을 만족하는 경우 true 반환
-        return true;
-    }
-
-    public bool ArmorRankUp()
-    {
-        if (true)
+        // 모든 요구 사항을 만족하는 경우 강화 성공
+        // 강화에 필요한 강화 소재 아이템들을 차감
+        foreach (var kvp in character.characterGrowth.weapon.rankUpMaterials)
         {
-            character.characterGrowth.armorEnhance += 1;
-            //Todo : 재료 소모
-            return true;
+            int requiredItemId = kvp.Key; // 요구되는 아이템의 아이디
+            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // 요구되는 아이템의 갯수
+
+            // 인벤토리에서 해당 아이템 갯수 차감
+            Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
+        }
+        
+        if (character.characterGrowth.weaponEnhance >= 4) //캐릭터의 무기 강화 정도가 4 이상일 경우
+        {
+            character.characterGrowth.weaponTier += 1; //티어 1단계 Up하고 강화도 초기화,
+            character.characterGrowth.weaponEnhance = 0;
         }
         else
         {
-            return false;
+            character.characterGrowth.weaponEnhance += 1;
         }
-    }//임시로 구조만 만들어둔 방어구 레벨업 메서드. //Todo: 위와 같음.
+
+        ApplyAdditionStat();
+        return;
+    }
+
+    public void ArmorRankUp()
+    {
+        //장비 강화 조건
+        //0~4강은 캐릭터가 어떤 레벨이든 강화 가능
+        //4강에서 +1강 하는 것은 다음 등급 장비로 전환을 의미함.
+        //캐릭터 0~30레벨 : 커먼 등급 이하 장비 착용 가능
+        //캐릭터 30~50레벨 : 레어 등급 이하 장비 착용 가능
+        //캐릭터 50~70레벨 : 에픽 등급 이하 장비 착용 가능
+        //캐릭터 70~90레벨 : 레전드 등급 이하 장비 착용 가능.
+        //따라서, 강화 단계가 4일 때에는 캐릭터 레벨이 적정 레벨 이상이어야 다음 등급 장비로 강화할 수 있다.
+
+        if (character.characterGrowth.armorTier >= (int)ItemRank.Legend) //레전드 등급 이상일 경우 강화 불가. (전용무기는 Myth 등급이지만 구현예정 x)
+        {
+            return;
+        }
+
+        if (character.characterGrowth.armorEnhance >= 4) //캐릭터의 장비 강화 정도가 4 이상일 경우
+        {
+            if (character.characterGrowth.Level < (character.characterGrowth.armorTier * 20 + 30)) //적정 레벨인지 체크하는 조건문. 현재 장비 등급이 0티어(커먼)일 때 캐릭터 레벨이 30 미만이면 강화 불가.
+            {
+                return;
+            }
+        }
+
+        // rankUpMaterials의 모든 요소에 대해 반복
+        foreach (var kvp in character.characterGrowth.armor.rankUpMaterials)
+        {
+            int requiredItemId = kvp.Key; // 요구되는 아이템의 아이디
+            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // 요구되는 아이템의 갯수 = 강화 정도마다 요구량이 증가한다.
+
+            // 인벤토리에 해당 아이템이 없거나 갯수가 요구되는 갯수보다 적은 경우
+            if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
+                currentItemCount < requiredItemCount)
+            {
+                // 요구 사항을 만족하지 못하면 종료
+                return;
+            }
+        }
+
+        // 모든 요구 사항을 만족하는 경우 강화 성공
+        // 강화에 필요한 강화 소재 아이템들을 차감
+        foreach (var kvp in character.characterGrowth.armor.rankUpMaterials)
+        {
+            int requiredItemId = kvp.Key; // 요구되는 아이템의 아이디
+            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // 요구되는 아이템의 갯수
+
+            // 인벤토리에서 해당 아이템 갯수 차감
+            Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
+        }
+
+        if (character.characterGrowth.armorEnhance >= 4) //캐릭터의 무기 강화 정도가 4 이상일 경우
+        {
+            character.characterGrowth.armorTier += 1; //티어 1단계 Up하고 강화도 초기화,
+            character.characterGrowth.armorEnhance = 0;
+        }
+        else
+        {
+            character.characterGrowth.armorEnhance += 1;
+        }
+
+        ApplyAdditionStat();
+        return;
+    }
+
+
 
     public bool ExSkillLevelUp(int ingredient)
     {
@@ -257,6 +346,7 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         }
     }//임시로 구조만 만들어둔 스킬 레벨업 메서드, //Todo: 스킬 레벨업 재화 소모, 스킬 레벨업 시 효과 등
 
+    
     public bool AffectionLevelUp(int ingredient)
     {
         if (ingredient >= character.characterGrowth.affectionLevel && character.characterGrowth.affectionLevel < 99)

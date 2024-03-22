@@ -13,9 +13,6 @@ public class ClassSO : ScriptableObject
     public string className;//클래스 이름
     public string classDescription;//클래스 설명
 
-    [Header("Image")]
-    public Sprite classSprite;//클래스 스프라이트(=썸네일or아이콘)
-
     [Header("Class_Status_basic")] //increase = 깡스탯 증가량(합연산). multiply = 배율(%) 증가량(곱연산)
     public int increaseHealth;
     public int increaseAtk;

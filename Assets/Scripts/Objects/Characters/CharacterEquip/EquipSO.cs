@@ -11,8 +11,6 @@ public class EquipSO : ScriptableObject
     public string equipName;//장비 이름
     public string equipDescription;//장비 설명
     
-    [Header("Image")]
-    public Sprite equipSprite;//장비 스프라이트(=썸네일or아이콘)
 
     [Header("Equip_Status_basic")] //increase = 깡스탯 증가량(합연산). multiply = 배율(%) 증가량(곱연산)
     public int increaseHealth;
@@ -37,6 +35,6 @@ public class EquipSO : ScriptableObject
     [Header("Develope")]
     public int equip_Id;//장비 식별자
     public EquipType equipType; //장비 타입
-    public ItemType ItemType;
+    public ItemRank ItemRank;
     public Dictionary<int, int> rankUpMaterials; //돌파하는데 필요한 소재 아이템의 ID값 / 필요한 갯수 딕셔너리
 }

@@ -136,6 +136,9 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
     public int ExSkillLevel { get; set; } //Ex½ºÅ³ ·¹º§ //Todo: ½ºÅ³ ·¹º§¿¡ µû¶ó ½ºÅ³ °è¼ö Àû¿ë½ÃÅ°±â, ½ÇÁ¦ ÀÎ°ÔÀÓ¿¡¼­ ½ºÅ³ ·¹º§¿¡ µû¶ó È¿°ú ´Þ¶óÁö°Ô ÇÏ±â.
     public int PassiveSkillLevel { get; set; } //ÆÐ½Ãºê ½ºÅ³ ·¹º§
 
+    public int weaponTier;
+    public int armorTier;
+
     public int weaponEnhance { get; set; } //¹«±â °­È­Á¤µµ
     public int armorEnhance { get; set; } //¹æ¾î±¸ °­È­Á¤µµ
     public int affectionLevel { get; set; } //È£°¨µµ ·¹º§
@@ -152,8 +155,8 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
         basicClass = character.characterData.basicClass;
         superiorClass = character.characterData.superiorClass[0];
 
-        weapon = character.characterData.weapon[0];
-        armor = character.characterData.armor[0];
+        weapon = character.characterData.weapon[weaponTier];
+        armor = character.characterData.armor[armorTier];
     }
 
     //ÃÖÃÊ ÃÊ±âÈ­ ¸Þ¼­µå
@@ -162,8 +165,6 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
     {
         star = character.characterData.basicStar; //Ä³¸¯ÅÍÀÇ ¼º±ÞÀº È¹µæ ½Ã ±âº» ¼º±Þ. //ÃÖ´ë ·¹º§Àº ±âº» ¼º±Þ¿¡ ÀÇÇØ Á¤ÇØÁü.
         Level = 1;
-        weaponEnhance = 1;
-        armorEnhance = 1;
         ExSkillLevel = 1;
         PassiveSkillLevel = 1; 
         affectionLevel = 1;
