@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -31,7 +32,7 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool canActing;
 
     [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
-    [HideInInspector] public List<OverlayTile> movePath = new List<OverlayTile>();
+    public List<OverlayTile> movePath = new List<OverlayTile>();
     private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
     public List<CharacterBase> targets = new List<CharacterBase>();
@@ -41,7 +42,7 @@ public class CharacterBase : MonoBehaviour
     public event Action OnEndAttacking;
     public event Action OnEndUseSkill;
 
-    private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
+    //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
@@ -84,6 +85,8 @@ public class CharacterBase : MonoBehaviour
 
         Managers.BattleManager.charactersInBattle.Add(this);
         Managers.BattleManager.charactersAsTeam[playerId].Add(this);
+
+        AnimationController.instance.onAnimationEnd += CheckActivated;
     }
 
     //스킬 및 패시브 시전자 설정
@@ -111,45 +114,24 @@ public class CharacterBase : MonoBehaviour
         curStandingTile.curStandingCharater = this;
     }
 
-    private void CheckEnemy()
-    {
-        if (movePath[0].curStandingCharater != null)
-        {
-            target = movePath[0].curStandingCharater;
-            StartCoroutine(Managers.BattleManager.OnPassCharacter(this, target));
-        }
-    }
-
-    public IEnumerator MoveCharacterToTile()
-    {
-        while (transform.position != movePath[1].transform.position)
-        {
-            transform.position = Vector2.MoveTowards(transform.position, movePath[1].transform.position, 15 * Time.deltaTime);
-            characterAnim.FlipCharacter(movePath[1].transform.position, false);
-
-            yield return animationWait;
-        }
-    }
-
     public void MoveCharacter()//캐릭터 이동
     {
         curStandingTile.curStandingCharater = null;
         OnStartMoving();
         int i = 0;
 
-        while (i < movePath.Count)
+        while (i < movePath.Count)// 이동 가능할 때
         {
-            AnimationController.instance.EnqueueMoveAnimation(this, movePath[i]);
+            AnimationController.instance.EnqueueMoveAnimation(this, curStandingTile, movePath[i]);
 
             curStandingTile = movePath[i];
+            pathedTiles.Push(movePath[i]);
 
             if (movePath[i].curStandingCharater != null)
             {
                 target = movePath[i].curStandingCharater;
-                StartCoroutine(Managers.BattleManager.OnPassCharacter(this, target));
+                Managers.BattleManager.OnPassCharacter(this, target);
             }
-
-            pathedTiles.Push(movePath[i]);
 
             if (isDead)
             {
@@ -172,55 +154,11 @@ public class CharacterBase : MonoBehaviour
         AnimationController.instance.StartAnimationQueue();
     }
 
-    //public IEnumerator MoveCharacter()//캐릭터 이동
-    //{
-    //    curStandingTile.curStandingCharater = null;
-    //    OnStartMoving();
-    //    CameraController.instance.SetCameraOnCharacter(this);
-
-    //    while (movePath.Count > 1)
-    //    {
-    //        yield return StartCoroutine(MoveCharacterToTile());
-
-    //        pathedTiles.Push(movePath[0]);
-    //        movePath.RemoveAt(0);
-
-    //        curStandingTile = movePath[0];
-
-    //        CheckEnemy();
-    //        yield return animationWait;
-
-    //        if (isDead)
-    //        {
-    //            BlockMoving();
-    //            break;
-    //        }
-    //    }
-
-    //    if (movePath.Count <= 1 && isWalking)//모든 타일을 다 지났거나, 이동이 막혔을 때
-    //    {
-    //        while (transform.position != movePath[0].transform.position)
-    //        {
-    //            transform.position = Vector2.MoveTowards(transform.position, movePath[0].transform.position, 20 * Time.deltaTime);
-    //            characterAnim.FlipCharacter(movePath[0].transform.position, true);
-
-    //            yield return null;
-    //        }
-    //        MoveTile(movePath[0]);
-
-    //        OnEndMoving();
-
-    //        if (isDead)
-    //        {
-    //            OnDie();
-    //        }
-    //    }
-
-    //}
-
     public void BlockMoving()//이동 막힘
     {
         movePath.Clear();
+
+        OverlayTile prevTile = pathedTiles.First();
 
         foreach(OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
         {
@@ -228,7 +166,7 @@ public class CharacterBase : MonoBehaviour
 
             if(tile.curStandingCharater == null || tile.curStandingCharater == this)
             {
-                AnimationController.instance.EnqueueBackAnimation(this, tile);
+                AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
 
                 break;
             }
@@ -300,6 +238,8 @@ public class CharacterBase : MonoBehaviour
         {
             didAttack = true;
         }
+
+        movePath.Clear();
         pathedTiles.Clear();
         leftWalkRange = 0;
 
@@ -354,10 +294,15 @@ public class CharacterBase : MonoBehaviour
         {
             canSkill = false;
             canActing = false;
-
-            //characterAnim.DeActivate();
         }
+    }
 
+    private void CheckActivated()
+    {
+        if (!canActing)
+        {
+            characterAnim.DeActivate();
+        }
     }
 
     public bool CheckEnenmy(CharacterBase target)// 적인지 확인
@@ -378,7 +323,7 @@ public class CharacterBase : MonoBehaviour
     public void SetAttackTarget(CharacterBase enemy)// 공격 시작
     {
         target = enemy;
-        StartCoroutine(Managers.BattleManager.Attack(this, target));
+        Managers.BattleManager.Attack(this, target);
     }
 
     public void TakeAttacked(CharacterBase enemy)// 공격 대상이 되었을 때
@@ -389,13 +334,13 @@ public class CharacterBase : MonoBehaviour
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
     {
         target = enemy;
-        StartCoroutine(Managers.BattleManager.DoAttack(this, target));
+        Managers.BattleManager.DoAttack(this, target);
     }
 
     public void CounterAttack(CharacterBase enemy)
     {
         target = enemy;
-        StartCoroutine(Managers.BattleManager.CounterAttack(this, target));
+        Managers.BattleManager.CounterAttack(this, target);
     }
 
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
@@ -413,13 +358,11 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnEndAttack(enemy);
         
-        StartCoroutine(nameof(EndAttacking));
+        EndAttacking();
     }
 
-    private IEnumerator EndAttacking()// 공격 끝내기(컷씬 등의 재생 이후)
+    private void EndAttacking()// 공격 끝내기
     {
-        yield return animationWait;
-
         isAttacking = false;
         if (character.CharacterAttackType == Constants.AttackType.Range)
         {
@@ -427,8 +370,6 @@ public class CharacterBase : MonoBehaviour
 
             OnEndActing();
         }
-
-        OnEndAttacking?.Invoke();
     }
 
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
@@ -455,7 +396,7 @@ public class CharacterBase : MonoBehaviour
     {
         GetSkillTarget();
 
-        StartCoroutine(Managers.BattleManager.UseSkill(this, targets));
+        Managers.BattleManager.UseSkill(this, targets);
     }
 
     private void GetSkillTarget()// 스킬 타겟 가져오기
@@ -506,24 +447,20 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterSkill.skillAbility?.OnEndSkill(target);
 
-        StartCoroutine(EndUseSkill());
+        EndUseSkill();
     }
 
-    private IEnumerator EndUseSkill()// 스킬 끝내기(컷씬 등의 재생 이후)
+    private void EndUseSkill()// 스킬 끝내기(컷씬 등의 재생 이후)
     {
-        yield return animationWait;
-
         didUseSkill = true;
 
         OnEndActing();
-
-        OnEndUseSkill?.Invoke();
     }
 
     //---------------------------------------------------------------------------
     // 캐릭터 사망 시
 
-    private void CharacterDie()
+    private void CharacterDie()// 캐릭터 사망
     {
         isDead = true;
         AnimationController.instance.StartDieAnimation(this);
