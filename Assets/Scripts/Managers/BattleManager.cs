@@ -21,7 +21,7 @@ public class BattleManager
     public event Action TurnStart;
 
     public bool isShowAnimation;
-    private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
+    //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
@@ -73,9 +73,8 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 이동 관련
 
-    // 애니메이션 처리하는 동안 딜레이를 주기 위해 코루틴으로 작성
     // 서버에 올라가면 어떻게 될지 모르겠음
-    public IEnumerator OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
+    public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
         if (!curCharacter.CheckEnenmy(standingCharacter))// 아군 위를 지나갔을 때
         {
@@ -89,15 +88,12 @@ public class BattleManager
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.SetAttackTarget(standingCharacter);
-                yield return animationWait;// 애니메이션이 끝날 때 까지 대기
             }
 
             if (!curCharacter.isDead && !standingCharacter.isDead)
             {
                 standingCharacter.OnEnemyPassesMe(curCharacter);
             }
-
-            AnimationController.instance.StartAnimationQueue();
         }
     }
 
@@ -105,24 +101,22 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 공격 관련
 
-    public IEnumerator Attack(CharacterBase attacker, CharacterBase victim)
+    public void Attack(CharacterBase attacker, CharacterBase victim)
     {
         attacker.AttackTarget(victim);
 
         victim.TakeAttacked(attacker);
-
-        AnimationController.instance.StartAnimationQueue();
 
         if (victim.isDead)
         {
             victim.OnDieInBattle(attacker);
         }
 
-        yield return animationWait;
+        AnimationController.instance.StartAnimationQueue();
     }
 
     //-----------------코드 어떤식으로 나눌지 고민 중
-    public IEnumerator DoAttack(CharacterBase attacker, CharacterBase victim)// 공격
+    public void DoAttack(CharacterBase attacker, CharacterBase victim)// 공격
     {
         int damage = CheckAttackDamage(attacker, victim);
 
@@ -137,14 +131,12 @@ public class BattleManager
         attacker.OnAttackSuccess(victim, damage);
 
         victim.OnTakeDamage(attacker);
-        
-        yield return animationWait;
 
         attacker.OnEndAttack(victim);
 
     }
 
-    public IEnumerator CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
+    public void CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
     {
         int damage = CheckAttackDamage(attacker, victim);
 
@@ -160,8 +152,6 @@ public class BattleManager
 
         victim.OnTakeDamage(attacker);
 
-        yield return animationWait;
-
         attacker.OnEndAttack(victim);
 
     }
@@ -169,7 +159,7 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 스킬 관련
 
-    public IEnumerator UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
     {
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
@@ -179,12 +169,10 @@ public class BattleManager
             Debug.Log(t + " take skill");
         }
 
-        yield return animationWait;// 애니메이션이 끝날 때 까지 대기
-
         skillUser.OnEndSkill(target);
     }
 
-    public IEnumerator SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
+    public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
     {
         AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
 
@@ -205,10 +193,9 @@ public class BattleManager
             skillUser.OnSkillAttackSuccess(victim, damage);
         }
 
-        yield return animationWait;
     }
 
-    public IEnumerator SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
+    public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
     {
         AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
 
@@ -228,8 +215,6 @@ public class BattleManager
 
             skillUser.OnSkillAttackSuccess(victim, figure);
         }
-
-        yield return animationWait;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

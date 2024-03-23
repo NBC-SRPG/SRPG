@@ -431,7 +431,7 @@ public class CharacterController : MonoBehaviour
         if (curTargetCharacter != null)
         {
             canClick = false;
-            curSelectedCharacter.OnEndAttacking += EndAttack;
+            AnimationController.instance.onAnimationEnd += EndAttack;
 
             curSelectedCharacter.SetAttackTarget(curTargetCharacter);
         }
@@ -445,7 +445,7 @@ public class CharacterController : MonoBehaviour
             ResetTileOnMove(surroundPath);
             Ui.ResetButtons();
 
-            curSelectedCharacter.OnEndWalk += EndMove;
+            AnimationController.instance.onAnimationEnd += EndMove;
 
             curSelectedCharacter.MoveCharacter();
         }
@@ -453,7 +453,6 @@ public class CharacterController : MonoBehaviour
 
     private void EndMove()// 캐릭터의 이동이 끝났을 시
     {
-        Debug.Log("EndMove");
         canClick = true;
 
         if(curSelectedCharacter == null)
@@ -461,7 +460,7 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
-        curSelectedCharacter.OnEndWalk -= EndMove;
+        AnimationController.instance.onAnimationEnd -= EndMove;
 
         ChangePhase(PlayerPhase.MoveandAttack);
 
@@ -481,7 +480,7 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
-        curSelectedCharacter.OnEndAttacking -= EndAttack;
+        AnimationController.instance.onAnimationEnd -= EndAttack;
 
         ChangePhase(PlayerPhase.MoveandAttack);
 
