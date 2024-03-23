@@ -11,10 +11,11 @@ public class CameraController : MonoBehaviour
 
     public Camera battaleCamera;
 
-    private Transform emptyCamera;
+    private Transform PrimeCamera;
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterCamera;
     [SerializeField] private CinemachineVirtualCamera followingTileCamera;
+
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
 
     private CinemachineFramingTransposer characterComposer;
@@ -34,7 +35,9 @@ public class CameraController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
+
     private void Start()
     {
         canMove = true;
@@ -51,12 +54,16 @@ public class CameraController : MonoBehaviour
         if (canMove)
         {
             MoveCamera();
+            followingCharacterCamera.transform.position = PrimeCamera.position;
+            followingTileCamera.transform.position = PrimeCamera.position;
         }
-        else
+
+        if(PrimeCamera != mainCamera.transform)
         {
-            mainCamera.transform.position = emptyCamera.transform.position;
+            mainCamera.transform.position = PrimeCamera.position;
         }
     }
+
 
     private void MoveCamera()//조이스틱으로 카메라 이동
     {
@@ -100,7 +107,7 @@ public class CameraController : MonoBehaviour
         followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 10;
 
-        emptyCamera = followingCharacterCamera.transform;
+        PrimeCamera = followingCharacterCamera.transform;
 
         followingCharacterCamera.Follow = character.transform;
     }
@@ -112,7 +119,7 @@ public class CameraController : MonoBehaviour
         followingTileCamera.Priority = 10;
         followingCharacterCamera.Priority = 5;
 
-        emptyCamera = followingTileCamera.transform;
+        PrimeCamera = followingTileCamera.transform;
 
         followingTileCamera.Follow = tile.transform;
     }
@@ -124,7 +131,7 @@ public class CameraController : MonoBehaviour
         followingTileCamera.Priority = 10;
         followingCharacterCamera.Priority = 5;
 
-        emptyCamera = followingTileCamera.transform;
+        PrimeCamera = followingTileCamera.transform;
 
         followingTileCamera.Follow = followingTargetGroup.transform;
     }
@@ -162,7 +169,8 @@ public class CameraController : MonoBehaviour
 
         followingCharacterCamera.Follow = null;
         followingTileCamera.Follow = null;
-        emptyCamera = null;
+
+        PrimeCamera = mainCamera.transform;
 
     }
 }

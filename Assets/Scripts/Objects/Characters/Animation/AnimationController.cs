@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -10,6 +11,7 @@ using UnityEngine.UI;
 public class AnimationController : MonoBehaviour
 {
     public static AnimationController instance;
+    public Queue<Action> animationQueue = new Queue<Action>();
 
     private void Awake()
     {
@@ -89,7 +91,7 @@ public class AnimationController : MonoBehaviour
         attacker.HealthBar.layer = 0;
         attacker.health.SetHealthBar();
         attacker.characterAnim.ReleaseTargets();
-        attacker.characterAnim.EndAnimation();
+        attacker.characterAnim.EndAnimation(attacker.isWalking);
         attacker.characterAnim.SetDamage(0);
         attacker = null;
 
@@ -99,7 +101,7 @@ public class AnimationController : MonoBehaviour
             victims[i].transform.localScale = new Vector3(1, 1, 0);
             victims[i].characterObject.layer = 0;
 
-            victims[i].characterAnim.EndAnimation();
+            victims[i].characterAnim.EndAnimation(victims[i].isWalking);
             victims[i].characterAnim.SetDamage(0);
 
             victims[i].HealthBar.layer = 0;
@@ -120,6 +122,12 @@ public class AnimationController : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     //공격 애니메이션
+
+    public void EnqueueAttackAnimation(CharacterBase attacker, CharacterBase victim)
+    {
+        Debug.Log("Enqueue attack");
+        animationQueue.Enqueue(() => StartAttackAnimation(attacker, victim));
+    }
 
     public void StartAttackAnimation(CharacterBase attacker, CharacterBase victim)
     {
@@ -144,21 +152,25 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
-                    if (!victim.isDead && victim.doCounterAttack)
-                    {
-                        StartCoroutine(PlayCounterAttackAnimation(victim, attacker));
-                        break;
-                    }
-                    else
-                    {
-                        CharacterRelease();
-                        break;
-                    }
+                    PlayNextAnimation();
+
+                    break;
                 }
             }
 
             yield return null;
         }
+    }
+
+    public void EnqueueCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)
+    {
+        Debug.Log("Enqueue counterattack");
+        animationQueue.Enqueue(() => StartCounterAnimation(attacker, victim));
+    }
+
+    private void StartCounterAnimation(CharacterBase attacker, CharacterBase victim)
+    {
+        StartCoroutine(PlayCounterAttackAnimation(attacker, victim));
     }
 
     private IEnumerator PlayCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)
@@ -174,7 +186,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
-                    CharacterRelease();
+                    PlayNextAnimation();
+
                     break;
                 }
             }
@@ -185,6 +198,12 @@ public class AnimationController : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     //스킬 애니메이션
+
+    public void EnqueueSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)
+    {
+        Debug.Log("Enqueue Skillattack");
+        animationQueue.Enqueue(() => StartSkillAnimation(attacker, victims));
+    }
 
     public void StartSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)
     {
@@ -207,13 +226,14 @@ public class AnimationController : MonoBehaviour
 
         while (true)
         {
-            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("skill"))
             {
                 float animTime = attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
                 if (animTime > 0.9f)
                 {
-                    CharacterRelease();
+                    PlayNextAnimation();
+
                     break;
                 }
             }
@@ -224,6 +244,12 @@ public class AnimationController : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 방어 애니메이션
+
+    public void EnqueuedefendAnimation(CharacterBase attacker, CharacterBase defender)
+    {
+        Debug.Log("Enqueue defend");
+        animationQueue.Enqueue(() => StartDefendAnimation(attacker, defender));
+    }
 
     public void StartDefendAnimation(CharacterBase attacker, CharacterBase defender)
     {
@@ -248,12 +274,106 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
-                    CharacterRelease();
+                    PlayNextAnimation();
+
                     break;
                 }
             }
 
             yield return null;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //이동 애니메이션
+
+    public void EnqueueMoveAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        Debug.Log("Enqueue Move");
+        animationQueue.Enqueue(() => StartMoveAnimation(mover, targetTile));
+    }
+
+    public void StartMoveAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        StartCoroutine(PlayMoveAnimation(mover, targetTile));
+    }
+
+    public IEnumerator PlayMoveAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        CameraController.instance.SetCameraOnCharacter(mover);
+
+        mover.characterAnim.PlayMoveAnimation();
+
+        while (mover.transform.position != targetTile.transform.position)
+        {
+            mover.transform.position = Vector2.MoveTowards(mover.transform.position, targetTile.transform.position, 15 * Time.deltaTime);
+            mover.characterAnim.FlipCharacter(targetTile.transform.position, false);
+
+            yield return null;
+        }
+
+        if (mover.transform.position == targetTile.transform.position)
+        {
+            mover.characterAnim.EndAnimation(mover.isWalking);
+            StartAnimationQueue();
+        }
+    }
+
+    public void EnqueueBackAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        Debug.Log("Enqueue Back");
+        animationQueue.Enqueue(() => StartBackAnimation(mover, targetTile));
+    }
+
+    public void StartBackAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        StartCoroutine(PlayBackAnimation(mover, targetTile));
+    }
+
+    public IEnumerator PlayBackAnimation(CharacterBase mover, OverlayTile targetTile)
+    {
+        CameraController.instance.SetCameraOnCharacter(mover);
+
+        mover.characterAnim.PlayHitAnimation();
+
+        while (mover.transform.position != targetTile.transform.position)
+        {
+            mover.transform.position = Vector2.MoveTowards(mover.transform.position, targetTile.transform.position, 20 * Time.deltaTime);
+            mover.characterAnim.FlipCharacter(targetTile.transform.position, true);
+
+            yield return null;
+        }
+
+        if (mover.transform.position == targetTile.transform.position)
+        {
+            mover.characterAnim.EndAnimation(mover.isWalking);
+            StartAnimationQueue();
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    // 애니메이션 재생 시작
+
+    public void StartAnimationQueue()
+    {
+        if(animationQueue.Count == 0)
+        {
+            return;
+        }
+
+        Action nextAnimation = animationQueue.Dequeue();
+        nextAnimation?.Invoke();
+    }
+
+    private void PlayNextAnimation()
+    {
+        if (animationQueue.Count > 0)
+        {
+            StartAnimationQueue();
+        }
+        else
+        {
+            CharacterRelease();
         }
     }
 
@@ -267,6 +387,8 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayDieAnimation(CharacterBase character)
     {
+        yield return new WaitWhile(() => (animationQueue.Count > 0) || isAnimationPlaying);// 애니메이션이 재생중이 아닐 때 사망 애니메이션 재생
+
         character.characterAnim.PlayDieAnimation();
 
         while (true)

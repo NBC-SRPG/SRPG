@@ -60,8 +60,13 @@ public class Character : MonoBehaviour
     //아마도 전투 시작시에 실행되는 Init 메서드
     public void CharacterInit() 
     {
-        characterGrowth.Init(this);
-        StatRefresh();
+        //characterGrowth.Init(this);
+        //StatRefresh();
+
+        Health = characterData.health;
+        Attack = characterData.atk;
+        Mov = characterData.mov;
+        CharacterAttackType = characterData.attackType;
     }
 
     //스탯 최신화 메서드. 

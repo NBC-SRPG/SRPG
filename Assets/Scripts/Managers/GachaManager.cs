@@ -7,7 +7,7 @@ public class GachaManager
     private Constants.GachaType gachaType;
 
     // 확률 테이블의 캐싱 딕셔너리
-    private Dictionary<string, Dictionary<int, float>> tables;
+    private Dictionary<string, Dictionary<int, float>> tables = new Dictionary<string, Dictionary<int, float>>();
 
 
     public void Init()
