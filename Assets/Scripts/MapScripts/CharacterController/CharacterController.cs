@@ -74,6 +74,17 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
+        if (curSelectedCharacter && curSelectedCharacter.isDead)
+        {
+            curSelectedCharacter = null;
+            ChangePhase(PlayerPhase.CharacterSelect);
+        }
+
+        if(curTargetCharacter && curTargetCharacter.isDead)
+        {
+            curTargetCharacter = null;
+        }
+
         switch (phase)
         {
             case PlayerPhase.CharacterSetting:
@@ -421,7 +432,7 @@ public class CharacterController : MonoBehaviour
             canClick = false;
             curSelectedCharacter.OnEndAttacking += EndAttack;
 
-            curSelectedCharacter.AttackTarget(curTargetCharacter);
+            curSelectedCharacter.SetAttackTarget(curTargetCharacter);
         }
     }
 
@@ -435,15 +446,22 @@ public class CharacterController : MonoBehaviour
 
             curSelectedCharacter.OnEndWalk += EndMove;
 
-            StartCoroutine(curSelectedCharacter.MoveCharacter());
+            curSelectedCharacter.MoveCharacter();
         }
     }
 
     private void EndMove()// 캐릭터의 이동이 끝났을 시
     {
+        Debug.Log("EndMove");
+        canClick = true;
+
+        if(curSelectedCharacter == null)
+        {
+            return;
+        }
+
         curSelectedCharacter.OnEndWalk -= EndMove;
 
-        canClick = true;
         ChangePhase(PlayerPhase.MoveandAttack);
 
         if (!curSelectedCharacter.canActing)
@@ -455,9 +473,15 @@ public class CharacterController : MonoBehaviour
 
     private void EndAttack()// 캐릭터의 공격이 끝났을 시
     {
+        canClick = true;
+
+        if (curSelectedCharacter == null)
+        {
+            return;
+        }
+
         curSelectedCharacter.OnEndAttacking -= EndAttack;
 
-        canClick = true;
         ChangePhase(PlayerPhase.MoveandAttack);
 
         if (!curSelectedCharacter.canActing)

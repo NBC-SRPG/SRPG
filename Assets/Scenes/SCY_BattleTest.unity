@@ -353,6 +353,7 @@ MonoBehaviour:
     party:
     - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
     - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
+    - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
   movePath: []
   nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}
@@ -2007,8 +2008,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Size.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Tiles.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Tiles.Array.data[0].first.x
@@ -2023,27 +2028,43 @@ PrefabInstance:
       value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[2].first.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[2].first.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_TileAssetArray.Array.data[0].m_RefCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_TileColorArray.Array.data[0].m_RefCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_TileMatrixArray.Array.data[0].m_RefCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[0].m_RefCount
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Tiles.Array.data[1].second.m_AllTileFlags
       value: 1073741825
       objectReference: {fileID: 0}
     - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[2].second.m_AllTileFlags
+      value: 1073741825
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Tiles.Array.data[1].second.m_TileObjectToInstantiateIndex
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 7024962525577240686, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_Tiles.Array.data[2].second.m_TileObjectToInstantiateIndex
       value: 65535
       objectReference: {fileID: 0}
     m_RemovedComponents: []
