@@ -7,7 +7,6 @@ public class CharAnimBase : MonoBehaviour
 {
     public Animator Animator { get; private set; }
 
-    protected CharacterBase character;
     protected CharacterBase targetCharacter;
     protected List<CharacterBase> targetList;
     protected SpriteRenderer sprite;
@@ -35,8 +34,6 @@ public class CharAnimBase : MonoBehaviour
 
     public void Init(CharacterBase thisCharacter)
     {
-        this.character = thisCharacter;
-
         Animator = GetComponent<Animator>();
 
         Idle = Animator.StringToHash(idleParameter);
@@ -72,8 +69,6 @@ public class CharAnimBase : MonoBehaviour
     public virtual void ShowDamage()
     {
         targetCharacter.health.TakeDamageHealthBar(targetCharacter.characterAnim.damage);
-        Debug.Log(targetCharacter.characterAnim.damage);
-
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
@@ -93,7 +88,7 @@ public class CharAnimBase : MonoBehaviour
     {
         this.targetCharacter = targetCharacter;
 
-        targetCharacter.transform.position = new Vector3(character.transform.position.x - 3f, character.transform.position.y, character.transform.position.z);
+        targetCharacter.transform.position = new Vector3(transform.parent.position.x - 3f, transform.parent.position.y, transform.parent.position.z);
 
         Animator.SetTrigger(defend);
     }
@@ -112,7 +107,7 @@ public class CharAnimBase : MonoBehaviour
     public virtual void KnockBackEnemy(int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBack(transform.position, scale);
+        targetCharacter.characterAnim.GetKnockBack(transform.parent.position, scale);
     }
 
     public void ShowHitParticle()
@@ -141,15 +136,15 @@ public class CharAnimBase : MonoBehaviour
         targetList = null;
     }
 
-    public void EndAnimation()
+    public void EndAnimation(bool isWalking)
     {
-        Animator.SetBool(Move, character.isWalking);
+        Animator.SetBool(Move, isWalking);
         Animator.SetBool(Hit, false);
     }
 
     protected Vector2 Getdirection(Vector3 target)
     {
-        Vector2 direction = (target - character.transform.position).normalized;
+        Vector2 direction = (target - transform.parent.position).normalized;
 
         return direction;
     }
@@ -158,11 +153,11 @@ public class CharAnimBase : MonoBehaviour
     {
         if(direction == Vector2.right)
         {
-            transform.localScale = new Vector2(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+            transform.parent.localScale = new Vector2(-1 * Mathf.Abs(transform.parent.localScale.x), transform.parent.localScale.y);
         }
         else if(direction == Vector2.left)
         {
-            transform.localScale = new Vector2(1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+            transform.parent.localScale = new Vector2(1 * Mathf.Abs(transform.parent.localScale.x), transform.parent.localScale.y);
         }
     }
 
@@ -196,8 +191,8 @@ public class CharAnimBase : MonoBehaviour
 
     public void GetKnockBack(Vector2 target, int scale)
     {
-        Vector2 knockBackDirection = ((Vector2)character.transform.position - target).normalized * scale;
-        Vector3 targetposition = new Vector3(character.transform.position.x + knockBackDirection.x, character.transform.position.y, character.transform.position.z);
+        Vector2 knockBackDirection = ((Vector2)transform.parent.position - target).normalized * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
 
         FlipCharacter(knockBackDirection, true);
 
@@ -225,9 +220,9 @@ public class CharAnimBase : MonoBehaviour
     protected IEnumerator MoveToTarget(Vector3 targetPosition)
     {
 
-        while(character.transform.position != targetPosition)
+        while(transform.parent.position != targetPosition)
         {
-            character.transform.position = Vector3.MoveTowards(character.transform.position, targetPosition, 100f * Time.deltaTime);
+            transform.parent.position = Vector3.MoveTowards(transform.parent.position, targetPosition, 100f * Time.deltaTime);
 
             yield return null;
         }
