@@ -97,9 +97,9 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {
         base.OnEnemyPassesMe(enemy);
-        enemy.BlockMoving();//ZOC 테스트 
 
         AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        enemy.BlockMoving();//ZOC 테스트 
     }
 
     public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
