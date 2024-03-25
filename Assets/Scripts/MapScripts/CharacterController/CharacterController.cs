@@ -46,6 +46,8 @@ public class CharacterController : MonoBehaviour
 
     private BattleUI Ui;
 
+    public int manaCost;
+
     private void Awake()
     {
         rangeFinder = new RangeFinder();
@@ -118,6 +120,8 @@ public class CharacterController : MonoBehaviour
             canClick = true;
             nowPlayerTurn = true;
 
+            manaCost += 2;
+
             //-----------------------------------------
 
             Ui.OnClickTurnEndButton += TurnEnd;
@@ -161,6 +165,8 @@ public class CharacterController : MonoBehaviour
             }
         }
         ChangePhase(PlayerPhase.Idle);
+
+        manaCost = 4;
 
         player.isReady = true;
         Managers.BattleManager.GetReady();
@@ -353,7 +359,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && manaCost >= curSelectedCharacter.curCharacterSkill.skillData.cost);
+        Ui.SetNoManaText(manaCost < curSelectedCharacter.curCharacterSkill.skillData.cost);
     }
 
     private void OnClickMoveAndAttack()
@@ -577,15 +584,17 @@ public class CharacterController : MonoBehaviour
     private void UseSkill()// 스킬 사용
     {
         canClick = false;
-        curSelectedCharacter.OnEndUseSkill += EndSkill;
+        AnimationController.instance.onAnimationEnd += EndSkill;
 
         curSelectedCharacter.targets = skillTargets;
         curSelectedCharacter.UseSkill();
+
+        manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
     }
 
     private void EndSkill()// 캐릭터의 공격이 끝났을 시
     {
-        curSelectedCharacter.OnEndUseSkill -= EndSkill;
+        AnimationController.instance.onAnimationEnd -= EndSkill;
 
         canClick = true;
         ChangePhase(PlayerPhase.CharacterSelect);

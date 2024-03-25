@@ -9,6 +9,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 public class BattleUI : UIBase
 {
+    private enum Texts
+    {
+        NoMana
+    }
+
     private enum GameObjects
     {
         TextPool
@@ -62,7 +67,7 @@ public class BattleUI : UIBase
         Managers.UI.SetCanvas(gameObject, false);
 
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
-        //BindText(typeof(Texts));
+        BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
@@ -121,11 +126,18 @@ public class BattleUI : UIBase
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
-    //버튼 Active
+    //UI Active
 
     private void RefreshUI()//ui 초기화
     {
         ResetButtons();
+
+        CloseTexts();
+    }
+
+    public void CloseTexts()
+    {
+        GetText((int)Texts.NoMana).gameObject.SetActive(false);
     }
 
     public void ResetButtons()
@@ -154,6 +166,11 @@ public class BattleUI : UIBase
     public void SetCanUseSkill(bool canSkill)
     {
         GetButton((int)Buttons.UseSkillButton).interactable = canSkill;
+    }
+
+    public void SetNoManaText(bool haveMana)
+    {
+        GetText((int)Texts.NoMana).gameObject.SetActive(haveMana);
     }
 
     public void ShowAtMoveAndAttackPhase()

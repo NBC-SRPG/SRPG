@@ -48,7 +48,7 @@ public class CharAnimBase : MonoBehaviour
         color = sprite.color;
 
         rb = GetComponentInParent<Rigidbody2D>();
-        particles = GetComponentInParent<Particles>();
+        particles = GetComponent<Particles>();
     }
 
     public void DeActivate()
@@ -91,6 +91,12 @@ public class CharAnimBase : MonoBehaviour
         targetCharacter.transform.position = new Vector3(transform.parent.position.x - 3f, transform.parent.position.y, transform.parent.position.z);
 
         Animator.SetTrigger(defend);
+    }
+
+    public void PlayExtraAnimation(CharacterBase targetCharacter, string anim)
+    {
+        this.targetCharacter = targetCharacter;
+        Animator.SetTrigger(anim);
     }
 
     public virtual void ShowDefend()
@@ -153,12 +159,14 @@ public class CharAnimBase : MonoBehaviour
     {
         if(direction == Vector2.right)
         {
-            transform.parent.localScale = new Vector2(-1 * Mathf.Abs(transform.parent.localScale.x), transform.parent.localScale.y);
+            transform.localScale = new Vector2(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
         }
         else if(direction == Vector2.left)
         {
-            transform.parent.localScale = new Vector2(1 * Mathf.Abs(transform.parent.localScale.x), transform.parent.localScale.y);
+            transform.localScale = new Vector2(1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
         }
+
+        
     }
 
     public void FlipCharacter(Vector2 targetPosiition, bool back)
@@ -187,6 +195,29 @@ public class CharAnimBase : MonoBehaviour
                 FlipCharacterDirection(Vector2.left);
             }
         }
+    }
+
+    public void ShakeCharacter()
+    {
+        StartCoroutine(nameof(Shake));
+    }
+
+    IEnumerator Shake()
+    {
+        Vector3 startPosition = transform.localPosition;
+
+        float shakeTime = 0.5f;
+
+        while (shakeTime > 0.0f)
+        {
+            transform.localPosition = new Vector2(startPosition.x , startPosition.y + UnityEngine.Random.insideUnitSphere.y * 0.05f);
+
+            shakeTime -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        transform.localPosition = startPosition;
     }
 
     public void GetKnockBack(Vector2 target, int scale)

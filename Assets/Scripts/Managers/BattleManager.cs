@@ -70,6 +70,19 @@ public class BattleManager
         return damage;
     }
 
+    private int CheckSkillDamage(CharacterBase attacker, CharacterBase victim)
+    {
+
+        //------
+        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+        //다른 클라이언트는 서버가 준 데미지를 받아옴
+        int damage = attacker.curCharacterSkill.SkillFigure - victim.character.Defence;// 임시 데미지 계산식
+
+        return damage;
+    }
+
     //---------------------------------------------------------------------------
     // 이동 관련
 
@@ -166,6 +179,7 @@ public class BattleManager
 
         foreach(var t in target)
         {
+            t.health.TakeDamage(20);
             Debug.Log(t + " take skill");
         }
 
@@ -183,7 +197,7 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            int damage = skillUser.curCharacterSkill.SkillFigure - victim.character.Defence;
+            int damage = CheckSkillDamage(skillUser, victim);
             //------
 
             victim.characterAnim.SetDamage(damage);

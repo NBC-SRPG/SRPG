@@ -10,7 +10,6 @@ public class CharacterBase : MonoBehaviour
 {
     public Character character;
     public GameObject characterObject;
-    public GameObject HealthBar;
     public CharAnimBase characterAnim;
     public HealthSystem health;
     public string playerId;
@@ -162,10 +161,10 @@ public class CharacterBase : MonoBehaviour
 
         foreach(OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
         {
-            curStandingTile = tile;
-
             if(tile.curStandingCharater == null || tile.curStandingCharater == this)
             {
+                curStandingTile = tile;
+
                 AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
 
                 break;
@@ -463,7 +462,9 @@ public class CharacterBase : MonoBehaviour
     private void CharacterDie()// 캐릭터 사망
     {
         isDead = true;
-        AnimationController.instance.StartDieAnimation(this);
+        //AnimationController.instance.StartDieAnimation(this);
+        AnimationController.instance.EnqueueDieAnimation(this);
+        AnimationController.instance.StartAnimationQueue();
     }
 
     public void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시

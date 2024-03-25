@@ -14,7 +14,10 @@ public class HealthSystem : MonoBehaviour
 
     public event Action Die;
 
-    private TextMeshProUGUI text;
+    private void Start()
+    {
+        AnimationController.instance.onAnimationEnd += SetHealthBar;
+    }
 
     public void SetHealth(int health)
     {

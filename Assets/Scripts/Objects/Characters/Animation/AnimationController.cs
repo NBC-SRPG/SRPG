@@ -35,6 +35,7 @@ public class AnimationController : MonoBehaviour
     private List<CharacterBase> victims;
 
     private bool isAnimationPlaying;
+    private bool isWalkPlaying;
 
     public event Action onAnimationEnd;
 
@@ -112,7 +113,6 @@ public class AnimationController : MonoBehaviour
 
         SetCharacterLayer(attacker, 0);
 
-        attacker.health.SetHealthBar();
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
         attacker.characterAnim.SetDamage(0);
@@ -132,8 +132,6 @@ public class AnimationController : MonoBehaviour
 
             victims[i].characterAnim.EndAnimation(victims[i].isWalking);
             victims[i].characterAnim.SetDamage(0);
-
-            victims[i].health.SetHealthBar();
         }
         victims.Clear();
 
@@ -143,6 +141,7 @@ public class AnimationController : MonoBehaviour
     public void EndAimation()
     {
         isAnimationPlaying = false;
+        isWalkPlaying = false;
         onAnimationEnd?.Invoke();
     }
 
@@ -205,11 +204,11 @@ public class AnimationController : MonoBehaviour
     private IEnumerator PlayCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)// 반격 애니메이션
     {
         Managers.UI.FindPopup<BattleUI>().ShowCounterText(attacker.transform);
-        attacker.characterAnim.PlayAttackAnimation(victim);
+        attacker.characterAnim.PlayExtraAnimation(victim, "counter_attack");
 
         while (true)
         {
-            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("attack"))
+            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsTag("attack"))
             {
                 float animTime = attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
@@ -316,6 +315,44 @@ public class AnimationController : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
+    //기타 애니메이션
+
+    public void EnqueueExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)
+    {
+        Debug.Log("Enqueue Extra");
+        animationQueue.Enqueue(() => StartExtraAnimation(attacker, victim, anim));
+    }
+
+    private void StartExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)// 기타 애니메이션 재생
+    {
+        isAnimationPlaying = true;
+
+        StartCoroutine(PlayExtraAnimation(attacker, victim, anim));
+    }
+
+    private IEnumerator PlayExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)// 기타 애니메이션
+    {
+        attacker.characterAnim.PlayExtraAnimation(victim, anim);
+
+        while (true)
+        {
+            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName(anim))
+            {
+                float animTime = attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+                if (animTime > 0.9f)
+                {
+                    PlayNextAnimation();
+
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
     //이동 애니메이션
 
     public void EnqueueMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)
@@ -326,7 +363,7 @@ public class AnimationController : MonoBehaviour
 
     public void StartMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 이동 애니메이션 재생
     {
-        isAnimationPlaying = true;
+        isWalkPlaying = true;
 
         StartCoroutine(PlayMoveAnimation(mover, prevTile, targetTile));
     }
@@ -351,6 +388,7 @@ public class AnimationController : MonoBehaviour
         if (mover.transform.position == targetTile.transform.position)
         {
             mover.characterAnim.EndAnimation(mover.isWalking);
+            isWalkPlaying = false;
             PlayNextAnimation();
         }
     }
@@ -363,7 +401,7 @@ public class AnimationController : MonoBehaviour
 
     public void StartBackAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 튕겨 나가는 애니메이션 재생
     {
-        isAnimationPlaying = true;
+        isWalkPlaying = true;
 
         StartCoroutine(PlayBackAnimation(mover, prevTile, targetTile));
     }
@@ -388,6 +426,7 @@ public class AnimationController : MonoBehaviour
         if (mover.transform.position == targetTile.transform.position)
         {
             mover.characterAnim.EndAnimation(mover.isWalking);
+            isWalkPlaying = false;
             PlayNextAnimation();
         }
     }
@@ -397,7 +436,7 @@ public class AnimationController : MonoBehaviour
 
     public void StartAnimationQueue()// 애니메이션 큐 재생 시작
     {
-        if(animationQueue.Count == 0 || isAnimationPlaying)
+        if(animationQueue.Count == 0 || isAnimationPlaying || isWalkPlaying)
         {
             return;
         }
@@ -423,6 +462,12 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 사망 애니메이션
 
+    public void EnqueueDieAnimation(CharacterBase character)
+    {
+        Debug.Log("Enqueue Die");
+        animationQueue.Enqueue(() => StartDieAnimation(character));
+    }
+
     public void StartDieAnimation(CharacterBase character)// 사망 애니메이션 재생
     {
         StartCoroutine(PlayDieAnimation(character));
@@ -430,7 +475,11 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayDieAnimation(CharacterBase character)
     {
-        yield return new WaitWhile(() => (animationQueue.Count > 0) || isAnimationPlaying);// 애니메이션이 재생중이 아닐 때 사망 애니메이션 재생
+        PlayNextAnimation();
+
+        //yield return new WaitWhile(() => (animationQueue.Count > 0) || isAnimationPlaying);// 애니메이션이 재생중이 아닐 때 사망 애니메이션 재생
+
+        character.characterAnim.Activate();
 
         character.characterAnim.PlayDieAnimation();
 
@@ -449,5 +498,6 @@ public class AnimationController : MonoBehaviour
 
             yield return null;
         }
+
     }
 }
