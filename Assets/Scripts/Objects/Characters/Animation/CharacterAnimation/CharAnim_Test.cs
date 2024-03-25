@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CharAnim_Test : CharAnimBase
 {
-    public override void PlayAttackAnimation(CharacterBase targetCharacter)
+    public void AttackingTiming()
     {
-        base.PlayAttackAnimation(targetCharacter);
+        AttackEnemy();
+        KnockBackEnemy(10);
 
-    }
-
-    public override void AttackEnemy()
-    {
-        base.AttackEnemy();
+        targetCharacter.characterAnim.ShakeCharacter();
     }
 
     public void MoveToPosition()

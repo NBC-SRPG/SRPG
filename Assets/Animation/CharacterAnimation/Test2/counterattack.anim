@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: attack
+  m_Name: counterattack
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -87,11 +87,18 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.5833333
-    functionName: AttackingTiming
+    functionName: AttackEnemy
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
-    intParameter: 0
+    intParameter: 10
+    messageOptions: 0
+  - time: 0.5833333
+    functionName: KnockBackEnemy
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 10
     messageOptions: 0
   - time: 0.75
     functionName: ShowDamage
