@@ -7,32 +7,32 @@ using static Constants;
 public class TalentSO : ScriptableObject
 {
     [Header("Develope")]
-    public int talent_Id;//Æ¯¼º ½Äº°ÀÚ
-    public TalentType talentType; //Æ¯¼º ºĞ·ù
+    public int talent_Id;//íŠ¹ì„± ì‹ë³„ì
+    public TalentType talentType; //íŠ¹ì„± ë¶„ë¥˜
 
     [Header("Talent_description")]
-    public string talentName;//Æ¯¼º ÀÌ¸§
-    public string talentDescription;//Æ¯¼º ¼³¸í
-    
+    public string talentName;//íŠ¹ì„± ì´ë¦„
+    public string talentDescription;//íŠ¹ì„± ì„¤ëª…
+   
 
-    [Header("Talent_Status_basic")] //increase = ±ø½ºÅÈ Áõ°¡·®(ÇÕ¿¬»ê). multiply = ¹èÀ²(%) Áõ°¡·®(°ö¿¬»ê)
+    [Header("Talent_Status_basic")] //increase = ê¹¡ìŠ¤íƒ¯ ì¦ê°€ëŸ‰(í•©ì—°ì‚°). multiply = ë°°ìœ¨(%) ì¦ê°€ëŸ‰(ê³±ì—°ì‚°)
     public int increaseHealth;
     public int increaseAtk;
     public int increaseDef;
     public int increasecMov;
 
-    public float multiplyHealth; //°ö¿¬»êÀº °è»êÇÒ ¶§ 1À» ´õÇÏ°í ½ÃÀÛÇÏ¹Ç·Î, ÀÌ Æ¯¼ºÀ¸·Î 10%¸¦ Áõ°¡½ÃÅ°°í ½Í´Ù¸é 0.1·Î ¼³Á¤ÇÏ´Â ¹æ½ÄÀ¸·Î ¼³Á¤ÇÏ¸é µË´Ï´Ù.
+    public float multiplyHealth; //ê³±ì—°ì‚°ì€ ê³„ì‚°í•  ë•Œ 1ì„ ë”í•˜ê³  ì‹œì‘í•˜ë¯€ë¡œ, ì´ íŠ¹ì„±ìœ¼ë¡œ 10%ë¥¼ ì¦ê°€ì‹œí‚¤ê³  ì‹¶ë‹¤ë©´ 0.1ë¡œ ì„¤ì •í•˜ëŠ” ë°©ì‹ìœ¼ë¡œ ì„¤ì •í•˜ë©´ ë©ë‹ˆë‹¤.
     public float multiplyAtk;
     public float multiplyDef;
 
     [Header("Talent_Status_addition")]
-    public float increasecCtr; //Ä¡¸íÅ¸ È®·ü +
-    public float increasecCtd; //Ä¡¸íÅ¸ ÇÇÇØ +
-    public float increaseInflictDamage; //ÁÖ´Â ÃÖÁ¾ ÇÇÇØ Áõ°¡ +
-    public float reducedTakenDamage; //¹Ş´Â ÃÖÁ¾ ÇÇÇØ °¨¼Ò -
+    public float increasecCtr; //ì¹˜ëª…íƒ€ í™•ë¥  +
+    public float increasecCtd; //ì¹˜ëª…íƒ€ í”¼í•´ +
+    public float increaseInflictDamage; //ì£¼ëŠ” ìµœì¢… í”¼í•´ ì¦ê°€ +
+    public float reducedTakenDamage; //ë°›ëŠ” ìµœì¢… í”¼í•´ ê°ì†Œ -
 
 
     [Header("Talent_special")]
-    public int speciaID;//Æ¯¼ºÀÇ º°µµ °íÀ¯ È¿°ú. ¼¼ºÎ·ÎÁ÷ ¹Ì±¸Çö.
-                           //Todo: Æ¯¼ºÀÌ ½ºÅÈ Áõ°¡ ¿Ü¿¡ Æ¯¼ö ±â´ÉÀ» ±¸ÇöÇÏ°í Àû¿ëÇÒ ¼ö ÀÖµµ·Ï ·ÎÁ÷ ¼³°è / ±¸Çö
+    public int speciaID;//íŠ¹ì„±ì˜ ë³„ë„ ê³ ìœ  íš¨ê³¼. ì„¸ë¶€ë¡œì§ ë¯¸êµ¬í˜„.
+                           //Todo: íŠ¹ì„±ì´ ìŠ¤íƒ¯ ì¦ê°€ ì™¸ì— íŠ¹ìˆ˜ ê¸°ëŠ¥ì„ êµ¬í˜„í•˜ê³  ì ìš©í•  ìˆ˜ ìˆë„ë¡ ë¡œì§ ì„¤ê³„ / êµ¬í˜„
 }

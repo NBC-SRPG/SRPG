@@ -8,7 +8,7 @@ public class CharacterSO : ScriptableObject
 {
     public Constants.AttackType attackType;//공격 타입
     public Constants.CharacterAttribute characterAttribute;//캐릭터 속성
-
+    
     [Header("Develope")]
     public int character_Id;//캐릭터 식별자
 

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using static Constants;
@@ -33,16 +35,31 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
         ApplyAdditionStat();
     }
 
-    public int LimitBreak(int piece) //ÀÓ½Ã·Î ¼³Á¤ÇÑ ÇÑ°è µ¹ÆÄ ¸Þ¼­µå. Ä³¸¯ÅÍ Á¶°¢ °¹¼ö Ã¼Å© ¹× Á¶°¢ ¼Ò¸ð ±â´É ±¸Çö ÇÊ¿ä.
-                                     //Todo: Á¶°¢ ¾ÆÀÌÅÛ µ¥ÀÌÅÍ¸¦ ¹Þ¾Æ¿Í¼­ °¹¼ö¸¦ Ã¼Å©ÇÏ°í, µ¹ÆÄ½Ã °¹¼ö Â÷°¨ÇÏµµ·Ï ±â´É ±¸ÇöÇÏ±â.
+    //ÀÓ½Ã·Î Æ²¸¸ °®ÃçµÐ Exp Áõ°¡ ¸Þ¼­µå.
+    //Todo: Ä³¸¯ÅÍ Á¤º¸ Ã¢¿¡¼­ Ä³¸¯ÅÍ °æÇèÄ¡ ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏ°í, ±× °¹¼ö¸¦ Á¶Á¤ÇÏ°í, ±× °¹¼ö¸¸Å­ °æÇèÄ¡¸¦ ÇÕ»êÇØ¼­, °æÇèÄ¡¸¦ ¿Ã¸®°í ¼±ÅÃÇÑ °æÇèÄ¡ ¾ÆÀÌÅÛµéÀÇ °¹¼ö¸¦ Â÷°¨ÇÏµµ·Ï ±â´É ±¸ÇöÇÏ±â.
+    //Ä³¸¯ÅÍ °æÇèÄ¡ ¾ÆÀÌÅÛÀº ÀÏ´Ü µî±Þ º° 4Á¾ÀÌ Á¸ÀçÇÏ¹Ç·Î, UI¿¡¼­ ÀÎº¥Åä¸®¿¡ ÀÖ´Â °æÇèÄ¡ ¾ÆÀÌÅÛ 4Á¾ÀÇ °¹¼ö¿Í ¾ÆÀÌÄÜÀ» ¶ç¿ì°í ÇÃ·¹ÀÌ¾î°¡ ÇØ´ç µî±ÞÀÇ ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÅÍÄ¡ ½Ã ÇØ´ç ¾ÆÀÌÅÛÀÇ ¼±ÅÃÇÑ °¹¼ö °ªÀÌ 1 Áõ°¡ÇÏµµ·Ï ÀúÀåÇØ¾ßÇÔ.
+    //·¹ÆÛ·±½º: ºí·ç ¾ÆÄ«ÀÌºêÀÇ Ä³¸¯ÅÍ À°¼ºÃ¢-·¹º§¾÷ ºÎºÐ ÂüÁ¶
+    public void CharacterExpAdd(int sum)
+    {
+        character.characterGrowth.Exp += sum;
+    }
+
+
+    public void LimitBreak() //Á¶°¢À» ¼Ò¸ðÇÏ°í µ¹ÆÄ¸¦ ÁøÇàÇÏ´Â ¸Þ¼­µå.
     {
         if (character.characterGrowth.Limit >= 4) //ÇÑ°è µ¹ÆÄ°¡ ÀÌ¹Ì ÃÖ´ëÄ¡¸é µ¹ÆÄ ºÒ°¡´É.
         {
-            return 0;
+            return;
         }
-        if (character.characterGrowth.Level == character.characterGrowth.maxLevel && piece >= character.characterGrowth.maxLevel + 30) //ÇöÀç Ä³¸¯ÅÍ ·¹º§ÀÌ ÃÖ´ëÄ¡ÀÌ°í, º¸À¯ Á¶°¢ °³¼ö°¡ µ¹ÆÄ ¿ä°Ç°ª ÀÌ»óÀÏ °æ¿ì. (µ¹ÆÄ ¿ä°Ç°ª = ÇöÀç ÃÖ´ë·¹º§ + 30) 
+
+        //µ¹ÆÄ Á¶°Ç¹® ÇØ¼³
+        //Á¶°Ç 1: Ä³¸¯ÅÍ ·¹º§ÀÌ Ä³¸¯ÅÍÀÇ ÃÖ´ë ·¹º§°ú °°ÀºÁö?
+        //Á¶°Ç 2: ¾îÄ«¿îÆ® µ¥ÀÌÅÍ¿¡¼­ ¾ÆÀÌÅÛ °¹¼ö¸¦ ¸®ÅÏÇÏ´Â ¸Þ¼­µå¸¦ ÀÌ¿ë, Ä³¸¯ÅÍ ID¿Í °°Àº ID °ªÀ» °®´Â ¾ÆÀÌÅÛÀÇ °¹¼ö¸¦ Ã¼Å©ÇÑ´Ù. ±× °ªÀÌ Ä³¸¯ÅÍÀÇ ÃÖ´ë·¹º§ + 30 ÀÌ»óÀÎÁö?
+        if (character.characterGrowth.Level == character.characterGrowth.maxLevel && Managers.AccountData.GetItemQuantity(character.characterData.character_Id) >= character.characterGrowth.maxLevel + 30) //ÇöÀç Ä³¸¯ÅÍ ·¹º§ÀÌ ÃÖ´ëÄ¡ÀÌ°í, º¸À¯ Á¶°¢ °³¼ö°¡ µ¹ÆÄ ¿ä°Ç°ª ÀÌ»óÀÏ °æ¿ì. (µ¹ÆÄ ¿ä°Ç°ª = ÇöÀç ÃÖ´ë·¹º§ + 30) 
         {
-            int paidPiece = character.characterGrowth.maxLevel + 30;
+            //µ¹ÆÄ ÁøÇà ÈÄ, Á¶°¢À» ¿ä±¸ °¹¼ö¸¸Å­ Â÷°¨. (Star, Limit¸¦ Áõ°¡½ÃÅ°¸é MaxLevel °ªµµ °°ÀÌ Áõ°¡ÇÏ¹Ç·Î, ÄÚµå ¼­¼ø¿¡ ÁÖÀÇ)
+            Managers.AccountData.UseItem(character.characterData.character_Id, character.characterGrowth.maxLevel + 30);
+
             if (character.characterGrowth.Star < 5) //ÇöÀç ¼º±ÞÀÌ 5¼º ¹Ì¸¸ÀÏ °æ¿ì, ÃÖ´ë ·¹º§ 10 Áõ°¡.
             {
                 character.characterGrowth.Star += 1;
@@ -51,12 +68,9 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
             {
                 character.characterGrowth.Limit += 1; 
             }
-            return paidPiece; //Â÷°¨ÇØ¾ßÇÏ´Â Á¶°¢ °ªÀ» ¸®ÅÏÇÑ´Ù.
         }
         else
         {
-            //µ¹ÆÄ ¿ä°Ç ¹ÌÃæÁ·.
-            return 0;
         }
     }
 
@@ -332,19 +346,51 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
 
 
 
-    public bool ExSkillLevelUp(int ingredient)
+    public void ExSkillLevelUp()
     {
-        if (ingredient >= character.characterGrowth.ExSkillLevel && character.characterGrowth.ExSkillLevel < 5)
+        //½ºÅ³ °­È­ Á¶°Ç
+
+        if (character.characterGrowth.ExSkillLevel >= 5) //½ºÅ³ 5·¹º§ ÀÌ»óÀÏ °æ¿ì °­È­ ºÒ°¡.
         {
-            character.characterGrowth.ExSkillLevel += 1;
-            //Todo : Àç·á ¼Ò¸ð
-            return true;
+            return;
         }
-        else
+
+        //Todo: ½ºÅ³ ·¹º§ º°·Î ÇÊ¿äÇÑ Àç·á µ¥ÀÌÅÍ¸¦ °¡Á®¿Í¾ßÇÔ
+        //½ºÅ³ ·¹º§Àº Áø¿µ º° ½ºÅ³ ·©Å©¾÷ ¾ÆÀÌÅÛÀ» »ç¿ë.
+        //Áø¿µ º° / ·¹º§ º°·Î ÇÊ¿ä ¾ÆÀÌÅÛ ID - ¾ÆÀÌÅÛ °¹¼ö µñ¼Å³Ê¸®°¡ ÇÊ¿äÇÔ
+        //¿¹½Ã) ¸¶Á·Áø¿µ ½ºÅ³ ·¹º§¾÷ 1¡æ2¿¡ ÇÊ¿äÇÑ µñ¼Å³Ê¸®<¾ÆÀÌÅÛ Á¾·ù, ¾ÆÀÌÅÛ °¹¼ö>
+        // ÀÌ·± ½ÄÀ¸·Î ¸¶Á·, 2¡æ3 ·¹º§... 3¡æ4 ·¹º§.., ±³´Ü 1¡æ2 ·¹º§ / ...
+        //¾î¶² ¹æ½ÄÀ¸·Î ±×¸®°í ¾îµð¿¡ ÀÌ µñ¼Å³Ê¸®¸¦ ÀúÀåÇØ ³ö¾ß ÁÁÀ» Áö »ý°¢ÇØµµ ÁÁÀº ´äÀÌ ¾È³ª¿È. ÁÁÀº ÀÇ°ß ÀÖÀ¸¸é Á¶¾ðÇØÁÖ¼¼¿ä.
+        /* 
+        foreach (var kvp in character.characterGrowth.)
         {
-            return false;
+            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµð
+            int requiredItemCount = kvp.Value * (character.characterGrowth.); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö = ½ºÅ³ ·¹º§ Á¤µµ¸¶´Ù ¿ä±¸·®ÀÌ Áõ°¡ÇÑ´Ù.
+
+            // ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª °¹¼ö°¡ ¿ä±¸µÇ´Â °¹¼öº¸´Ù ÀûÀº °æ¿ì
+            if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
+                currentItemCount < requiredItemCount)
+            {
+                // ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏÁö ¸øÇÏ¸é Á¾·á
+                return;
+            }
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµÐ ½ºÅ³ ·¹º§¾÷ ¸Þ¼­µå, //Todo: ½ºÅ³ ·¹º§¾÷ ÀçÈ­ ¼Ò¸ð, ½ºÅ³ ·¹º§¾÷ ½Ã È¿°ú µî
+
+        // ¸ðµç ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏ´Â °æ¿ì ½ºÅ³ °­È­ ¼º°ø
+        // °­È­¿¡ ÇÊ¿äÇÑ °­È­ ¼ÒÀç ¾ÆÀÌÅÛµéÀ» Â÷°¨
+        foreach (var kvp in character.characterGrowth.)
+        {
+            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµð
+            int requiredItemCount = kvp.Value * (character.characterGrowth.); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö
+
+            // ÀÎº¥Åä¸®¿¡¼­ ÇØ´ç ¾ÆÀÌÅÛ °¹¼ö Â÷°¨
+            Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
+        }
+        character.characterGrowth.ExSkillLevel += 1;
+        return;
+        */
+    }
+
 
 
     /* È£°¨µµ ¸Þ¼­µå´Â ÁÖ¼® Ã³¸®. ½Ã°£ÀÌ ³²´Â´ë·Î ÀÛ¾÷. 

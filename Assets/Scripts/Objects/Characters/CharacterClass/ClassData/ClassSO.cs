@@ -6,14 +6,14 @@ using static Constants;
 public class ClassSO : ScriptableObject
 {
     [Header("Develope")]
-    public int class_Id;//Å¬·¡½º ½Äº°ÀÚ
-    public BaseClass bassClass; //»Ñ¸® Å¬·¡½º
+    public int class_Id;//í´ë˜ìŠ¤ ì‹ë³„ì
+    public BaseClass bassClass; //ë¿Œë¦¬ í´ë˜ìŠ¤
 
     [Header("Class_description")]
-    public string className;//Å¬·¡½º ÀÌ¸§
-    public string classDescription;//Å¬·¡½º ¼³¸í
+    public string className;//í´ë˜ìŠ¤ ì´ë¦„
+    public string classDescription;//í´ë˜ìŠ¤ ì„¤ëª…
 
-    [Header("Class_Status_basic")] //increase = ±ø½ºÅÈ Áõ°¡·®(ÇÕ¿¬»ê). multiply = ¹èÀ²(%) Áõ°¡·®(°ö¿¬»ê)
+    [Header("Class_Status_basic")] //increase = ê¹¡ìŠ¤íƒ¯ ì¦ê°€ëŸ‰(í•©ì—°ì‚°). multiply = ë°°ìœ¨(%) ì¦ê°€ëŸ‰(ê³±ì—°ì‚°)
     public int increaseHealth;
     public int increaseAtk;
     public int increaseDef;
@@ -24,12 +24,12 @@ public class ClassSO : ScriptableObject
     public float multiplyDef;
 
     [Header("Class_Status_addition")]
-    public float increasecCtr; //Ä¡¸íÅ¸ È®·ü +
-    public float increasecCtd; //Ä¡¸íÅ¸ ÇÇÇØ +
-    public float increaseInflictDamage; //ÁÖ´Â ÃÖÁ¾ ÇÇÇØ Áõ°¡ +
-    public float reducedTakenDamage; //¹Ş´Â ÃÖÁ¾ ÇÇÇØ °¨¼Ò -
-
+    public float increasecCtr; //ì¹˜ëª…íƒ€ í™•ë¥  +
+    public float increasecCtd; //ì¹˜ëª…íƒ€ í”¼í•´ +
+    public float increaseInflictDamage; //ì£¼ëŠ” ìµœì¢… í”¼í•´ ì¦ê°€ +
+    public float reducedTakenDamage; //ë°›ëŠ” ìµœì¢… í”¼í•´ ê°ì†Œ -
+    
     [Header("Class_unique")]
-    public int uniqueID;//Å¬·¡½ºÀÇ º°µµ °íÀ¯ È¿°ú. ¼¼ºÎ·ÎÁ÷ ¹Ì±¸Çö.
-                           //Todo: Æ¯¼ºÀÌ ½ºÅÈ Áõ°¡ ¿Ü¿¡ Æ¯¼ö ±â´ÉÀ» ±¸ÇöÇÏ°í Àû¿ëÇÒ ¼ö ÀÖµµ·Ï ·ÎÁ÷ ¼³°è / ±¸Çö
+    public int uniqueID;//í´ë˜ìŠ¤ì˜ ë³„ë„ ê³ ìœ  íš¨ê³¼. ì„¸ë¶€ë¡œì§ ë¯¸êµ¬í˜„.
+                           //Todo: íŠ¹ì„±ì´ ìŠ¤íƒ¯ ì¦ê°€ ì™¸ì— íŠ¹ìˆ˜ ê¸°ëŠ¥ì„ êµ¬í˜„í•˜ê³  ì ìš©í•  ìˆ˜ ìˆë„ë¡ ë¡œì§ ì„¤ê³„ / êµ¬í˜„
 }
