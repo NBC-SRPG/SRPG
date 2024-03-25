@@ -4,7 +4,7 @@ public class Managers : MonoBehaviour
 {
     private static Managers instance = null;
     public static Managers Instance { get { return instance; } }
-
+    
     private static ResourceManager resourceManager = new ResourceManager();
     private static SoundManager soundManager = new SoundManager();
     private static UIManager uiManager = new UIManager();
@@ -24,8 +24,6 @@ public class Managers : MonoBehaviour
     private static GachaManager s_gachamanager = new GachaManager();
     public static GachaManager GachaManager { get { Init(); return s_gachamanager; } }
     
-    private static CharacterGrowthManager s_characterGrowthManager = new CharacterGrowthManager();
-    public static CharacterGrowthManager CharacterGrowthManager { get { Init();return s_characterGrowthManager; } }
 
 
     private void Start()

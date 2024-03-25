@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Constants;
 
-public class CharacterGrowth  //ĳ������ ���� / Ư�� �� Ŭ���� / ��Ÿ ��� ĳ���� ��ü�� �������� ���� �����͸��� �����ϴ� Ŭ����.
+public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭터 객체의 개인적인 고유 데이터만을 저장하는 클래스.
 {
     private Character character;
 
@@ -14,7 +14,7 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
 
     public ClassSO basicClass { get; set; }
     public ClassSO superiorClass { get; set; }
-
+    
     public WeaponSO weapon { get; set; }
     public ArmorSO armor { get; set; }
 
@@ -34,14 +34,14 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
             {
                 level = math.clamp(value, 1, Managers.AccountData.playerData.Level);
             }
-            Managers.CharacterGrowthManager.Init(character);
-            Managers.CharacterGrowthManager.ApplyGrowStat();
-            Managers.CharacterGrowthManager.ApplyAdditionStat(); //������ �� ���� ���� �� Ư��/Ŭ���� ���� ��������.
-            maxExp = (level * 100 + maxLevel * level * 20); //���Ƿ� �ִ� ����ġ��(�������ϴµ� �ʿ��� ����ġ ��)�� ����. 
+            character.characterGrowthManager.Init(character);
+            character.characterGrowthManager.ApplyGrowStat();
+            character.characterGrowthManager.ApplyAdditionStat(); //레벨업 시 성장 스탯 및 특성/클래스 스탯 리프레시.
+            maxExp = (level * 100 + maxLevel * level * 20); //임의로 최대 경험치값(레벨업하는데 필요한 경험치 값)을 설정. 
         }
     }
 
-    public int maxLevel  //Star�� Limit ���� ���� �ٸ� ���� ������.
+    public int maxLevel  //Star와 Limit 값에 따라 다른 값을 리턴함.
     {
         get
         {
@@ -87,10 +87,10 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
     public int Exp
     {
         get { return exp; }
-        private set //����ġ �����ڿ� ��ü������ ������ ����� ��ġ.
+        set //경험치 설정자에 자체적으로 레벨업 기능을 배치.
         {
             exp = value;
-            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //������ ���� ������ ���� ���ϵ��� ���� �߰�
+            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
             {
                 exp -= maxExp;
                 Level += 1;
@@ -101,7 +101,7 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
 
     public int maxExp { get; set; }
 
-    private int star; //����
+    private int star; //성급
     public int Star
     {
         get { return star; }
@@ -111,19 +111,19 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
             {
                 star = math.clamp(value, 1, 5);
             }
-            else if (Limit >= 1) //�Ѱ赹�� 1 �̻� = 5���̶�� ��
+            else if (Limit >= 1) //한계돌파 1 이상 = 5성이라는 뜻
             {
                 star = 5;
             }
         }
     }
 
-    private int limit; //���� �Ѱ� ���� ����. 0 = �ѵ�x
+    private int limit; //현재 한계 돌파 정도. 0 = 한돌x
     public int Limit
     {
         get { return limit; }
         set { 
-                // Star�� 5�� ������ �Ѱ谪 ����
+                // Star가 5일 때에만 한계값 설정
                 if (Star >= 5)
                 {
                     limit = math.clamp(value, 0, 4);
@@ -131,15 +131,15 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
         }
     }
 
-    public int ExSkillLevel { get; set; } //Ex��ų ���� //Todo: ��ų ������ ���� ��ų ��� �����Ű��, ���� �ΰ��ӿ��� ��ų ������ ���� ȿ�� �޶����� �ϱ�.
-    public int PassiveSkillLevel { get; set; } //�нú� ��ų ����
+    public int ExSkillLevel { get; set; } //Ex스킬 레벨 //Todo: 스킬 레벨에 따라 스킬 계수 적용시키기, 실제 인게임에서 스킬 레벨에 따라 효과 달라지게 하기.
+    public int PassiveSkillLevel { get; set; } //패시브 스킬 레벨
 
     public int weaponTier;
     public int armorTier;
 
-    public int weaponEnhance { get; set; } //���� ��ȭ����
-    public int armorEnhance { get; set; } //�� ��ȭ����
-    public int affectionLevel { get; set; } //ȣ���� ����
+    public int weaponEnhance { get; set; } //무기 강화정도
+    public int armorEnhance { get; set; } //방어구 강화정도
+    public int affectionLevel { get; set; } //호감도 레벨
 
 
     //CharacterGrowth에 Character을 넣고 선택중인 특성과 클래스를 CharacterData의 SO와 연결시키는 메서드.
@@ -161,7 +161,7 @@ public class CharacterGrowth  //ĳ������ ���� / Ư�� �
     //캐릭터를 계정에서 최초로 획득 시 이 메서드를 호출할 것.
     public void InitialInit() 
     {
-        star = character.characterData.basicStar; //ĳ������ ������ ȹ�� �� �⺻ ����. //�ִ� ������ �⺻ ���޿� ���� ������.
+        star = character.characterData.basicStar; //캐릭터의 성급은 획득 시 기본 성급. //최대 레벨은 기본 성급에 의해 정해짐.
         Level = 1;
         ExSkillLevel = 1;
         PassiveSkillLevel = 1; 

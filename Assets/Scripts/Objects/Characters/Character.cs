@@ -7,7 +7,8 @@ public class Character : MonoBehaviour
 {
     public CharacterSO characterData;
     public CharacterGrowth characterGrowth;
-
+    public CharacterGrowthManager characterGrowthManager;
+    
     public SkillBase skill;
     public PassiveAbilityBase passiveAbility;
 
@@ -62,14 +63,21 @@ public class Character : MonoBehaviour
     {
         characterGrowth.Init(this);
         StatRefresh();
+
+        /*
+        Health = characterData.health;
+        Attack = characterData.atk;
+        Mov = characterData.mov;
+        CharacterAttackType = characterData.attackType;
+        */
     }
 
     //스탯 최신화 메서드. 
     public void StatRefresh() 
     {
-        Managers.CharacterGrowthManager.Init(this);
-        Managers.CharacterGrowthManager.ApplyGrowStat();
-        Managers.CharacterGrowthManager.ApplyAdditionStat();
+        characterGrowthManager.Init(this);
+        characterGrowthManager.ApplyGrowStat();
+        characterGrowthManager.ApplyAdditionStat();
     }
 
     //스킬 선언
