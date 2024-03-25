@@ -84,7 +84,7 @@ public class Constants
         Common,
         PickUp
     }
-    
+
     public enum BaseClass //기본 클래스 5종.
     {
         Warrior,
@@ -95,7 +95,7 @@ public class Constants
     }
 
     public enum LimitBreak // 한계돌파. (정수값 = 해당 성급의 최대 레벨)
-    { 
+    {
         LimitBreak_1 = 75,
         LimitBreak_2 = 80,
         LimitBreak_3 = 85,
@@ -139,7 +139,7 @@ public class Constants
 
     //아이템 분류.
     //아이템 분류 선별 기준 = '인벤토리에 표시되고 정보를 볼 수 있어야 하는지? 여부가 성립하면 아이템'
-    public enum ItemType 
+    public enum ItemType
     {
         Ticket, //캐릭터 뽑기 티켓류 
         Piece, //캐릭터 조각류
@@ -170,6 +170,5 @@ public class Constants
         Character,
         Item
     }
-
 
 }

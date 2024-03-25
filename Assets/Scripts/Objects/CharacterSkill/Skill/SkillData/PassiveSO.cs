@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ public class PassiveSO : ScriptableObject
     [Header("Description")]
     public string PassiveName;
     public string description;
-
+    
     [Header("Develope")]
     public int passive_Id;
 }

@@ -6,7 +6,7 @@ using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Constants;
 
-public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯ÅÍ °´Ã¼ÀÇ °³ÀÎÀûÀÎ °íÀ¯ µ¥ÀÌÅÍ¸¸À» ÀúÀåÇÏ´Â Å¬·¡½º.
+public class CharacterGrowth  //ìºë¦­í„°ì˜ ì„±ì¥ / íŠ¹ì„± ë° í´ë˜ìŠ¤ / ê¸°íƒ€ ë“±ë“± ìºë¦­í„° ê°ì²´ì˜ ê°œì¸ì ì¸ ê³ ìœ  ë°ì´í„°ë§Œì„ ì €ì¥í•˜ëŠ” í´ë˜ìŠ¤.
 {
     private Character character;
 
@@ -16,12 +16,12 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
 
     public ClassSO basicClass { get; set; }
     public ClassSO superiorClass { get; set; }
-
+    
     public WeaponSO weapon { get; set; }
     public ArmorSO armor { get; set; }
 
 
-    //·¹º§, ÃÖ´ë·¹º§, °æÇèÄ¡, ÃÖ´ë °æÇèÄ¡
+    //ï¿½ï¿½ï¿½ï¿½, ï¿½Ö´ë·¹ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ä¡, ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½Ä¡
     private int level;
     public int Level
     {
@@ -36,14 +36,14 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
             {
                 level = math.clamp(value, 1, Managers.AccountData.playerData.Level);
             }
-            Managers.CharacterGrowthManager.Init(character);
-            Managers.CharacterGrowthManager.ApplyGrowStat();
-            Managers.CharacterGrowthManager.ApplyAdditionStat(); //·¹º§¾÷ ½Ã ¼ºÀå ½ºÅÈ ¹× Æ¯¼º/Å¬·¡½º ½ºÅÈ ¸®ÇÁ·¹½Ã.
-            maxExp = (level * 100 + maxLevel * level * 20); //ÀÓÀÇ·Î ÃÖ´ë °æÇèÄ¡°ª(·¹º§¾÷ÇÏ´Âµ¥ ÇÊ¿äÇÑ °æÇèÄ¡ °ª)À» ¼³Á¤. 
+            character.characterGrowthManager.Init(character);
+            character.characterGrowthManager.ApplyGrowStat();
+            character.characterGrowthManager.ApplyAdditionStat(); //ë ˆë²¨ì—… ì‹œ ì„±ì¥ ìŠ¤íƒ¯ ë° íŠ¹ì„±/í´ë˜ìŠ¤ ìŠ¤íƒ¯ ë¦¬í”„ë ˆì‹œ.
+            maxExp = (level * 100 + maxLevel * level * 20); //ì„ì˜ë¡œ ìµœëŒ€ ê²½í—˜ì¹˜ê°’(ë ˆë²¨ì—…í•˜ëŠ”ë° í•„ìš”í•œ ê²½í—˜ì¹˜ ê°’)ì„ ì„¤ì •. 
         }
     }
 
-    public int maxLevel  //Star¿Í Limit °ª¿¡ µû¶ó ´Ù¸¥ °ªÀ» ¸®ÅÏÇÔ.
+    public int maxLevel  //Starì™€ Limit ê°’ì— ë”°ë¼ ë‹¤ë¥¸ ê°’ì„ ë¦¬í„´í•¨.
     {
         get
         {
@@ -89,10 +89,10 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
     public int Exp
     {
         get { return exp; }
-        private set //°æÇèÄ¡ ¼³Á¤ÀÚ¿¡ ÀÚÃ¼ÀûÀ¸·Î ·¹º§¾÷ ±â´ÉÀ» ¹èÄ¡.
+        set //ê²½í—˜ì¹˜ ì„¤ì •ìì— ìì²´ì ìœ¼ë¡œ ë ˆë²¨ì—… ê¸°ëŠ¥ì„ ë°°ì¹˜.
         {
             exp = value;
-            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //·¹º§ÀÌ °èÁ¤ ·¹º§À» ³ÑÁö ¸øÇÏµµ·Ï Á¶°Ç Ãß°¡
+            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //ë ˆë²¨ì´ ê³„ì • ë ˆë²¨ì„ ë„˜ì§€ ëª»í•˜ë„ë¡ ì¡°ê±´ ì¶”ê°€
             {
                 exp -= maxExp;
                 Level += 1;
@@ -103,7 +103,7 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
 
     public int maxExp { get; set; }
 
-    private int star; //¼º±Ş
+    private int star; //ì„±ê¸‰
     public int Star
     {
         get { return star; }
@@ -113,19 +113,19 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
             {
                 star = math.clamp(value, 1, 5);
             }
-            else if (Limit >= 1) //ÇÑ°èµ¹ÆÄ 1 ÀÌ»ó = 5¼ºÀÌ¶ó´Â ¶æ
+            else if (Limit >= 1) //í•œê³„ëŒíŒŒ 1 ì´ìƒ = 5ì„±ì´ë¼ëŠ” ëœ»
             {
                 star = 5;
             }
         }
     }
 
-    private int limit; //ÇöÀç ÇÑ°è µ¹ÆÄ Á¤µµ. 0 = ÇÑµ¹x
+    private int limit; //í˜„ì¬ í•œê³„ ëŒíŒŒ ì •ë„. 0 = í•œëŒx
     public int Limit
     {
         get { return limit; }
         set { 
-                // Star°¡ 5ÀÏ ¶§¿¡¸¸ ÇÑ°è°ª ¼³Á¤
+                // Starê°€ 5ì¼ ë•Œì—ë§Œ í•œê³„ê°’ ì„¤ì •
                 if (Star >= 5)
                 {
                     limit = math.clamp(value, 0, 4);
@@ -133,18 +133,19 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
         }
     }
 
-    public int ExSkillLevel { get; set; } //Ex½ºÅ³ ·¹º§ //Todo: ½ºÅ³ ·¹º§¿¡ µû¶ó ½ºÅ³ °è¼ö Àû¿ë½ÃÅ°±â, ½ÇÁ¦ ÀÎ°ÔÀÓ¿¡¼­ ½ºÅ³ ·¹º§¿¡ µû¶ó È¿°ú ´Ş¶óÁö°Ô ÇÏ±â.
-    public int PassiveSkillLevel { get; set; } //ÆĞ½Ãºê ½ºÅ³ ·¹º§
+
+    public int ExSkillLevel { get; set; } //ExìŠ¤í‚¬ ë ˆë²¨ //Todo: ìŠ¤í‚¬ ë ˆë²¨ì— ë”°ë¼ ìŠ¤í‚¬ ê³„ìˆ˜ ì ìš©ì‹œí‚¤ê¸°, ì‹¤ì œ ì¸ê²Œì„ì—ì„œ ìŠ¤í‚¬ ë ˆë²¨ì— ë”°ë¼ íš¨ê³¼ ë‹¬ë¼ì§€ê²Œ í•˜ê¸°
+    public int PassiveSkillLevel { get; set; } //íŒ¨ì‹œë¸Œ ìŠ¤í‚¬ ë ˆë²¨
 
     public int weaponTier;
     public int armorTier;
 
-    public int weaponEnhance { get; set; } //¹«±â °­È­Á¤µµ
-    public int armorEnhance { get; set; } //¹æ¾î±¸ °­È­Á¤µµ
-    public int affectionLevel { get; set; } //È£°¨µµ ·¹º§
+    public int weaponEnhance { get; set; } //ë¬´ê¸° ê°•í™”ì •ë„
+    public int armorEnhance { get; set; } //ë°©ì–´êµ¬ ê°•í™”ì •ë„
+    public int affectionLevel { get; set; } //í˜¸ê°ë„ ë ˆë²¨
 
 
-    //CharacterGrowth¿¡ CharacterÀ» ³Ö°í ¼±ÅÃÁßÀÎ Æ¯¼º°ú Å¬·¡½º¸¦ CharacterDataÀÇ SO¿Í ¿¬°á½ÃÅ°´Â ¸Ş¼­µå.
+    //CharacterGrowthì— Characterì„ ë„£ê³  ì„ íƒì¤‘ì¸ íŠ¹ì„±ê³¼ í´ë˜ìŠ¤ë¥¼ CharacterDataì˜ SOì™€ ì—°ê²°ì‹œí‚¤ëŠ” ë©”ì„œë“œ.
     public void Init(Character _character)
     {
         character = _character;
@@ -159,11 +160,13 @@ public class CharacterGrowth  //Ä³¸¯ÅÍÀÇ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º / ±âÅ¸ µîµî Ä³¸¯Å
         armor = character.characterData.armor[armorTier];
     }
 
-    //ÃÖÃÊ ÃÊ±âÈ­ ¸Ş¼­µå
-    //Ä³¸¯ÅÍ¸¦ °èÁ¤¿¡¼­ ÃÖÃÊ·Î È¹µæ ½Ã ÀÌ ¸Ş¼­µå¸¦ È£ÃâÇÒ °Í.
+    //ìµœì´ˆ ì´ˆê¸°í™” ë©”ì„œë“œ
+    //ìºë¦­í„°ë¥¼ ê³„ì •ì—ì„œ ìµœì´ˆë¡œ íšë“ ì‹œ ì´ ë©”ì„œë“œë¥¼ í˜¸ì¶œí•  ê²ƒ.
     public void InitialInit() 
     {
-        star = character.characterData.basicStar; //Ä³¸¯ÅÍÀÇ ¼º±ŞÀº È¹µæ ½Ã ±âº» ¼º±Ş. //ÃÖ´ë ·¹º§Àº ±âº» ¼º±Ş¿¡ ÀÇÇØ Á¤ÇØÁü.
+
+        star = character.characterData.basicStar; //ìºë¦­í„°ì˜ ì„±ê¸‰ì€ íšë“ ì‹œ ê¸°ë³¸ ì„±ê¸‰. //ìµœëŒ€ ë ˆë²¨ì€ ê¸°ë³¸ ì„±ê¸‰ì— ì˜í•´ ì •í•´ì§.
+
         Level = 1;
         ExSkillLevel = 1;
         PassiveSkillLevel = 1; 
