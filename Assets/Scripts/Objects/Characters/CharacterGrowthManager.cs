@@ -346,7 +346,8 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
         }
     }//임시로 구조만 만들어둔 스킬 레벨업 메서드, //Todo: 스킬 레벨업 재화 소모, 스킬 레벨업 시 효과 등
 
-    
+
+    /* 호감도 메서드는 주석 처리. 시간이 남는대로 작업. 
     public bool AffectionLevelUp(int ingredient)
     {
         if (ingredient >= character.characterGrowth.affectionLevel && character.characterGrowth.affectionLevel < 99)
@@ -360,4 +361,5 @@ public class CharacterGrowthManager //캐릭터 성장 / 특성 및 클래스 선택 / 스탯 �
             return false;
         }
     }//임시로 구조만 만들어둔 호감도 레벨업 메서드, //Todo: 호감도 레벨업 재화 소모, 호감도 증가 시 추가 효과 등.
+    */
 }
