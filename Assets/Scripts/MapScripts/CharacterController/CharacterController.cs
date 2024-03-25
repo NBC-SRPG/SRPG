@@ -75,6 +75,17 @@ public class CharacterController : MonoBehaviour
 
     private void Update()
     {
+        if (curSelectedCharacter && curSelectedCharacter.isDead)
+        {
+            curSelectedCharacter = null;
+            ChangePhase(PlayerPhase.CharacterSelect);
+        }
+
+        if(curTargetCharacter && curTargetCharacter.isDead)
+        {
+            curTargetCharacter = null;
+        }
+
         switch (phase)
         {
             case PlayerPhase.CharacterSetting:
@@ -420,9 +431,9 @@ public class CharacterController : MonoBehaviour
         if (curTargetCharacter != null)
         {
             canClick = false;
-            curSelectedCharacter.OnEndAttacking += EndAttack;
+            AnimationController.instance.onAnimationEnd += EndAttack;
 
-            curSelectedCharacter.AttackTarget(curTargetCharacter);
+            curSelectedCharacter.SetAttackTarget(curTargetCharacter);
         }
     }
 
@@ -434,17 +445,23 @@ public class CharacterController : MonoBehaviour
             ResetTileOnMove(surroundPath);
             Ui.ResetButtons();
 
-            curSelectedCharacter.OnEndWalk += EndMove;
+            AnimationController.instance.onAnimationEnd += EndMove;
 
-            StartCoroutine(curSelectedCharacter.MoveCharacter());
+            curSelectedCharacter.MoveCharacter();
         }
     }
 
     private void EndMove()// 캐릭터의 이동이 끝났을 시
     {
-        curSelectedCharacter.OnEndWalk -= EndMove;
-
         canClick = true;
+
+        if(curSelectedCharacter == null)
+        {
+            return;
+        }
+
+        AnimationController.instance.onAnimationEnd -= EndMove;
+
         ChangePhase(PlayerPhase.MoveandAttack);
 
         if (!curSelectedCharacter.canActing)
@@ -456,9 +473,15 @@ public class CharacterController : MonoBehaviour
 
     private void EndAttack()// 캐릭터의 공격이 끝났을 시
     {
-        curSelectedCharacter.OnEndAttacking -= EndAttack;
-
         canClick = true;
+
+        if (curSelectedCharacter == null)
+        {
+            return;
+        }
+
+        AnimationController.instance.onAnimationEnd -= EndAttack;
+
         ChangePhase(PlayerPhase.MoveandAttack);
 
         if (!curSelectedCharacter.canActing)

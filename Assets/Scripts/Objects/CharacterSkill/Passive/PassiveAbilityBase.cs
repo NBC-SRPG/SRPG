@@ -51,6 +51,11 @@ public class PassiveAbilityBase
 
     }
 
+    public virtual void OnTakeAttacked(CharacterBase enemy)// 공격 타겟이 되었을 때
+    {
+
+    }
+
     public virtual void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
     {
 
@@ -89,25 +94,21 @@ public class PassiveAbilityBase
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 {
-    public override void OnEndTurn()
-    {
-        base.OnEndTurn();
-
-        character.doCounterAttack = false;
-    }
-
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {
         base.OnEnemyPassesMe(enemy);
-        enemy.BlockMoving();//ZOC 테스트 
 
-        AnimationController.instance.StartDefendAnimation(enemy, character);
+        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        enemy.BlockMoving();//ZOC 테스트 
     }
 
-    public override void OnTakeDamage(CharacterBase enemy)// 반격 테스트
+    public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
     {
-        base.OnTakeDamage(enemy);
+        base.OnTakeAttacked(enemy);
 
-        character.doCounterAttack = true;
+        if (!character.isDead)
+        {
+            character.CounterAttack(enemy);
+        }
     }
 }

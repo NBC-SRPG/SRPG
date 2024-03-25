@@ -2,7 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.TextCore.Text;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BattleManager
@@ -18,7 +21,7 @@ public class BattleManager
     public event Action TurnStart;
 
     public bool isShowAnimation;
-    private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
+    //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
@@ -53,12 +56,25 @@ public class BattleManager
     //-----------------------------------------------------------------------------------------------------------------------
     //전투 관련 함수들
 
+    private int CheckAttackDamage(CharacterBase attacker, CharacterBase victim)
+    {
+        attacker.OnStartAttack(victim);
+
+        //------
+        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+        //다른 클라이언트는 서버가 준 데미지를 받아옴
+        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
+
+        return damage;
+    }
+
     //---------------------------------------------------------------------------
     // 이동 관련
 
-    // 애니메이션 처리하는 동안 딜레이를 주기 위해 코루틴으로 작성
     // 서버에 올라가면 어떻게 될지 모르겠음
-    public IEnumerator OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
+    public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
         if (!curCharacter.CheckEnenmy(standingCharacter))// 아군 위를 지나갔을 때
         {
@@ -71,8 +87,7 @@ public class BattleManager
 
             if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
             {
-                curCharacter.AttackTarget(standingCharacter);
-                yield return animationWait;// 애니메이션이 끝날 때 까지 대기
+                curCharacter.SetAttackTarget(standingCharacter);
             }
 
             if (!curCharacter.isDead && !standingCharacter.isDead)
@@ -82,66 +97,60 @@ public class BattleManager
         }
     }
 
+
     //---------------------------------------------------------------------------
     // 공격 관련
 
-    public IEnumerator Attack(CharacterBase attacker, CharacterBase victim)// 공격
+    public void Attack(CharacterBase attacker, CharacterBase victim)
     {
-        attacker.OnStartAttack(victim);
+        attacker.AttackTarget(victim);
 
-        //------
-        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
-        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
-        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
-        //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
-        //------
-        
-        attacker.characterAnim.SetDamage(damage);
-
-        victim.health.TakeDamage(damage);
-        Debug.Log("take damage : " + damage);
-
-        attacker.OnAttackSuccess(victim, damage);
-
-        victim.OnTakeDamage(attacker);
-        if (!victim.isDead && victim.doCounterAttack)// 피해를 받은 캐릭터가 반격이 활성화 되어 있다면,
-        {
-            victim.CounterAttack(attacker);
-        }
-
-        AnimationController.instance.StartAttackAnimation(attacker, victim);
-        yield return animationWait;
-
-        attacker.OnEndAttack(victim);
+        victim.TakeAttacked(attacker);
 
         if (victim.isDead)
         {
             victim.OnDieInBattle(attacker);
         }
 
+        AnimationController.instance.StartAnimationQueue();
     }
 
-    public IEnumerator CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
+    //-----------------코드 어떤식으로 나눌지 고민 중
+    public void DoAttack(CharacterBase attacker, CharacterBase victim)// 공격
     {
-        attacker.OnStartAttack(victim);
+        int damage = CheckAttackDamage(attacker, victim);
 
-        //------
-        //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
-        //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
-        //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
-        //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
-        //------
+        //--------------------------------------------------
 
-        attacker.characterAnim.SetDamage(damage);
+        victim.characterAnim.SetDamage(damage);
+
+        AnimationController.instance.EnqueueAttackAnimation(attacker, victim);
 
         victim.health.TakeDamage(damage);
 
         attacker.OnAttackSuccess(victim, damage);
 
         victim.OnTakeDamage(attacker);
-        yield return animationWait;
+
+        attacker.OnEndAttack(victim);
+
+    }
+
+    public void CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
+    {
+        int damage = CheckAttackDamage(attacker, victim);
+
+        //--------------------------------------------------
+
+        victim.characterAnim.SetDamage(damage);
+
+        AnimationController.instance.EnqueueCounterAttackAnimation(attacker, victim);
+
+        victim.health.TakeDamage(damage);
+
+        attacker.OnAttackSuccess(victim, damage);
+
+        victim.OnTakeDamage(attacker);
 
         attacker.OnEndAttack(victim);
 
@@ -150,7 +159,7 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 스킬 관련
 
-    public IEnumerator UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
     {
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
@@ -160,9 +169,52 @@ public class BattleManager
             Debug.Log(t + " take skill");
         }
 
-        yield return animationWait;// 애니메이션이 끝날 때 까지 대기
-
         skillUser.OnEndSkill(target);
+    }
+
+    public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
+    {
+        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
+
+        foreach (CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            int damage = skillUser.curCharacterSkill.SkillFigure - victim.character.Defence;
+            //------
+
+            victim.characterAnim.SetDamage(damage);
+
+            victim.health.TakeDamage(damage);
+
+            skillUser.OnSkillAttackSuccess(victim, damage);
+        }
+
+    }
+
+    public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
+    {
+        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
+
+        foreach (CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            int figure = skillUser.curCharacterSkill.SkillFigure;
+            //------
+
+            victim.characterAnim.SetDamage(figure);
+
+            victim.health.HealHealth(figure);
+
+            skillUser.OnSkillAttackSuccess(victim, figure);
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -170,6 +222,11 @@ public class BattleManager
 
     public void PlayerTurnEnd()//플레이어 턴 끝
     {
+        foreach (CharacterBase characters in charactersInBattle)
+        {
+            characters.OnEndPlayerTurn();
+        }
+
         nowPlayerNum++;
 
         if(nowPlayerNum >= players.Count)

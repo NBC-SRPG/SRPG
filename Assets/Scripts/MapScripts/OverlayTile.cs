@@ -63,7 +63,6 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             attackRangeTile.SetActive(true);
-            defaultTile?.SetActive(!attackRangeTile.activeSelf);
         }
     }
 

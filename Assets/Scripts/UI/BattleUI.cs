@@ -2,11 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 public class BattleUI : UIBase
 {
+    private enum GameObjects
+    {
+        TextPool
+    }
+
     private enum Buttons
     {
         CancelButton,
@@ -37,6 +44,7 @@ public class BattleUI : UIBase
     public event Action OnClickSkillConFirmButton;
 
     public VirtualJoyStick joyStick;
+    public DamageTextPool textPool;
 
     private void Start()
     {
@@ -57,7 +65,7 @@ public class BattleUI : UIBase
         //BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        //BindObject(typeof(GameObjects));
+        BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.CancelButton).onClick.AddListener(OnClickCancel);
@@ -70,6 +78,9 @@ public class BattleUI : UIBase
 
         //조이스틱 가져오기
         joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
+
+        //텍스트풀 가져오기
+        textPool = GetObject((int)GameObjects.TextPool).GetComponent<DamageTextPool>();
 
         RefreshUI();
     }
@@ -171,4 +182,47 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.SkillConFirmButton).interactable = isTarget;
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------
+    //데미지 표기
+
+    private TextMeshPro ShowText(Transform transform)
+    {
+        GameObject obj;
+        TextMeshPro text;
+
+        obj = textPool.GetText("BattleText");
+        text = obj.GetComponentInChildren<TextMeshPro>();
+
+        obj.gameObject.SetActive(true);
+
+        obj.transform.position = new Vector2(transform.position.x, transform.position.y + 2f);
+
+        return text;
+    }
+
+    public void ShowDamageText(int damage, Transform transform, bool isHeal = false)
+    {
+        TextMeshPro text = ShowText(transform);
+
+        text.text = damage.ToString();
+        if (isHeal)
+        {
+            text.color = Color.green;
+        }
+    }
+
+
+    public void ShowCounterText(Transform transform)
+    {
+        TextMeshPro text = ShowText(transform);
+
+        text.text = "Counter";
+    }
+
+    public void ShowDefendText(Transform transform)
+    {
+        TextMeshPro text = ShowText(transform);
+
+        text.text = "Blocked";
+    }
 }
