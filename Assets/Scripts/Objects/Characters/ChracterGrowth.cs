@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Search;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Constants;
 
@@ -11,8 +9,8 @@ public class CharacterGrowth : MonoBehaviour
     private Character character;
 
     //'현재 선택중인 특성 번호' ( 0 = None )
-    // 이 변수들을 설정해 배열의 index 번호를 지정한다.
     // 특성1은 30레벨에 해금 -> 해금 시 바로 찍혀있음
+    //이 변수들을 설정해 배열의 index 번호를 지정한다.
     public int selectTalent_Tier2 { get; private set; }
     public int selectTalent_Tier3 { get; private set; }
     public int selectSuperialClass { get; private set; }
@@ -99,7 +97,7 @@ public class CharacterGrowth : MonoBehaviour
 
     //최초 초기화 메서드
     //캐릭터를 계정에서 최초로 획득 시 이 메서드를 호출할 것.
-    public void InitialInit()
+    public void InitialInit() 
     {
         star = character.characterData.defaltStar; //캐릭터의 성급은 획득 시 기본 성급.
         Level = 1;
@@ -111,7 +109,6 @@ public class CharacterGrowth : MonoBehaviour
         affectionLevel = 1;
     }
 
-    /*
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public bool SelectTalent_tier2(int select)
     {
@@ -221,8 +218,8 @@ public class CharacterGrowth : MonoBehaviour
         }
         else
         {
-            return 0;
             //돌파 요건 미충족.
+            return 0;
         }
     }
 
