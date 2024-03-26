@@ -15,6 +15,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterCamera;
     [SerializeField] private CinemachineVirtualCamera followingTileCamera;
+    [SerializeField] private CinemachineVirtualCamera followingCharacterGroupCamera;
 
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
 
@@ -47,6 +48,8 @@ public class CameraController : MonoBehaviour
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
+
+        ResetCamera();
     }
 
     private void Update()
@@ -56,6 +59,7 @@ public class CameraController : MonoBehaviour
             MoveCamera();
             followingCharacterCamera.transform.position = PrimeCamera.position;
             followingTileCamera.transform.position = PrimeCamera.position;
+            followingCharacterGroupCamera.transform.position = PrimeCamera.position;
         }
 
         if(PrimeCamera != mainCamera.transform)
@@ -106,6 +110,7 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 5;
         followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 10;
+        followingCharacterGroupCamera.Priority = 5;
 
         PrimeCamera = followingCharacterCamera.transform;
 
@@ -118,6 +123,7 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 5;
         followingTileCamera.Priority = 10;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 5;
 
         PrimeCamera = followingTileCamera.transform;
 
@@ -128,12 +134,13 @@ public class CameraController : MonoBehaviour
     public void SetCameraOnSelected()
     {
         mainCamera.Priority = 5;
-        followingTileCamera.Priority = 10;
+        followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 10;
 
-        PrimeCamera = followingTileCamera.transform;
+        PrimeCamera = followingCharacterGroupCamera.transform;
 
-        followingTileCamera.Follow = followingTargetGroup.transform;
+        followingCharacterGroupCamera.Follow = followingTargetGroup.transform;
     }
 
     //그룹 카메라에 목표물 추가
@@ -159,6 +166,14 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public void ResetGroup()
+    {
+        for(int i = 0; i < followingTargetGroup.m_Targets.Length; i++)
+        {
+            followingTargetGroup.RemoveMember(followingTargetGroup.m_Targets[i].target);
+        }
+    }
+
     public void ResetCamera()// 카메라 초기화
     {
         canMove = true;
@@ -166,11 +181,12 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 10;
         followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 5;
 
         followingCharacterCamera.Follow = null;
         followingTileCamera.Follow = null;
+        followingCharacterGroupCamera.Follow = null;
 
         PrimeCamera = mainCamera.transform;
-
     }
 }

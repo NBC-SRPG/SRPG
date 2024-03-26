@@ -180,6 +180,7 @@ public class BattleManager
         foreach(var t in target)
         {
             t.health.TakeDamage(20);
+            t.health.TakeDamageHealthBar(20);
             Debug.Log(t + " take skill");
         }
 
