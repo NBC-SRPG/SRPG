@@ -11,7 +11,6 @@ public class Character : MonoBehaviour
     public SkillBase skill;
     public PassiveAbilityBase passiveAbility;
 
-
     //캐릭터 스탯 구조 설명: 기본스탯과 Calc 스탯 2종류로 나뉜다.
     //기본 스탯: CharacterSO의 기초 스탯 + 캐릭터 레벨에 의한 성장 스탯이 저장된다. 캐릭터 레벨이 변동될 때마다 값이 바뀐다.
     //Clac 스탯: 기본 스탯을 기반으로 특성, 클래스, 장비로 증가한 스탯을 계산한 1차 결과 스탯. 캐릭터 클래스/스탯/장비가 변동할 때마다 값이 바뀐다. 

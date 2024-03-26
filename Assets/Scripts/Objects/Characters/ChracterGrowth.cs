@@ -10,14 +10,15 @@ public class CharacterGrowth : MonoBehaviour
 {
     private Character character;
 
-    //'ÇöÀç ¼±ÅÃÁßÀÎ Æ¯¼º ¹øÈ£' ( 0 = None )
-    //ÀÌ º¯¼öµéÀ» ¼³Á¤ÇØ ¹è¿­ÀÇ index ¹øÈ£¸¦ ÁöÁ¤ÇÑ´Ù.
+    //'í˜„ì¬ ì„ íƒì¤‘ì¸ íŠ¹ì„± ë²ˆí˜¸' ( 0 = None )
+    // ì´ ë³€ìˆ˜ë“¤ì„ ì„¤ì •í•´ ë°°ì—´ì˜ index ë²ˆí˜¸ë¥¼ ì§€ì •í•œë‹¤.
+    // íŠ¹ì„±1ì€ 30ë ˆë²¨ì— í•´ê¸ˆ -> í•´ê¸ˆ ì‹œ ë°”ë¡œ ì°í˜€ìˆìŒ
     public int selectTalent_Tier2 { get; private set; }
     public int selectTalent_Tier3 { get; private set; }
     public int selectSuperialClass { get; private set; }
 
 
-    //'ÇöÀç ¼±ÅÃ ÁßÀÎ Æ¯¼º ¹øÈ£ÀÇ Æ¯¼º/Å¬·¡½ºÀÇ SO ¸¦ ÂüÁ¶ÇÔ' 
+    //'í˜„ì¬ ì„ íƒ ì¤‘ì¸ íŠ¹ì„± ë²ˆí˜¸ì˜ íŠ¹ì„±/í´ë˜ìŠ¤ì˜ SO ë¥¼ ì°¸ì¡°í•¨' 
     public TalentSO talent_Tier1 { get; private set; }
     public TalentSO talent_Tier2 { get; private set; }
     public TalentSO talent_Tier3 { get; private set; }
@@ -26,14 +27,14 @@ public class CharacterGrowth : MonoBehaviour
     public ClassSO superiorClass { get; private set; }
 
 
-    //·¹º§, ÃÖ´ë·¹º§, °æÇèÄ¡, ÃÖ´ë °æÇèÄ¡
+    //ë ˆë²¨, ìµœëŒ€ë ˆë²¨, ê²½í—˜ì¹˜, ìµœëŒ€ ê²½í—˜ì¹˜
     private int level;
     public int Level
     {
         get { return level; }
         set
         {
-            if (Managers.AccountData.playerData.Level >= maxLevel) 
+            if (Managers.AccountData.playerData.Level >= maxLevel)
             {
                 level = math.clamp(value, 1, maxLevel);
             }
@@ -42,8 +43,8 @@ public class CharacterGrowth : MonoBehaviour
                 level = math.clamp(value, 1, Managers.AccountData.playerData.Level);
             }
             ApplyGrowStat();
-            ApplyAdditionStat(); //·¹º§¾÷ ½Ã ¼ºÀå ½ºÅÈ ¹× Æ¯¼º/Å¬·¡½º ½ºÅÈ ¸®ÇÁ·¹½Ã.
-            maxExp = (level * 100 + maxLevel * level * 20); //ÀÓÀÇ·Î ÃÖ´ë °æÇèÄ¡°ª(·¹º§¾÷ÇÏ´Âµ¥ ÇÊ¿äÇÑ °æÇèÄ¡ °ª)À» ¼³Á¤. 
+            ApplyAdditionStat(); //ë ˆë²¨ì—… ì‹œ ì„±ì¥ ìŠ¤íƒ¯ ë° íŠ¹ì„±/í´ë˜ìŠ¤ ìŠ¤íƒ¯ ë¦¬í”„ë ˆì‹œ.
+            maxExp = (level * 100 + maxLevel * level * 20); //ì„ì˜ë¡œ ìµœëŒ€ ê²½í—˜ì¹˜ê°’(ë ˆë²¨ì—…í•˜ëŠ”ë° í•„ìš”í•œ ê²½í—˜ì¹˜ ê°’)ì„ ì„¤ì •. 
         }
     }
 
@@ -53,13 +54,13 @@ public class CharacterGrowth : MonoBehaviour
     public int Exp
     {
         get { return exp; }
-        private set //°æÇèÄ¡ ¼³Á¤ÀÚ¿¡ ÀÚÃ¼ÀûÀ¸·Î ·¹º§¾÷ ±â´ÉÀ» ¹èÄ¡Çß½À´Ï´Ù.
+        set //ê²½í—˜ì¹˜ ì„¤ì •ìì— ìì²´ì ìœ¼ë¡œ ë ˆë²¨ì—… ê¸°ëŠ¥ì„ ë°°ì¹˜í–ˆìŠµë‹ˆë‹¤.
         {
             exp = value;
-            while (exp >= maxExp && level < maxLevel && level < Managers.AccountData.playerData.Level)  //·¹º§ÀÌ °èÁ¤ ·¹º§À» ³ÑÁö ¸øÇÏµµ·Ï Á¶°Ç Ãß°¡
+            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //ë ˆë²¨ì´ ê³„ì • ë ˆë²¨ì„ ë„˜ì§€ ëª»í•˜ë„ë¡ ì¡°ê±´ ì¶”ê°€
             {
                 exp -= maxExp;
-                level += 1;
+                Level += 1;
             }
             exp = math.clamp(exp, 0, maxExp);
         }
@@ -67,46 +68,55 @@ public class CharacterGrowth : MonoBehaviour
 
     public int maxExp { get; private set; }
 
-    public Star star { get; private set; } //¼º±Ş
+    public Star star { get; private set; } //ì„±ê¸‰
 
-    public int ExSkillLevel { get; private set; } //Ex½ºÅ³ ·¹º§ //Todo: ½ºÅ³ ·¹º§¿¡ µû¶ó ½ºÅ³ °è¼ö Àû¿ë½ÃÅ°±â, ½ÇÁ¦ ÀÎ°ÔÀÓ¿¡¼­ ½ºÅ³ ·¹º§¿¡ µû¶ó È¿°ú ´Ş¶óÁö°Ô ÇÏ±â.
-    public int PassiveSkillLevel { get; private set; } //ÆĞ½Ãºê ½ºÅ³ ·¹º§
+    public int ExSkillLevel { get; private set; } //ExìŠ¤í‚¬ ë ˆë²¨ //Todo: ìŠ¤í‚¬ ë ˆë²¨ì— ë”°ë¼ ìŠ¤í‚¬ ê³„ìˆ˜ ì ìš©ì‹œí‚¤ê¸°, ì‹¤ì œ ì¸ê²Œì„ì—ì„œ ìŠ¤í‚¬ ë ˆë²¨ì— ë”°ë¼ íš¨ê³¼ ë‹¬ë¼ì§€ê²Œ í•˜ê¸°.
+    public int PassiveSkillLevel { get; private set; } //íŒ¨ì‹œë¸Œ ìŠ¤í‚¬ ë ˆë²¨
 
-    public int weaponLevel { get; private set; } //¹«±â ·¹º§
-    public int armorLevel { get; private set; } //¹æ¾î±¸ ·¹º§
-    public int affectionLevel { get; private set; } //È£°¨µµ ·¹º§
+    public int weaponLevel { get; private set; } //ë¬´ê¸° ë ˆë²¨
+    public int armorLevel { get; private set; } //ë°©ì–´êµ¬ ë ˆë²¨
+    public int affectionLevel { get; private set; } //í˜¸ê°ë„ ë ˆë²¨
 
 
-    //CharacterGrowth¿¡ CharacterÀ» ³Ö°í ¼±ÅÃÁßÀÎ Æ¯¼º°ú Å¬·¡½º¸¦ CharacterDataÀÇ SO¿Í ¿¬°á½ÃÅ°´Â ¸Ş¼­µå.
+    //CharacterGrowthì— Characterì„ ë„£ê³  ì„ íƒì¤‘ì¸ íŠ¹ì„±ê³¼ í´ë˜ìŠ¤ë¥¼ CharacterDataì˜ SOì™€ ì—°ê²°ì‹œí‚¤ëŠ” ë©”ì„œë“œ.
     public void Init(Character _character)
     {
         character = _character;
+        // TODO
+        // í…ŒìŠ¤íŠ¸ ë°ì´í„°
+        // talent_Tierì—ëŠ” DBì—ì„œ êº¼ë‚´ì™€ì„œ ë„£ê¸°, DBì— ì—†ì„ ë• null
         talent_Tier1 = character.characterData.talent_Tier1;
-        talent_Tier2 = character.characterData.talent_Tier2[selectTalent_Tier2 -1];
-        talent_Tier3 = character.characterData.talent_Tier3[selectTalent_Tier3 -1];
+        talent_Tier2 = null;
+        talent_Tier3 = null;
+        //talent_Tier1 = character.characterData.talent_Tier1;
+        // TODO -1 ì¸ë±ìŠ¤ì— ì ‘ê·¼í•˜ë©´ ì˜¤ë¥˜ -> ë‹¤ë¥¸ ë°©ë²• ìƒê°í•´ì•¼í•¨
+        //talent_Tier2 = character.characterData.talent_Tier2[selectTalent_Tier2 - 1];
+        //talent_Tier3 = character.characterData.talent_Tier3[selectTalent_Tier3 - 1];
 
         basicClass = character.characterData.basicClass;
-        superiorClass = character.characterData.superiorClass[selectSuperialClass -1];
+        //superiorClass = character.characterData.superiorClass[selectSuperialClass - 1];
     }
 
-    //ÃÖÃÊ ÃÊ±âÈ­ ¸Ş¼­µå
-    //Ä³¸¯ÅÍ¸¦ °èÁ¤¿¡¼­ ÃÖÃÊ·Î È¹µæ ½Ã ÀÌ ¸Ş¼­µå¸¦ È£ÃâÇÒ °Í.
-    public void InitialInit() 
+    //ìµœì´ˆ ì´ˆê¸°í™” ë©”ì„œë“œ
+    //ìºë¦­í„°ë¥¼ ê³„ì •ì—ì„œ ìµœì´ˆë¡œ íšë“ ì‹œ ì´ ë©”ì„œë“œë¥¼ í˜¸ì¶œí•  ê²ƒ.
+    public void InitialInit()
     {
-        star = character.characterData.defaltStar; //Ä³¸¯ÅÍÀÇ ¼º±ŞÀº È¹µæ ½Ã ±âº» ¼º±Ş.
+        star = character.characterData.defaltStar; //ìºë¦­í„°ì˜ ì„±ê¸‰ì€ íšë“ ì‹œ ê¸°ë³¸ ì„±ê¸‰.
         Level = 1;
-        maxLevel = (int)star; //ÃÖ´ë ·¹º§Àº ±âº» ¼º±Ş¿¡ ÀÇÇØ Á¤ÇØÁü.
+        maxLevel = (int)star; //ìµœëŒ€ ë ˆë²¨ì€ ê¸°ë³¸ ì„±ê¸‰ì— ì˜í•´ ì •í•´ì§.
         weaponLevel = 1;
         armorLevel = 1;
         ExSkillLevel = 1;
-        PassiveSkillLevel = 1; 
+        PassiveSkillLevel = 1;
         affectionLevel = 1;
     }
 
-    //2Æ¼¾î Æ¯¼º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ
+    /*
+    //2í‹°ì–´ íŠ¹ì„± ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨
     public bool SelectTalent_tier2(int select)
     {
-        if (select > 0 && select <= character.characterData.talent_Tier2.Length - 1)
+        //1 or 2 
+        if (select > 0 && select <= character.characterData.talent_Tier2.Length)
         {
             if (Level >= 50)
             {
@@ -116,21 +126,34 @@ public class CharacterGrowth : MonoBehaviour
             }
             else
             {
-                Debug.Log("2Æ¼¾î Æ¯¼º ¼³Á¤ Á¶°ÇÀ» ÃæÁ·ÇÏÁö ¸øÇß½À´Ï´Ù.");
+                Debug.Log("2í‹°ì–´ íŠ¹ì„± ì„¤ì • ì¡°ê±´ì„ ì¶©ì¡±í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
                 return false;
             }
         }
         else
         {
-            Debug.Log("Àß¸øµÈ Á¢±Ù°ªÀÔ´Ï´Ù.");
+            Debug.Log("ì˜ëª»ëœ ì ‘ê·¼ê°’ì…ë‹ˆë‹¤.");
             return false;
         }
     }
+    */
 
-    //3Æ¼¾î Æ¯¼º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ
+    //2í‹°ì–´ íŠ¹ì„± ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨
+    public void SelectTalent_tier2(TalentSO selectTalent)
+    {
+        talent_Tier2 = selectTalent;
+        ApplyAdditionStat();
+    }
+    public void SelectTalent_tier3(TalentSO selectTalent)
+    {
+        talent_Tier3 = selectTalent;
+        ApplyAdditionStat();
+    }
+
+    //3í‹°ì–´ íŠ¹ì„± ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨
     public bool SelectTalent_tier3(int select)
     {
-        if (select > 0 && select <= character.characterData.talent_Tier3.Length - 1)
+        if (select > 0 && select <= character.characterData.talent_Tier3.Length)
         {
             if (level >= 70 && selectTalent_Tier2 != 0)
             {
@@ -140,18 +163,18 @@ public class CharacterGrowth : MonoBehaviour
             }
             else
             {
-                Debug.Log("3Æ¼¾î Æ¯¼º ¼³Á¤ Á¶°ÇÀ» ÃæÁ·ÇÏÁö ¸øÇß½À´Ï´Ù.");
+                Debug.Log("3í‹°ì–´ íŠ¹ì„± ì„¤ì • ì¡°ê±´ì„ ì¶©ì¡±í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
                 return false;
             }
         }
         else
         {
-            Debug.Log("Àß¸øµÈ Á¢±Ù°ªÀÔ´Ï´Ù.");
+            Debug.Log("ì˜ëª»ëœ ì ‘ê·¼ê°’ì…ë‹ˆë‹¤.");
             return false;
         }
     }
 
-    //»óÀ§ Å¬·¡½º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ.
+    //ìƒìœ„ í´ë˜ìŠ¤ ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨.
     public bool SelectSuperialClass(int select)
     {
         if (select > 0 && select <= character.characterData.superiorClass.Length - 1)
@@ -164,74 +187,74 @@ public class CharacterGrowth : MonoBehaviour
             }
             else
             {
-                Debug.Log("»óÀ§ Å¬·¡½º ¼³Á¤ Á¶°ÇÀ» ÃæÁ·ÇÏÁö ¸øÇß½À´Ï´Ù.");
+                Debug.Log("ìƒìœ„ í´ë˜ìŠ¤ ì„¤ì • ì¡°ê±´ì„ ì¶©ì¡±í•˜ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.");
                 return false;
             }
         }
         else
         {
-            Debug.Log("Àß¸øµÈ Á¢±Ù°ªÀÔ´Ï´Ù.");
+            Debug.Log("ì˜ëª»ëœ ì ‘ê·¼ê°’ì…ë‹ˆë‹¤.");
             return false;
         }
     }
 
-    public int LimitBreak(int piece) //ÀÓ½Ã·Î ¼³Á¤ÇÑ ÇÑ°è µ¹ÆÄ ¸Ş¼­µå. Ä³¸¯ÅÍ Á¶°¢ °¹¼ö Ã¼Å© ¹× Á¶°¢ ¼Ò¸ğ ±â´É ±¸Çö ÇÊ¿ä.
-                                     //Todo: Á¶°¢ ¾ÆÀÌÅÛ µ¥ÀÌÅÍ¸¦ ¹Ş¾Æ¿Í¼­ °¹¼ö¸¦ Ã¼Å©ÇÏ°í, µ¹ÆÄ½Ã °¹¼ö Â÷°¨ÇÏµµ·Ï ±â´É ±¸ÇöÇÏ±â.
+    public int LimitBreak(int piece) //ì„ì‹œë¡œ ì„¤ì •í•œ í•œê³„ ëŒíŒŒ ë©”ì„œë“œ. ìºë¦­í„° ì¡°ê° ê°¯ìˆ˜ ì²´í¬ ë° ì¡°ê° ì†Œëª¨ ê¸°ëŠ¥ êµ¬í˜„ í•„ìš”.
+                                     //Todo: ì¡°ê° ì•„ì´í…œ ë°ì´í„°ë¥¼ ë°›ì•„ì™€ì„œ ê°¯ìˆ˜ë¥¼ ì²´í¬í•˜ê³ , ëŒíŒŒì‹œ ê°¯ìˆ˜ ì°¨ê°í•˜ë„ë¡ ê¸°ëŠ¥ êµ¬í˜„í•˜ê¸°.
     {
-        if (star == Star.LimitBreak_4) //ÇÑ°è µ¹ÆÄ°¡ ÀÌ¹Ì ÃÖ´ëÄ¡¸é µ¹ÆÄ ºÒ°¡´É.
+        if (star == Star.LimitBreak_4) //í•œê³„ ëŒíŒŒê°€ ì´ë¯¸ ìµœëŒ€ì¹˜ë©´ ëŒíŒŒ ë¶ˆê°€ëŠ¥.
         {
             return 0;
         }
-        if (level == maxLevel && piece >= (int)star + 30) //ÇöÀç Ä³¸¯ÅÍ ·¹º§ÀÌ ÃÖ´ëÄ¡ÀÌ°í, º¸À¯ Á¶°¢ °³¼ö°¡ µ¹ÆÄ ¿ä°Ç°ª ÀÌ»óÀÏ °æ¿ì. (µ¹ÆÄ ¿ä°Ç°ª = ÇöÀç ÃÖ´ë·¹º§ + 30) 
+        if (level == maxLevel && piece >= (int)star + 30) //í˜„ì¬ ìºë¦­í„° ë ˆë²¨ì´ ìµœëŒ€ì¹˜ì´ê³ , ë³´ìœ  ì¡°ê° ê°œìˆ˜ê°€ ëŒíŒŒ ìš”ê±´ê°’ ì´ìƒì¼ ê²½ìš°. (ëŒíŒŒ ìš”ê±´ê°’ = í˜„ì¬ ìµœëŒ€ë ˆë²¨ + 30) 
         {
             int paidPiece = (int)star + 30;
-            if ((int)star <= 70) //ÇöÀç ¼º±ŞÀÌ 5¼º ¹Ì¸¸ÀÏ °æ¿ì, ÃÖ´ë ·¹º§ 10 Áõ°¡.
+            if ((int)star <= 70) //í˜„ì¬ ì„±ê¸‰ì´ 5ì„± ë¯¸ë§Œì¼ ê²½ìš°, ìµœëŒ€ ë ˆë²¨ 10 ì¦ê°€.
             {
                 star = (Star)((int)star + 10);
             }
-            else //ÇöÀç ¼º±ŞÀÌ 5¼º ÀÌ»óÀÏ °æ¿ì, ÃÖ´ë ·¹º§ 5 Áõ°¡.
+            else //í˜„ì¬ ì„±ê¸‰ì´ 5ì„± ì´ìƒì¼ ê²½ìš°, ìµœëŒ€ ë ˆë²¨ 5 ì¦ê°€.
             {
                 star = (Star)((int)star + 5);
             }
             maxLevel = (int)star;
-            return paidPiece; //Â÷°¨ÇØ¾ßÇÏ´Â Á¶°¢ °ªÀ» ¸®ÅÏÇÑ´Ù.
+            return paidPiece; //ì°¨ê°í•´ì•¼í•˜ëŠ” ì¡°ê° ê°’ì„ ë¦¬í„´í•œë‹¤.
         }
         else
         {
-            //µ¹ÆÄ ¿ä°Ç ¹ÌÃæÁ·.
             return 0;
+            //ëŒíŒŒ ìš”ê±´ ë¯¸ì¶©ì¡±.
         }
     }
 
-    public void ApplyGrowStat() //Ä³¸¯ÅÍ ¼ºÀå ½ºÅÈ(·¹º§) Àû¿ë ¸Ş¼­µå. ·¹º§°ªÀÌ ¹Ù²ğ ¶§¸¶´Ù È£ÃâµÈ´Ù. °è»êÇÑ µÚ CharacterÀÇ ±âº» ½ºÅÈ¿¡ ÀúÀåÇÑ´Ù. 
+    public void ApplyGrowStat() //ìºë¦­í„° ì„±ì¥ ìŠ¤íƒ¯(ë ˆë²¨) ì ìš© ë©”ì„œë“œ. ë ˆë²¨ê°’ì´ ë°”ë€” ë•Œë§ˆë‹¤ í˜¸ì¶œëœë‹¤. ê³„ì‚°í•œ ë’¤ Characterì˜ ê¸°ë³¸ ìŠ¤íƒ¯ì— ì €ì¥í•œë‹¤. 
     {
-        //Ä³¸¯ÅÍÀÇ ½ºÅÈ °ªÀ» (±âº» ½ºÅÈ°ª + ·¹º§¿¡ ÀÇÇØ Áõ°¡ÇÑ ¼öÄ¡°ª)À¸·Î ÀúÀåÇÑ´Ù.
-        //°è»ê½Ä : ½ºÅÈ°ª = ¿øº»Ä³¸¯ÅÍÀÇ ±âº» ½ºÅÈ + (¿øº» Ä³¸¯ÅÍÀÇ ¼ºÀå ½ºÅÈ * ÀÌ Ä³¸¯ÅÍ °³Ã¼ÀÇ ÇöÀç ·¹º§)
+        //ìºë¦­í„°ì˜ ìŠ¤íƒ¯ ê°’ì„ (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + ë ˆë²¨ì— ì˜í•´ ì¦ê°€í•œ ìˆ˜ì¹˜ê°’)ìœ¼ë¡œ ì €ì¥í•œë‹¤.
+        //ê³„ì‚°ì‹ : ìŠ¤íƒ¯ê°’ = ì›ë³¸ìºë¦­í„°ì˜ ê¸°ë³¸ ìŠ¤íƒ¯ + (ì›ë³¸ ìºë¦­í„°ì˜ ì„±ì¥ ìŠ¤íƒ¯ * ì´ ìºë¦­í„° ê°œì²´ì˜ í˜„ì¬ ë ˆë²¨)
         character.Health = (character.characterData.health + (character.characterData.growHealth * level));
         character.Attack = (character.characterData.atk + (character.characterData.growAtk * level));
         character.Defence = (character.characterData.def + (character.characterData.growDef * level));
     }
 
-    public void ApplyAdditionStat() //Ä³¸¯ÅÍ Æ¯¼º / Å¬·¡½º / Àåºñ ½ºÅÈ Àû¿ë ¸Ş¼­µå, °è»êÇÑ µÚ °ªÀ» CharacterÀÇ Calc ½ºÅÈ¿¡ ÀúÀåÇÑ´Ù. 
+    public void ApplyAdditionStat() //ìºë¦­í„° íŠ¹ì„± / í´ë˜ìŠ¤ / ì¥ë¹„ ìŠ¤íƒ¯ ì ìš© ë©”ì„œë“œ, ê³„ì‚°í•œ ë’¤ ê°’ì„ Characterì˜ Calc ìŠ¤íƒ¯ì— ì €ì¥í•œë‹¤. 
     {
-        //Æ¯¼ºÀ¸·Î ¿Ã¶ó°¡´Â ´É·ÂÄ¡µéÀÇ ÇÕ°è¸¦ ÀúÀåÇÒ º¯¼ö¸¦ ¼±¾ğÇÑ´Ù.
-        int talentIncrHp_sum = 0; //Ã¼·Â »ó¼ö Áõ°¡Ä¡ ÇÕ°è
-        int talentIncrDef_sum = 0; //¹æ¾î·Â
-        int talentIncrAtk_sum = 0; //°ø°İ·Â
-        int talentIncrMov_sum = 0; //ÀÌµ¿°Å¸®
+        //íŠ¹ì„±ìœ¼ë¡œ ì˜¬ë¼ê°€ëŠ” ëŠ¥ë ¥ì¹˜ë“¤ì˜ í•©ê³„ë¥¼ ì €ì¥í•  ë³€ìˆ˜ë¥¼ ì„ ì–¸í•œë‹¤.
+        int talentIncrHp_sum = 0; //ì²´ë ¥ ìƒìˆ˜ ì¦ê°€ì¹˜ í•©ê³„
+        int talentIncrDef_sum = 0; //ë°©ì–´ë ¥
+        int talentIncrAtk_sum = 0; //ê³µê²©ë ¥
+        int talentIncrMov_sum = 0; //ì´ë™ê±°ë¦¬
 
-        float talentIncrCtr_sum = 0; //Ä¡¸íÅ¸ È®·ü ( ¼öÄ¡ 0.1 = Ä¡¸íÅ¸ È®·ü 10%Áõ°¡)
-        float talentIncrCtd_sum = 0; //Ä¡¸íÅ¸ ÇÇÇØ
-        float talentIncrInfD_sum = 0; //ÁÖ´Â µ¥¹ÌÁö Áõ°¡
-        float talentIncrTakenD_sum = 0; //¹Ş´Â ÇÇÇØ °¨¼Ò
+        float talentIncrCtr_sum = 0; //ì¹˜ëª…íƒ€ í™•ë¥  ( ìˆ˜ì¹˜ 0.1 = ì¹˜ëª…íƒ€ í™•ë¥  10%ì¦ê°€)
+        float talentIncrCtd_sum = 0; //ì¹˜ëª…íƒ€ í”¼í•´
+        float talentIncrInfD_sum = 0; //ì£¼ëŠ” ë°ë¯¸ì§€ ì¦ê°€
+        float talentIncrTakenD_sum = 0; //ë°›ëŠ” í”¼í•´ ê°ì†Œ
 
-        float talentMultiplHp_sum = 0; //Ã¼·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
-        float talentMultiplDef_sum = 0; //¹æ¾î·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
-        float talentMultiplAtk_sum = 0; //°ø°İ·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
+        float talentMultiplHp_sum = 0; //ì²´ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
+        float talentMultiplDef_sum = 0; //ë°©ì–´ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
+        float talentMultiplAtk_sum = 0; //ê³µê²©ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
 
-        if (level >= 30) //·¹º§ÀÌ 30 ÀÌ»óÀÌ¾î¼­ 1Â÷ Æ¯¼ºÀÌ ÇØ±İµÇ¾ú´ÂÁö È®ÀÎÇÑ´Ù.
+        if (level >= 30) //ë ˆë²¨ì´ 30 ì´ìƒì´ì–´ì„œ 1ì°¨ íŠ¹ì„±ì´ í•´ê¸ˆë˜ì—ˆëŠ”ì§€ í™•ì¸í•œë‹¤.
         {
-            //Æ¼¾î1 Æ¯¼ºÀº ÇÏ³ª »ÓÀÌ¹Ç·Î, Ä³¸¯ÅÍSO°¡ °¡Áø 1Æ¼¾î Æ¯¼ºÀÇ Áõ°¡°ªÀ» °¡Á®¿Í ÇÕ°è¿¡ ÀúÀåÇÑ´Ù.
+            //í‹°ì–´1 íŠ¹ì„±ì€ í•˜ë‚˜ ë¿ì´ë¯€ë¡œ, ìºë¦­í„°SOê°€ ê°€ì§„ 1í‹°ì–´ íŠ¹ì„±ì˜ ì¦ê°€ê°’ì„ ê°€ì ¸ì™€ í•©ê³„ì— ì €ì¥í•œë‹¤.
             talentIncrHp_sum = talent_Tier1.increaseHealth;
             talentIncrDef_sum = talent_Tier1.increaseDef;
             talentIncrAtk_sum = talent_Tier1.increaseAtk;
@@ -246,9 +269,9 @@ public class CharacterGrowth : MonoBehaviour
             talentMultiplDef_sum = talent_Tier1.multiplyDef;
             talentMultiplAtk_sum = talent_Tier1.multiplyAtk;
 
-            if (talent_Tier2 != null) //'¼±ÅÃÇÑ 2Æ¼¾î Æ¯¼º'°ªÀÌ 0ÀÌ¶ó¸é Æ¯¼ºÀÌ °³¹æµÇÁö ¾Ê¾Ò°Å³ª ¾ÆÁ÷ ¼±ÅÃÇÏÁö ¾ÊÀº °æ¿ì.
+            if (talent_Tier2 != null) //'ì„ íƒí•œ 2í‹°ì–´ íŠ¹ì„±'ê°’ì´ 0ì´ë¼ë©´ íŠ¹ì„±ì´ ê°œë°©ë˜ì§€ ì•Šì•˜ê±°ë‚˜ ì•„ì§ ì„ íƒí•˜ì§€ ì•Šì€ ê²½ìš°.
             {
-                //selectTrait_Tier °ªÀÌ 0ÀÌ ¾Æ´Ï¶ó¸é Æ¯¼ºÀ» ¼±ÅÃÇß´Ù´Â ¶æ. Ä³¸¯ÅÍSO°¡ °¡Áø '¼±ÅÃ°¡´ÉÇÑ Æ¼¾î 2 Æ¯¼º ¹è¿­'¿¡¼­ ÀÏÄ¡ÇÏ´Â Æ¯¼ºÀ» °¡Á®¿Í ±× Áõ°¡°ªÀ» ÇÕ°è¿¡ ´õÇÑ´Ù. 
+                //selectTrait_Tier ê°’ì´ 0ì´ ì•„ë‹ˆë¼ë©´ íŠ¹ì„±ì„ ì„ íƒí–ˆë‹¤ëŠ” ëœ». ìºë¦­í„°SOê°€ ê°€ì§„ 'ì„ íƒê°€ëŠ¥í•œ í‹°ì–´ 2 íŠ¹ì„± ë°°ì—´'ì—ì„œ ì¼ì¹˜í•˜ëŠ” íŠ¹ì„±ì„ ê°€ì ¸ì™€ ê·¸ ì¦ê°€ê°’ì„ í•©ê³„ì— ë”í•œë‹¤. 
                 talentIncrHp_sum += talent_Tier2.increaseHealth;
                 talentIncrDef_sum += talent_Tier2.increaseDef;
                 talentIncrAtk_sum += talent_Tier2.increaseAtk;
@@ -264,7 +287,7 @@ public class CharacterGrowth : MonoBehaviour
                 talentMultiplAtk_sum += talent_Tier2.multiplyAtk;
                 if (talent_Tier3 != null)
                 {
-                    //3Æ¼¾î Æ¯¼ºµµ ¸¶Âù°¡Áö·Î Àû¿ëµÈ´Ù.
+                    //3í‹°ì–´ íŠ¹ì„±ë„ ë§ˆì°¬ê°€ì§€ë¡œ ì ìš©ëœë‹¤.
                     talentIncrHp_sum += talent_Tier3.increaseHealth;
                     talentIncrDef_sum += talent_Tier3.increaseDef;
                     talentIncrAtk_sum += talent_Tier3.increaseAtk;
@@ -282,7 +305,7 @@ public class CharacterGrowth : MonoBehaviour
             }
         }
 
-        //Å¬·¡½ºÀÇ °æ¿ì ±âº» Å¬·¡½º(1·¹º§ºÎÅÍ Àû¿ë)ÀÇ °ªÀÌ ÀúÀåµÇ°í, »óÀ§ Å¬·¡½º°¡ ÇØ±İµÇ¾ú°í ±× Å¬·¡½º¸¦ ¼±ÅÃÇß´ÂÁö Ã¼Å©ÇØ »óÀ§ Å¬·¡½º ½ºÅÈ Áõ°¡Ä¡¸¦ ÇÕ»êÇÑ´Ù.
+        //í´ë˜ìŠ¤ì˜ ê²½ìš° ê¸°ë³¸ í´ë˜ìŠ¤(1ë ˆë²¨ë¶€í„° ì ìš©)ì˜ ê°’ì´ ì €ì¥ë˜ê³ , ìƒìœ„ í´ë˜ìŠ¤ê°€ í•´ê¸ˆë˜ì—ˆê³  ê·¸ í´ë˜ìŠ¤ë¥¼ ì„ íƒí–ˆëŠ”ì§€ ì²´í¬í•´ ìƒìœ„ í´ë˜ìŠ¤ ìŠ¤íƒ¯ ì¦ê°€ì¹˜ë¥¼ í•©ì‚°í•œë‹¤.
         int classincrHp_sum = basicClass.increaseHealth;
         int classincrDef_sum = basicClass.increaseDef;
         int classincrAtk_sum = basicClass.increaseAtk;
@@ -309,15 +332,15 @@ public class CharacterGrowth : MonoBehaviour
             classIncrInfD_sum += superiorClass.increaseInflictDamage;
             classIncrTakenD_sum += superiorClass.reducedTakenDamage;
 
-            classMultiplHp_sum = superiorClass.multiplyHealth;
-            classMultiplHp_sum = superiorClass.multiplyDef;
-            classMultiplHp_sum = superiorClass.multiplyAtk;
+            classMultiplHp_sum += superiorClass.multiplyHealth;
+            classMultiplDef_sum += superiorClass.multiplyDef;
+            classMultiplAtk_sum += superiorClass.multiplyAtk;
         }
 
-        //Àåºñ ½ºÅÈ.
-        //¹«±â·Î È¹µæÇÒ ¼ö ÀÖ´Â ½ºÅÈ = °ø°İ·Â, Ä¡È®, Ä¡ÇÇ, ÁÖ´Â ÇÇÇØÁõ°¡
-        //¹æ¾î±¸·Î È¹µæÇÒ ¼ö ÀÖ´Â ½ºÅÈ = Ã¼·Â, ¹æ¾î·Â, ¹Ş´Â ÇÇÇØ °¨¼Ò
-        int weaponincrAtk_sum = (character.characterData.weapon.increaseAtk * weaponLevel) ;
+        //ì¥ë¹„ ìŠ¤íƒ¯.
+        //ë¬´ê¸°ë¡œ íšë“í•  ìˆ˜ ìˆëŠ” ìŠ¤íƒ¯ = ê³µê²©ë ¥, ì¹˜í™•, ì¹˜í”¼, ì£¼ëŠ” í”¼í•´ì¦ê°€
+        //ë°©ì–´êµ¬ë¡œ íšë“í•  ìˆ˜ ìˆëŠ” ìŠ¤íƒ¯ = ì²´ë ¥, ë°©ì–´ë ¥, ë°›ëŠ” í”¼í•´ ê°ì†Œ
+        int weaponincrAtk_sum = (character.characterData.weapon.increaseAtk * weaponLevel);
         float weaponMultiplAtk_sum = (character.characterData.weapon.multiplyAtk * weaponLevel);
         float weaponIncrCtr_sum = (character.characterData.weapon.increasecCtr * weaponLevel);
         float weaponIncrCtd_sum = (character.characterData.weapon.increasecCtd * weaponLevel);
@@ -330,9 +353,9 @@ public class CharacterGrowth : MonoBehaviour
         float armorIncrTakenD_sum = (character.characterData.armor.reducedTakenDamage * armorLevel);
 
 
-        //ÀÌ·¸°Ô ÀúÀåÇÑ ÇÕ°èÄ¡¸¦ Calc ½ºÅÈ¿¡ °è»êÇØ¼­ ÀúÀåÇÑ´Ù.
-        //°è»ê½Ä °£·«È÷ : Calc ½ºÅÈ = (±âº» ½ºÅÈ°ª + ÇÕ¿¬»ê »ó¼ö ¼öÄ¡°ªÀÇ ÇÕ) *(°ö¿¬»ê ¹èÀ² ¼öÄ¡°ªÀÇ ÇÕ)
-        //°è»ê½Ä »ó¼¼ : Calc ½ºÅÈ = (int)(  (±âº» ½ºÅÈ°ª + Æ¯¼ºÀ¸·Î Áõ°¡ÇÏ´Â ½ºÅÈ ÇÕ°èÄ¡ + Å¬·¡½º·Î Áõ°¡ÇÏ´Â ½ºÅÈ ÇÕ°èÄ¡) * ( 1 + Æ¯¼ºÀ¸·Î Áõ°¡ÇÏ´Â ½ºÅÈ ¹èÀ² + Å¬·¡½º·Î Áõ°¡ÇÏ´Â ½ºÅÈ ¹èÀ²)  )
+        //ì´ë ‡ê²Œ ì €ì¥í•œ í•©ê³„ì¹˜ë¥¼ Calc ìŠ¤íƒ¯ì— ê³„ì‚°í•´ì„œ ì €ì¥í•œë‹¤.
+        //ê³„ì‚°ì‹ ê°„ëµíˆ : Calc ìŠ¤íƒ¯ = (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + í•©ì—°ì‚° ìƒìˆ˜ ìˆ˜ì¹˜ê°’ì˜ í•©) *(ê³±ì—°ì‚° ë°°ìœ¨ ìˆ˜ì¹˜ê°’ì˜ í•©)
+        //ê³„ì‚°ì‹ ìƒì„¸ : Calc ìŠ¤íƒ¯ = (int)(  (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + íŠ¹ì„±ìœ¼ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ í•©ê³„ì¹˜ + í´ë˜ìŠ¤ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ í•©ê³„ì¹˜) * ( 1 + íŠ¹ì„±ìœ¼ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ ë°°ìœ¨ + í´ë˜ìŠ¤ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ ë°°ìœ¨)  )
         character.CalcHealth = (int)((character.Health + talentIncrHp_sum + classincrHp_sum + armorincrHp_sum) * (1 + talentMultiplHp_sum + classMultiplHp_sum + armorMultiplHp_sum));
         character.CalcDef = (int)((character.Defence + talentIncrDef_sum + classincrDef_sum + armorincrDef_sum) * (1 + talentMultiplDef_sum + classMultiplDef_sum + armorMultiplDef_sum));
         character.CalcAtk = (int)((character.Attack + talentIncrAtk_sum + classincrAtk_sum + weaponincrAtk_sum) * (1 + talentMultiplAtk_sum + classMultiplAtk_sum + weaponMultiplAtk_sum));
@@ -342,7 +365,7 @@ public class CharacterGrowth : MonoBehaviour
         character.CalcCrtDMG = (character.CriticalDMG + talentIncrCtd_sum + classIncrCtd_sum + weaponIncrCtd_sum);
         character.CalcInflictDMGRatio = (character.InflictDamageRatio + talentIncrInfD_sum + classIncrInfD_sum + weaponIncrInfD_sum);
         character.CalcTakenDMGRatio = (character.TakenDamageRatio + talentIncrTakenD_sum + classIncrTakenD_sum + armorIncrTakenD_sum);
-        //±âº» ½ºÅÈ °ª°ú Calc ½ºÅÈ°ªÀÌ ºĞ¸®µÇ¾îÀÖÀ¸¹Ç·Î, ½ÇÁ¦ ÀÎ°ÔÀÓ ÀüÅõ¿¡¼­´Â Calc½ºÅÈÀ» »ç¿ëÇØÁÖ¼¼¿ä.
+        //ê¸°ë³¸ ìŠ¤íƒ¯ ê°’ê³¼ Calc ìŠ¤íƒ¯ê°’ì´ ë¶„ë¦¬ë˜ì–´ìˆìœ¼ë¯€ë¡œ, ì‹¤ì œ ì¸ê²Œì„ ì „íˆ¬ì—ì„œëŠ” CalcìŠ¤íƒ¯ì„ ì‚¬ìš©í•´ì£¼ì„¸ìš”.
     }
 
     public bool WeaponLevelUp(int ingredient)
@@ -350,54 +373,54 @@ public class CharacterGrowth : MonoBehaviour
         if (ingredient >= weaponLevel && weaponLevel < level)
         {
             weaponLevel += 1;
-            //Todo : Àç·á ¼Ò¸ğ
+            //Todo : ì¬ë£Œ ì†Œëª¨
             return true;
         }
         else
         {
             return false;
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµĞ ¹«±â ·¹º§¾÷ ¸Ş¼­µå. //Todo: Àåºñ ·¹º§¾÷ ¹æ½Ä ¹× ¿ä±¸ ¾ÆÀÌÅÛ. Àåºñ µî±Ş »ó½Â, Àåºñ ·¹º§¾÷ ½Ã ½ºÅÈ °ü·Ã ³íÀÇ ÇÊ¿ä.
+    }//ì„ì‹œë¡œ êµ¬ì¡°ë§Œ ë§Œë“¤ì–´ë‘” ë¬´ê¸° ë ˆë²¨ì—… ë©”ì„œë“œ. //Todo: ì¥ë¹„ ë ˆë²¨ì—… ë°©ì‹ ë° ìš”êµ¬ ì•„ì´í…œ. ì¥ë¹„ ë“±ê¸‰ ìƒìŠ¹, ì¥ë¹„ ë ˆë²¨ì—… ì‹œ ìŠ¤íƒ¯ ê´€ë ¨ ë…¼ì˜ í•„ìš”.
 
     public bool ArmorLevelUp(int ingredient)
     {
         if (ingredient >= weaponLevel && weaponLevel < level)
         {
             armorLevel += 1;
-            //Todo : Àç·á ¼Ò¸ğ
+            //Todo : ì¬ë£Œ ì†Œëª¨
             return true;
         }
         else
         {
             return false;
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµĞ ¹æ¾î±¸ ·¹º§¾÷ ¸Ş¼­µå. //Todo: À§¿Í °°À½.
+    }//ì„ì‹œë¡œ êµ¬ì¡°ë§Œ ë§Œë“¤ì–´ë‘” ë°©ì–´êµ¬ ë ˆë²¨ì—… ë©”ì„œë“œ. //Todo: ìœ„ì™€ ê°™ìŒ.
 
     public bool ExSkillLevelUp(int ingredient)
     {
         if (ingredient >= ExSkillLevel && ExSkillLevel < 5)
         {
             ExSkillLevel += 1;
-            //Todo : Àç·á ¼Ò¸ğ
+            //Todo : ì¬ë£Œ ì†Œëª¨
             return true;
         }
         else
         {
             return false;
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµĞ ½ºÅ³ ·¹º§¾÷ ¸Ş¼­µå, //Todo: ½ºÅ³ ·¹º§¾÷ ÀçÈ­ ¼Ò¸ğ, ½ºÅ³ ·¹º§¾÷ ½Ã È¿°ú µî
+    }//ì„ì‹œë¡œ êµ¬ì¡°ë§Œ ë§Œë“¤ì–´ë‘” ìŠ¤í‚¬ ë ˆë²¨ì—… ë©”ì„œë“œ, //Todo: ìŠ¤í‚¬ ë ˆë²¨ì—… ì¬í™” ì†Œëª¨, ìŠ¤í‚¬ ë ˆë²¨ì—… ì‹œ íš¨ê³¼ ë“±
 
     public bool AffectionLevelUp(int ingredient)
     {
         if (ingredient >= affectionLevel && affectionLevel < 99)
         {
             affectionLevel += 1;
-            //Todo : Àç·á ¼Ò¸ğ
+            //Todo : ì¬ë£Œ ì†Œëª¨
             return true;
         }
         else
         {
             return false;
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµĞ È£°¨µµ ·¹º§¾÷ ¸Ş¼­µå, //Todo: È£°¨µµ ·¹º§¾÷ ÀçÈ­ ¼Ò¸ğ, È£°¨µµ Áõ°¡ ½Ã Ãß°¡ È¿°ú µî.
+    }//ì„ì‹œë¡œ êµ¬ì¡°ë§Œ ë§Œë“¤ì–´ë‘” í˜¸ê°ë„ ë ˆë²¨ì—… ë©”ì„œë“œ, //Todo: í˜¸ê°ë„ ë ˆë²¨ì—… ì¬í™” ì†Œëª¨, í˜¸ê°ë„ ì¦ê°€ ì‹œ ì¶”ê°€ íš¨ê³¼ ë“±.
 }

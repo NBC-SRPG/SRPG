@@ -20,6 +20,8 @@ public class AdventureUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
+
         BindButton(typeof(Buttons));
 
         GetButton((int)Buttons.PVPButton).onClick.AddListener(OnClickPVPButton);
