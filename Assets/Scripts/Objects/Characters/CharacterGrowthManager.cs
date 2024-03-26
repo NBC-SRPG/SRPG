@@ -5,8 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using static Constants;
+using static RankUp_skillMaterials;
 
-public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °è»ê ¸Ş¼­µå µî µ¥ÀÌÅÍ°¡ ¾Æ´Ñ ¸Ş¼­µå¸¸À» µû·Î ÀúÀåÇÏ´Â Å¬·¡½º.
+public class CharacterGrowthManager //ìºë¦­í„° ì„±ì¥ / íŠ¹ì„± ë° í´ë˜ìŠ¤ ì„ íƒ / ìŠ¤íƒ¯ ê³„ì‚° ë©”ì„œë“œ ë“± ë°ì´í„°ê°€ ì•„ë‹Œ ë©”ì„œë“œë§Œì„ ë”°ë¡œ ì €ì¥í•˜ëŠ” í´ë˜ìŠ¤.
 {
     private Character character;
     public void Init(Character _character)
@@ -14,57 +15,57 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
         character = _character;
     }
 
-    //2Æ¼¾î Æ¯¼º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ
+    //2í‹°ì–´ íŠ¹ì„± ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨
     public void SelectTalent_tier2(TalentSO select)
     {
         character.characterGrowth.talent_Tier2 = select;
         ApplyAdditionStat();
     }
 
-    //3Æ¼¾î Æ¯¼º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ
+    //3í‹°ì–´ íŠ¹ì„± ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨
     public void SelectTalent_tier3(TalentSO select)
     {
         character.characterGrowth.talent_Tier3 = select;
         ApplyAdditionStat();
     }
 
-    //»óÀ§ Å¬·¡½º ¼±ÅÃ ½Ã »ç¿ëÇÏ´Â ¸Ş¼­µå. UI¿Í ¿¬µ¿ ÇÊ¿äÇÔ.
+    //ìƒìœ„ í´ë˜ìŠ¤ ì„ íƒ ì‹œ ì‚¬ìš©í•˜ëŠ” ë©”ì„œë“œ. UIì™€ ì—°ë™ í•„ìš”í•¨.
     public void SelectSuperialClass(ClassSO select)
     {
         character.characterGrowth.superiorClass = select;
         ApplyAdditionStat();
     }
 
-    //ÀÓ½Ã·Î Æ²¸¸ °®ÃçµĞ Exp Áõ°¡ ¸Ş¼­µå.
-    //Todo: Ä³¸¯ÅÍ Á¤º¸ Ã¢¿¡¼­ Ä³¸¯ÅÍ °æÇèÄ¡ ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏ°í, ±× °¹¼ö¸¦ Á¶Á¤ÇÏ°í, ±× °¹¼ö¸¸Å­ °æÇèÄ¡¸¦ ÇÕ»êÇØ¼­, °æÇèÄ¡¸¦ ¿Ã¸®°í ¼±ÅÃÇÑ °æÇèÄ¡ ¾ÆÀÌÅÛµéÀÇ °¹¼ö¸¦ Â÷°¨ÇÏµµ·Ï ±â´É ±¸ÇöÇÏ±â.
-    //Ä³¸¯ÅÍ °æÇèÄ¡ ¾ÆÀÌÅÛÀº ÀÏ´Ü µî±Ş º° 4Á¾ÀÌ Á¸ÀçÇÏ¹Ç·Î, UI¿¡¼­ ÀÎº¥Åä¸®¿¡ ÀÖ´Â °æÇèÄ¡ ¾ÆÀÌÅÛ 4Á¾ÀÇ °¹¼ö¿Í ¾ÆÀÌÄÜÀ» ¶ç¿ì°í ÇÃ·¹ÀÌ¾î°¡ ÇØ´ç µî±ŞÀÇ ¾ÆÀÌÅÛ ¾ÆÀÌÄÜ ÅÍÄ¡ ½Ã ÇØ´ç ¾ÆÀÌÅÛÀÇ ¼±ÅÃÇÑ °¹¼ö °ªÀÌ 1 Áõ°¡ÇÏµµ·Ï ÀúÀåÇØ¾ßÇÔ.
-    //·¹ÆÛ·±½º: ºí·ç ¾ÆÄ«ÀÌºêÀÇ Ä³¸¯ÅÍ À°¼ºÃ¢-·¹º§¾÷ ºÎºĞ ÂüÁ¶
+    //ì„ì‹œë¡œ í‹€ë§Œ ê°–ì¶°ë‘” Exp ì¦ê°€ ë©”ì„œë“œ.
+    //Todo: ìºë¦­í„° ì •ë³´ ì°½ì—ì„œ ìºë¦­í„° ê²½í—˜ì¹˜ ì•„ì´í…œì„ ì„ íƒí•˜ê³ , ê·¸ ê°¯ìˆ˜ë¥¼ ì¡°ì •í•˜ê³ , ê·¸ ê°¯ìˆ˜ë§Œí¼ ê²½í—˜ì¹˜ë¥¼ í•©ì‚°í•´ì„œ, ê²½í—˜ì¹˜ë¥¼ ì˜¬ë¦¬ê³  ì„ íƒí•œ ê²½í—˜ì¹˜ ì•„ì´í…œë“¤ì˜ ê°¯ìˆ˜ë¥¼ ì°¨ê°í•˜ë„ë¡ ê¸°ëŠ¥ êµ¬í˜„í•˜ê¸°.
+    //ìºë¦­í„° ê²½í—˜ì¹˜ ì•„ì´í…œì€ ì¼ë‹¨ ë“±ê¸‰ ë³„ 4ì¢…ì´ ì¡´ì¬í•˜ë¯€ë¡œ, UIì—ì„œ ì¸ë²¤í† ë¦¬ì— ìˆëŠ” ê²½í—˜ì¹˜ ì•„ì´í…œ 4ì¢…ì˜ ê°¯ìˆ˜ì™€ ì•„ì´ì½˜ì„ ë„ìš°ê³  í”Œë ˆì´ì–´ê°€ í•´ë‹¹ ë“±ê¸‰ì˜ ì•„ì´í…œ ì•„ì´ì½˜ í„°ì¹˜ ì‹œ í•´ë‹¹ ì•„ì´í…œì˜ ì„ íƒí•œ ê°¯ìˆ˜ ê°’ì´ 1 ì¦ê°€í•˜ë„ë¡ ì €ì¥í•´ì•¼í•¨.
+    //ë ˆí¼ëŸ°ìŠ¤: ë¸”ë£¨ ì•„ì¹´ì´ë¸Œì˜ ìºë¦­í„° ìœ¡ì„±ì°½-ë ˆë²¨ì—… ë¶€ë¶„ ì°¸ì¡°
     public void CharacterExpAdd(int sum)
     {
         character.characterGrowth.Exp += sum;
     }
 
 
-    public void LimitBreak() //Á¶°¢À» ¼Ò¸ğÇÏ°í µ¹ÆÄ¸¦ ÁøÇàÇÏ´Â ¸Ş¼­µå.
+    public void LimitBreak() //ì¡°ê°ì„ ì†Œëª¨í•˜ê³  ëŒíŒŒë¥¼ ì§„í–‰í•˜ëŠ” ë©”ì„œë“œ.
     {
-        if (character.characterGrowth.Limit >= 4) //ÇÑ°è µ¹ÆÄ°¡ ÀÌ¹Ì ÃÖ´ëÄ¡¸é µ¹ÆÄ ºÒ°¡´É.
+        if (character.characterGrowth.Limit >= 4) //í•œê³„ ëŒíŒŒê°€ ì´ë¯¸ ìµœëŒ€ì¹˜ë©´ ëŒíŒŒ ë¶ˆê°€ëŠ¥.
         {
             return;
         }
 
-        //µ¹ÆÄ Á¶°Ç¹® ÇØ¼³
-        //Á¶°Ç 1: Ä³¸¯ÅÍ ·¹º§ÀÌ Ä³¸¯ÅÍÀÇ ÃÖ´ë ·¹º§°ú °°ÀºÁö?
-        //Á¶°Ç 2: ¾îÄ«¿îÆ® µ¥ÀÌÅÍ¿¡¼­ ¾ÆÀÌÅÛ °¹¼ö¸¦ ¸®ÅÏÇÏ´Â ¸Ş¼­µå¸¦ ÀÌ¿ë, Ä³¸¯ÅÍ ID¿Í °°Àº ID °ªÀ» °®´Â ¾ÆÀÌÅÛÀÇ °¹¼ö¸¦ Ã¼Å©ÇÑ´Ù. ±× °ªÀÌ Ä³¸¯ÅÍÀÇ ÃÖ´ë·¹º§ + 30 ÀÌ»óÀÎÁö?
-        if (character.characterGrowth.Level == character.characterGrowth.maxLevel && Managers.AccountData.GetItemQuantity(character.characterData.character_Id) >= character.characterGrowth.maxLevel + 30) //ÇöÀç Ä³¸¯ÅÍ ·¹º§ÀÌ ÃÖ´ëÄ¡ÀÌ°í, º¸À¯ Á¶°¢ °³¼ö°¡ µ¹ÆÄ ¿ä°Ç°ª ÀÌ»óÀÏ °æ¿ì. (µ¹ÆÄ ¿ä°Ç°ª = ÇöÀç ÃÖ´ë·¹º§ + 30) 
+        //ëŒíŒŒ ì¡°ê±´ë¬¸ í•´ì„¤
+        //ì¡°ê±´ 1: ìºë¦­í„° ë ˆë²¨ì´ ìºë¦­í„°ì˜ ìµœëŒ€ ë ˆë²¨ê³¼ ê°™ì€ì§€?
+        //ì¡°ê±´ 2: ì–´ì¹´ìš´íŠ¸ ë°ì´í„°ì—ì„œ ì•„ì´í…œ ê°¯ìˆ˜ë¥¼ ë¦¬í„´í•˜ëŠ” ë©”ì„œë“œë¥¼ ì´ìš©, ìºë¦­í„° IDì™€ ê°™ì€ ID ê°’ì„ ê°–ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜ë¥¼ ì²´í¬í•œë‹¤. ê·¸ ê°’ì´ ìºë¦­í„°ì˜ ìµœëŒ€ë ˆë²¨ + 30 ì´ìƒì¸ì§€?
+        if (character.characterGrowth.Level == character.characterGrowth.maxLevel && Managers.AccountData.GetItemQuantity(character.characterData.character_Id) >= character.characterGrowth.maxLevel + 30) //í˜„ì¬ ìºë¦­í„° ë ˆë²¨ì´ ìµœëŒ€ì¹˜ì´ê³ , ë³´ìœ  ì¡°ê° ê°œìˆ˜ê°€ ëŒíŒŒ ìš”ê±´ê°’ ì´ìƒì¼ ê²½ìš°. (ëŒíŒŒ ìš”ê±´ê°’ = í˜„ì¬ ìµœëŒ€ë ˆë²¨ + 30) 
         {
-            //µ¹ÆÄ ÁøÇà ÈÄ, Á¶°¢À» ¿ä±¸ °¹¼ö¸¸Å­ Â÷°¨. (Star, Limit¸¦ Áõ°¡½ÃÅ°¸é MaxLevel °ªµµ °°ÀÌ Áõ°¡ÇÏ¹Ç·Î, ÄÚµå ¼­¼ø¿¡ ÁÖÀÇ)
+            //ëŒíŒŒ ì§„í–‰ í›„, ì¡°ê°ì„ ìš”êµ¬ ê°¯ìˆ˜ë§Œí¼ ì°¨ê°. (Star, Limitë¥¼ ì¦ê°€ì‹œí‚¤ë©´ MaxLevel ê°’ë„ ê°™ì´ ì¦ê°€í•˜ë¯€ë¡œ, ì½”ë“œ ì„œìˆœì— ì£¼ì˜)
             Managers.AccountData.UseItem(character.characterData.character_Id, character.characterGrowth.maxLevel + 30);
 
-            if (character.characterGrowth.Star < 5) //ÇöÀç ¼º±ŞÀÌ 5¼º ¹Ì¸¸ÀÏ °æ¿ì, ÃÖ´ë ·¹º§ 10 Áõ°¡.
+            if (character.characterGrowth.Star < 5) //í˜„ì¬ ì„±ê¸‰ì´ 5ì„± ë¯¸ë§Œì¼ ê²½ìš°, ìµœëŒ€ ë ˆë²¨ 10 ì¦ê°€.
             {
                 character.characterGrowth.Star += 1;
             }
-            else if (character.characterGrowth.Star >= 5 && character.characterGrowth.Limit < 4) //ÇöÀç ¼º±ŞÀÌ 5¼º ÀÌ»óÀÌ°í ÇÑ°è°¡ 4 ¹Ì¸¸ÀÏ °æ¿ì, ÃÖ´ë ·¹º§ 5 Áõ°¡.
+            else if (character.characterGrowth.Star >= 5 && character.characterGrowth.Limit < 4) //í˜„ì¬ ì„±ê¸‰ì´ 5ì„± ì´ìƒì´ê³  í•œê³„ê°€ 4 ë¯¸ë§Œì¼ ê²½ìš°, ìµœëŒ€ ë ˆë²¨ 5 ì¦ê°€.
             {
                 character.characterGrowth.Limit += 1; 
             }
@@ -74,35 +75,35 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
         }
     }
 
-    public void ApplyGrowStat() //Ä³¸¯ÅÍ ¼ºÀå ½ºÅÈ(·¹º§) Àû¿ë ¸Ş¼­µå. ·¹º§°ªÀÌ ¹Ù²ğ ¶§¸¶´Ù È£ÃâµÈ´Ù. °è»êÇÑ µÚ CharacterÀÇ ±âº» ½ºÅÈ¿¡ ÀúÀåÇÑ´Ù. 
+    public void ApplyGrowStat() //ìºë¦­í„° ì„±ì¥ ìŠ¤íƒ¯(ë ˆë²¨) ì ìš© ë©”ì„œë“œ. ë ˆë²¨ê°’ì´ ë°”ë€” ë•Œë§ˆë‹¤ í˜¸ì¶œëœë‹¤. ê³„ì‚°í•œ ë’¤ Characterì˜ ê¸°ë³¸ ìŠ¤íƒ¯ì— ì €ì¥í•œë‹¤. 
     {
-        //Ä³¸¯ÅÍÀÇ ½ºÅÈ °ªÀ» (±âº» ½ºÅÈ°ª + ·¹º§¿¡ ÀÇÇØ Áõ°¡ÇÑ ¼öÄ¡°ª)À¸·Î ÀúÀåÇÑ´Ù.
-        //°è»ê½Ä : ½ºÅÈ°ª = ¿øº»Ä³¸¯ÅÍÀÇ ±âº» ½ºÅÈ + (¿øº» Ä³¸¯ÅÍÀÇ ¼ºÀå ½ºÅÈ * ÀÌ Ä³¸¯ÅÍ °³Ã¼ÀÇ ÇöÀç ·¹º§)
+        //ìºë¦­í„°ì˜ ìŠ¤íƒ¯ ê°’ì„ (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + ë ˆë²¨ì— ì˜í•´ ì¦ê°€í•œ ìˆ˜ì¹˜ê°’)ìœ¼ë¡œ ì €ì¥í•œë‹¤.
+        //ê³„ì‚°ì‹ : ìŠ¤íƒ¯ê°’ = ì›ë³¸ìºë¦­í„°ì˜ ê¸°ë³¸ ìŠ¤íƒ¯ + (ì›ë³¸ ìºë¦­í„°ì˜ ì„±ì¥ ìŠ¤íƒ¯ * ì´ ìºë¦­í„° ê°œì²´ì˜ í˜„ì¬ ë ˆë²¨)
         character.Health = (character.characterData.health + (character.characterData.growHealth * character.characterGrowth.Level));
         character.Attack = (character.characterData.atk + (character.characterData.growAtk * character.characterGrowth.Level));
         character.Defence = (character.characterData.def + (character.characterData.growDef * character.characterGrowth.Level));
     }
 
-    public void ApplyAdditionStat() //Ä³¸¯ÅÍ Æ¯¼º / Å¬·¡½º / Àåºñ ½ºÅÈ Àû¿ë ¸Ş¼­µå, °è»êÇÑ µÚ °ªÀ» CharacterÀÇ Calc ½ºÅÈ¿¡ ÀúÀåÇÑ´Ù. 
+    public void ApplyAdditionStat() //ìºë¦­í„° íŠ¹ì„± / í´ë˜ìŠ¤ / ì¥ë¹„ ìŠ¤íƒ¯ ì ìš© ë©”ì„œë“œ, ê³„ì‚°í•œ ë’¤ ê°’ì„ Characterì˜ Calc ìŠ¤íƒ¯ì— ì €ì¥í•œë‹¤. 
     {
-        //Æ¯¼ºÀ¸·Î ¿Ã¶ó°¡´Â ´É·ÂÄ¡µéÀÇ ÇÕ°è¸¦ ÀúÀåÇÒ º¯¼ö¸¦ ¼±¾ğÇÑ´Ù.
-        int talentIncrHp_sum = 0; //Ã¼·Â »ó¼ö Áõ°¡Ä¡ ÇÕ°è
-        int talentIncrDef_sum = 0; //¹æ¾î·Â
-        int talentIncrAtk_sum = 0; //°ø°İ·Â
-        int talentIncrMov_sum = 0; //ÀÌµ¿°Å¸®
+        //íŠ¹ì„±ìœ¼ë¡œ ì˜¬ë¼ê°€ëŠ” ëŠ¥ë ¥ì¹˜ë“¤ì˜ í•©ê³„ë¥¼ ì €ì¥í•  ë³€ìˆ˜ë¥¼ ì„ ì–¸í•œë‹¤.
+        int talentIncrHp_sum = 0; //ì²´ë ¥ ìƒìˆ˜ ì¦ê°€ì¹˜ í•©ê³„
+        int talentIncrDef_sum = 0; //ë°©ì–´ë ¥
+        int talentIncrAtk_sum = 0; //ê³µê²©ë ¥
+        int talentIncrMov_sum = 0; //ì´ë™ê±°ë¦¬
 
-        float talentIncrCtr_sum = 0; //Ä¡¸íÅ¸ È®·ü ( ¼öÄ¡ 0.1 = Ä¡¸íÅ¸ È®·ü 10%Áõ°¡)
-        float talentIncrCtd_sum = 0; //Ä¡¸íÅ¸ ÇÇÇØ
-        float talentIncrInfD_sum = 0; //ÁÖ´Â µ¥¹ÌÁö Áõ°¡
-        float talentIncrTakenD_sum = 0; //¹Ş´Â ÇÇÇØ °¨¼Ò
+        float talentIncrCtr_sum = 0; //ì¹˜ëª…íƒ€ í™•ë¥  ( ìˆ˜ì¹˜ 0.1 = ì¹˜ëª…íƒ€ í™•ë¥  10%ì¦ê°€)
+        float talentIncrCtd_sum = 0; //ì¹˜ëª…íƒ€ í”¼í•´
+        float talentIncrInfD_sum = 0; //ì£¼ëŠ” ë°ë¯¸ì§€ ì¦ê°€
+        float talentIncrTakenD_sum = 0; //ë°›ëŠ” í”¼í•´ ê°ì†Œ
 
-        float talentMultiplHp_sum = 0; //Ã¼·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
-        float talentMultiplDef_sum = 0; //¹æ¾î·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
-        float talentMultiplAtk_sum = 0; //°ø°İ·Â ¹èÀ² Áõ°¡Ä¡ ÇÕ°è
+        float talentMultiplHp_sum = 0; //ì²´ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
+        float talentMultiplDef_sum = 0; //ë°©ì–´ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
+        float talentMultiplAtk_sum = 0; //ê³µê²©ë ¥ ë°°ìœ¨ ì¦ê°€ì¹˜ í•©ê³„
 
-        if (character.characterGrowth.Level >= 30) //·¹º§ÀÌ 30 ÀÌ»óÀÌ¾î¼­ 1Â÷ Æ¯¼ºÀÌ ÇØ±İµÇ¾ú´ÂÁö È®ÀÎÇÑ´Ù.
+        if (character.characterGrowth.Level >= 30) //ë ˆë²¨ì´ 30 ì´ìƒì´ì–´ì„œ 1ì°¨ íŠ¹ì„±ì´ í•´ê¸ˆë˜ì—ˆëŠ”ì§€ í™•ì¸í•œë‹¤.
         {
-            //Æ¼¾î1 Æ¯¼ºÀº ÇÏ³ª »ÓÀÌ¹Ç·Î, Ä³¸¯ÅÍSO°¡ °¡Áø 1Æ¼¾î Æ¯¼ºÀÇ Áõ°¡°ªÀ» °¡Á®¿Í ÇÕ°è¿¡ ÀúÀåÇÑ´Ù.
+            //í‹°ì–´1 íŠ¹ì„±ì€ í•˜ë‚˜ ë¿ì´ë¯€ë¡œ, ìºë¦­í„°SOê°€ ê°€ì§„ 1í‹°ì–´ íŠ¹ì„±ì˜ ì¦ê°€ê°’ì„ ê°€ì ¸ì™€ í•©ê³„ì— ì €ì¥í•œë‹¤.
             talentIncrHp_sum = character.characterGrowth.talent_Tier1.increaseHealth;
             talentIncrDef_sum = character.characterGrowth.talent_Tier1.increaseDef;
             talentIncrAtk_sum = character.characterGrowth.talent_Tier1.increaseAtk;
@@ -117,9 +118,9 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
             talentMultiplDef_sum = character.characterGrowth.talent_Tier1.multiplyDef;
             talentMultiplAtk_sum = character.characterGrowth.talent_Tier1.multiplyAtk;
 
-            if (character.characterGrowth.talent_Tier2 != null) //'¼±ÅÃÇÑ 2Æ¼¾î Æ¯¼º'°ªÀÌ 0ÀÌ¶ó¸é Æ¯¼ºÀÌ °³¹æµÇÁö ¾Ê¾Ò°Å³ª ¾ÆÁ÷ ¼±ÅÃÇÏÁö ¾ÊÀº °æ¿ì.
+            if (character.characterGrowth.talent_Tier2 != null) //'ì„ íƒí•œ 2í‹°ì–´ íŠ¹ì„±'ê°’ì´ 0ì´ë¼ë©´ íŠ¹ì„±ì´ ê°œë°©ë˜ì§€ ì•Šì•˜ê±°ë‚˜ ì•„ì§ ì„ íƒí•˜ì§€ ì•Šì€ ê²½ìš°.
             {
-                //selectTrait_Tier °ªÀÌ 0ÀÌ ¾Æ´Ï¶ó¸é Æ¯¼ºÀ» ¼±ÅÃÇß´Ù´Â ¶æ. Ä³¸¯ÅÍSO°¡ °¡Áø '¼±ÅÃ°¡´ÉÇÑ Æ¼¾î 2 Æ¯¼º ¹è¿­'¿¡¼­ ÀÏÄ¡ÇÏ´Â Æ¯¼ºÀ» °¡Á®¿Í ±× Áõ°¡°ªÀ» ÇÕ°è¿¡ ´õÇÑ´Ù. 
+                //selectTrait_Tier ê°’ì´ 0ì´ ì•„ë‹ˆë¼ë©´ íŠ¹ì„±ì„ ì„ íƒí–ˆë‹¤ëŠ” ëœ». ìºë¦­í„°SOê°€ ê°€ì§„ 'ì„ íƒê°€ëŠ¥í•œ í‹°ì–´ 2 íŠ¹ì„± ë°°ì—´'ì—ì„œ ì¼ì¹˜í•˜ëŠ” íŠ¹ì„±ì„ ê°€ì ¸ì™€ ê·¸ ì¦ê°€ê°’ì„ í•©ê³„ì— ë”í•œë‹¤. 
                 talentIncrHp_sum += character.characterGrowth.talent_Tier2.increaseHealth;
                 talentIncrDef_sum += character.characterGrowth.talent_Tier2.increaseDef;
                 talentIncrAtk_sum += character.characterGrowth.talent_Tier2.increaseAtk;
@@ -135,7 +136,7 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
                 talentMultiplAtk_sum += character.characterGrowth.talent_Tier2.multiplyAtk;
                 if (character.characterGrowth.talent_Tier3 != null)
                 {
-                    //3Æ¼¾î Æ¯¼ºµµ ¸¶Âù°¡Áö·Î Àû¿ëµÈ´Ù.
+                    //3í‹°ì–´ íŠ¹ì„±ë„ ë§ˆì°¬ê°€ì§€ë¡œ ì ìš©ëœë‹¤.
                     talentIncrHp_sum += character.characterGrowth.talent_Tier3.increaseHealth;
                     talentIncrDef_sum += character.characterGrowth.talent_Tier3.increaseDef;
                     talentIncrAtk_sum += character.characterGrowth.talent_Tier3.increaseAtk;
@@ -153,7 +154,7 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
             }
         }
 
-        //Å¬·¡½ºÀÇ °æ¿ì ±âº» Å¬·¡½º(1·¹º§ºÎÅÍ Àû¿ë)ÀÇ °ªÀÌ ÀúÀåµÇ°í, »óÀ§ Å¬·¡½º°¡ ÇØ±İµÇ¾ú°í ±× Å¬·¡½º¸¦ ¼±ÅÃÇß´ÂÁö Ã¼Å©ÇØ »óÀ§ Å¬·¡½º ½ºÅÈ Áõ°¡Ä¡¸¦ ÇÕ»êÇÑ´Ù.
+        //í´ë˜ìŠ¤ì˜ ê²½ìš° ê¸°ë³¸ í´ë˜ìŠ¤(1ë ˆë²¨ë¶€í„° ì ìš©)ì˜ ê°’ì´ ì €ì¥ë˜ê³ , ìƒìœ„ í´ë˜ìŠ¤ê°€ í•´ê¸ˆë˜ì—ˆê³  ê·¸ í´ë˜ìŠ¤ë¥¼ ì„ íƒí–ˆëŠ”ì§€ ì²´í¬í•´ ìƒìœ„ í´ë˜ìŠ¤ ìŠ¤íƒ¯ ì¦ê°€ì¹˜ë¥¼ í•©ì‚°í•œë‹¤.
         int classincrHp_sum = character.characterGrowth.basicClass.increaseHealth;
         int classincrDef_sum = character.characterGrowth.basicClass.increaseDef;
         int classincrAtk_sum = character.characterGrowth.basicClass.increaseAtk;
@@ -185,9 +186,9 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
             classMultiplAtk_sum += character.characterGrowth.superiorClass.multiplyAtk;
         }
 
-        //Àåºñ ½ºÅÈ.
-        //¹«±â·Î È¹µæÇÒ ¼ö ÀÖ´Â ½ºÅÈ = °ø°İ·Â, Ä¡È®, Ä¡ÇÇ, ÁÖ´Â ÇÇÇØÁõ°¡
-        //¹æ¾î±¸·Î È¹µæÇÒ ¼ö ÀÖ´Â ½ºÅÈ = Ã¼·Â, ¹æ¾î·Â, ¹Ş´Â ÇÇÇØ °¨¼Ò
+        //ì¥ë¹„ ìŠ¤íƒ¯.
+        //ë¬´ê¸°ë¡œ íšë“í•  ìˆ˜ ìˆëŠ” ìŠ¤íƒ¯ = ê³µê²©ë ¥, ì¹˜í™•, ì¹˜í”¼, ì£¼ëŠ” í”¼í•´ì¦ê°€
+        //ë°©ì–´êµ¬ë¡œ íšë“í•  ìˆ˜ ìˆëŠ” ìŠ¤íƒ¯ = ì²´ë ¥, ë°©ì–´ë ¥, ë°›ëŠ” í”¼í•´ ê°ì†Œ
         int weaponincrAtk_sum = (character.characterGrowth.weapon.increaseAtk * (character.characterGrowth.weaponEnhance + 1));
         float weaponMultiplAtk_sum = (character.characterGrowth.weapon.multiplyAtk * (character.characterGrowth.weaponEnhance + 1));
         float weaponIncrCtr_sum = (character.characterGrowth.weapon.increasecCtr * (character.characterGrowth.weaponEnhance + 1));
@@ -201,9 +202,9 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
         float armorIncrTakenD_sum = (character.characterGrowth.armor.reducedTakenDamage * (character.characterGrowth.armorEnhance + 1));
 
 
-        //ÀÌ·¸°Ô ÀúÀåÇÑ ÇÕ°èÄ¡¸¦ Calc ½ºÅÈ¿¡ °è»êÇØ¼­ ÀúÀåÇÑ´Ù.
-        //°è»ê½Ä °£·«È÷ : Calc ½ºÅÈ = (±âº» ½ºÅÈ°ª + ÇÕ¿¬»ê »ó¼ö ¼öÄ¡°ªÀÇ ÇÕ) *(°ö¿¬»ê ¹èÀ² ¼öÄ¡°ªÀÇ ÇÕ)
-        //°è»ê½Ä »ó¼¼ : Calc ½ºÅÈ = (int)(  (±âº» ½ºÅÈ°ª + Æ¯¼ºÀ¸·Î Áõ°¡ÇÏ´Â ½ºÅÈ ÇÕ°èÄ¡ + Å¬·¡½º·Î Áõ°¡ÇÏ´Â ½ºÅÈ ÇÕ°èÄ¡) * ( 1 + Æ¯¼ºÀ¸·Î Áõ°¡ÇÏ´Â ½ºÅÈ ¹èÀ² + Å¬·¡½º·Î Áõ°¡ÇÏ´Â ½ºÅÈ ¹èÀ²)  )
+        //ì´ë ‡ê²Œ ì €ì¥í•œ í•©ê³„ì¹˜ë¥¼ Calc ìŠ¤íƒ¯ì— ê³„ì‚°í•´ì„œ ì €ì¥í•œë‹¤.
+        //ê³„ì‚°ì‹ ê°„ëµíˆ : Calc ìŠ¤íƒ¯ = (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + í•©ì—°ì‚° ìƒìˆ˜ ìˆ˜ì¹˜ê°’ì˜ í•©) *(ê³±ì—°ì‚° ë°°ìœ¨ ìˆ˜ì¹˜ê°’ì˜ í•©)
+        //ê³„ì‚°ì‹ ìƒì„¸ : Calc ìŠ¤íƒ¯ = (int)(  (ê¸°ë³¸ ìŠ¤íƒ¯ê°’ + íŠ¹ì„±ìœ¼ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ í•©ê³„ì¹˜ + í´ë˜ìŠ¤ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ í•©ê³„ì¹˜) * ( 1 + íŠ¹ì„±ìœ¼ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ ë°°ìœ¨ + í´ë˜ìŠ¤ë¡œ ì¦ê°€í•˜ëŠ” ìŠ¤íƒ¯ ë°°ìœ¨)  )
         character.CalcHealth = (int)((character.Health + talentIncrHp_sum + classincrHp_sum + armorincrHp_sum) * (1 + talentMultiplHp_sum + classMultiplHp_sum + armorMultiplHp_sum));
         character.CalcDef = (int)((character.Defence + talentIncrDef_sum + classincrDef_sum + armorincrDef_sum) * (1 + talentMultiplDef_sum + classMultiplDef_sum + armorMultiplDef_sum));
         character.CalcAtk = (int)((character.Attack + talentIncrAtk_sum + classincrAtk_sum + weaponincrAtk_sum) * (1 + talentMultiplAtk_sum + classMultiplAtk_sum + weaponMultiplAtk_sum));
@@ -213,62 +214,62 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
         character.CalcCrtDMG = (character.CriticalDMG + talentIncrCtd_sum + classIncrCtd_sum + weaponIncrCtd_sum);
         character.CalcInflictDMGRatio = (character.InflictDamageRatio + talentIncrInfD_sum + classIncrInfD_sum + weaponIncrInfD_sum);
         character.CalcTakenDMGRatio = (character.TakenDamageRatio + talentIncrTakenD_sum + classIncrTakenD_sum + armorIncrTakenD_sum);
-        //±âº» ½ºÅÈ °ª°ú Calc ½ºÅÈ°ªÀÌ ºĞ¸®µÇ¾îÀÖÀ¸¹Ç·Î, ½ÇÁ¦ ÀÎ°ÔÀÓ ÀüÅõ¿¡¼­´Â Calc½ºÅÈÀ» »ç¿ëÇØÁÖ¼¼¿ä.
+        //ê¸°ë³¸ ìŠ¤íƒ¯ ê°’ê³¼ Calc ìŠ¤íƒ¯ê°’ì´ ë¶„ë¦¬ë˜ì–´ìˆìœ¼ë¯€ë¡œ, ì‹¤ì œ ì¸ê²Œì„ ì „íˆ¬ì—ì„œëŠ” CalcìŠ¤íƒ¯ì„ ì‚¬ìš©í•´ì£¼ì„¸ìš”.
     }
 
     public void WeaponRankUp()
     {
-        //Àåºñ °­È­ Á¶°Ç
-        //0~4°­Àº Ä³¸¯ÅÍ°¡ ¾î¶² ·¹º§ÀÌµç °­È­ °¡´É
-        //4°­¿¡¼­ +1°­ ÇÏ´Â °ÍÀº ´ÙÀ½ µî±Ş Àåºñ·Î ÀüÈ¯À» ÀÇ¹ÌÇÔ.
-        //Ä³¸¯ÅÍ 0~30·¹º§ : Ä¿¸Õ µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 30~50·¹º§ : ·¹¾î µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 50~70·¹º§ : ¿¡ÇÈ µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 70~90·¹º§ : ·¹Àüµå µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É.
-        //µû¶ó¼­, °­È­ ´Ü°è°¡ 4ÀÏ ¶§¿¡´Â Ä³¸¯ÅÍ ·¹º§ÀÌ ÀûÁ¤ ·¹º§ ÀÌ»óÀÌ¾î¾ß ´ÙÀ½ µî±Ş Àåºñ·Î °­È­ÇÒ ¼ö ÀÖ´Ù.
+        //ì¥ë¹„ ê°•í™” ì¡°ê±´
+        //0~4ê°•ì€ ìºë¦­í„°ê°€ ì–´ë–¤ ë ˆë²¨ì´ë“  ê°•í™” ê°€ëŠ¥
+        //4ê°•ì—ì„œ +1ê°• í•˜ëŠ” ê²ƒì€ ë‹¤ìŒ ë“±ê¸‰ ì¥ë¹„ë¡œ ì „í™˜ì„ ì˜ë¯¸í•¨.
+        //ìºë¦­í„° 0~30ë ˆë²¨ : ì»¤ë¨¼ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 30~50ë ˆë²¨ : ë ˆì–´ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 50~70ë ˆë²¨ : ì—í”½ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 70~90ë ˆë²¨ : ë ˆì „ë“œ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥.
+        //ë”°ë¼ì„œ, ê°•í™” ë‹¨ê³„ê°€ 4ì¼ ë•Œì—ëŠ” ìºë¦­í„° ë ˆë²¨ì´ ì ì • ë ˆë²¨ ì´ìƒì´ì–´ì•¼ ë‹¤ìŒ ë“±ê¸‰ ì¥ë¹„ë¡œ ê°•í™”í•  ìˆ˜ ìˆë‹¤.
 
-        if(character.characterGrowth.weaponTier >= (int)ItemRank.Legend) //·¹Àüµå µî±Ş ÀÌ»óÀÏ °æ¿ì °­È­ ºÒ°¡. (Àü¿ë¹«±â´Â Myth µî±ŞÀÌÁö¸¸ ±¸Çö¿¹Á¤ x)
+        if(character.characterGrowth.weaponTier >= (int)ItemRank.Legend) //ë ˆì „ë“œ ë“±ê¸‰ ì´ìƒì¼ ê²½ìš° ê°•í™” ë¶ˆê°€. (ì „ìš©ë¬´ê¸°ëŠ” Myth ë“±ê¸‰ì´ì§€ë§Œ êµ¬í˜„ì˜ˆì • x)
         {
             return;
         }
 
-        if (character.characterGrowth.weaponEnhance >= 4) //Ä³¸¯ÅÍÀÇ Àåºñ °­È­ Á¤µµ°¡ 4 ÀÌ»óÀÏ °æ¿ì
+        if (character.characterGrowth.weaponEnhance >= 4) //ìºë¦­í„°ì˜ ì¥ë¹„ ê°•í™” ì •ë„ê°€ 4 ì´ìƒì¼ ê²½ìš°
         {
-            if (character.characterGrowth.Level < (character.characterGrowth.weaponTier * 20 + 30)) //ÀûÁ¤ ·¹º§ÀÎÁö Ã¼Å©ÇÏ´Â Á¶°Ç¹®. ÇöÀç Àåºñ µî±ŞÀÌ 0Æ¼¾î(Ä¿¸Õ)ÀÏ ¶§ Ä³¸¯ÅÍ ·¹º§ÀÌ 30 ¹Ì¸¸ÀÌ¸é °­È­ ºÒ°¡.
+            if (character.characterGrowth.Level < (character.characterGrowth.weaponTier * 20 + 30)) //ì ì • ë ˆë²¨ì¸ì§€ ì²´í¬í•˜ëŠ” ì¡°ê±´ë¬¸. í˜„ì¬ ì¥ë¹„ ë“±ê¸‰ì´ 0í‹°ì–´(ì»¤ë¨¼)ì¼ ë•Œ ìºë¦­í„° ë ˆë²¨ì´ 30 ë¯¸ë§Œì´ë©´ ê°•í™” ë¶ˆê°€.
             {
                 return;
             }
         }
 
-        // rankUpMaterialsÀÇ ¸ğµç ¿ä¼Ò¿¡ ´ëÇØ ¹İº¹
+        // rankUpMaterialsì˜ ëª¨ë“  ìš”ì†Œì— ëŒ€í•´ ë°˜ë³µ
         foreach (var kvp in character.characterGrowth.weapon.rankUpMaterials)
         {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö = °­È­ Á¤µµ¸¶´Ù ¿ä±¸·®ÀÌ Áõ°¡ÇÑ´Ù.
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜ = ê°•í™” ì •ë„ë§ˆë‹¤ ìš”êµ¬ëŸ‰ì´ ì¦ê°€í•œë‹¤.
 
-            // ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª °¹¼ö°¡ ¿ä±¸µÇ´Â °¹¼öº¸´Ù ÀûÀº °æ¿ì
+            // ì¸ë²¤í† ë¦¬ì— í•´ë‹¹ ì•„ì´í…œì´ ì—†ê±°ë‚˜ ê°¯ìˆ˜ê°€ ìš”êµ¬ë˜ëŠ” ê°¯ìˆ˜ë³´ë‹¤ ì ì€ ê²½ìš°
             if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
                 currentItemCount < requiredItemCount)
             {
-                // ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏÁö ¸øÇÏ¸é Á¾·á
+                // ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ì§€ ëª»í•˜ë©´ ì¢…ë£Œ
                 return;
             }
         }
 
-        // ¸ğµç ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏ´Â °æ¿ì °­È­ ¼º°ø
-        // °­È­¿¡ ÇÊ¿äÇÑ °­È­ ¼ÒÀç ¾ÆÀÌÅÛµéÀ» Â÷°¨
+        // ëª¨ë“  ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš° ê°•í™” ì„±ê³µ
+        // ê°•í™”ì— í•„ìš”í•œ ê°•í™” ì†Œì¬ ì•„ì´í…œë“¤ì„ ì°¨ê°
         foreach (var kvp in character.characterGrowth.weapon.rankUpMaterials)
         {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value * (character.characterGrowth.weaponEnhance); // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜
 
-            // ÀÎº¥Åä¸®¿¡¼­ ÇØ´ç ¾ÆÀÌÅÛ °¹¼ö Â÷°¨
+            // ì¸ë²¤í† ë¦¬ì—ì„œ í•´ë‹¹ ì•„ì´í…œ ê°¯ìˆ˜ ì°¨ê°
             Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
         }
         
-        if (character.characterGrowth.weaponEnhance >= 4) //Ä³¸¯ÅÍÀÇ ¹«±â °­È­ Á¤µµ°¡ 4 ÀÌ»óÀÏ °æ¿ì
+        if (character.characterGrowth.weaponEnhance >= 4) //ìºë¦­í„°ì˜ ë¬´ê¸° ê°•í™” ì •ë„ê°€ 4 ì´ìƒì¼ ê²½ìš°
         {
-            character.characterGrowth.weaponTier += 1; //Æ¼¾î 1´Ü°è UpÇÏ°í °­È­µµ ÃÊ±âÈ­,
+            character.characterGrowth.weaponTier += 1; //í‹°ì–´ 1ë‹¨ê³„ Upí•˜ê³  ê°•í™”ë„ ì´ˆê¸°í™”,
             character.characterGrowth.weaponEnhance = 0;
         }
         else
@@ -282,57 +283,57 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
 
     public void ArmorRankUp()
     {
-        //Àåºñ °­È­ Á¶°Ç
-        //0~4°­Àº Ä³¸¯ÅÍ°¡ ¾î¶² ·¹º§ÀÌµç °­È­ °¡´É
-        //4°­¿¡¼­ +1°­ ÇÏ´Â °ÍÀº ´ÙÀ½ µî±Ş Àåºñ·Î ÀüÈ¯À» ÀÇ¹ÌÇÔ.
-        //Ä³¸¯ÅÍ 0~30·¹º§ : Ä¿¸Õ µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 30~50·¹º§ : ·¹¾î µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 50~70·¹º§ : ¿¡ÇÈ µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É
-        //Ä³¸¯ÅÍ 70~90·¹º§ : ·¹Àüµå µî±Ş ÀÌÇÏ Àåºñ Âø¿ë °¡´É.
-        //µû¶ó¼­, °­È­ ´Ü°è°¡ 4ÀÏ ¶§¿¡´Â Ä³¸¯ÅÍ ·¹º§ÀÌ ÀûÁ¤ ·¹º§ ÀÌ»óÀÌ¾î¾ß ´ÙÀ½ µî±Ş Àåºñ·Î °­È­ÇÒ ¼ö ÀÖ´Ù.
+        //ì¥ë¹„ ê°•í™” ì¡°ê±´
+        //0~4ê°•ì€ ìºë¦­í„°ê°€ ì–´ë–¤ ë ˆë²¨ì´ë“  ê°•í™” ê°€ëŠ¥
+        //4ê°•ì—ì„œ +1ê°• í•˜ëŠ” ê²ƒì€ ë‹¤ìŒ ë“±ê¸‰ ì¥ë¹„ë¡œ ì „í™˜ì„ ì˜ë¯¸í•¨.
+        //ìºë¦­í„° 0~30ë ˆë²¨ : ì»¤ë¨¼ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 30~50ë ˆë²¨ : ë ˆì–´ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 50~70ë ˆë²¨ : ì—í”½ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥
+        //ìºë¦­í„° 70~90ë ˆë²¨ : ë ˆì „ë“œ ë“±ê¸‰ ì´í•˜ ì¥ë¹„ ì°©ìš© ê°€ëŠ¥.
+        //ë”°ë¼ì„œ, ê°•í™” ë‹¨ê³„ê°€ 4ì¼ ë•Œì—ëŠ” ìºë¦­í„° ë ˆë²¨ì´ ì ì • ë ˆë²¨ ì´ìƒì´ì–´ì•¼ ë‹¤ìŒ ë“±ê¸‰ ì¥ë¹„ë¡œ ê°•í™”í•  ìˆ˜ ìˆë‹¤.
 
-        if (character.characterGrowth.armorTier >= (int)ItemRank.Legend) //·¹Àüµå µî±Ş ÀÌ»óÀÏ °æ¿ì °­È­ ºÒ°¡. (Àü¿ë¹«±â´Â Myth µî±ŞÀÌÁö¸¸ ±¸Çö¿¹Á¤ x)
+        if (character.characterGrowth.armorTier >= (int)ItemRank.Legend) //ë ˆì „ë“œ ë“±ê¸‰ ì´ìƒì¼ ê²½ìš° ê°•í™” ë¶ˆê°€. (ì „ìš©ë¬´ê¸°ëŠ” Myth ë“±ê¸‰ì´ì§€ë§Œ êµ¬í˜„ì˜ˆì • x)
         {
             return;
         }
 
-        if (character.characterGrowth.armorEnhance >= 4) //Ä³¸¯ÅÍÀÇ Àåºñ °­È­ Á¤µµ°¡ 4 ÀÌ»óÀÏ °æ¿ì
+        if (character.characterGrowth.armorEnhance >= 4) //ìºë¦­í„°ì˜ ì¥ë¹„ ê°•í™” ì •ë„ê°€ 4 ì´ìƒì¼ ê²½ìš°
         {
-            if (character.characterGrowth.Level < (character.characterGrowth.armorTier * 20 + 30)) //ÀûÁ¤ ·¹º§ÀÎÁö Ã¼Å©ÇÏ´Â Á¶°Ç¹®. ÇöÀç Àåºñ µî±ŞÀÌ 0Æ¼¾î(Ä¿¸Õ)ÀÏ ¶§ Ä³¸¯ÅÍ ·¹º§ÀÌ 30 ¹Ì¸¸ÀÌ¸é °­È­ ºÒ°¡.
+            if (character.characterGrowth.Level < (character.characterGrowth.armorTier * 20 + 30)) //ì ì • ë ˆë²¨ì¸ì§€ ì²´í¬í•˜ëŠ” ì¡°ê±´ë¬¸. í˜„ì¬ ì¥ë¹„ ë“±ê¸‰ì´ 0í‹°ì–´(ì»¤ë¨¼)ì¼ ë•Œ ìºë¦­í„° ë ˆë²¨ì´ 30 ë¯¸ë§Œì´ë©´ ê°•í™” ë¶ˆê°€.
             {
                 return;
             }
         }
 
-        // rankUpMaterialsÀÇ ¸ğµç ¿ä¼Ò¿¡ ´ëÇØ ¹İº¹
+        // rankUpMaterialsì˜ ëª¨ë“  ìš”ì†Œì— ëŒ€í•´ ë°˜ë³µ
         foreach (var kvp in character.characterGrowth.armor.rankUpMaterials)
         {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö = °­È­ Á¤µµ¸¶´Ù ¿ä±¸·®ÀÌ Áõ°¡ÇÑ´Ù.
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜ = ê°•í™” ì •ë„ë§ˆë‹¤ ìš”êµ¬ëŸ‰ì´ ì¦ê°€í•œë‹¤.
 
-            // ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª °¹¼ö°¡ ¿ä±¸µÇ´Â °¹¼öº¸´Ù ÀûÀº °æ¿ì
+            // ì¸ë²¤í† ë¦¬ì— í•´ë‹¹ ì•„ì´í…œì´ ì—†ê±°ë‚˜ ê°¯ìˆ˜ê°€ ìš”êµ¬ë˜ëŠ” ê°¯ìˆ˜ë³´ë‹¤ ì ì€ ê²½ìš°
             if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
                 currentItemCount < requiredItemCount)
             {
-                // ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏÁö ¸øÇÏ¸é Á¾·á
+                // ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ì§€ ëª»í•˜ë©´ ì¢…ë£Œ
                 return;
             }
         }
 
-        // ¸ğµç ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏ´Â °æ¿ì °­È­ ¼º°ø
-        // °­È­¿¡ ÇÊ¿äÇÑ °­È­ ¼ÒÀç ¾ÆÀÌÅÛµéÀ» Â÷°¨
+        // ëª¨ë“  ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš° ê°•í™” ì„±ê³µ
+        // ê°•í™”ì— í•„ìš”í•œ ê°•í™” ì†Œì¬ ì•„ì´í…œë“¤ì„ ì°¨ê°
         foreach (var kvp in character.characterGrowth.armor.rankUpMaterials)
         {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value * (character.characterGrowth.armorEnhance); // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜
 
-            // ÀÎº¥Åä¸®¿¡¼­ ÇØ´ç ¾ÆÀÌÅÛ °¹¼ö Â÷°¨
+            // ì¸ë²¤í† ë¦¬ì—ì„œ í•´ë‹¹ ì•„ì´í…œ ê°¯ìˆ˜ ì°¨ê°
             Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
         }
 
-        if (character.characterGrowth.armorEnhance >= 4) //Ä³¸¯ÅÍÀÇ ¹«±â °­È­ Á¤µµ°¡ 4 ÀÌ»óÀÏ °æ¿ì
+        if (character.characterGrowth.armorEnhance >= 4) //ìºë¦­í„°ì˜ ë¬´ê¸° ê°•í™” ì •ë„ê°€ 4 ì´ìƒì¼ ê²½ìš°
         {
-            character.characterGrowth.armorTier += 1; //Æ¼¾î 1´Ü°è UpÇÏ°í °­È­µµ ÃÊ±âÈ­,
+            character.characterGrowth.armorTier += 1; //í‹°ì–´ 1ë‹¨ê³„ Upí•˜ê³  ê°•í™”ë„ ì´ˆê¸°í™”,
             character.characterGrowth.armorEnhance = 0;
         }
         else
@@ -348,64 +349,74 @@ public class CharacterGrowthManager //Ä³¸¯ÅÍ ¼ºÀå / Æ¯¼º ¹× Å¬·¡½º ¼±ÅÃ / ½ºÅÈ °
 
     public void ExSkillLevelUp()
     {
-        //½ºÅ³ °­È­ Á¶°Ç
+        //ìŠ¤í‚¬ ê°•í™” ì¡°ê±´
 
-        if (character.characterGrowth.ExSkillLevel >= 5) //½ºÅ³ 5·¹º§ ÀÌ»óÀÏ °æ¿ì °­È­ ºÒ°¡.
+        if (character.characterGrowth.ExSkillLevel >= 5) //ìŠ¤í‚¬ 5ë ˆë²¨ ì´ìƒì¼ ê²½ìš° ê°•í™” ë¶ˆê°€.
         {
             return;
         }
 
-        //Todo: ½ºÅ³ ·¹º§ º°·Î ÇÊ¿äÇÑ Àç·á µ¥ÀÌÅÍ¸¦ °¡Á®¿Í¾ßÇÔ
-        //½ºÅ³ ·¹º§Àº Áø¿µ º° ½ºÅ³ ·©Å©¾÷ ¾ÆÀÌÅÛÀ» »ç¿ë.
-        //Áø¿µ º° / ·¹º§ º°·Î ÇÊ¿ä ¾ÆÀÌÅÛ ID - ¾ÆÀÌÅÛ °¹¼ö µñ¼Å³Ê¸®°¡ ÇÊ¿äÇÔ
-        //¿¹½Ã) ¸¶Á·Áø¿µ ½ºÅ³ ·¹º§¾÷ 1¡æ2¿¡ ÇÊ¿äÇÑ µñ¼Å³Ê¸®<¾ÆÀÌÅÛ Á¾·ù, ¾ÆÀÌÅÛ °¹¼ö>
-        // ÀÌ·± ½ÄÀ¸·Î ¸¶Á·, 2¡æ3 ·¹º§... 3¡æ4 ·¹º§.., ±³´Ü 1¡æ2 ·¹º§ / ...
-        //¾î¶² ¹æ½ÄÀ¸·Î ±×¸®°í ¾îµğ¿¡ ÀÌ µñ¼Å³Ê¸®¸¦ ÀúÀåÇØ ³ö¾ß ÁÁÀ» Áö »ı°¢ÇØµµ ÁÁÀº ´äÀÌ ¾È³ª¿È. ÁÁÀº ÀÇ°ß ÀÖÀ¸¸é Á¶¾ğÇØÁÖ¼¼¿ä.
-        /* 
-        foreach (var kvp in character.characterGrowth.)
-        {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö = ½ºÅ³ ·¹º§ Á¤µµ¸¶´Ù ¿ä±¸·®ÀÌ Áõ°¡ÇÑ´Ù.
+        //Todo: ìŠ¤í‚¬ ë ˆë²¨ ë³„ë¡œ í•„ìš”í•œ ì¬ë£Œ ë°ì´í„°ë¥¼ ê°€ì ¸ì™€ì•¼í•¨
+        //ìŠ¤í‚¬ ë ˆë²¨ì€ ì§„ì˜ ë³„ ìŠ¤í‚¬ ë­í¬ì—… ì•„ì´í…œì„ ì‚¬ìš©í•´ì„œ ë ˆë²¨ì—…í•œë‹¤.
+        //ì§„ì˜ ë³„ / ë ˆë²¨ ë³„ë¡œ í•„ìš” ì•„ì´í…œ ID - ì•„ì´í…œ ê°¯ìˆ˜ ë”•ì…”ë„ˆë¦¬ê°€ í•„ìš”í•¨
+        //ì˜ˆì‹œ) ë§ˆì¡±ì§„ì˜ ìŠ¤í‚¬ ë ˆë²¨ì—… 1â†’2ì— í•„ìš”í•œ ë”•ì…”ë„ˆë¦¬<ì•„ì´í…œ ì¢…ë¥˜, ì•„ì´í…œ ê°¯ìˆ˜>
+        // ì´ëŸ° ì‹ìœ¼ë¡œ ë§ˆì¡±, 2â†’3 ë ˆë²¨... 3â†’4 ë ˆë²¨.., êµë‹¨ 1â†’2 ë ˆë²¨ / ...
+        //ì¼ë‹¨ ì„ì‹œë¡œ ë¯¸ë¦¬ ë§Œë“¤ì–´ë‘” static ë”•ì…”ë„ˆë¦¬ì˜ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ëŠ” í˜•ì‹ì„ ì±„ìš©í•¨. DB ì‘ì—… í›„ DB ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ëŠ” í˜•ì‹ìœ¼ë¡œ ë³€ê²½í•  í•„ìš” ìˆìŒ.
 
-            // ÀÎº¥Åä¸®¿¡ ÇØ´ç ¾ÆÀÌÅÛÀÌ ¾ø°Å³ª °¹¼ö°¡ ¿ä±¸µÇ´Â °¹¼öº¸´Ù ÀûÀº °æ¿ì
+        // ìŠ¤í‚¬ ë ˆë²¨ì— í•„ìš”í•œ ì¬ë£Œ ê°€ì ¸ì˜¤ê¸°
+        // ë©”ì„œë“œ GetSkillMaterials( ìºë¦­í„° ì†Œì† ì§„ì˜, ìºë¦­í„° ìŠ¤í‚¬ ë ˆë²¨) ì€ ì§„ì˜ê³¼ ìŠ¤í‚¬ ë ˆë²¨ì— ë”°ë¼ì„œ í•´ë‹¹ ìŠ¤í‚¬ ë ˆë²¨ì—…ì— í•„ìš”í•œ ì•„ì´í…œ ID & ê°¯ìˆ˜ ë”•ì…”ë„ˆë¦¬ë¥¼ ë¦¬í„´í•¨.
+        Dictionary<int, int> requiredMaterials = RankUp_skillMaterials.GetSkillMaterials(character.characterData.belonging, character.characterGrowth.ExSkillLevel);
+        if (requiredMaterials == null)
+        {
+            // í•„ìš”í•œ ì¬ë£Œê°€ ì—†ëŠ” ê²½ìš° ì¢…ë£Œ
+            return;
+        }
+
+
+        foreach (var kvp in requiredMaterials)
+        {
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜ = ìŠ¤í‚¬ ë ˆë²¨ ì •ë„ë§ˆë‹¤ ìš”êµ¬ëŸ‰ì´ ì¦ê°€í•œë‹¤.
+
+            // ì¸ë²¤í† ë¦¬ì— í•´ë‹¹ ì•„ì´í…œì´ ì—†ê±°ë‚˜ ê°¯ìˆ˜ê°€ ìš”êµ¬ë˜ëŠ” ê°¯ìˆ˜ë³´ë‹¤ ì ì€ ê²½ìš°
             if (!Managers.AccountData.inventory.TryGetValue(requiredItemId, out int currentItemCount) ||
                 currentItemCount < requiredItemCount)
             {
-                // ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏÁö ¸øÇÏ¸é Á¾·á
+                // ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ì§€ ëª»í•˜ë©´ ì¢…ë£Œ
                 return;
             }
         }
 
-        // ¸ğµç ¿ä±¸ »çÇ×À» ¸¸Á·ÇÏ´Â °æ¿ì ½ºÅ³ °­È­ ¼º°ø
-        // °­È­¿¡ ÇÊ¿äÇÑ °­È­ ¼ÒÀç ¾ÆÀÌÅÛµéÀ» Â÷°¨
-        foreach (var kvp in character.characterGrowth.)
+        // ëª¨ë“  ìš”êµ¬ ì‚¬í•­ì„ ë§Œì¡±í•˜ëŠ” ê²½ìš° ìŠ¤í‚¬ ê°•í™” ì„±ê³µ
+        // ê°•í™”ì— í•„ìš”í•œ ê°•í™” ì†Œì¬ ì•„ì´í…œë“¤ì„ ì°¨ê°
+        foreach (var kvp in requiredMaterials)
         {
-            int requiredItemId = kvp.Key; // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ ¾ÆÀÌµğ
-            int requiredItemCount = kvp.Value * (character.characterGrowth.); // ¿ä±¸µÇ´Â ¾ÆÀÌÅÛÀÇ °¹¼ö
+            int requiredItemId = kvp.Key; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ì•„ì´ë””
+            int requiredItemCount = kvp.Value; // ìš”êµ¬ë˜ëŠ” ì•„ì´í…œì˜ ê°¯ìˆ˜
 
-            // ÀÎº¥Åä¸®¿¡¼­ ÇØ´ç ¾ÆÀÌÅÛ °¹¼ö Â÷°¨
+            // ì¸ë²¤í† ë¦¬ì—ì„œ í•´ë‹¹ ì•„ì´í…œ ê°¯ìˆ˜ ì°¨ê°
             Managers.AccountData.RemoveItem(requiredItemId, requiredItemCount);
         }
         character.characterGrowth.ExSkillLevel += 1;
         return;
-        */
+        
     }
 
 
 
-    /* È£°¨µµ ¸Ş¼­µå´Â ÁÖ¼® Ã³¸®. ½Ã°£ÀÌ ³²´Â´ë·Î ÀÛ¾÷. 
+    /* í˜¸ê°ë„ ë©”ì„œë“œëŠ” ì£¼ì„ ì²˜ë¦¬. ì‹œê°„ì´ ë‚¨ëŠ”ëŒ€ë¡œ ì‘ì—…. 
     public bool AffectionLevelUp(int ingredient)
     {
         if (ingredient >= character.characterGrowth.affectionLevel && character.characterGrowth.affectionLevel < 99)
         {
             character.characterGrowth.affectionLevel += 1;
-            //Todo : Àç·á ¼Ò¸ğ
+            //Todo : ì¬ë£Œ ì†Œëª¨
             return true;
         }
         else
         {
             return false;
         }
-    }//ÀÓ½Ã·Î ±¸Á¶¸¸ ¸¸µé¾îµĞ È£°¨µµ ·¹º§¾÷ ¸Ş¼­µå, //Todo: È£°¨µµ ·¹º§¾÷ ÀçÈ­ ¼Ò¸ğ, È£°¨µµ Áõ°¡ ½Ã Ãß°¡ È¿°ú µî.
+    }//ì„ì‹œë¡œ êµ¬ì¡°ë§Œ ë§Œë“¤ì–´ë‘” í˜¸ê°ë„ ë ˆë²¨ì—… ë©”ì„œë“œ, //Todo: í˜¸ê°ë„ ë ˆë²¨ì—… ì¬í™” ì†Œëª¨, í˜¸ê°ë„ ì¦ê°€ ì‹œ ì¶”ê°€ íš¨ê³¼ ë“±.
     */
 }
