@@ -69,8 +69,7 @@ public class CharacterController : MonoBehaviour
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
 
-        Ui = Managers.UI.FindPopup<BattleUI>();
-
+        Ui = Managers.UI.FindUI<BattleUI>();
     }
 
     private void Update()

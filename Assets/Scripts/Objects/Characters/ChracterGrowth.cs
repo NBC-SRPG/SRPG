@@ -9,6 +9,7 @@ public class CharacterGrowth : MonoBehaviour
     private Character character;
 
     //'현재 선택중인 특성 번호' ( 0 = None )
+    // 특성1은 30레벨에 해금 -> 해금 시 바로 찍혀있음
     //이 변수들을 설정해 배열의 index 번호를 지정한다.
     public int selectTalent_Tier2 { get; private set; }
     public int selectTalent_Tier3 { get; private set; }
@@ -31,7 +32,7 @@ public class CharacterGrowth : MonoBehaviour
         get { return level; }
         set
         {
-            if (Managers.AccountData.playerData.Level >= maxLevel) 
+            if (Managers.AccountData.playerData.Level >= maxLevel)
             {
                 level = math.clamp(value, 1, maxLevel);
             }
@@ -51,13 +52,13 @@ public class CharacterGrowth : MonoBehaviour
     public int Exp
     {
         get { return exp; }
-        private set //경험치 설정자에 자체적으로 레벨업 기능을 배치했습니다.
+        set //경험치 설정자에 자체적으로 레벨업 기능을 배치했습니다.
         {
             exp = value;
-            while (exp >= maxExp && level < maxLevel && level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
+            while (exp >= maxExp && Level < maxLevel && Level < Managers.AccountData.playerData.Level)  //레벨이 계정 레벨을 넘지 못하도록 조건 추가
             {
                 exp -= maxExp;
-                level += 1;
+                Level += 1;
             }
             exp = math.clamp(exp, 0, maxExp);
         }
@@ -79,12 +80,19 @@ public class CharacterGrowth : MonoBehaviour
     public void Init(Character _character)
     {
         character = _character;
+        // TODO
+        // 테스트 데이터
+        // talent_Tier에는 DB에서 꺼내와서 넣기, DB에 없을 땐 null
         talent_Tier1 = character.characterData.talent_Tier1;
-        talent_Tier2 = character.characterData.talent_Tier2[selectTalent_Tier2 -1];
-        talent_Tier3 = character.characterData.talent_Tier3[selectTalent_Tier3 -1];
+        talent_Tier2 = null;
+        talent_Tier3 = null;
+        //talent_Tier1 = character.characterData.talent_Tier1;
+        // TODO -1 인덱스에 접근하면 오류 -> 다른 방법 생각해야함
+        //talent_Tier2 = character.characterData.talent_Tier2[selectTalent_Tier2 - 1];
+        //talent_Tier3 = character.characterData.talent_Tier3[selectTalent_Tier3 - 1];
 
         basicClass = character.characterData.basicClass;
-        superiorClass = character.characterData.superiorClass[selectSuperialClass -1];
+        //superiorClass = character.characterData.superiorClass[selectSuperialClass - 1];
     }
 
     //최초 초기화 메서드
@@ -97,14 +105,15 @@ public class CharacterGrowth : MonoBehaviour
         weaponLevel = 1;
         armorLevel = 1;
         ExSkillLevel = 1;
-        PassiveSkillLevel = 1; 
+        PassiveSkillLevel = 1;
         affectionLevel = 1;
     }
 
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public bool SelectTalent_tier2(int select)
     {
-        if (select > 0 && select <= character.characterData.talent_Tier2.Length - 1)
+        //1 or 2 
+        if (select > 0 && select <= character.characterData.talent_Tier2.Length)
         {
             if (Level >= 50)
             {
@@ -124,11 +133,24 @@ public class CharacterGrowth : MonoBehaviour
             return false;
         }
     }
+    */
+
+    //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
+    public void SelectTalent_tier2(TalentSO selectTalent)
+    {
+        talent_Tier2 = selectTalent;
+        ApplyAdditionStat();
+    }
+    public void SelectTalent_tier3(TalentSO selectTalent)
+    {
+        talent_Tier3 = selectTalent;
+        ApplyAdditionStat();
+    }
 
     //3티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public bool SelectTalent_tier3(int select)
     {
-        if (select > 0 && select <= character.characterData.talent_Tier3.Length - 1)
+        if (select > 0 && select <= character.characterData.talent_Tier3.Length)
         {
             if (level >= 70 && selectTalent_Tier2 != 0)
             {
@@ -307,15 +329,15 @@ public class CharacterGrowth : MonoBehaviour
             classIncrInfD_sum += superiorClass.increaseInflictDamage;
             classIncrTakenD_sum += superiorClass.reducedTakenDamage;
 
-            classMultiplHp_sum = superiorClass.multiplyHealth;
-            classMultiplHp_sum = superiorClass.multiplyDef;
-            classMultiplHp_sum = superiorClass.multiplyAtk;
+            classMultiplHp_sum += superiorClass.multiplyHealth;
+            classMultiplDef_sum += superiorClass.multiplyDef;
+            classMultiplAtk_sum += superiorClass.multiplyAtk;
         }
 
         //장비 스탯.
         //무기로 획득할 수 있는 스탯 = 공격력, 치확, 치피, 주는 피해증가
         //방어구로 획득할 수 있는 스탯 = 체력, 방어력, 받는 피해 감소
-        int weaponincrAtk_sum = (character.characterData.weapon.increaseAtk * weaponLevel) ;
+        int weaponincrAtk_sum = (character.characterData.weapon.increaseAtk * weaponLevel);
         float weaponMultiplAtk_sum = (character.characterData.weapon.multiplyAtk * weaponLevel);
         float weaponIncrCtr_sum = (character.characterData.weapon.increasecCtr * weaponLevel);
         float weaponIncrCtd_sum = (character.characterData.weapon.increasecCtd * weaponLevel);

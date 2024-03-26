@@ -12,7 +12,8 @@ public class GachaManager
 
     public void Init()
     {
-        tables.Clear();
+        //tables.Clear();
+        tables = new Dictionary<string, Dictionary<int, float>>();
         gachaType = Constants.GachaType.Common;
     }
 
@@ -34,7 +35,7 @@ public class GachaManager
             return GetTableFromDB(tableName);
         }
     }
-    
+
     // 테이블에서 확률에 따라 캐릭터 id를 하나 반환
     private int GetRandomCharacterFromTable(string tableName)
     {
@@ -63,7 +64,7 @@ public class GachaManager
         Result(result);
         if (gachaType == Constants.GachaType.PickUp)
         {
-           // Managers.AccountData.curGachaPoint += 1;
+            Managers.AccountData.gachaPoint += 1;
         }
 
         return result;
@@ -88,7 +89,7 @@ public class GachaManager
 
         if (gachaType == Constants.GachaType.PickUp)
         {
-            //Managers.AccountData.curGachaPoint += 10;
+            Managers.AccountData.gachaPoint += 10;
         }
 
         return queue;
