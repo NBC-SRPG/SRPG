@@ -96,7 +96,8 @@ public class MainUI : UIBase
         // 버튼 클릭 사운드 출력 (SoundManager)
         // Managers.Sound(Sound.Effect, "ButtonClick");
 
-        // CharacterUI 생성 (UIManager)
+        // 메인UI -> 캐릭터UI 접근임을 알림
+        CharacterEntryUI.isFormation = false;
         Managers.UI.ShowUI<CharacterUI>();
     }
     private void OnClickFormationButton()
@@ -104,7 +105,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickFormationButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<FormationUI>();
+        Managers.UI.ShowUI<FormationUI>();
     }
     private void OnClickInventoryButton()
     {
@@ -132,21 +133,21 @@ public class MainUI : UIBase
         Debug.Log("OnClickAdventureButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<AdventureUI>();
+        Managers.UI.ShowUI<AdventureUI>();
     }
     private void OnClickFriendButton()
     {
         Debug.Log("OnClickFriendButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<FriendUI>();
+        Managers.UI.ShowUI<FriendUI>();
     }
     private void OnClickMailButton()
     {
         Debug.Log("OnClickMailButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<MailUI>();
+        Managers.UI.ShowUI<MailUI>();
     }
     private void OnClickNoticeButton()
     {
@@ -167,6 +168,6 @@ public class MainUI : UIBase
         Debug.Log("OnClickProfileButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<ProfileUI>();
+        Managers.UI.ShowUI<ProfileUI>();
     }
 }
