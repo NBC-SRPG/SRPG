@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 public class Managers : MonoBehaviour
 {
     private static Managers instance = null;
@@ -72,7 +70,7 @@ public class Managers : MonoBehaviour
                 new PlayerData(), 
                 new Dictionary<int, bool>(), 
                 new Dictionary<int, string[]>(), 
-                new int[5,5],
+                new Dictionary<int, FormationData>(),
                 new List<MailSO>());
 
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();

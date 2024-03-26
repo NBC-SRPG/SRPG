@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class AccountData
 {
@@ -11,13 +8,11 @@ public class AccountData
     public Dictionary<int, bool> missionClearData { get; set; }
     //public Dictionary<ItemData, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
-    //public Dictionary<int, Dictionary<int, Character>> formationData { get; set; }
-    public int[,] formationData { get; set; }
+    public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
-    // Init �޼���
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
@@ -25,8 +20,7 @@ public class AccountData
         Dictionary<int, bool> missionClearData,
         //Dictionary<ItemData, int> inventory,
         Dictionary<int, string[]> friendData,
-        //Dictionary<int, Dictionary<int, Character>> formationData,
-        int[,] formationData,
+        Dictionary<int, FormationData> formationData,
         List<MailSO> mailBox
         )
     {
@@ -36,8 +30,7 @@ public class AccountData
         this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         //this.inventory = inventory ?? new Dictionary<ItemData, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
-        //this.formationData = formationData ?? new Dictionary<int, Dictionary<int, Character>>();
-        this.formationData = formationData ?? new int[5, 5];
+        this.formationData = formationData ?? new Dictionary<int, FormationData>();
         this.mailBox = mailBox ?? new List<MailSO>();
     }
 }

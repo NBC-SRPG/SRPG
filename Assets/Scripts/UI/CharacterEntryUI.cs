@@ -115,11 +115,11 @@ public class CharacterEntryUI : UIBase
         Debug.Log("AddCharacterToFormation");
 
         FormationUI ui = Managers.UI.FindUI<FormationUI>();
-        // 이미 편성에 해당 캐릭터가 포함되어 있느지 체크
-        bool isCharacterInFormation = Enumerable.Range(0, Managers.AccountData.formationData.GetLength(1))
-            .Select(col => Managers.AccountData.formationData[ui.presetIndex, col])
-            .Contains(Managers.AccountData.characterData[characterId].characterData.character_Id);
 
+        // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
+        FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
+        // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
+        bool isCharacterInFormation = currentFormation.characterId.Contains(characterId);
         // 이미 편성에 포함되어 있으면 불가 안내 UI
         if (isCharacterInFormation)
         {
@@ -131,7 +131,7 @@ public class CharacterEntryUI : UIBase
         // 편성 UI 뽑아서 formationIndex에 해당하는 곳에 캐릭터 정보 전달
         Debug.Log(ui.presetIndex);
         Debug.Log(formationIndex);
-        Managers.AccountData.formationData[ui.presetIndex, formationIndex] = Managers.AccountData.characterData[characterId].characterData.character_Id;
+        Managers.AccountData.formationData[ui.presetIndex].characterId[formationIndex] = Managers.AccountData.characterData[characterId].characterData.character_Id;
         ui.UpdateFormationMember(formationIndex);
 
         Managers.UI.CloseUI(Managers.UI.PeekUI<CharacterUI>());

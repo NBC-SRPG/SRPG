@@ -149,9 +149,9 @@ public class FormationUI : UIBase
         Texts formationLevelTextEnum = (Texts)Enum.Parse(typeof(Texts), $"FormationLevelText{index + 1}");
 
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
-        if (Managers.AccountData.formationData[presetIndex, index] != 0)
+        if (Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
         {
-            Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex, index]}");
+            Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex].characterId[index]}");
             GetImage((int)formationImageEnum).sprite = characterSprite;
             // TODO
             // 아웃라인 활성화 및 색상 설정
@@ -161,7 +161,7 @@ public class FormationUI : UIBase
             GetImage((int)formationAttributeImageEnum).color = Color.red;
 
             // 캐릭터 레벨 설정
-            int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]].characterGrowth.Level;
+            int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].characterGrowth.Level;
             GetText((int)formationLevelTextEnum).text = $"Lv. {characterLevel}";
 
             // 별 개수 꺼내오기 및 설정
@@ -249,7 +249,7 @@ public class FormationUI : UIBase
         // 편성 초기화
         for (int i = 0; i < 5; i++)
         {
-            Managers.AccountData.formationData[presetIndex, i] = 0;
+            Managers.AccountData.formationData[presetIndex].characterId[i] = 0;
         }
         UpdateFormationToPreset(presetIndex);
     }
@@ -273,7 +273,7 @@ public class FormationUI : UIBase
     {
         Debug.Log("OnPressedFormationButton");
 
-        if (Managers.AccountData.formationData[presetIndex, index] == 0)
+        if (Managers.AccountData.formationData[presetIndex].characterId[index] == 0)
         {
             return;
         }
@@ -285,7 +285,7 @@ public class FormationUI : UIBase
             CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
 
 
-            ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]);
+            ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
             hasShownCharacterInfo = true;
         }
     }
