@@ -9,7 +9,7 @@ public class UIEventHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public Action OnPointerDownHandler = null;
     public Action OnPointerUpHandler = null;
 
-    bool pressed = false;
+    private bool pressed = false;
 
     private void Update()
     {

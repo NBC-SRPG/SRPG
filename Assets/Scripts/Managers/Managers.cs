@@ -78,9 +78,9 @@ public class Managers : MonoBehaviour
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
             Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
             Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            s_accountData.characterData.Add(int.Parse(testChatacter1.characterData.character_Id), testChatacter1);
-            s_accountData.characterData.Add(int.Parse(testChatacter2.characterData.character_Id), testChatacter2);
-            s_accountData.characterData.Add(int.Parse(testChatacter3.characterData.character_Id), testChatacter3);
+            s_accountData.characterData.Add((testChatacter1.characterData.character_Id), testChatacter1);
+            s_accountData.characterData.Add((testChatacter2.characterData.character_Id), testChatacter2);
+            s_accountData.characterData.Add((testChatacter3.characterData.character_Id), testChatacter3);
 
             testChatacter1.CharacterInit();
             testChatacter2.CharacterInit();

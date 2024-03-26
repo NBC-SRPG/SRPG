@@ -60,6 +60,10 @@ public class UIBase : MonoBehaviour
 
         switch (type)
         {
+            case Constants.UIEvent.Pressed:
+                evt.OnPressedHandler -= action;
+                evt.OnPressedHandler += action;
+                break;
             case Constants.UIEvent.PointerDown:
                 evt.OnPointerDownHandler -= action;
                 evt.OnPointerDownHandler += action;
