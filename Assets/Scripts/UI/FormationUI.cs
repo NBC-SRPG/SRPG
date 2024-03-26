@@ -1,13 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
+using static Constants;
 
 public class FormationUI : UIBase
 {
     public int presetIndex;
+    // 1초 이상 눌렀는지를 체크하는 변수
+    private float pressedTimer;
+    // 1초 이상 눌렀을 때 캐릭터 정보창이 켜져있는지 체크하는 변수
+    private bool hasShownCharacterInfo;
     private enum Texts
     {
-        PartyNameText
+        PartyNameText,
+        FormationLevelText1,
+        FormationLevelText2,
+        FormationLevelText3,
+        FormationLevelText4,
+        FormationLevelText5
     }
     private enum Buttons
     {
@@ -25,7 +38,6 @@ public class FormationUI : UIBase
         RightArrowButton,
         //PartyNameButton,
         ResetButton,
-        //SaveButton,
         BackButton
     }
     private enum Images
@@ -39,7 +51,20 @@ public class FormationUI : UIBase
         FormationImage2,
         FormationImage3,
         FormationImage4,
-        FormationImage5
+        FormationImage5,
+        FormationAttributeImage1,
+        FormationAttributeImage2,
+        FormationAttributeImage3,
+        FormationAttributeImage4,
+        FormationAttributeImage5
+    }
+    private enum GameObjects
+    {
+        FormationStar1,
+        FormationStar2,
+        FormationStar3,
+        FormationStar4,
+        FormationStar5
     }
     private void Start()
     {
@@ -53,25 +78,31 @@ public class FormationUI : UIBase
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
-        GetButton((int)Buttons.PresetButton1).onClick.AddListener(() => UpdateFormationToPreset(1));
-        GetButton((int)Buttons.PresetButton2).onClick.AddListener(() => UpdateFormationToPreset(2));
-        GetButton((int)Buttons.PresetButton3).onClick.AddListener(() => UpdateFormationToPreset(3));
-        GetButton((int)Buttons.PresetButton4).onClick.AddListener(() => UpdateFormationToPreset(4));
-        GetButton((int)Buttons.PresetButton5).onClick.AddListener(() => UpdateFormationToPreset(5));
-        GetButton((int)Buttons.FormationButton1).onClick.AddListener(() => OnClickFormationButton(1));
-        GetButton((int)Buttons.FormationButton2).onClick.AddListener(() => OnClickFormationButton(2));
-        GetButton((int)Buttons.FormationButton3).onClick.AddListener(() => OnClickFormationButton(3));
-        GetButton((int)Buttons.FormationButton4).onClick.AddListener(() => OnClickFormationButton(4));
-        GetButton((int)Buttons.FormationButton5).onClick.AddListener(() => OnClickFormationButton(5));
+        Buttons presetButton;
+        Buttons formationButton;
+
+        for (int i = 0; i < 5; i++)
+        {
+            int index = i;
+
+            presetButton = (Buttons)Enum.Parse(typeof(Buttons), $"PresetButton{index + 1}");
+            GetButton((int)presetButton).onClick.AddListener(() => UpdateFormationToPreset(index));
+
+            formationButton = (Buttons)Enum.Parse(typeof(Buttons), $"FormationButton{index + 1}");
+            GetButton((int)formationButton).onClick.AddListener(() => OnClickFormationButton(index));
+            BindEvent(GetButton((int)formationButton).gameObject, OnPointerUpFormationButton, UIEvent.PointerUp);
+            BindEvent(GetButton((int)formationButton).gameObject, () => OnPressedFormationButton(index), UIEvent.Pressed);
+        }
+
         GetButton((int)Buttons.LeftArrowButton).onClick.AddListener(OnClickLeftArrowButton);
         GetButton((int)Buttons.RightArrowButton).onClick.AddListener(OnClickRightArrowButton);
         //GetButton((int)Buttons.PartyNameButton).onClick.AddListener(OnClickPartyNameButton);
         GetButton((int)Buttons.ResetButton).onClick.AddListener(OnClickResetButton);
-        //GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
-        presetIndex = 1;
+        presetIndex = 0;
 
         UpdateFormationToPreset(presetIndex);
 
@@ -86,6 +117,17 @@ public class FormationUI : UIBase
         // TODO
         // 현재 프리셋 버튼의 이미지 기본으로
         // index 프리셋 버튼의 이미지 체크 이미지로
+        // 테스트로 색상 변경 사용중
+        Images presetImage;
+
+        for (int i = 0; i < 5; i++)
+        {
+            presetImage = (Images)Enum.Parse(typeof(Images), $"PresetImage{i + 1}");
+            GetImage((int)presetImage).color = Color.white;
+        }
+
+        presetImage = (Images)Enum.Parse(typeof(Images), $"PresetImage{index + 1}");
+        GetImage((int)presetImage).color = Color.green;
         // 딕셔너리에서 index에 해당하는 캐릭터 정보 들고오기
         // 편성에 채우기
 
@@ -101,48 +143,53 @@ public class FormationUI : UIBase
     // 편성의 index에 해당하는 부분 업데이트
     public void UpdateFormationMember(int index)
     {
+        Images formationImageEnum = (Images)Enum.Parse(typeof(Images), $"FormationImage{index + 1}");
+        Images formationAttributeImageEnum = (Images)Enum.Parse(typeof(Images), $"FormationAttributeImage{index + 1}");
+        GameObjects formationStarEnum = (GameObjects)Enum.Parse(typeof(GameObjects), $"FormationStar{index + 1}");
+        Texts formationLevelTextEnum = (Texts)Enum.Parse(typeof(Texts), $"FormationLevelText{index + 1}");
+
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
-        if (Managers.AccountData.formationData[presetIndex, index] == 0)
+        if (Managers.AccountData.formationData[presetIndex, index] != 0)
         {
-            switch (index)
+            Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex, index]}");
+            GetImage((int)formationImageEnum).sprite = characterSprite;
+            // TODO
+            // 아웃라인 활성화 및 색상 설정
+            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = true;
+            // GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().effectColor = Color.red;
+            // 속성 이미지 변경
+            GetImage((int)formationAttributeImageEnum).color = Color.red;
+
+            // 캐릭터 레벨 설정
+            int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]].characterGrowth.Level;
+            GetText((int)formationLevelTextEnum).text = $"Lv. {characterLevel}";
+
+            // 별 개수 꺼내오기 및 설정
+            int numberOfStars = 3; // 테스트 데이터, 실제 값으로 교체 필요
+            float starWidth = 50f; // 별 이미지의 너비
+            for (int starIndex = 0; starIndex < numberOfStars; starIndex++)
             {
-                case 0:
-                    GetImage((int)Images.FormationImage1).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
-                    break;
-                case 1:
-                    GetImage((int)Images.FormationImage2).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
-                    break;
-                case 2:
-                    GetImage((int)Images.FormationImage3).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
-                    break;
-                case 3:
-                    GetImage((int)Images.FormationImage4).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
-                    break;
-                case 4:
-                    GetImage((int)Images.FormationImage5).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]}");
-                    break;
+                GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)formationStarEnum).transform);
+                star.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                RectTransform rt = star.GetComponent<RectTransform>();
+                rt.anchorMax = new Vector2(0f, 0f);
+                rt.anchorMin = new Vector2(0f, 0f);
+                rt.pivot = new Vector2(0f, 0f);
+                rt.anchoredPosition = new Vector2(starIndex * starWidth, 0);
             }
         }
-        // 없다면 빈칸으로 밀어버리기
+        // 없다면(0이라면) 빈칸으로 밀어버리기
         else
         {
-            switch (index)
+            GetImage((int)formationImageEnum).sprite = null;
+            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = false;
+            GetImage((int)formationAttributeImageEnum).color = Color.white;
+            GetText((int)formationLevelTextEnum).text = "";
+
+            for (int i = GetObject((int)formationStarEnum).transform.childCount - 1; i >= 0; i--)
             {
-                case 0:
-                    GetImage((int)Images.FormationImage1).sprite = null;
-                    break;
-                case 1:
-                    GetImage((int)Images.FormationImage2).sprite = null;
-                    break;
-                case 2:
-                    GetImage((int)Images.FormationImage3).sprite = null;
-                    break;
-                case 3:
-                    GetImage((int)Images.FormationImage4).sprite = null;
-                    break;
-                case 4:
-                    GetImage((int)Images.FormationImage5).sprite = null;
-                    break;
+                GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
+                Destroy(child);
             }
         }
     }
@@ -153,7 +200,7 @@ public class FormationUI : UIBase
         //Managers.Sound.Play(Constants.Sound.Effect, "ButtonClick");
         // 편성에서 클릭한 것이라고 알려주기
         CharacterEntryUI.isFormation = true;
-        // 1번째 버튼이라고 알려주기
+        // index번째 버튼이라고 알려주기
         CharacterEntryUI.formationIndex = index;
         // 캐릭터 UI 띄우기
         Managers.UI.ShowUI<CharacterUI>();
@@ -163,8 +210,8 @@ public class FormationUI : UIBase
     {
         Debug.Log("OnClickLeftArrowButton");
 
-        // 현재 프리셋이 1이라면 return
-        if (presetIndex == 1)
+        // 현재 프리셋이 0이라면 return
+        if (presetIndex == 0)
         {
             return;
         }
@@ -177,8 +224,8 @@ public class FormationUI : UIBase
     {
         Debug.Log("OnClickRightArrowButton");
 
-        // 현재 프리셋이 5라면 return
-        if (presetIndex == 5)
+        // 현재 프리셋이 4라면 return
+        if (presetIndex == 4)
         {
             return;
         }
@@ -198,7 +245,7 @@ public class FormationUI : UIBase
     private void OnClickResetButton()
     {
         Debug.Log("OnClickResetButton");
-        // TODO
+
         // 편성 초기화
         for (int i = 0; i < 5; i++)
         {
@@ -207,20 +254,39 @@ public class FormationUI : UIBase
         UpdateFormationToPreset(presetIndex);
     }
 
-    private void OnClickSaveButton()
-    {
-        Debug.Log("OnClickSaveButton");
-        // TODO
-        // 편성 저장
-    }
-
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
 
-        // TODO
-        // 저장 되지 않은 프리셋의 캐릭터들 편성 추가 체크 변수 해제 필요
-
         Managers.UI.CloseUI(this);
+    }
+
+    private void OnPointerUpFormationButton()
+    {
+        Debug.Log("OnPointerUpFormationButton");
+
+        pressedTimer = 0f; // 버튼에서 손을 뗐을 때 pressedTimer 리셋
+        hasShownCharacterInfo = false;
+    }
+
+    private void OnPressedFormationButton(int index)
+    {
+        Debug.Log("OnPressedFormationButton");
+
+        if (Managers.AccountData.formationData[presetIndex, index] == 0)
+        {
+            return;
+        }
+
+        pressedTimer += Time.deltaTime;
+
+        if (pressedTimer > 1f && !hasShownCharacterInfo)
+        {
+            CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
+
+
+            ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex, index]]);
+            hasShownCharacterInfo = true;
+        }
     }
 }

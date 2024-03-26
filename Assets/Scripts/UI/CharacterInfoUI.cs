@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
+using UnityEngine.UI;
 using static Constants;
 
 public class CharacterInfoUI : UIBase
@@ -24,6 +27,7 @@ public class CharacterInfoUI : UIBase
         ExSkillDescriptionText,
         PassiveSkillText,
         PassiveSkillDescriptionText,
+        TalentDescriptionText,
         HpText,
         AtkText,
         DefText,
@@ -36,31 +40,52 @@ public class CharacterInfoUI : UIBase
         TalentButton,
         ClassButton,
         BackButton,
-        ExSkillLevelUpButton
+        ExSkillLevelUpButton,
+        WeaponButton,
+        ArmorButton,
+        EquipmentUpgradeUICloseButton,
+        Talent1Button,
+        Talent2_1Button,
+        Talent2_2Button,
+        Talent3_1Button,
+        Talent3_2Button,
+        TalentApplyButton,
+        TalentCancelButton,
+        TalentCheckButton,
+        TestLevelUpButton // 테스트 버튼
     }
     private enum Images
     {
         IllustrationImage,
         ExSkillImage,
         PassiveSkillImage,
-        ExpFrontImage
+        WeaponImage,
+        ArmorImage,
+        TalentInfoImage,
+        ExpFrontImage,
+        TalentPath2,
+        TalentPath2_1,
+        TalentPath2_2,
+        TalentPath3,
+        TalentPath3_1,
+        TalentPath3_2,
+        Talent1Image,
+        Talent2_1Image,
+        Talent2_2Image,
+        Talent3_1Image,
+        Talent3_2Image,
     }
     private enum GameObjects
     {
         SkillTab,
         TalentTab,
         ClassTab,
-        SkillInfoUI,
+        ExSkillInfoUI,
+        PassiveSkillInfoUI,
         TalentInfoUI,
         EquipmentUpgradeUI,
         Star
     }
-    /*
-    private void Start()
-    {
-        Init();
-    }
-    */
 
     public void SetCharacter(Character character)
     {
@@ -78,14 +103,15 @@ public class CharacterInfoUI : UIBase
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        // 스킬, 특성 이미지 클릭 시작, 클릭 끝 이벤트 걸기
+        // 스킬 이미지 클릭 시작, 클릭 끝 이벤트 걸기
         BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerDownExSkill, UIEvent.PointerDown);
         BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerUpExSkill, UIEvent.PointerUp);
         BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerDownPassiveSkill, UIEvent.PointerDown);
         BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerUpPassiveSkill, UIEvent.PointerUp);
 
-        // 스킬, 특성 팝업 UI 비활성화 상태로 두기
-        GetObject((int)GameObjects.SkillInfoUI).SetActive(false);
+        // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
+        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
+        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
 
@@ -94,8 +120,16 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.TalentButton).onClick.AddListener(() => ShowTab(PlayTab.Talent));
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
+        GetImage((int)Images.WeaponImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.weapon.equip_Id}");
+        GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.armor.equip_Id}");
+
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
+        GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
+        GetButton((int)Buttons.TalentCancelButton).onClick.AddListener(OnClickTalentCancelButton);
+        GetButton((int)Buttons.TalentCheckButton).onClick.AddListener(OnClickTalentCancelButton);
+        GetButton((int)Buttons.WeaponButton).onClick.AddListener(() => OnClickWeaponButton(character.characterData.weapon));
+        GetButton((int)Buttons.ArmorButton).onClick.AddListener(() => OnClickArmorButton(character.characterData.armor));
 
         ShowTab(PlayTab.Skill);
 
@@ -104,11 +138,12 @@ public class CharacterInfoUI : UIBase
         InitTalentTab();
         InitClassTab();
         InitCharacterInfo();
+
+        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(() => { character.characterGrowth.Exp += character.characterGrowth.maxExp; UpdateStat(); });
     }
 
     private void InitSkillTab()
     {
-        // 데이터에 스킬 레벨이 없음??
         GetText((int)Texts.ExSkillText).text = $"{character.characterData.skill.skillName}"; // 뒤에 레벨도 붙어야 함
         GetText((int)Texts.ExSkillDescriptionText).text = $"{character.characterData.skill.description}";
         GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.skill.skill_ID}");
@@ -120,7 +155,75 @@ public class CharacterInfoUI : UIBase
 
     private void InitTalentTab()
     {
+        // 특성 이미지 세팅
+        GetImage((int)Images.Talent1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.talent_Tier1.talent_Id}");
+        GetImage((int)Images.Talent2_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.talent_Tier2[0].talent_Id}");
+        GetImage((int)Images.Talent2_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.talent_Tier2[1].talent_Id}");
+        GetImage((int)Images.Talent3_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.talent_Tier3[0].talent_Id}");
+        GetImage((int)Images.Talent3_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.talent_Tier3[1].talent_Id}");
 
+        // 특성 버튼 세팅
+        GetButton((int)Buttons.Talent1Button).onClick.AddListener(() => OnClickTalentButton(1, character.characterData.talent_Tier1));
+        GetButton((int)Buttons.Talent2_1Button).onClick.AddListener(() => OnClickTalentButton(2, character.characterData.talent_Tier2[0]));
+        GetButton((int)Buttons.Talent2_2Button).onClick.AddListener(() => OnClickTalentButton(2, character.characterData.talent_Tier2[1]));
+        GetButton((int)Buttons.Talent3_1Button).onClick.AddListener(() => OnClickTalentButton(3, character.characterData.talent_Tier3[0]));
+        GetButton((int)Buttons.Talent3_2Button).onClick.AddListener(() => OnClickTalentButton(3, character.characterData.talent_Tier3[1]));
+
+        TalentPathUpdate();
+    }
+
+    // 특성 패스 & 아웃라인 세팅
+    private void TalentPathUpdate()
+    {
+        // 2단계 특성이 찍혀있다면
+        if (character.characterGrowth.talent_Tier2 != null)
+        {
+            GetImage((int)Images.TalentPath2).color = Color.red;
+
+            // 2-1 특성이 찍혀있다면
+            if (character.characterGrowth.talent_Tier2 == character.characterData.talent_Tier2[0])
+            {
+                GetImage((int)Images.TalentPath2_1).color = Color.red;
+                GetImage((int)Images.TalentPath2_2).color = Color.black;
+
+                GetImage((int)Images.Talent2_1Image).transform.parent.GetComponent<Outline>().enabled = true;
+                GetImage((int)Images.Talent2_2Image).transform.parent.GetComponent<Outline>().enabled = false;
+            }
+            // 2-2 특성이 찍혀있다면
+            else
+            {
+                GetImage((int)Images.TalentPath2_1).color = Color.black;
+                GetImage((int)Images.TalentPath2_2).color = Color.red;
+
+                GetImage((int)Images.Talent2_1Image).transform.parent.GetComponent<Outline>().enabled = false;
+                GetImage((int)Images.Talent2_2Image).transform.parent.GetComponent<Outline>().enabled = true;
+            }
+        }
+
+        // 3번째 특성 찍었을 때
+        if (character.characterGrowth.talent_Tier3 != null)
+        {
+            GetImage((int)Images.TalentPath3).color = Color.red;
+
+            // 3-1 특성
+            if (character.characterGrowth.talent_Tier3 == character.characterData.talent_Tier3[0])
+            {
+                GetImage((int)Images.TalentPath3_1).color = Color.red;
+                GetImage((int)Images.TalentPath3_2).color = Color.black;
+
+                GetImage((int)Images.Talent3_1Image).transform.parent.GetComponent<Outline>().enabled = true;
+                GetImage((int)Images.Talent3_2Image).transform.parent.GetComponent<Outline>().enabled = false;
+            }
+            // 3-2 특성
+            else
+            {
+                GetImage((int)Images.TalentPath3_1).color = Color.black;
+                GetImage((int)Images.TalentPath3_2).color = Color.red;
+
+                GetImage((int)Images.Talent3_1Image).transform.parent.GetComponent<Outline>().enabled = false;
+                GetImage((int)Images.Talent3_2Image).transform.parent.GetComponent<Outline>().enabled = true;
+            }
+        }
     }
 
     private void InitClassTab()
@@ -133,7 +236,8 @@ public class CharacterInfoUI : UIBase
         GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.character_Id}");
         GetText((int)Texts.NameText).text = $"{character.characterData.characterName}";
 
-        int numberOfStars = character.characterData.defaltStar; // 별의 개수
+        // int numberOfStars = character.characterData.defaltStar; // 별의 개수
+        int numberOfStars = 3; // 별의 개수 // 테스트 데이터
         float starWidth = 100f; // 별 이미지의 너비
         float spacing = 10f; // 별 사이의 간격
 
@@ -150,15 +254,20 @@ public class CharacterInfoUI : UIBase
             rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
         }
 
-        GetText((int)Texts.HpText).text = $"{character.characterData.health + character.level * character.characterData.growHealth}";
-        GetText((int)Texts.AtkText).text = $"{character.characterData.atk + character.level * character.characterData.growAtk}";
-        GetText((int)Texts.DefText).text = $"{character.characterData.def + character.level * character.characterData.growDef}";
-        GetText((int)Texts.LevelText).text = $"Lv. {character.level} / {character.maxLevel}";
-        GetText((int)Texts.ExpText).text = $"{character.exp} / {character.maxExp}";
-        GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.exp / character.maxExp;
-        
+        UpdateStat();
         // TODO
         // 장비 정보는 아직 없는 듯?
+    }
+
+    private void UpdateStat()
+    {
+        GetText((int)Texts.LevelText).text = $"Lv. {character.characterGrowth.Level} / {character.characterGrowth.maxLevel}";
+        GetText((int)Texts.ExpText).text = $"{character.characterGrowth.Exp} / {character.characterGrowth.maxExp}";
+        GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.characterGrowth.Exp / character.characterGrowth.maxExp;
+
+        GetText((int)Texts.HpText).text = $"{character.CalcHealth}";
+        GetText((int)Texts.AtkText).text = $"{character.CalcAtk}";
+        GetText((int)Texts.DefText).text = $"{character.CalcDef}";
     }
 
     private void ShowTab(PlayTab tab)
@@ -191,7 +300,8 @@ public class CharacterInfoUI : UIBase
                 break;
 
             case PlayTab.Talent:
-
+                // TODO
+                // 레벨 30이 넘어야 해금
                 GetObject((int)GameObjects.TalentTab).SetActive(true);
                 break;
 
@@ -229,40 +339,171 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnPointerUpExSkill");
 
-        GetObject((int)GameObjects.SkillInfoUI).SetActive(false);
+        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
     }
 
     private void OnPointerDownExSkill()
     {
         Debug.Log("OnPointerDownExSkill");
 
-        GetObject((int)GameObjects.SkillInfoUI).SetActive(true);
+        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
     }
+
+    private void OnClickEquipmentUpgradeUICloseButton()
+    {
+        Debug.Log("OnClickEquipmentUpgradeUICloseButton");
+
+        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+    }
+
     // TODO 고유 스킬 UI는 따로 할 것인지?
     private void OnPointerUpPassiveSkill()
     {
         Debug.Log("OnPointerUpPassiveSkill");
 
-        GetObject((int)GameObjects.SkillInfoUI).SetActive(false);
+        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
     }
 
     private void OnPointerDownPassiveSkill()
     {
         Debug.Log("OnPointerDownPassiveSkill");
 
-        GetObject((int)GameObjects.SkillInfoUI).SetActive(true);
+        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(true);
     }
-    private void OnPointerUpTalent()
+
+    private void OnClickTalentButton(int talentTier, TalentSO talent)
     {
-        Debug.Log("OnPointerUpTalent");
+        Debug.Log("OnClickTalentButton");
+
+        // 특성 선택 UI 켜기
+        GetObject((int)GameObjects.TalentInfoUI).SetActive(true);
+
+        // 이미지, 설명 세팅
+        GetImage((int)Images.TalentInfoImage).sprite = Managers.Resource.Load<Sprite>($"{talent.talent_Id}");
+        GetText((int)Texts.TalentDescriptionText).text = talent.talentDescription;
+
+        // 버튼들 모두 비활성화 상태
+        GetButton((int)Buttons.TalentApplyButton).gameObject.SetActive(false);
+        GetButton((int)Buttons.TalentCancelButton).gameObject.SetActive(false);
+        GetButton((int)Buttons.TalentCheckButton).gameObject.SetActive(false);
+
+        switch (talentTier)
+        {
+            // 선택한게 1단계 특성인 경우 -> 항상 적용중
+            case 1:
+                // 선택한 특성이면 아웃라인 켜기
+                SetupSelectedTalentUI();
+                break;
+
+            case 2:
+                // 선택 가능한지 체크
+                if(character.characterGrowth.Level < 50)
+                {
+                    SetupUnselectableTalentUI(talentTier);
+                }
+                // 이미 적용 된 특성이라면
+                else if (character.characterGrowth.talent_Tier2 == talent)
+                {
+                    SetupSelectedTalentUI();
+                }
+                // 적용 안된 특성이라면
+                else
+                {
+                    SetupUnselectedTalentUI(talentTier, talent);
+                }
+                break;
+
+            case 3:
+                // 선택 가능한지 체크
+                if (character.characterGrowth.Level < 70 || character.characterGrowth.talent_Tier2 == null)
+                {
+                    SetupUnselectableTalentUI(talentTier);
+                }
+                // 이미 적용 된 특성이라면
+                else if (character.characterGrowth.talent_Tier3 == talent)
+                {
+                    SetupSelectedTalentUI();
+                }
+                // 적용 안된 특성이라면
+                else
+                {
+                    SetupUnselectedTalentUI(talentTier, talent);
+                }
+                break;
+        }
+    }
+
+    // 이미 적용 된 특성 UI 세팅
+    private void SetupSelectedTalentUI()
+    {
+        GetImage((int)Images.TalentInfoImage).transform.parent.GetComponent<Outline>().enabled = true;
+
+        GetButton((int)Buttons.TalentCheckButton).gameObject.SetActive(true);
+    }
+
+    // 적용 안된 특성 UI 세팅
+    private void SetupUnselectedTalentUI(int talentTier, TalentSO talent)
+    {
+        GetImage((int)Images.TalentInfoImage).transform.parent.GetComponent<Outline>().enabled = false;
+
+        GetButton((int)Buttons.TalentApplyButton).gameObject.SetActive(true);
+        GetButton((int)Buttons.TalentCancelButton).gameObject.SetActive(true);
+
+        GetButton((int)Buttons.TalentApplyButton).onClick.RemoveAllListeners();
+        GetButton((int)Buttons.TalentApplyButton).onClick.AddListener(() => OnClickTalentApplyButton(talentTier, talent));
+    }
+
+    // 특성 선택이 불가능할 때 UI 세팅
+    private void SetupUnselectableTalentUI(int talentTier)
+    {
+        GetImage((int)Images.TalentInfoImage).transform.parent.GetComponent<Outline>().enabled = false;
+        GetButton((int)Buttons.TalentCheckButton).gameObject.SetActive(true);
+
+        if (talentTier == 2)
+        {
+            GetText((int)Texts.TalentDescriptionText).text += $"\n\n<color=red>* 레벨 50이상이 필요합니다.</color>";
+        }
+        else if (talentTier == 3)
+        {
+            GetText((int)Texts.TalentDescriptionText).text += $"\n\n<color=red>* 레벨 70이상, 2단계 특성 활성화가 필요합니다.</color>";
+        }
+    }
+
+    private void OnClickTalentApplyButton(int talentTier, TalentSO selectTalent)
+    {
+        Debug.Log("OnClickTalentApplyButton");
+
+        if (talentTier == 2)
+        {
+            character.characterGrowth.SelectTalent_tier2(selectTalent);
+        }
+        else if (talentTier == 3)
+        {
+            character.characterGrowth.SelectTalent_tier3(selectTalent);
+        }
+
+        TalentPathUpdate();
+        UpdateStat();
+        GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
+    }
+
+    private void OnClickTalentCancelButton()
+    {
+        Debug.Log("OnClickTalentCancelButton");
 
         GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
     }
 
-    private void OnPointerDownTalent()
+    private void OnClickWeaponButton(EquipSO weapon)
     {
-        Debug.Log("OnPointerDownTalent");
+        Debug.Log("OnClickWeaponButton");
 
-        GetObject((int)GameObjects.TalentInfoUI).SetActive(true);
+        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+    }
+    private void OnClickArmorButton(EquipSO armor)
+    {
+        Debug.Log("OnClickArmorButton");
+
+        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
     }
 }
