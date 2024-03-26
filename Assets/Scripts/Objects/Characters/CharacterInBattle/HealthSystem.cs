@@ -13,6 +13,7 @@ public class HealthSystem : MonoBehaviour
     [field:SerializeField] public int CurHealth {  get; set; }
 
     public event Action Die;
+    public event Action DieAnimation;
 
     private void Start()
     {
@@ -67,6 +68,11 @@ public class HealthSystem : MonoBehaviour
         healthBar.fillAmount -= ((float)n / (float)MaxHealth);
 
         Managers.UI.FindPopup<BattleUI>().ShowDamageText(n, transform);
+
+        if(CurHealth <= 0)
+        {
+            DieAnimation?.Invoke();
+        }
     }
 
     public void HealHealthBar(int n)// 체력 회복함

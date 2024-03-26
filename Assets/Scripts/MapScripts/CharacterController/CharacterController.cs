@@ -300,7 +300,7 @@ public class CharacterController : MonoBehaviour
 
     private void SelectCurCharacter(CharacterBase character)
     {
-        if (character == null && curSelectedCharacter != null)
+        if ((character == null && curSelectedCharacter != null) || (character != curSelectedCharacter && curSelectedCharacter != null))
         {
             CameraController.instance.RemoveGroup(curSelectedCharacter);
         }
@@ -314,7 +314,7 @@ public class CharacterController : MonoBehaviour
 
     private void SelectTargetCharacter(CharacterBase character)
     {
-        if(character == null && curTargetCharacter != null)
+        if((character == null && curTargetCharacter != null) || (character != curTargetCharacter && curTargetCharacter != null))
         {
             CameraController.instance.RemoveGroup(curTargetCharacter);
         }

@@ -30,6 +30,8 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool canSkill;
     [HideInInspector] public bool canActing;
 
+    [HideInInspector] public bool hasAnimationBeforDIe = false;
+
     [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
     public List<OverlayTile> movePath = new List<OverlayTile>();
     private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
@@ -63,6 +65,7 @@ public class CharacterBase : MonoBehaviour
         health = GetComponent<HealthSystem>();
         health.SetHealth(character.Health);
         health.Die += CharacterDie;
+        health.DieAnimation += DieAnimation;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
         curCharacterSkill = character.InitSkills();
@@ -463,12 +466,19 @@ public class CharacterBase : MonoBehaviour
     {
         isDead = true;
         //AnimationController.instance.StartDieAnimation(this);
-        AnimationController.instance.EnqueueDieAnimation(this);
-        AnimationController.instance.StartAnimationQueue();
+        //AnimationController.instance.EnqueueDieAnimation(this);
+        //AnimationController.instance.StartAnimationQueue();
+    }
+
+    private void DieAnimation()
+    {
+        AnimationController.instance.StartDieAnimation(this);
     }
 
     public void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
     {
+        //hasAnimationBeforDIe = true;
+
         curCharacterPassive?.OnDieInBattle(killer);
         curCharacterPassive?.OnDie();
 

@@ -475,9 +475,10 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayDieAnimation(CharacterBase character)
     {
-        PlayNextAnimation();
+        //PlayNextAnimation();
 
         //yield return new WaitWhile(() => (animationQueue.Count > 0) || isAnimationPlaying);// 애니메이션이 재생중이 아닐 때 사망 애니메이션 재생
+        yield return new WaitWhile(() => character.hasAnimationBeforDIe);// 사망시 재생되는 애니메이션이 있을 시, 대기
 
         character.characterAnim.Activate();
 
