@@ -11,7 +11,12 @@ public class PassiveAbilityBase
         this.character = character;
     }
 
-    public virtual void OnStartTurn()// 턴 시작 시 발동
+    public virtual void OnRoundStart()// 
+    {
+
+    }
+
+    public virtual void OnTurnStart()// 턴 시작 시 발동
     {
 
     }
@@ -51,6 +56,21 @@ public class PassiveAbilityBase
 
     }
 
+    public virtual void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
+    {
+
+    }
+
+    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 적중 시
+    {
+
+    }
+
+    public virtual void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
+    {
+
+    }
+
     public virtual void OnTakeAttacked(CharacterBase enemy)// 공격 타겟이 되었을 때
     {
 
@@ -76,7 +96,12 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnEndTurn()// 턴이 끝날 때
+    public virtual void OnRoundEnd()
+    {
+
+    }
+
+    public virtual void OnTurnEnd()// 턴이 끝날 때
     {
 
     }
@@ -112,5 +137,13 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
     //    {
     //        character.CounterAttack(enemy);
     //    }
+    //}
+
+    //public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    //{
+    //    base.OnAttackSuccess(enemy, damage);
+
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
     //}
 }

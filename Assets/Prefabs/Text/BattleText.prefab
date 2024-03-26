@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6997315371328384201}
   - component: {fileID: 4246424608558938536}
   - component: {fileID: 4707654160283045158}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: BattleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4003329992709459704}
-  m_Layer: 31
+  m_Layer: 0
   m_Name: BattleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5893897894585437722, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
       propertyPath: m_Layer
-      value: 31
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8490768754455699248, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
       propertyPath: m_Pivot.x
@@ -165,6 +165,14 @@ PrefabInstance:
     - target: {fileID: 8490768754455699248, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
       propertyPath: m_SizeDelta.y
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490768754455699248, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8490768754455699248, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8490768754455699248, guid: 16afbd32ecaf1d149bf4f54d08ee93c1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -315,12 +323,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
+  m_fontSize: 18
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 15
-  m_fontSizeMax: 30
+  m_fontSizeMin: 5
+  m_fontSizeMax: 18
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

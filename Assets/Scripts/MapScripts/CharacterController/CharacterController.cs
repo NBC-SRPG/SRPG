@@ -584,12 +584,13 @@ public class CharacterController : MonoBehaviour
     private void UseSkill()// 스킬 사용
     {
         canClick = false;
+
+        manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
+
         AnimationController.instance.onAnimationEnd += EndSkill;
 
         curSelectedCharacter.targets = skillTargets;
         curSelectedCharacter.UseSkill();
-
-        manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
     }
 
     private void EndSkill()// 캐릭터의 공격이 끝났을 시
@@ -597,7 +598,13 @@ public class CharacterController : MonoBehaviour
         AnimationController.instance.onAnimationEnd -= EndSkill;
 
         canClick = true;
-        ChangePhase(PlayerPhase.CharacterSelect);
+        ChangePhase(PlayerPhase.ActingSelect);
+
+        if (!curSelectedCharacter.canActing)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
     }
 
 

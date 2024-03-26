@@ -213,6 +213,7 @@ public class BattleUI : UIBase
         obj.gameObject.SetActive(true);
 
         obj.transform.position = new Vector2(transform.position.x, transform.position.y + 2f);
+        text.gameObject.layer = transform.gameObject.layer;
 
         return text;
     }
