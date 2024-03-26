@@ -68,7 +68,7 @@ public class CharAnimBase : MonoBehaviour
 
     public virtual void ShowDamage()
     {
-        targetCharacter.health.TakeDamageHealthBar(targetCharacter.characterAnim.damage);
+        //targetCharacter.health.TakeDamageHealthBar(targetCharacter.characterAnim.damage);
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)

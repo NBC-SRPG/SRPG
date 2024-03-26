@@ -6,6 +6,6 @@ public class FloatingText : MonoBehaviour
 {
     public void Deactivate()
     {
-        gameObject.SetActive(false);
+        transform.parent.gameObject.SetActive(false);
     }
 }

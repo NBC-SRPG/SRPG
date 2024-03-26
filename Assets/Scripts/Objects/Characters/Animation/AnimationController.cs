@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.U2D;
@@ -10,7 +11,7 @@ using UnityEngine.UI;
 public class AnimationController : MonoBehaviour
 {
     public static AnimationController instance;
-    public Queue<Action> animationQueue = new Queue<Action>();
+    private Queue<Action> animationQueue = new Queue<Action>();
 
     private void Awake()
     {
@@ -34,16 +35,22 @@ public class AnimationController : MonoBehaviour
     private CharacterBase attacker;
     private List<CharacterBase> victims;
 
+    private Dictionary<Action, List<Action>> stitchedAnim = new Dictionary<Action, List<Action>>();
+
     private bool isAnimationPlaying;
     private bool isWalkPlaying;
 
     public event Action onAnimationEnd;
+
+    private Action prevAnimation;
 
     //-----------------------------------------------------------------------------------------------------------------------
     //캐릭터 위치 조정
 
     private void SetCharacterLayer(CharacterBase character, int layerNum)
     {
+        character.gameObject.layer = layerNum;
+
         foreach(Transform child in character.GetComponentInChildren<Transform>())
         {
             child.gameObject.layer = layerNum;
@@ -156,6 +163,7 @@ public class AnimationController : MonoBehaviour
 
     public void StartAttackAnimation(CharacterBase attacker, CharacterBase victim)// 공격 애니메이션 재생
     {
+        Debug.Log("attackAnimation");
         isAnimationPlaying = true;
 
         List<CharacterBase> victims = new List<CharacterBase>() { victim };
@@ -436,21 +444,43 @@ public class AnimationController : MonoBehaviour
 
     public void StartAnimationQueue()// 애니메이션 큐 재생 시작
     {
-        if(animationQueue.Count == 0 || isAnimationPlaying || isWalkPlaying)
+        if(animationQueue.Count == 0)
+        {
+            EndAimation();
+            return;
+        }
+
+        if(isAnimationPlaying || isWalkPlaying)
         {
             return;
         }
 
-        Debug.Log("startAnimation");
-
-        animationQueue.Dequeue()?.Invoke();
+        prevAnimation = animationQueue.Dequeue();
+        prevAnimation?.Invoke();
     }
 
     private void PlayNextAnimation()// 다음 애니메이션 재생
     {
+        if (stitchedAnim.ContainsKey(prevAnimation))
+        {
+            Debug.Log("stitched Play");
+
+            foreach(Action action in stitchedAnim[prevAnimation])
+            {
+                action.Invoke();
+            }
+
+            stitchedAnim.Remove(prevAnimation);
+        }
+        else
+        {
+            Debug.Log("no Stitched");
+        }
+
         if (animationQueue.Count > 0)
         {
-            animationQueue.Dequeue()?.Invoke();
+            prevAnimation = animationQueue.Dequeue();
+            prevAnimation?.Invoke();
         }
         else
         {
@@ -500,5 +530,34 @@ public class AnimationController : MonoBehaviour
             yield return null;
         }
 
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    // 기타 함수들
+
+    public bool CheckAnimation()
+    {
+        if(animationQueue.Count > 0 || isAnimationPlaying)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void StitchAnimation(Action action)
+    {
+        Debug.Log("Stitched");
+
+        if (stitchedAnim.ContainsKey(animationQueue.Last()))
+        {
+            stitchedAnim[animationQueue.Last()].Add(action);
+        }
+        else
+        {
+            stitchedAnim.Add(animationQueue.Last(), new List<Action>() { action });
+        }
     }
 }

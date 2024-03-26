@@ -17,6 +17,8 @@ public class CharacterBase : MonoBehaviour
     public SkillBase curCharacterSkill;
     public PassiveAbilityBase curCharacterPassive;
 
+    public CharacterBufList curCharacterBufList;
+
     public OverlayTile curStandingTile;
     public int leftWalkRange;
     [HideInInspector] public bool isDead;
@@ -97,6 +99,8 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.Init(this);
 
         curCharacterPassive.init(this);
+
+        curCharacterBufList = new CharacterBufList(this);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -182,7 +186,12 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 유틸 관련
-    public void OnStartTurn()// 턴 시작 시
+    public void OnRoundStart()
+    {
+        curCharacterPassive?.OnRoundStart();
+    }
+
+    public void OnStartPlayerTurn()// 턴 시작 시
     {
         isWalking = false;
         isAttacking = false;
@@ -196,27 +205,32 @@ public class CharacterBase : MonoBehaviour
 
         leftWalkRange = character.Mov;
 
-        curCharacterPassive?.OnStartTurn();
+        curCharacterPassive?.OnTurnStart();
+        curCharacterBufList?.OnTurnStart();
     }
 
     public void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnPassAlly(allyCharacter);
+        curCharacterBufList?.OnPassAlly(allyCharacter);
     }
 
     public void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnAllyPassedMe(allyCharacter);
+        curCharacterBufList?.OnAllyPassedMe(allyCharacter);
     }
 
     public void OnPassEnemy(CharacterBase enemyCharacter)// 적군 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnPassEnemy(enemyCharacter);
+        curCharacterBufList?.OnPassEnemy(enemyCharacter);
     }
 
     public void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
     {
         curCharacterPassive?.OnEnemyPassesMe(enemyCharacter);
+        curCharacterBufList?.OnEnemyPassesMe(enemyCharacter);
     }
 
     public void OnStartMoving()// 이동 시
@@ -253,6 +267,7 @@ public class CharacterBase : MonoBehaviour
     public void OnEndActing()// 행동이 끝난 뒤
     {
         curCharacterPassive?.OnEndActing();
+        curCharacterBufList?.OnEndActing();
 
         if (isDead)
         {
@@ -265,24 +280,18 @@ public class CharacterBase : MonoBehaviour
         CheckingActing();
     }
 
-    public void OnEndPlayerTurn()
+    public void OnEndPlayerTurn()// 플레이어 턴이 끝날 때
     {
-        isWalking = false;
-        isAttacking = false;
-
-        didAttack = false;
-        didWalk = false;
-        didUseSkill = false;
-
-        canSkill = true;
-        canActing = true;
-
         characterAnim.Activate();
+
+        curCharacterPassive?.OnTurnEnd();
+        curCharacterBufList?.OnTurnEnd();
     }
 
-    public void OnEndTurn()// 턴이 끝날 때
+    public void OnRoundEnd()// 턴이 끝날 때
     {
-        curCharacterPassive?.OnEndTurn();
+        curCharacterPassive?.OnRoundEnd();
+        curCharacterBufList?.OnRoundEnd();
     }
 
     private void CheckingActing()// 행동 가능 횟수 확인
@@ -301,7 +310,7 @@ public class CharacterBase : MonoBehaviour
 
     private void CheckActivated()
     {
-        if (!canActing)
+        if (!canActing && Managers.BattleManager.nowPlayer.playerId == playerId)
         {
             characterAnim.DeActivate();
         }
@@ -348,17 +357,21 @@ public class CharacterBase : MonoBehaviour
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         curCharacterPassive?.OnStartAttack(enemy);
+        curCharacterBufList?.OnStartAttack(enemy);
+
         isAttacking = true;
     }
 
     public void OnAttackSuccess(CharacterBase enemy, int damage)// 공격 적중 시
     {
         curCharacterPassive?.OnAttackSuccess(enemy, damage);
+        curCharacterBufList?.OnAttackSuccess(enemy, damage);
     }
 
     public void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {
         curCharacterPassive?.OnEndAttack(enemy);
+        curCharacterBufList?.OnEndAttack(enemy);
         
         EndAttacking();
     }
@@ -377,13 +390,14 @@ public class CharacterBase : MonoBehaviour
     public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
     {
         curCharacterPassive?.OnTakeDamage(enemy);
+        curCharacterBufList?.OnTakeDamage(enemy);
     }
 
     private void GetAttackTarget()// 공격 타겟 가져오기
     {
         List<OverlayTile> temp = new List<OverlayTile>();
 
-        temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
 
         foreach (OverlayTile scale in temp)
         {
@@ -433,6 +447,7 @@ public class CharacterBase : MonoBehaviour
 
     public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
+        curCharacterPassive.OnUseSkill(target);
         curCharacterSkill.skillAbility?.OnUseSkill(target);
     }
 
@@ -442,13 +457,15 @@ public class CharacterBase : MonoBehaviour
         {
             curCharacterPassive?.OnAttackSuccess(target, damage);
         }
+        curCharacterPassive.OnSkillAttackSuccess(target, damage);
         curCharacterSkill.skillAbility?.OnSkillAttackSuccess(target, damage);
     }
 
     public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
+        curCharacterPassive.OnEndSkill(target);
         curCharacterSkill.skillAbility?.OnEndSkill(target);
-
+        
         EndUseSkill();
     }
 
@@ -465,7 +482,7 @@ public class CharacterBase : MonoBehaviour
     private void CharacterDie()// 캐릭터 사망
     {
         isDead = true;
-        //AnimationController.instance.StartDieAnimation(this);
+
         //AnimationController.instance.EnqueueDieAnimation(this);
         //AnimationController.instance.StartAnimationQueue();
     }
@@ -477,8 +494,6 @@ public class CharacterBase : MonoBehaviour
 
     public void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
     {
-        //hasAnimationBeforDIe = true;
-
         curCharacterPassive?.OnDieInBattle(killer);
         curCharacterPassive?.OnDie();
 
@@ -488,14 +503,14 @@ public class CharacterBase : MonoBehaviour
     public void OnDie()// 사망 시
     {
         curCharacterPassive?.OnDie();
+        curCharacterBufList?.OnDie();
 
         Debug.Log("die");
-
-        curStandingTile.curStandingCharater = null;
     }
 
     private void OnDisable()
     {
+        curStandingTile.curStandingCharater = null;
         curStandingTile = null;
     }
 }

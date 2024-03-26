@@ -122,6 +122,7 @@ public class BattleManager
 
         if (victim.isDead)
         {
+            Debug.Log("dead");
             victim.OnDieInBattle(attacker);
         }
 
@@ -177,14 +178,21 @@ public class BattleManager
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
 
+        skillUser.curCharacterSkill.skillAbility.UseSkill(target);
         foreach(var t in target)
         {
             t.health.TakeDamage(20);
-            t.health.TakeDamageHealthBar(20);
             Debug.Log(t + " take skill");
+
+            if (t.isDead)
+            {
+                t.OnDieInBattle(skillUser);
+            }
         }
 
         skillUser.OnEndSkill(target);
+
+        AnimationController.instance.StartAnimationQueue();
     }
 
     public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
@@ -237,7 +245,7 @@ public class BattleManager
 
     public void PlayerTurnEnd()//플레이어 턴 끝
     {
-        foreach (CharacterBase characters in charactersInBattle)
+        foreach (CharacterBase characters in charactersAsTeam[nowPlayer.playerId].FindAll(x => !x.isDead))
         {
             characters.OnEndPlayerTurn();
         }
@@ -257,6 +265,11 @@ public class BattleManager
     {
         nowPlayer = players[nowPlayerNum];
 
+        foreach (CharacterBase characters in charactersAsTeam[nowPlayer.playerId].FindAll(x => !x.isDead))
+        {
+            characters.OnStartPlayerTurn();
+        }
+
         TurnStart?.Invoke();
         Debug.Log("nowPlayer" + nowPlayer.playerId);
     }
@@ -265,9 +278,9 @@ public class BattleManager
     {
         players = players.OrderByDescending(x => x.prioty).ToList();
 
-        foreach (CharacterBase characters in charactersInBattle)
+        foreach (CharacterBase characters in charactersInBattle.FindAll(x => !x.isDead))
         {
-            characters.OnStartTurn();
+            characters.OnRoundStart();
         }
 
         PlayerTurnStart();
@@ -275,9 +288,9 @@ public class BattleManager
 
     private void EndRound()//라운드 끝
     {
-        foreach(CharacterBase characters in charactersInBattle)
+        foreach(CharacterBase characters in charactersInBattle.FindAll(x => !x.isDead))
         {
-            characters.OnEndTurn();
+            characters.OnRoundEnd();
         }
 
         nowPlayerNum = 0;
