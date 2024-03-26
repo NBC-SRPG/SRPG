@@ -66,7 +66,7 @@ public class Constants
 
     public enum PlayerCons
     {
-        DefaltLevel = 1,
+        DefaltLevel = 100,
         DefaltMaxExp = 100,
         MaxLevel = 90,
         DefaltMaxAp = 160
@@ -80,6 +80,7 @@ public class Constants
 
     public enum UIEvent
     {
+        Pressed,
         PointerDown,
         PointerUp
     }
@@ -146,4 +147,6 @@ public class Constants
         Robe //로브
     }
 
+    public const int MaxDiamond = 999999;
+    public const int MaxGold = 999999;
 }

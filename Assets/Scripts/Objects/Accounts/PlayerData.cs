@@ -4,16 +4,60 @@ using UnityEngine;
 using static Constants;
 
 public class PlayerData
-{   //순서대로 UID, 닉네임, 다이아, 골드. AP, AP최대치, 계정 레벨, 계정 최대 레벨, 현재 경험치, 최대 경험치, 생일, 선호 캐릭터 목록, 캐릭터 아이콘, 지원 캐릭터
-    public string uId { get; private set; }
-    public string playerName { get; private set; }
-    public string playerComment { get; private set; }
-    public int diamond { get; private set; }
-    public int gold { get; private set; }
-    public int ap { get; private set; }
-    public int maxAp { get; private set; } = (int)PlayerCons.DefaltMaxAp;
-    private int level = (int)PlayerCons.DefaltLevel;
-    public int Level { get { return level; } 
+{
+    public event Action<int> OnDiamondChanged;
+    public event Action<int> OnGoldChanged;
+    public event Action<int> OnApChanged;
+
+    public string uId { get; private set; } // UID
+    public string playerName { get; private set; } // 닉네임
+    public string playerComment { get; private set; } // 코멘트
+
+    private int diamond;
+    public int Diamond
+    {
+        get => diamond;
+        private set
+        {
+            if (diamond != value)
+            {
+                diamond = value;
+                OnDiamondChanged?.Invoke(diamond);
+            }
+        }
+    } // 다이아
+
+    private int gold;
+    public int Gold
+    {
+        get => gold;
+        private set
+        {
+            if (gold != value)
+            {
+                gold = value;
+                OnGoldChanged?.Invoke(gold);
+            }
+        }
+    } // 골드
+
+    private int ap;
+    public int Ap
+    {
+        get => ap;
+        private set
+        {
+            if (ap != value)
+            {
+                ap = value;
+                OnApChanged?.Invoke(ap);
+            }
+        }
+    } // ap
+
+    public int maxAp { get; private set; } = (int)PlayerCons.DefaltMaxAp; // maxAp
+    private int level = (int)PlayerCons.DefaltLevel; // 레벨
+    public int Level { get { return level; }  // 레벨 & 경험치, ap 자동 설정
                        private set
                         {
                             level = math.clamp(value, (int)PlayerCons.DefaltLevel, maxLevel);
@@ -21,14 +65,14 @@ public class PlayerData
                             maxAp = math.clamp((160 + ((level - 1) * 2)), (int)PlayerCons.DefaltMaxAp, 240);
                         }
                      }
-    public int maxLevel { get; private set; } = (int)PlayerCons.MaxLevel;
-    public int exp { get; private set; }
-    public int maxExp { get; private set; } = (int)PlayerCons.DefaltMaxExp;
-    public string birthday { get; private set; }
-    public int[] favoriteCharacter { get; private set; }
-    public int lobbyCharacter { get; private set; }
-    public int characterIcon { get; private set; }
-    public int supportCharacter { get; private set; }
+    public int maxLevel { get; private set; } = (int)PlayerCons.MaxLevel; // 최대 레벨
+    public int exp { get; private set; } // 경험치
+    public int maxExp { get; private set; } = (int)PlayerCons.DefaltMaxExp; // 최대 경험치
+    public string birthday { get; private set; } // 생일
+    public int[] favoriteCharacter { get; private set; } // 선호 캐릭터
+    public int lobbyCharacter { get; private set; } // 로비 캐릭터
+    public int characterIcon { get; private set; } // 캐릭터 아이콘
+    public int supportCharacter { get; private set; } // 지원 캐릭터
 
     // Init 메서드
     public void Init(
@@ -114,16 +158,16 @@ public class PlayerData
 
     public bool AddDiamond(int amount) //다이아 획득
     {
-        int calcedDiamond = diamond + amount;
+        int calcedDiamond = Diamond + amount;
 
         if (amount < 0)
         {
             Debug.Log("더하려는 값이 음수값입니다.");
             return false;
         }
-        else if (calcedDiamond <= 999999)
+        else if (calcedDiamond <= MaxDiamond)
         {
-            diamond = calcedDiamond;
+            Diamond = calcedDiamond;
             return true;
         }
         else
@@ -135,11 +179,11 @@ public class PlayerData
 
     public bool ReduceDiamond(int amount) //다이아 지불
     {
-        int calcedDiamond = diamond - amount;
+        int calcedDiamond = Diamond - amount;
 
         if (calcedDiamond >= 0)
         {
-            diamond = calcedDiamond;
+            Diamond = calcedDiamond;
             return true;
         }
         else
@@ -151,15 +195,15 @@ public class PlayerData
 
     public bool AddGold(int amount) //골드 획득
     {
-        int calcedGold = gold + amount;
+        int calcedGold = Gold + amount;
         if ( amount < 0)
         {
             Debug.Log("더하려는 값이 음수값입니다.");
             return false;
         }
-        else if (calcedGold <= 9999999)
+        else if (calcedGold <= MaxGold)
         {
-            gold = calcedGold;
+            Gold = calcedGold;
             return true;
         }
         else
@@ -171,11 +215,11 @@ public class PlayerData
 
     public bool ReduceGold(int amount) //골드 지불
     {
-        int calcedGold = gold - amount;
+        int calcedGold = Gold - amount;
 
         if (calcedGold >= 0)
         {
-            gold = calcedGold;
+            Gold = calcedGold;
             return true;
         }
         else
@@ -186,14 +230,14 @@ public class PlayerData
     }
     public bool AddAP(int value) //Ap 충전. 충전에는 별도의 제한이 없음
     {
-            ap += value;
-            return true;
+        Ap += value;
+        return true;
     }
     public bool ReduceAP(int value) //Ap 차감
     {
-        if ((ap - value) >= 0)
+        if ((Ap - value) >= 0)
         {
-            ap -= value;
+            Ap -= value;
             return true;
         }
         else
@@ -202,11 +246,13 @@ public class PlayerData
             return false;
         }
     }
-    public void RegenAP() //Ap 리젠 시 사용 될 메서드. 리젠 Ap는 최대치를 넘어서 증가하지 않는다. 통상적으로 6분에 1씩, 1시간에 10 재생. 하루 총 재생량은 240.
+    // Ap 리젠 시 사용 될 메서드. 리젠 Ap는 최대치를 넘어서 증가하지 않는다.
+    // 통상적으로 6분에 1씩, 1시간에 10 재생. 하루 총 재생량은 240.
+    public void RegenAP() 
     {
-        if ((ap + 1) <= maxAp)
+        if ((Ap + 1) <= maxAp)
         {
-            ap += 1;
+            Ap += 1;
         }
     }
 
