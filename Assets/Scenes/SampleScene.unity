@@ -301,8 +301,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 735687906}
-        m_TargetAssemblyTypeName: FirebaseGoogleAuth, Assembly-CSharp
-        m_MethodName: TryGoogleLogin
+        m_TargetAssemblyTypeName: Login, Assembly-CSharp
+        m_MethodName: GoogleLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -359,10 +359,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 735687901}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19bf0be79fda4124aaa09b16d5c10e50, type: 3}
+  m_Script: {fileID: 11500000, guid: 4031de5d0bed8a143ac86f9314fbcc0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 1732019321}
 --- !u!1 &1224033606
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +374,7 @@ GameObject:
   - component: {fileID: 1224033609}
   - component: {fileID: 1224033608}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Login
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -421,7 +420,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Login
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
