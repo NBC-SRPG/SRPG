@@ -59,6 +59,8 @@ public class AnimationController : MonoBehaviour
 
     private void CharacterSetting(CharacterBase attacker, List<CharacterBase> victims)// 캐릭터 위치 지정
     {
+        CameraController.instance.SetCharacterCameraMove(1);
+
         backGround.gameObject.SetActive(true);
         battleCanvas.gameObject.SetActive(true);
 
@@ -90,15 +92,14 @@ public class AnimationController : MonoBehaviour
             victims[i].characterAnim.Activate();
             victims[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
-
             group.AddMember(victims[i].transform, 1, 5);
         }
-
-        CameraController.instance.SetCharacterCameraMove(1);
     }
 
     private void CharacterRelease() // 캐릭터 제자리로
     {
+        CameraController.instance.SetCharacterCameraMove(0);
+
         backGround.gameObject.SetActive(false);
         battleCanvas.gameObject.SetActive(false);
 
@@ -141,8 +142,6 @@ public class AnimationController : MonoBehaviour
             victims[i].characterAnim.SetDamage(0);
         }
         victims.Clear();
-
-        CameraController.instance.SetCharacterCameraMove(0);
     }
 
     public void EndAimation()
@@ -211,7 +210,7 @@ public class AnimationController : MonoBehaviour
 
     private IEnumerator PlayCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)// 반격 애니메이션
     {
-        Managers.UI.FindPopup<BattleUI>().ShowCounterText(attacker.transform);
+        Managers.UI.FindUI<BattleUI>().ShowCounterText(attacker.transform);
         attacker.characterAnim.PlayExtraAnimation(victim, "counter_attack");
 
         while (true)
@@ -239,31 +238,37 @@ public class AnimationController : MonoBehaviour
     {
         Debug.Log("Enqueue Skillattack");
         animationQueue.Enqueue(() => StartSkillAnimation(attacker, victims));
+
+        Debug.Log("Enqueue " + victims.Count);
     }
 
     public void StartSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)// 스킬 애니메이션 재생
     {
         isAnimationPlaying = true;
 
-        CharacterRelease();
-        CharacterSetting(attacker, victims);
+        Debug.Log("Dequeue " + victims.Count);
 
-        if(victims.Count == 0)
-        {
-            CharacterRelease();
-            return;
-        }
+        CharacterRelease();
+
+        //if (victims.Count == 0)
+        //{
+        //    Debug.Log("no target");
+        //    PlayNextAnimation();
+        //    return;
+        //}
+
+        CharacterSetting(attacker, victims);
 
         StartCoroutine(PlaySkillAnimation(victims));
     }
 
-    private IEnumerator PlaySkillAnimation(List<CharacterBase> victim)// 스킬 애니메이션
+    private IEnumerator PlaySkillAnimation(List<CharacterBase> victims)// 스킬 애니메이션
     {
-        attacker.characterAnim.PlaySkillAnimation(victim);
+        attacker.characterAnim.PlaySkillAnimation(victims);
 
         while (true)
         {
-            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("skill"))
+            if (attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsTag("skill"))
             {
                 float animTime = attacker.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
@@ -463,7 +468,6 @@ public class AnimationController : MonoBehaviour
     {
         if (stitchedAnim.ContainsKey(prevAnimation))
         {
-            Debug.Log("stitched Play");
 
             foreach(Action action in stitchedAnim[prevAnimation])
             {
@@ -471,10 +475,6 @@ public class AnimationController : MonoBehaviour
             }
 
             stitchedAnim.Remove(prevAnimation);
-        }
-        else
-        {
-            Debug.Log("no Stitched");
         }
 
         if (animationQueue.Count > 0)
