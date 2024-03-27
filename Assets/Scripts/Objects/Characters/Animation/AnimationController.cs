@@ -65,7 +65,7 @@ public class AnimationController : MonoBehaviour
         battleCanvas.gameObject.SetActive(true);
 
         this.attacker = attacker;
-        this.victims = victims;
+        this.victims = victims.ConvertAll(data => data);
 
         attacker.transform.position = attackerPosition.transform.position;
         attacker.transform.localScale = new Vector3(4, 4, 0);
@@ -75,24 +75,28 @@ public class AnimationController : MonoBehaviour
         attacker.characterAnim.Activate();
         attacker.characterAnim.FlipCharacterDirection(Vector2.right);
 
+        attacker.health.healthBarCanvas.SetActive(false);
+
         group.AddMember(attacker.transform, 1, 5);
 
-        for (int i = 0; i < victims.Count; i++)
+        for (int i = 0; i < this.victims.Count; i++)
         {
-            if (victims[i] == attacker)
+            if (this.victims[i] == attacker)
             {
                 continue;
             }
 
-            victims[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
-            victims[i].transform.localScale = new Vector3(4, 4, 0);
+            this.victims[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
+            this.victims[i].transform.localScale = new Vector3(4, 4, 0);
 
-            SetCharacterLayer(victims[i], 31);
+            SetCharacterLayer(this.victims[i], 31);
 
-            victims[i].characterAnim.Activate();
-            victims[i].characterAnim.FlipCharacterDirection(Vector2.left);
+            this.victims[i].characterAnim.Activate();
+            this.victims[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
-            group.AddMember(victims[i].transform, 1, 5);
+            this.victims[i].health.healthBarCanvas.SetActive(false);
+
+            group.AddMember(this.victims[i].transform, 1, 5);
         }
     }
 
@@ -124,6 +128,9 @@ public class AnimationController : MonoBehaviour
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
         attacker.characterAnim.SetDamage(0);
+
+        attacker.health.healthBarCanvas.SetActive(true);
+
         attacker = null;
 
         if(victims.Count == 0)
@@ -140,6 +147,8 @@ public class AnimationController : MonoBehaviour
 
             victims[i].characterAnim.EndAnimation(victims[i].isWalking);
             victims[i].characterAnim.SetDamage(0);
+
+            victims[i].health.healthBarCanvas.SetActive(true);
         }
         victims.Clear();
     }
@@ -236,26 +245,26 @@ public class AnimationController : MonoBehaviour
 
     public void EnqueueSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)
     {
-        Debug.Log("Enqueue Skillattack");
-        animationQueue.Enqueue(() => StartSkillAnimation(attacker, victims));
+        List<CharacterBase> v = new List<CharacterBase>();
 
-        Debug.Log("Enqueue " + victims.Count);
+        v.AddRange(victims.ConvertAll(data => data));
+
+        Debug.Log("Enqueue Skillattack");
+        animationQueue.Enqueue(() => StartSkillAnimation(attacker, v));
     }
 
     public void StartSkillAnimation(CharacterBase attacker, List<CharacterBase> victims)// 스킬 애니메이션 재생
     {
         isAnimationPlaying = true;
 
-        Debug.Log("Dequeue " + victims.Count);
-
         CharacterRelease();
 
-        //if (victims.Count == 0)
-        //{
-        //    Debug.Log("no target");
-        //    PlayNextAnimation();
-        //    return;
-        //}
+        if (victims.Count == 0)
+        {
+            Debug.Log("no target");
+            PlayNextAnimation();
+            return;
+        }
 
         CharacterSetting(attacker, victims);
 

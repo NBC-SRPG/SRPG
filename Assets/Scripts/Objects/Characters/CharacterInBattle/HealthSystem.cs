@@ -7,17 +7,20 @@ using UnityEngine.UI;
 
 public class HealthSystem : MonoBehaviour
 {
-    public Image healthBar;
+    public GameObject healthBarCanvas;
+
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image backHealBar;
 
     public int MaxHealth { get; set; }
-    [field:SerializeField] public int CurHealth {  get; set; }
+    public int CurHealth {  get; set; }
 
     public event Action Die;
     public event Action DieAnimation;
 
     private void Start()
     {
-        AnimationController.instance.onAnimationEnd += SetHealthBar;
+        //AnimationController.instance.onAnimationEnd += SetHealthBar;
     }
 
     public void SetHealth(int health)
@@ -60,6 +63,10 @@ public class HealthSystem : MonoBehaviour
         {
             HealHealthBar(n);
         }
+        else
+        {
+            AnimationController.instance.StitchAnimation(() => HealHealthBar(n));
+        }
     }
 
     private void ChangeHealth(int n)//체력 변화
@@ -79,11 +86,11 @@ public class HealthSystem : MonoBehaviour
 
     public void TakeDamageHealthBar(int n)// 데미지 입힘
     {
-        healthBar.fillAmount -= ((float)n / (float)MaxHealth);
+        StartCoroutine(TakeHealthBar(false));
 
-        Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform);
+        //Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform);
 
-        if(CurHealth <= 0)
+        if (CurHealth <= 0)
         {
             DieAnimation?.Invoke();
         }
@@ -91,7 +98,7 @@ public class HealthSystem : MonoBehaviour
 
     public void HealHealthBar(int n)// 체력 회복함
     {
-        healthBar.fillAmount += ((float)n / (float)MaxHealth);
+        StartCoroutine(TakeHealthBar(true));
 
         Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform, true);
     }
@@ -106,42 +113,37 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    private IEnumerator TakeHealthBar()
+    private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
     {
-        while (HealthRatio != healthBar.fillAmount)
+        if(!heal)
         {
-            if (HealthRatio < healthBar.fillAmount)
+            backHealBar.color = Color.yellow;
+            backHealBar.fillAmount = healthBar.fillAmount;
+            healthBar.fillAmount = HealthRatio;
+
+            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
             {
-                healthBar.fillAmount -= 0.1f;
-            }
-            else
-            {
-                healthBar.fillAmount += 0.1f;
+                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, Time.deltaTime * 2f);
+
+                yield return null;
             }
 
-            yield return null;
+            backHealBar.fillAmount = healthBar.fillAmount;
         }
-    }
-
-    private IEnumerator TakeHealthBar(int n)// 체력바 변화
-    {
-        float number = (float)n / (float)MaxHealth;
-        float tmp = 0;
-
-        while (number != tmp)
+        else if(heal)
         {
-            if (number < 0)
+            backHealBar.color = Color.green;
+            backHealBar.fillAmount = HealthRatio;
+
+            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
             {
-                healthBar.fillAmount -= 0.1f;
-                tmp -= 0.1f;
-            }
-            else
-            {
-                healthBar.fillAmount += 0.1f;
-                tmp += 0.1f;
+                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, Time.deltaTime * 2f);
+
+                yield return null;
             }
 
-            yield return null;
+            healthBar.fillAmount = backHealBar.fillAmount;
         }
+
     }
 }

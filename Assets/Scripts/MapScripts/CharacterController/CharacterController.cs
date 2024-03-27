@@ -330,6 +330,12 @@ public class CharacterController : MonoBehaviour
 
     private void ActingSelectPhase()
     {
+        if (curSelectedCharacter == null)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
+
         RaycastHit2D hit = GetTouchOnce();
 
         if (hit)
@@ -395,6 +401,12 @@ public class CharacterController : MonoBehaviour
 
     private void CharacterMoveandAttackPhase()// 캐릭터 이동 및 일반 공격 페이즈
     {
+        if (curSelectedCharacter == null)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
+
         if (AnimationController.instance.CheckAnimation())
         {
             return;
@@ -508,6 +520,12 @@ public class CharacterController : MonoBehaviour
 
     private void SkillTargetSelectPhase()// 스킬 범위 선택
     {
+        if (curSelectedCharacter == null)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
+
         if (AnimationController.instance.CheckAnimation())
         {
             return;

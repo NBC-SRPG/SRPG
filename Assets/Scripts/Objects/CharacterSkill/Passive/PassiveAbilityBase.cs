@@ -139,11 +139,18 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
     //    }
     //}
 
-    //public override void OnAttackSuccess(CharacterBase enemy, int damage)
-    //{
-    //    base.OnAttackSuccess(enemy, damage);
+    public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    {
+        base.OnAttackSuccess(enemy, damage);
 
-    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
-    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
-    //}
+        //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+        enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
+    }
+
+    public override void OnPassAlly(CharacterBase allyCharacter)
+    {
+        base.OnPassAlly(allyCharacter);
+
+        allyCharacter.health.HealHealth(10);
+    }
 }

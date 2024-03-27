@@ -149,6 +149,8 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.MoveButton).gameObject.SetActive(false);
         GetButton((int)Buttons.AttackButton).gameObject.SetActive(false);
         GetButton((int)Buttons.SkillConFirmButton).gameObject.SetActive(false);
+
+        CloseTexts();
     }
 
     public void ShowAtCharacterSelectPhase()
