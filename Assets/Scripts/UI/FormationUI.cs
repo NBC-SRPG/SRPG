@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
@@ -22,6 +23,10 @@ public class FormationUI : UIBase
         FormationLevelText4,
         FormationLevelText5
     }
+    private enum InputFields
+    {
+        PartyNameInputField
+    }
     private enum Buttons
     {
         PresetButton1,
@@ -36,7 +41,6 @@ public class FormationUI : UIBase
         FormationButton5,
         LeftArrowButton,
         RightArrowButton,
-        //PartyNameButton,
         ResetButton,
         BackButton
     }
@@ -79,6 +83,7 @@ public class FormationUI : UIBase
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
+        Bind<TMP_InputField>(typeof(InputFields));
 
         Buttons presetButton;
         Buttons formationButton;
@@ -98,20 +103,17 @@ public class FormationUI : UIBase
 
         GetButton((int)Buttons.LeftArrowButton).onClick.AddListener(OnClickLeftArrowButton);
         GetButton((int)Buttons.RightArrowButton).onClick.AddListener(OnClickRightArrowButton);
-        //GetButton((int)Buttons.PartyNameButton).onClick.AddListener(OnClickPartyNameButton);
         GetButton((int)Buttons.ResetButton).onClick.AddListener(OnClickResetButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+
+        Get<TMP_InputField>((int)InputFields.PartyNameInputField).onEndEdit.AddListener(ChangePartyName);
 
         presetIndex = 0;
 
         UpdateFormationToPreset(presetIndex);
-
-        // TODO
-        // 저장되어 있는 프리셋이 있는지 체크해서 로드
     }
 
     // 프리셋 변경 시 업데이트
-    // 프리셋 버튼 클릭이랑 같은 역할을 하게 될 것 같음 -> 둘이 합치고 함수명 고민
     private void UpdateFormationToPreset(int index)
     {
         // TODO
@@ -133,6 +135,9 @@ public class FormationUI : UIBase
 
         presetIndex = index;
 
+        // 파티 이름 불러오기
+        Get<TMP_InputField>((int)InputFields.PartyNameInputField).text = $"{Managers.AccountData.formationData[presetIndex].partyName}";
+       
         // 바뀐 프리셋 편성 데이터 업데이트
         for (int i = 0; i < 5; i++)
         {
@@ -149,7 +154,7 @@ public class FormationUI : UIBase
         Texts formationLevelTextEnum = (Texts)Enum.Parse(typeof(Texts), $"FormationLevelText{index + 1}");
 
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
-        if (Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
+        if (Managers.AccountData.formationData.ContainsKey(presetIndex) && Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
         {
             Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex].characterId[index]}");
             GetImage((int)formationImageEnum).sprite = characterSprite;
@@ -191,6 +196,16 @@ public class FormationUI : UIBase
                 GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
                 Destroy(child);
             }
+        }
+    }
+
+    private void ChangePartyName(string newPartyName)
+    {
+        if (!string.IsNullOrEmpty(newPartyName))
+        {
+            Debug.Log("New PartyName: " + newPartyName);
+
+            Managers.AccountData.formationData[presetIndex].partyName = newPartyName;
         }
     }
 
@@ -283,7 +298,6 @@ public class FormationUI : UIBase
         if (pressedTimer > 1f && !hasShownCharacterInfo)
         {
             CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
-
 
             ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
             hasShownCharacterInfo = true;
