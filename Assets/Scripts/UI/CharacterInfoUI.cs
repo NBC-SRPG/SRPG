@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
-using static Constants;
 
 public class CharacterInfoUI : UIBase
 {
@@ -40,7 +35,9 @@ public class CharacterInfoUI : UIBase
         TalentButton,
         ClassButton,
         BackButton,
-        ExSkillLevelUpButton,
+        HomeButton,
+        SkinButton,
+        ExSkillButton,
         WeaponButton,
         ArmorButton,
         EquipmentUpgradeUICloseButton,
@@ -57,6 +54,7 @@ public class CharacterInfoUI : UIBase
     private enum Images
     {
         IllustrationImage,
+        AttributeImage,
         ExSkillImage,
         PassiveSkillImage,
         WeaponImage,
@@ -80,7 +78,6 @@ public class CharacterInfoUI : UIBase
         SkillTab,
         TalentTab,
         ClassTab,
-        ExSkillInfoUI,
         PassiveSkillInfoUI,
         TalentInfoUI,
         EquipmentUpgradeUI,
@@ -103,14 +100,6 @@ public class CharacterInfoUI : UIBase
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        // 스킬 이미지 클릭 시작, 클릭 끝 이벤트 걸기
-        BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerDownExSkill, UIEvent.PointerDown);
-        BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerUpExSkill, UIEvent.PointerUp);
-        BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerDownPassiveSkill, UIEvent.PointerDown);
-        BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerUpPassiveSkill, UIEvent.PointerUp);
-
-        // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.TalentInfoUI).SetActive(false);
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
@@ -124,12 +113,13 @@ public class CharacterInfoUI : UIBase
         GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.armor.equip_Id}");
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
+        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
         GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
         GetButton((int)Buttons.TalentCancelButton).onClick.AddListener(OnClickTalentCancelButton);
         GetButton((int)Buttons.TalentCheckButton).onClick.AddListener(OnClickTalentCancelButton);
         GetButton((int)Buttons.WeaponButton).onClick.AddListener(() => OnClickWeaponButton(character.characterData.weapon));
         GetButton((int)Buttons.ArmorButton).onClick.AddListener(() => OnClickArmorButton(character.characterData.armor));
+        GetButton((int)Buttons.ExSkillButton).onClick.AddListener(() => OnClickExSkillButton(character.characterData.character_Id));
 
         ShowTab(PlayTab.Skill);
 
@@ -139,6 +129,7 @@ public class CharacterInfoUI : UIBase
         InitClassTab();
         InitCharacterInfo();
 
+        // 테스트 레벨업
         GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(() => { character.characterGrowth.Exp += character.characterGrowth.maxExp; UpdateStat(); });
     }
 
@@ -175,6 +166,9 @@ public class CharacterInfoUI : UIBase
     // 특성 패스 & 아웃라인 세팅
     private void TalentPathUpdate()
     {
+        // TODO
+        // 안찍은 특성 흑백 이미지 처리 -> 쉐이더 사용
+
         // 2단계 특성이 찍혀있다면
         if (character.characterGrowth.talent_Tier2 != null)
         {
@@ -188,6 +182,8 @@ public class CharacterInfoUI : UIBase
 
                 GetImage((int)Images.Talent2_1Image).transform.parent.GetComponent<Outline>().enabled = true;
                 GetImage((int)Images.Talent2_2Image).transform.parent.GetComponent<Outline>().enabled = false;
+            
+
             }
             // 2-2 특성이 찍혀있다면
             else
@@ -235,6 +231,8 @@ public class CharacterInfoUI : UIBase
     {
         GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.character_Id}");
         GetText((int)Texts.NameText).text = $"{character.characterData.characterName}";
+        // TODO
+        // 속성 이미지 변경
 
         // int numberOfStars = character.characterData.defaltStar; // 별의 개수
         int numberOfStars = 3; // 별의 개수 // 테스트 데이터
@@ -256,7 +254,7 @@ public class CharacterInfoUI : UIBase
 
         UpdateStat();
         // TODO
-        // 장비 정보는 아직 없는 듯?
+        // 장비 정보
     }
 
     private void UpdateStat()
@@ -274,7 +272,17 @@ public class CharacterInfoUI : UIBase
     {
         // 이미 탭에 열려있는 정보를 누르면 아무것도 하지않음
         if (playTab == tab)
+        {
             return;
+        }
+
+        // 특성 탭을 열려고 할 때, 레벨이 30보다 낮다면 경고 메시지 주고 바로 return;
+        if (tab == PlayTab.Talent && character.characterGrowth.Level < 30)
+        {
+            WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
+            warningUi.SetText("레벨 30이상이어야 합니다.");
+            return;
+        }
 
         // 현재 열려있는 탭 업데이트
         playTab = tab;
@@ -319,34 +327,12 @@ public class CharacterInfoUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
-    private void OnClickExSkillLevelUpButton()
+    private void OnClickExSkillButton(int characterId)
     {
-        Debug.Log("OnClickExSkillLevelUpButton");
+        Debug.Log("OnClickExSkillButton");
 
-        // TODO
-        // 버튼 클릭 효과음
-        // 스킬 레벨 업
-        // 정보 저장
-        // 스킬 LV 텍스트 & 설명 업데이트
-    }
-
-    // TODO
-    // EX, 고유 스킬의 정보창은 CharacterInfo Init에서 초기화 -> 변하지 않음
-    // 특성 정보창은 클릭 시 초기화 -> 특성 5가지 클릭 시 매번 바뀜
-    // 초기화 전 마지막 클릭 한 특성 정보를 들고 있다가 같으면 아무것도 하지 않고 return
-    // 팝업창은 SetActive로 관리하고 있으나 추후 필요 시 기존과 같이 동적 관리
-    private void OnPointerUpExSkill()
-    {
-        Debug.Log("OnPointerUpExSkill");
-
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
-    }
-
-    private void OnPointerDownExSkill()
-    {
-        Debug.Log("OnPointerDownExSkill");
-
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
+        ExSkillInfoUI ui = Managers.UI.ShowUI<ExSkillInfoUI>();
+        ui.Init(characterId);
     }
 
     private void OnClickEquipmentUpgradeUICloseButton()
@@ -354,21 +340,6 @@ public class CharacterInfoUI : UIBase
         Debug.Log("OnClickEquipmentUpgradeUICloseButton");
 
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
-    }
-
-    // TODO 고유 스킬 UI는 따로 할 것인지?
-    private void OnPointerUpPassiveSkill()
-    {
-        Debug.Log("OnPointerUpPassiveSkill");
-
-        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
-    }
-
-    private void OnPointerDownPassiveSkill()
-    {
-        Debug.Log("OnPointerDownPassiveSkill");
-
-        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(true);
     }
 
     private void OnClickTalentButton(int talentTier, TalentSO talent)
@@ -505,5 +476,12 @@ public class CharacterInfoUI : UIBase
         Debug.Log("OnClickArmorButton");
 
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+    }
+
+    private void OnClickHomeButton()
+    {
+        Debug.Log("OnClickHomeButton");
+
+        Managers.UI.ReturnMainUI();
     }
 }
