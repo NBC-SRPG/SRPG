@@ -120,6 +120,12 @@ public class Managers : MonoBehaviour
                 mailSO.remainingTime = expireDate - DateTime.Now;
             }
             s_accountData.mailBox.Add(mailSO);
+            
+            s_accountData.formationData.Add(0, new FormationData());
+            s_accountData.formationData.Add(1, new FormationData());
+            s_accountData.formationData.Add(2, new FormationData());
+            s_accountData.formationData.Add(3, new FormationData());
+            s_accountData.formationData.Add(4, new FormationData());
 
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
