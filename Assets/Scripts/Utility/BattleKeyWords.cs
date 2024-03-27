@@ -19,5 +19,7 @@ public class BattleKeyWords
         Defend,
         Quikness,
 
+        Test_UniqBuf,
+
     }
 }

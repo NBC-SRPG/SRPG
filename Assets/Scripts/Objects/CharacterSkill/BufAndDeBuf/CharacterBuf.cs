@@ -25,6 +25,11 @@ public class CharacterBuf
         Buffer = buffer;
     }
 
+    public virtual BonusStat GetAdditionalStat()
+    {
+        return null;
+    }
+
     public virtual void OnAddBuf()
     {
 

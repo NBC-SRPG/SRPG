@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class SkillAbilityBase
 {
-    CharacterBase character;
+    protected CharacterBase character;
 
     public virtual void init(CharacterBase character)// 스킬 소유자 설정
     {
@@ -37,5 +37,15 @@ public class SkillAbility_ : SkillAbilityBase // 테스트용
     public override void init(CharacterBase character)
     {
         base.init(character);
+    }
+
+    public override void UseSkill(List<CharacterBase> target)
+    {
+        base.UseSkill(target);
+
+        foreach(CharacterBase target2 in target)
+        {
+            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
+        }
     }
 }

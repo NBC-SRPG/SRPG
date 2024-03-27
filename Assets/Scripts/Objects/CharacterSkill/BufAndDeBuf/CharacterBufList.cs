@@ -8,11 +8,13 @@ public class CharacterBufList
     private CharacterBase character;
 
     public List<CharacterBuf> bufList;
+    private List<CharacterBuf> removeList;
 
     public CharacterBufList(CharacterBase character)
     {
         this.character = character;
         bufList = new List<CharacterBuf>();
+        removeList = new List<CharacterBuf>();
     }
 
     //-------------------------------------------------------------------------------------------------------------------
@@ -40,6 +42,10 @@ public class CharacterBufList
                     break;
                 case BattleKeyWords.BufKeyword.Bleed:
                     buf = new CharacterBuf_Bleed();
+                    break;
+
+                case BattleKeyWords.BufKeyword.Test_UniqBuf:
+                    buf = new CharacterBuf_Herald();
                     break;
             }
 
@@ -73,27 +79,50 @@ public class CharacterBufList
         return buf;
     }
 
-    public void RemoveBuf(CharacterBuf buf)
+    public void RemoveBuf()
     {
-        bufList.Remove(buf);
+        foreach(CharacterBuf buf in removeList)
+        {
+            bufList.Remove(buf);
+        }
+
+        removeList.Clear();
     }
 
     private void CheckDestroyBuf()
     {
+
         foreach (CharacterBuf buf in bufList)
         {
             if (buf.IsDestroyed)
             {
                 buf.OnDestroy();
-                RemoveBuf(buf);
+                removeList.Add(buf);
             }
         }
+
+        RemoveBuf();
     }
 
 
 
     //-------------------------------------------------------------------------------------------------------------------
     // 버프 적용
+
+    public BonusStat GetAdditionalStat()
+    {
+        BonusStat stat = new BonusStat();
+
+        foreach(CharacterBuf buf in bufList)
+        {
+            if (!buf.IsDestroyed && buf.GetAdditionalStat() != null)
+            {
+                stat.AddStat(buf.GetAdditionalStat());
+            }
+        }
+
+        return stat;
+    }
 
     public void OnRoundStart()
     {

@@ -64,6 +64,7 @@ public class Character : MonoBehaviour
 
         Health = characterData.health;
         Attack = characterData.atk;
+        Defence = characterData.def;
         Mov = characterData.mov;
         CharacterAttackType = characterData.attackType;
     }

@@ -75,7 +75,7 @@ public class CharacterBase : MonoBehaviour
 
         SetSkillOwner();
 
-        leftWalkRange = character.Mov;
+        leftWalkRange = Mov;
 
         isDead = false;
         isWalking = false;
@@ -102,6 +102,42 @@ public class CharacterBase : MonoBehaviour
 
         curCharacterBufList = new CharacterBufList(this);
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    // 스탯 관련 함수
+
+    public int Attack
+    {
+        get
+        {
+            return character.Attack + curCharacterBufList.GetAdditionalStat().ExtraAtk;
+        } 
+    }
+
+    public int Defend
+    {
+        get
+        {
+            return character.Defence + curCharacterBufList.GetAdditionalStat().ExtraDefend;
+        }
+    }
+
+    public int Health
+    {
+        get
+        {
+            return character.Health;
+        }
+    }
+
+    public int Mov
+    {
+        get
+        {
+            return character.Mov + curCharacterBufList.GetAdditionalStat().ExtraMov;
+        }
+    }
+
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 이동 관련 함수
@@ -189,6 +225,7 @@ public class CharacterBase : MonoBehaviour
     public void OnRoundStart()
     {
         curCharacterPassive?.OnRoundStart();
+        curCharacterBufList?.OnRoundStart();
     }
 
     public void OnStartPlayerTurn()// 턴 시작 시
@@ -203,7 +240,7 @@ public class CharacterBase : MonoBehaviour
         canSkill = true;
         canActing = true;
 
-        leftWalkRange = character.Mov;
+        leftWalkRange = Mov;
 
         curCharacterPassive?.OnTurnStart();
         curCharacterBufList?.OnTurnStart();
@@ -463,15 +500,10 @@ public class CharacterBase : MonoBehaviour
 
     public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
+        didUseSkill = true;
+
         curCharacterPassive.OnEndSkill(target);
         curCharacterSkill.skillAbility?.OnEndSkill(target);
-        
-        EndUseSkill();
-    }
-
-    private void EndUseSkill()// 스킬 끝내기(컷씬 등의 재생 이후)
-    {
-        didUseSkill = true;
 
         OnEndActing();
     }
