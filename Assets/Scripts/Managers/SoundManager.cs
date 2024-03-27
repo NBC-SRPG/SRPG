@@ -14,7 +14,9 @@ public class SoundManager
     private float masterVolume = 1f;
     // BGM, Effect 볼륨 값
     private Dictionary<Constants.Sound, float> soundVolumes = new Dictionary<Constants.Sound, float>();
-
+    private bool masterMute = false;
+    // BGM, Effect 음소거 상태인지 체크
+    private Dictionary<Constants.Sound, bool> soundMutes = new Dictionary<Constants.Sound, bool>();
     public void Init()
     {
         if (soundRoot == null)
@@ -40,12 +42,14 @@ public class SoundManager
                 }
                 // BGM AudioSource는 loop 효과
                 audioSources[(int)Constants.Sound.Bgm].loop = true;
-                // 볼륨 딕셔너리에 추가 후 볼륨 1로 세팅
+                // 볼륨 딕셔너리에 추가 후 볼륨 1로 세팅 & 음소거 상태 아님 체크
+                // TODO 볼륨, 음소거 세팅 시 데이터 저장 후 불러오기
                 foreach (Constants.Sound sound in Enum.GetValues(typeof(Constants.Sound)))
                 {
                     if (sound != Constants.Sound.Max)
                     {
                         soundVolumes[sound] = 1f;
+                        soundMutes[sound] = false;
                     }
                 }
             }
@@ -131,9 +135,13 @@ public class SoundManager
                     audioSources[(int)sound].volume = 0f;
                 }
             }
+
+            masterMute = true;
         }
         else
         {
+            masterMute = false;
+
             // 음소거 해제 시 기존 값으로 적용
             ApplyVolume();
         }
@@ -144,9 +152,11 @@ public class SoundManager
         if (mute)
         {
             audioSources[(int)sound].volume = 0f;
+            soundMutes[sound] = true;
         }
         else
         {
+            soundMutes[sound] = false;
             ApplyVolume();
         }
     }
@@ -158,6 +168,12 @@ public class SoundManager
         {
             if (sound != Constants.Sound.Max)
             {
+                // 마스터 음소거 or sound 음소거 시 볼륨 세팅 하지 않음
+                if (masterMute || soundMutes[sound])
+                {
+                    continue;
+                }
+
                 audioSources[(int)sound].volume = masterVolume * soundVolumes[sound];
             }
         }
@@ -168,6 +184,7 @@ public class SoundManager
     {
         audioSources[(int)type].Stop();
     }
+
     // path에 해당하는 AudioClip 가져오기
     private AudioClip GetAudioClip(string path)
     {

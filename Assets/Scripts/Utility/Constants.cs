@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Constants
 {
     public enum Sound
@@ -66,17 +62,23 @@ public class Constants
 
     public enum PlayerCons
     {
-        DefaltLevel = 1,
+        DefaltLevel = 100,
         DefaltMaxExp = 100,
         MaxLevel = 90,
         DefaltMaxAp = 160
     }
-
-
+    
     public enum TalentType
     {
         Stat, //단순히 스탯 (체력/방어력/공격력, MOV, 치확, 치피, 뎀증, 받피감) 수치만 상승시킨다.
-        Special //스탯 뿐만 아니라 부가적인 특수 메커니즘을 추가하거나 변경 시킨다. 
+        Special //스탯 뿐만 아니라 부가적인 특수 메커니즘을 추가하거나 변경 시킨다.
+    }
+
+    public enum UIEvent
+    {
+        Pressed,
+        PointerDown,
+        PointerUp
     }
 
     public enum GachaType
@@ -84,7 +86,7 @@ public class Constants
         Common,
         PickUp
     }
-    
+
     public enum BaseClass //기본 클래스 5종.
     {
         Warrior,
@@ -141,4 +143,6 @@ public class Constants
         Robe //로브
     }
 
+    public const int MaxDiamond = 999999;
+    public const int MaxGold = 999999;
 }
