@@ -279,6 +279,8 @@ public class PlayerData
             int month = numericValue / 100;
             int day = numericValue % 100;
 
+            // TODO
+            // 이런 경우 30일까지 밖에 없거나, 2월의 경우 윤년 체크 불가
             if (month >= 1 && month <= 12 && day >= 1 && day <= 31)
             {
                 // 날짜가 유효하면 저장
