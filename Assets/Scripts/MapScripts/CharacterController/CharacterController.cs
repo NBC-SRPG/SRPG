@@ -78,13 +78,12 @@ public class CharacterController : MonoBehaviour
     {
         if (curSelectedCharacter && curSelectedCharacter.isDead)
         {
-            curSelectedCharacter = null;
-            ChangePhase(PlayerPhase.CharacterSelect);
+            SelectCurCharacter(null);
         }
 
         if(curTargetCharacter && curTargetCharacter.isDead)
         {
-            curTargetCharacter = null;
+            SelectTargetCharacter(null);
         }
 
         switch (phase)
@@ -396,6 +395,11 @@ public class CharacterController : MonoBehaviour
 
     private void CharacterMoveandAttackPhase()// 캐릭터 이동 및 일반 공격 페이즈
     {
+        if (AnimationController.instance.CheckAnimation())
+        {
+            return;
+        }
+
         if (!curSelectedCharacter.isWalking)// 캐릭터가 이동중이 아닐 때
         {
             GetPathTile();
@@ -459,14 +463,15 @@ public class CharacterController : MonoBehaviour
 
     private void EndMove()// 캐릭터의 이동이 끝났을 시
     {
+        AnimationController.instance.onAnimationEnd -= EndMove;
+
         canClick = true;
 
-        if(curSelectedCharacter == null)
+        if (curSelectedCharacter == null)
         {
+            ChangePhase(PlayerPhase.CharacterSelect);
             return;
         }
-
-        AnimationController.instance.onAnimationEnd -= EndMove;
 
         ChangePhase(PlayerPhase.MoveandAttack);
 
@@ -479,14 +484,15 @@ public class CharacterController : MonoBehaviour
 
     private void EndAttack()// 캐릭터의 공격이 끝났을 시
     {
+        AnimationController.instance.onAnimationEnd -= EndAttack;
+
         canClick = true;
 
         if (curSelectedCharacter == null)
         {
+            ChangePhase(PlayerPhase.CharacterSelect);
             return;
         }
-
-        AnimationController.instance.onAnimationEnd -= EndAttack;
 
         ChangePhase(PlayerPhase.MoveandAttack);
 
@@ -502,9 +508,14 @@ public class CharacterController : MonoBehaviour
 
     private void SkillTargetSelectPhase()// 스킬 범위 선택
     {
+        if (AnimationController.instance.CheckAnimation())
+        {
+            return;
+        }
+
         if (!curSelectedCharacter.canActing)
         {
-            ChangePhase(PlayerPhase.CharacterSelect);
+            ChangePhase(PlayerPhase.MoveandAttack);
             return;
         }
 
@@ -598,9 +609,16 @@ public class CharacterController : MonoBehaviour
         AnimationController.instance.onAnimationEnd -= EndSkill;
 
         canClick = true;
+
+        if (curSelectedCharacter == null)
+        {
+            ChangePhase(PlayerPhase.CharacterSelect);
+            return;
+        }
+
         ChangePhase(PlayerPhase.ActingSelect);
 
-        if (!curSelectedCharacter.canActing)
+        if (!curSelectedCharacter.canActing && curSelectedCharacter)
         {
             ChangePhase(PlayerPhase.CharacterSelect);
             return;

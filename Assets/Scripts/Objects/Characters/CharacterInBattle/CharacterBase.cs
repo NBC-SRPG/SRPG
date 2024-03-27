@@ -506,6 +506,8 @@ public class CharacterBase : MonoBehaviour
         curCharacterBufList?.OnDie();
 
         Debug.Log("die");
+
+        Managers.BattleManager.CheckRemainCharacter();
     }
 
     private void OnDisable()

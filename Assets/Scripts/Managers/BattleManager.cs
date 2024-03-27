@@ -179,7 +179,10 @@ public class BattleManager
         skillUser.OnUseSkill(target);
 
         skillUser.curCharacterSkill.skillAbility.UseSkill(target);
-        foreach(var t in target)
+
+        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
+
+        foreach (var t in target)
         {
             t.health.TakeDamage(20);
             Debug.Log(t + " take skill");
@@ -197,8 +200,6 @@ public class BattleManager
 
     public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
     {
-        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
-
         foreach (CharacterBase victim in target)
         {
             //------
@@ -220,8 +221,6 @@ public class BattleManager
 
     public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
     {
-        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
-
         foreach (CharacterBase victim in target)
         {
             //------
@@ -297,4 +296,31 @@ public class BattleManager
 
         StartRound();
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //기타 함수들
+
+    public void CheckRemainCharacter()
+    {
+        int numbers;
+
+        foreach(GamePlayer player in players)
+        {
+            numbers = 0;
+
+            foreach(CharacterBase chracter in charactersAsTeam[player.playerId])
+            {
+                if (chracter.isDead)
+                {
+                    numbers++;
+                }
+
+                if(numbers == charactersAsTeam[player.playerId].Count)
+                {
+                    Debug.Log(player.playerId + " is lose");
+                }
+            }
+        }
+    }
+
 }

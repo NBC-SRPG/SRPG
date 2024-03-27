@@ -101,7 +101,7 @@ public class CharAnimBase : MonoBehaviour
 
     public virtual void ShowDefend()
     {
-        Managers.UI.FindPopup<BattleUI>().ShowDefendText(targetCharacter.transform);
+        Managers.UI.FindUI<BattleUI>().ShowDefendText(targetCharacter.transform);
     }
 
     public virtual void AttackEnemy()

@@ -81,7 +81,7 @@ public class HealthSystem : MonoBehaviour
     {
         healthBar.fillAmount -= ((float)n / (float)MaxHealth);
 
-        Managers.UI.FindPopup<BattleUI>().ShowDamageText(n, transform);
+        Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform);
 
         if(CurHealth <= 0)
         {
@@ -93,7 +93,7 @@ public class HealthSystem : MonoBehaviour
     {
         healthBar.fillAmount += ((float)n / (float)MaxHealth);
 
-        Managers.UI.FindPopup<BattleUI>().ShowDamageText(n, transform, true);
+        Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform, true);
     }
 
     public void SetHealthBar()// 체력바 실제 수치랑 맞추기
