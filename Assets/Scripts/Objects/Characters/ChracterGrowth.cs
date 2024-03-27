@@ -133,7 +133,6 @@ public class CharacterGrowth : MonoBehaviour
             return false;
         }
     }
-    */
 
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public void SelectTalent_tier2(TalentSO selectTalent)

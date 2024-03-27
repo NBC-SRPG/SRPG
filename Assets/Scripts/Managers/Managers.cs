@@ -83,9 +83,9 @@ public class Managers : MonoBehaviour
             testChatacter1.CharacterInit();
             testChatacter2.CharacterInit();
             testChatacter3.CharacterInit();
-            testChatacter1.characterGrowth.InitialInit();
-            testChatacter2.characterGrowth.InitialInit();
-            testChatacter3.characterGrowth.InitialInit();
+            //testChatacter1.characterGrowth.InitialInit();
+            //testChatacter2.characterGrowth.InitialInit();
+            //testChatacter3.characterGrowth.InitialInit();
 
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
             mailSO.id = "1";
