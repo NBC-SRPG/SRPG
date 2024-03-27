@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="Skill_")]
+[CreateAssetMenu(menuName = "SkillData/SkillData", fileName = "Skill_")]
 public class SkillSO : ScriptableObject
 {
     [Header("Develope")]
