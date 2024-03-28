@@ -9,11 +9,20 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
-    private Transform emptyCamera;
+    public Camera battaleCamera;
+
+    [Header("Idle_Camera")]
+    private Transform PrimeCamera;
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterCamera;
     [SerializeField] private CinemachineVirtualCamera followingTileCamera;
+    [SerializeField] private CinemachineVirtualCamera followingCharacterGroupCamera;
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
+
+    [Header("BattleCamera")]
+    [SerializeField] private CinemachineVirtualCamera BattleCameara;
+    public CinemachineTargetGroup BattleTargetGroup;
+
 
     private CinemachineFramingTransposer characterComposer;
 
@@ -32,7 +41,9 @@ public class CameraController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
+
     private void Start()
     {
         canMove = true;
@@ -42,6 +53,8 @@ public class CameraController : MonoBehaviour
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
+
+        ResetCamera();
     }
 
     private void Update()
@@ -49,12 +62,19 @@ public class CameraController : MonoBehaviour
         if (canMove)
         {
             MoveCamera();
+            followingCharacterCamera.transform.position = PrimeCamera.position;
+            followingTileCamera.transform.position = PrimeCamera.position;
+            followingCharacterGroupCamera.transform.position = PrimeCamera.position;
         }
-        else
+
+        if(PrimeCamera != mainCamera.transform)
         {
-            mainCamera.transform.position = emptyCamera.transform.position;
+            mainCamera.transform.position = PrimeCamera.position;
         }
+
+        BattleTargetGroup.transform.position = PrimeCamera.position;
     }
+
 
     private void MoveCamera()//조이스틱으로 카메라 이동
     {
@@ -68,14 +88,14 @@ public class CameraController : MonoBehaviour
 
         if (Input.mouseScrollDelta.y > 0)
         {
-            if (mainCamera.m_Lens.OrthographicSize > 4)
+            if (mainCamera.m_Lens.OrthographicSize > 5)
             {
                 mainCamera.m_Lens.OrthographicSize -= 0.2f;
             }
         }
         if (Input.mouseScrollDelta.y < 0)
         {
-            if (mainCamera.m_Lens.OrthographicSize < 6.52)
+            if (mainCamera.m_Lens.OrthographicSize < 12)
             {
                 mainCamera.m_Lens.OrthographicSize += 0.2f;
             }
@@ -97,8 +117,9 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 5;
         followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 10;
+        followingCharacterGroupCamera.Priority = 5;
 
-        emptyCamera = followingCharacterCamera.transform;
+        PrimeCamera = followingCharacterCamera.transform;
 
         followingCharacterCamera.Follow = character.transform;
     }
@@ -109,8 +130,9 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 5;
         followingTileCamera.Priority = 10;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 5;
 
-        emptyCamera = followingTileCamera.transform;
+        PrimeCamera = followingTileCamera.transform;
 
         followingTileCamera.Follow = tile.transform;
     }
@@ -119,12 +141,13 @@ public class CameraController : MonoBehaviour
     public void SetCameraOnSelected()
     {
         mainCamera.Priority = 5;
-        followingTileCamera.Priority = 10;
+        followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 10;
 
-        emptyCamera = followingTileCamera.transform;
+        PrimeCamera = followingCharacterGroupCamera.transform;
 
-        followingTileCamera.Follow = followingTargetGroup.transform;
+        followingCharacterGroupCamera.Follow = followingTargetGroup.transform;
     }
 
     //그룹 카메라에 목표물 추가
@@ -150,6 +173,14 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public void ResetGroup()
+    {
+        for(int i = 0; i < followingTargetGroup.m_Targets.Length; i++)
+        {
+            followingTargetGroup.RemoveMember(followingTargetGroup.m_Targets[i].target);
+        }
+    }
+
     public void ResetCamera()// 카메라 초기화
     {
         canMove = true;
@@ -157,10 +188,12 @@ public class CameraController : MonoBehaviour
         mainCamera.Priority = 10;
         followingTileCamera.Priority = 5;
         followingCharacterCamera.Priority = 5;
+        followingCharacterGroupCamera.Priority = 5;
 
         followingCharacterCamera.Follow = null;
         followingTileCamera.Follow = null;
-        emptyCamera = null;
+        followingCharacterGroupCamera.Follow = null;
 
+        PrimeCamera = mainCamera.transform;
     }
 }

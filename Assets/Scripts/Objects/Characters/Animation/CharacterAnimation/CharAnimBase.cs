@@ -7,9 +7,12 @@ public class CharAnimBase : MonoBehaviour
 {
     public Animator Animator { get; private set; }
 
-    protected CharacterBase character;
     protected CharacterBase targetCharacter;
     protected List<CharacterBase> targetList;
+    protected SpriteRenderer sprite;
+    private Color color;
+    protected Rigidbody2D rb;
+    protected Particles particles;
 
     private string idleParameter = "idle";
     private string moveParameter = "move";
@@ -31,8 +34,6 @@ public class CharAnimBase : MonoBehaviour
 
     public void Init(CharacterBase thisCharacter)
     {
-        this.character = thisCharacter;
-
         Animator = GetComponent<Animator>();
 
         Idle = Animator.StringToHash(idleParameter);
@@ -43,7 +44,21 @@ public class CharAnimBase : MonoBehaviour
         Die = Animator.StringToHash(dieParameter);
         defend = Animator.StringToHash(defendParameter);
 
-        Debug.Log("animator init");
+        sprite = GetComponent<SpriteRenderer>();
+        color = sprite.color;
+
+        rb = GetComponentInParent<Rigidbody2D>();
+        particles = GetComponent<Particles>();
+    }
+
+    public void DeActivate()
+    {
+        sprite.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+    }
+
+    public void Activate()
+    {
+        sprite.color = color;
     }
 
     public void SetDamage(int damage)
@@ -51,11 +66,17 @@ public class CharAnimBase : MonoBehaviour
         this.damage = damage;
     }
 
+    public virtual void ShowDamage()
+    {
+        Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent);
+    }
+
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
     {
         this.targetCharacter = targetCharacter;
         Animator.SetTrigger(Attack);
     }
+
 
     public virtual void PlaySkillAnimation(List<CharacterBase> targets)
     {
@@ -67,15 +88,37 @@ public class CharAnimBase : MonoBehaviour
     {
         this.targetCharacter = targetCharacter;
 
-        targetCharacter.transform.position = new Vector3(character.transform.position.x - 3f, character.transform.position.y, character.transform.position.z);
+        targetCharacter.transform.position = new Vector3(transform.parent.position.x - 3f, transform.parent.position.y, transform.parent.position.z);
 
         Animator.SetTrigger(defend);
     }
 
-    public virtual void HitEnemy(int scale)
+    public void PlayExtraAnimation(CharacterBase targetCharacter, string anim)
+    {
+        this.targetCharacter = targetCharacter;
+        Animator.SetTrigger(anim);
+    }
+
+    public virtual void ShowDefend()
+    {
+        Managers.UI.FindUI<BattleUI>().ShowDefendText(targetCharacter.transform);
+    }
+
+    public virtual void AttackEnemy()
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBack(transform.position, scale);
+        targetCharacter.characterAnim.ShowHitParticle();
+    }
+
+    public virtual void KnockBackEnemy(int scale)
+    {
+        targetCharacter.characterAnim.PlayHitAnimation();
+        targetCharacter.characterAnim.GetKnockBack(transform.parent.position, scale);
+    }
+
+    public void ShowHitParticle()
+    {
+        particles.PlayHitParticle();
     }
 
     public void PlayMoveAnimation()
@@ -99,17 +142,31 @@ public class CharAnimBase : MonoBehaviour
         targetList = null;
     }
 
-    public void EndAnimation()
+    public void EndAnimation(bool isWalking)
     {
-        Animator.SetBool(Move, character.isWalking);
+        Animator.SetBool(Move, isWalking);
         Animator.SetBool(Hit, false);
     }
 
     protected Vector2 Getdirection(Vector3 target)
     {
-        Vector2 direction = (target - character.transform.position).normalized;
+        Vector2 direction = (target - transform.parent.position).normalized;
 
         return direction;
+    }
+
+    public void FlipCharacterDirection(Vector2 direction)
+    {
+        if(direction == Vector2.right)
+        {
+            transform.localScale = new Vector2(-1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        }
+        else if(direction == Vector2.left)
+        {
+            transform.localScale = new Vector2(1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
+        }
+
+        
     }
 
     public void FlipCharacter(Vector2 targetPosiition, bool back)
@@ -120,42 +177,83 @@ public class CharAnimBase : MonoBehaviour
         {
             if (back)
             {
-                transform.GetComponent<SpriteRenderer>().flipX = false;
+                FlipCharacterDirection(Vector2.left);
             }
             else
             {
-                transform.GetComponent<SpriteRenderer>().flipX = true;
+                FlipCharacterDirection(Vector2.right);
             }
         }
         else if(direction.x == Vector2.left.x)
         {
             if (back)
             {
-                transform.GetComponent<SpriteRenderer>().flipX = true;
+                FlipCharacterDirection(Vector2.right);
             }
             else
             {
-                transform.GetComponent<SpriteRenderer>().flipX = false;
+                FlipCharacterDirection(Vector2.left);
             }
         }
     }
 
+    public void ShakeCharacter()
+    {
+        StartCoroutine(nameof(Shake));
+    }
+
+    IEnumerator Shake()
+    {
+        Vector3 startPosition = transform.localPosition;
+
+        float shakeTime = 0.5f;
+
+        while (shakeTime > 0.0f)
+        {
+            transform.localPosition = new Vector2(startPosition.x , startPosition.y + UnityEngine.Random.insideUnitSphere.y * 0.05f);
+
+            shakeTime -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        transform.localPosition = startPosition;
+    }
+
     public void GetKnockBack(Vector2 target, int scale)
     {
-        Vector2 knockBackDirection = ((Vector2)character.transform.position - target).normalized * scale;
-        Vector3 targetposition = new Vector3(character.transform.position.x + knockBackDirection.x, character.transform.position.y, character.transform.position.z);
+        Vector2 knockBackDirection = ((Vector2)transform.parent.position - target).normalized * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
 
         FlipCharacter(knockBackDirection, true);
 
+        //StartCoroutine(KnockBack(knockBackDirection));
         StartCoroutine(MoveToTarget(targetposition));
     }
 
-    protected IEnumerator MoveToTarget(Vector3 targetPosition)
+    protected IEnumerator KnockBack(Vector2 direction)
+    {
+        float timeSet = 0;
+        while (true)
+        {
+            rb.AddRelativeForce(direction / 2, ForceMode2D.Impulse);
+            timeSet += Time.deltaTime;
+            if (timeSet > 0.25f)
+            {
+                Debug.Log("111");
+                rb.velocity = Vector2.zero;
+                break;
+            }
+            yield return null;
+        }
+    }
+
+    protected IEnumerator MoveToTarget(Vector3 targetPosition, float speed = 100f)
     {
 
-        while(character.transform.position != targetPosition)
+        while(transform.parent.position != targetPosition)
         {
-            character.transform.position = Vector3.MoveTowards(character.transform.position, targetPosition, 80f * Time.deltaTime);
+            transform.parent.position = Vector3.MoveTowards(transform.parent.position, targetPosition, speed * Time.deltaTime);
 
             yield return null;
         }

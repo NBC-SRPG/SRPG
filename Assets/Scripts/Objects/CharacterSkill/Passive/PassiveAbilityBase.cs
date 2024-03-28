@@ -11,7 +11,12 @@ public class PassiveAbilityBase
         this.character = character;
     }
 
-    public virtual void OnStartTurn()// 턴 시작 시 발동
+    public virtual void OnRoundStart()// 
+    {
+
+    }
+
+    public virtual void OnTurnStart()// 턴 시작 시 발동
     {
 
     }
@@ -51,6 +56,26 @@ public class PassiveAbilityBase
 
     }
 
+    public virtual void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
+    {
+
+    }
+
+    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 적중 시
+    {
+
+    }
+
+    public virtual void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
+    {
+
+    }
+
+    public virtual void OnTakeAttacked(CharacterBase enemy)// 공격 타겟이 되었을 때
+    {
+
+    }
+
     public virtual void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
     {
 
@@ -71,7 +96,12 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnEndTurn()// 턴이 끝날 때
+    public virtual void OnRoundEnd()
+    {
+
+    }
+
+    public virtual void OnTurnEnd()// 턴이 끝날 때
     {
 
     }
@@ -89,25 +119,38 @@ public class PassiveAbilityBase
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 {
-    public override void OnEndTurn()
-    {
-        base.OnEndTurn();
-
-        character.doCounterAttack = false;
-    }
-
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {
         base.OnEnemyPassesMe(enemy);
-        enemy.BlockMoving();//ZOC 테스트 
 
-        AnimationController.instance.StartDefendAnimation(enemy, character);
+        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
+
+        enemy.BlockMoving();//ZOC 테스트 
     }
 
-    public override void OnTakeDamage(CharacterBase enemy)// 반격 테스트
-    {
-        base.OnTakeDamage(enemy);
+    //public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
+    //{
+    //    base.OnTakeAttacked(enemy);
 
-        character.doCounterAttack = true;
+    //    if (!character.isDead)
+    //    {
+    //        character.CounterAttack(enemy);
+    //    }
+    //}
+
+    //public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    //{
+    //    base.OnAttackSuccess(enemy, damage);
+
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
+    //}
+
+    public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
+    {
+        base.OnPassAlly(allyCharacter);
+
+        allyCharacter.health.HealHealth(10);
     }
 }
