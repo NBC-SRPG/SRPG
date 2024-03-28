@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class AccountData
 {
     public Dictionary<string, int> stageClearData { get; set; }
-    public Dictionary<int, CharacterGrowth> characterData { get; set; }
+    public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
     public Dictionary<int, bool> missionClearData { get; set; }
     //public Dictionary<int, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
@@ -15,7 +15,7 @@ public class AccountData
 
     public void Init(
         Dictionary<string, int> stageClearData,
-        Dictionary<int, CharacterGrowth> characterData,
+        Dictionary<int, Character> characterData,
         PlayerData playerData,
         Dictionary<int, bool> missionClearData,
         //Dictionary<int, int> inventory,
@@ -25,7 +25,7 @@ public class AccountData
         )
     {
         this.stageClearData = stageClearData ?? new Dictionary<string, int>();
-        this.characterData = characterData ?? new Dictionary<int, CharacterGrowth>();
+        this.characterData = characterData ?? new Dictionary<int, Character>();
         this.playerData = playerData ?? new PlayerData();
         this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         //this.inventory = inventory ?? new Dictionary<int, int>();
