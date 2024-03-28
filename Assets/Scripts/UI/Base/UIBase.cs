@@ -53,6 +53,28 @@ public class UIBase : MonoBehaviour
     {
         Bind<Button>(type);
     }
+
+    protected void BindEvent(GameObject go, Action action, Constants.UIEvent type)
+    {
+        UIEventHandler evt = go.GetComponent<UIEventHandler>();
+
+        switch (type)
+        {
+            case Constants.UIEvent.Pressed:
+                evt.OnPressedHandler -= action;
+                evt.OnPressedHandler += action;
+                break;
+            case Constants.UIEvent.PointerDown:
+                evt.OnPointerDownHandler -= action;
+                evt.OnPointerDownHandler += action;
+                break;
+            case Constants.UIEvent.PointerUp:
+                evt.OnPointerUpHandler -= action;
+                evt.OnPointerUpHandler += action;
+                break;
+        }
+    }
+
     // 캐싱 딕셔너리에서 T타입의 인덱스에 해당하는 값을 반환
     // Enum타입으로 저장하였으므로 Enum타입의 값을 int로 변환하여 사용 -> 가독성
     protected T Get<T>(int idx) where T : UnityEngine.Object

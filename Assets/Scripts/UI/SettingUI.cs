@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SettingUI : UIBase
 {
-    private PlayTab playTab;
+    private PlayTab playTab = PlayTab.None;
     private enum PlayTab
     {
         None,
@@ -39,6 +39,8 @@ public class SettingUI : UIBase
 
     private void Init()
     {
+        Managers.UI.SetCanvas(gameObject);
+
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
@@ -117,7 +119,7 @@ public class SettingUI : UIBase
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
-
+        // TODO 버튼 클릭 효과음
         Managers.UI.CloseUI(this);
     }
 }
