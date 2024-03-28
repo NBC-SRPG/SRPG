@@ -77,7 +77,7 @@ public class AnimationController : MonoBehaviour
 
         attacker.health.healthBarCanvas.SetActive(false);
 
-        group.AddMember(attacker.transform, 1, 5);
+        group.AddMember(attacker.transform, 1, 2);
 
         for (int i = 0; i < this.victims.Count; i++)
         {
@@ -96,7 +96,7 @@ public class AnimationController : MonoBehaviour
 
             this.victims[i].health.healthBarCanvas.SetActive(false);
 
-            group.AddMember(this.victims[i].transform, 1, 5);
+            group.AddMember(this.victims[i].transform, 1, 2);
         }
     }
 
@@ -127,7 +127,7 @@ public class AnimationController : MonoBehaviour
 
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
-        attacker.characterAnim.SetDamage(0);
+        //attacker.characterAnim.SetDamage(0);
 
         attacker.health.healthBarCanvas.SetActive(true);
 
@@ -146,7 +146,7 @@ public class AnimationController : MonoBehaviour
             SetCharacterLayer(victims[i], 0);
 
             victims[i].characterAnim.EndAnimation(victims[i].isWalking);
-            victims[i].characterAnim.SetDamage(0);
+            //victims[i].characterAnim.SetDamage(0);
 
             victims[i].health.healthBarCanvas.SetActive(true);
         }
@@ -171,12 +171,11 @@ public class AnimationController : MonoBehaviour
 
     public void StartAttackAnimation(CharacterBase attacker, CharacterBase victim)// 공격 애니메이션 재생
     {
-        Debug.Log("attackAnimation");
+        CharacterRelease();
         isAnimationPlaying = true;
 
         List<CharacterBase> victims = new List<CharacterBase>() { victim };
-
-        CharacterRelease();
+        
         CharacterSetting(attacker, victims);
 
         StartCoroutine(PlayAttackAnimation(attacker, victim));
@@ -304,11 +303,12 @@ public class AnimationController : MonoBehaviour
 
     public void StartDefendAnimation(CharacterBase attacker, CharacterBase defender)// 방어 애니메이션 재생
     {
+        CharacterRelease();
+
         isAnimationPlaying = true;
 
         List<CharacterBase> victims = new List<CharacterBase>() { defender };
 
-        CharacterRelease();
         CharacterSetting(attacker, victims);
 
         StartCoroutine(PlayDefendAnimation(defender));

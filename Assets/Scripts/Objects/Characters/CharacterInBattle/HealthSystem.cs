@@ -11,6 +11,7 @@ public class HealthSystem : MonoBehaviour
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
+    [SerializeField] private TextMeshPro healthText;
 
     public int MaxHealth { get; set; }
     public int CurHealth {  get; set; }
@@ -20,7 +21,7 @@ public class HealthSystem : MonoBehaviour
 
     private void Start()
     {
-        //AnimationController.instance.onAnimationEnd += SetHealthBar;
+
     }
 
     public void SetHealth(int health)
@@ -29,6 +30,7 @@ public class HealthSystem : MonoBehaviour
         CurHealth = health;
 
         healthBar.fillAmount = HealthRatio;
+        healthText.text = CurHealth.ToString();
     }
 
     public float HealthRatio
@@ -50,6 +52,7 @@ public class HealthSystem : MonoBehaviour
         if (!AnimationController.instance.CheckAnimation())// 애니메이션 재생중이 아니면 곧바로 체력바 갱신
         {
             TakeDamageHealthBar(damage);
+            Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform);
         }
         else
         {
@@ -90,7 +93,7 @@ public class HealthSystem : MonoBehaviour
     {
         StartCoroutine(TakeHealthBar(false));
 
-        //Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform);
+        healthText.text = CurHealth.ToString();
 
         if (CurHealth <= 0)
         {
@@ -102,18 +105,11 @@ public class HealthSystem : MonoBehaviour
     {
         StartCoroutine(TakeHealthBar(true));
 
+        healthText.text = CurHealth.ToString();
+
         Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform, true);
     }
 
-    public void SetHealthBar()// 체력바 실제 수치랑 맞추기
-    {
-        healthBar.fillAmount = HealthRatio;
-
-        if (CurHealth <= 0)
-        {
-            DieAnimation?.Invoke();
-        }
-    }
 
     private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
     {

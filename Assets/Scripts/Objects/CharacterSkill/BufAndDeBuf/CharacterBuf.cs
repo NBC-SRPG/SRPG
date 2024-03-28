@@ -9,6 +9,7 @@ public class CharacterBuf
     protected CharacterBase character;// 버프 걸린 캐릭터
 
     public virtual BattleKeyWords.BufKeyword BufKeyword { get; protected set; }
+
     public virtual BattleKeyWords.BufType BufType { get; protected set; }
 
     public virtual string Keyword {  get; protected set; }

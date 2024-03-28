@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterBufList
@@ -31,7 +32,6 @@ public class CharacterBufList
         }
 
         buf = bufList.Find(x => x.BufKeyword == key && !x.IsDestroyed);
-        
 
         if (buf == null)// 없다면 새로 생성
         {
@@ -63,7 +63,7 @@ public class CharacterBufList
         }
     }
 
-    public CharacterBuf FindBuf(BattleKeyWords.BufKeyword key, CharacterBase buffer = null)
+    public CharacterBuf FindBuf(BattleKeyWords.BufKeyword key, CharacterBase buffer = null)// 특정 버프 찾기
     {
         CharacterBuf buf;
 
@@ -79,7 +79,25 @@ public class CharacterBufList
         return buf;
     }
 
-    public void RemoveBuf()
+    public List<CharacterBuf> FindPositiveBuf(int number)// 긍정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+
+        bufs = bufs.Take(number).ToList();
+
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBuf(int number)// 부정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+
+        bufs = bufs.Take(number).ToList();
+
+        return bufs;
+    }
+
+    public void RemoveBuf()// 버프 제거
     {
         foreach(CharacterBuf buf in removeList)
         {
@@ -89,7 +107,7 @@ public class CharacterBufList
         removeList.Clear();
     }
 
-    private void CheckDestroyBuf()
+    private void CheckDestroyBuf()// 버프 제거 목록 확보
     {
 
         foreach (CharacterBuf buf in bufList)
@@ -109,7 +127,7 @@ public class CharacterBufList
     //-------------------------------------------------------------------------------------------------------------------
     // 버프 적용
 
-    public BonusStat GetAdditionalStat()
+    public BonusStat GetAdditionalStat()// 추가 스탯 적용
     {
         BonusStat stat = new BonusStat();
 

@@ -68,7 +68,7 @@ public class CharAnimBase : MonoBehaviour
 
     public virtual void ShowDamage()
     {
-        //targetCharacter.health.TakeDamageHealthBar(targetCharacter.characterAnim.damage);
+        Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent);
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
@@ -248,12 +248,12 @@ public class CharAnimBase : MonoBehaviour
         }
     }
 
-    protected IEnumerator MoveToTarget(Vector3 targetPosition)
+    protected IEnumerator MoveToTarget(Vector3 targetPosition, float speed = 100f)
     {
 
         while(transform.parent.position != targetPosition)
         {
-            transform.parent.position = Vector3.MoveTowards(transform.parent.position, targetPosition, 100f * Time.deltaTime);
+            transform.parent.position = Vector3.MoveTowards(transform.parent.position, targetPosition, speed * Time.deltaTime);
 
             yield return null;
         }

@@ -12,6 +12,11 @@ public class CharAnim_Test : CharAnimBase
         targetCharacter.characterAnim.ShakeCharacter();
     }
 
+    public void Damage()
+    {
+        targetCharacter.characterAnim.ShowDamage();
+    }
+
     public void MoveToPosition()
     {
         Vector3 moveTarget = new Vector3(
@@ -20,7 +25,7 @@ public class CharAnim_Test : CharAnimBase
 
         FlipCharacter(moveTarget, false);
 
-        StartCoroutine(MoveToTarget(moveTarget));
+        StartCoroutine(MoveToTarget(moveTarget, 200f));
     }
 
 }

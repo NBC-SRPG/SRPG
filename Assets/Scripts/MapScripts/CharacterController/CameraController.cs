@@ -11,13 +11,18 @@ public class CameraController : MonoBehaviour
 
     public Camera battaleCamera;
 
+    [Header("Idle_Camera")]
     private Transform PrimeCamera;
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterCamera;
     [SerializeField] private CinemachineVirtualCamera followingTileCamera;
     [SerializeField] private CinemachineVirtualCamera followingCharacterGroupCamera;
-
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
+
+    [Header("BattleCamera")]
+    [SerializeField] private CinemachineVirtualCamera BattleCameara;
+    public CinemachineTargetGroup BattleTargetGroup;
+
 
     private CinemachineFramingTransposer characterComposer;
 
@@ -66,6 +71,8 @@ public class CameraController : MonoBehaviour
         {
             mainCamera.transform.position = PrimeCamera.position;
         }
+
+        BattleTargetGroup.transform.position = PrimeCamera.position;
     }
 
 

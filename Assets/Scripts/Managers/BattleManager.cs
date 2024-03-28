@@ -67,10 +67,12 @@ public class BattleManager
         //다른 클라이언트는 서버가 준 데미지를 받아옴
         int damage = attacker.Attack - victim.Defend;// 임시 데미지 계산식
 
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
+
         return damage;
     }
 
-    private int CheckSkillDamage(CharacterBase attacker, CharacterBase victim)
+    private int CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim)
     {
 
         //------
@@ -78,9 +80,90 @@ public class BattleManager
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = attacker.curCharacterSkill.SkillFigure - victim.Defend;// 임시 데미지 계산식
+        int damage = figure - victim.Defend;// 임시 데미지 계산식
+
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
 
         return damage;
+    }
+
+    private float ExtraDmgbyAttribute(CharacterBase attacker, CharacterBase victim)
+    {
+        switch (attacker.character.characterData.characterAttribute)
+        {
+            case Constants.CharacterAttribute.Fire:
+                if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+                {
+                    return 0.75f;
+                }
+                else if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            case Constants.CharacterAttribute.Water:
+                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+                {
+                    return 0.75f;
+                }
+                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            case Constants.CharacterAttribute.Bolt:
+                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+                {
+                    return 0.75f;
+                }
+                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            case Constants.CharacterAttribute.Grass:
+                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+                {
+                    return 0.75f;
+                }
+                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            case Constants.CharacterAttribute.Light:
+                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Dark)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            case Constants.CharacterAttribute.Dark:
+                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Light)
+                {
+                    return 1.5f;
+                }
+                else
+                {
+                    return 1;
+                }
+            default:
+                return 1;
+        }
     }
 
     //---------------------------------------------------------------------------
@@ -173,7 +256,7 @@ public class BattleManager
     //---------------------------------------------------------------------------
     // 스킬 관련
 
-    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)
+    public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)// 스킬 사용
     {
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
@@ -197,7 +280,7 @@ public class BattleManager
         AnimationController.instance.StartAnimationQueue();
     }
 
-    public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)
+    public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)// 스킬 공격
     {
         foreach (CharacterBase victim in target)
         {
@@ -206,7 +289,7 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            int damage = CheckSkillDamage(skillUser, victim);
+            int damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
             //------
 
             victim.characterAnim.SetDamage(damage);
@@ -218,7 +301,7 @@ public class BattleManager
 
     }
 
-    public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)
+    public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)// 힐
     {
         foreach (CharacterBase victim in target)
         {
@@ -235,6 +318,26 @@ public class BattleManager
             victim.health.HealHealth(figure);
 
             skillUser.OnSkillAttackSuccess(victim, figure);
+        }
+    }
+
+    public void SkillAttackDirect(CharacterBase skillUser, int figure, List<CharacterBase> target)// 기타 스킬(추가타 등)
+    {
+        foreach (CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            int damage = CheckSkillDamage(skillUser, figure, victim);
+            //------
+
+            victim.characterAnim.SetDamage(damage);
+
+            victim.health.TakeDamage(damage);
+
+            skillUser.OnSkillAttackSuccess(victim, damage);
         }
     }
 

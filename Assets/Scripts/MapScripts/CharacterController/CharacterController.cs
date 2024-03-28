@@ -184,7 +184,7 @@ public class CharacterController : MonoBehaviour
 
         skillTargets.Clear();
 
-        Ui.ResetButtons();
+        Ui.ResetUI();
         CameraController.instance.ResetCamera();
 
         switch (phase)
@@ -307,6 +307,7 @@ public class CharacterController : MonoBehaviour
         curSelectedCharacter = character;
         //이후 ui에 캐릭터 정보를 보내줌
         Ui.curSelectedCharacter = curSelectedCharacter;
+        Ui.ShowSelectCharacterInfo();
 
         CameraController.instance.AddGroup(curSelectedCharacter);
     }
@@ -321,6 +322,7 @@ public class CharacterController : MonoBehaviour
         curTargetCharacter = character;
         //이후 ui에 캐릭터 정보를 보내줌
         Ui.curTargetCharacter = curTargetCharacter;
+        Ui.ShowTargetInfo();
 
         CameraController.instance.AddGroup(curTargetCharacter);
     }
@@ -465,7 +467,7 @@ public class CharacterController : MonoBehaviour
         {
             canClick = false;
             ResetTileOnMove(surroundPath);
-            Ui.ResetButtons();
+            Ui.ResetUI();
 
             AnimationController.instance.onAnimationEnd += EndMove;
 
@@ -660,6 +662,8 @@ public class CharacterController : MonoBehaviour
             }
 
         }
+
+        Ui.SetCurLeftWalk(curSelectedCharacter.leftWalkRange - movePath.Count + 1);
 
         RaycastHit2D hit = GetTouching();
 
