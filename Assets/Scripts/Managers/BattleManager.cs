@@ -17,6 +17,7 @@ public class BattleManager
 
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
+    public int nowRound; 
 
     public event Action TurnStart;
 
@@ -48,6 +49,7 @@ public class BattleManager
     public void InitBattle()
     {
         nowPlayerNum = 0;
+        nowRound = 0;
 
         StartRound();
     }
@@ -377,6 +379,8 @@ public class BattleManager
 
     private void StartRound()//라운드 시작
     {
+        nowRound++;
+
         players = players.OrderByDescending(x => x.prioty).ToList();
 
         foreach (CharacterBase characters in charactersInBattle.FindAll(x => !x.isDead))
