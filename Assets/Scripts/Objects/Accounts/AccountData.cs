@@ -19,7 +19,7 @@ public class AccountData
         Dictionary<int, Character> characterData,
         PlayerData playerData,
         Dictionary<int, bool> missionClearData,
-        //Dictionary<ItemData, int> inventory,
+        //Dictionary<int, int> inventory,
         Dictionary<int, string[]> friendData,
         Dictionary<int, FormationData> formationData,
         List<MailSO> mailBox
