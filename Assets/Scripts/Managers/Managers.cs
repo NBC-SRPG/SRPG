@@ -12,6 +12,9 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound { get { Init(); return soundManager; } }
     public static UIManager UI { get {  Init(); return uiManager; } }
 
+    private static Database database = new Database();
+    public static Database DB { get {  Init(); return database; } }
+
     private static MapManager s_mapManager = new MapManager();
     public static MapManager MapManager { get { Init(); return s_mapManager; } }
 
