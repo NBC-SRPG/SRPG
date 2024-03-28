@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 public class UIManager
@@ -28,6 +27,7 @@ public class UIManager
     public void SetCanvas(GameObject go, bool sort = true)
     {
         Canvas canvas = go.GetComponent<Canvas>();
+        canvas.overrideSorting = true;
 
         if (sort)
         {
@@ -68,7 +68,7 @@ public class UIManager
         return ui;
     }
     // UI 스택에서 T타입의 UI를 return
-    public T FindPopup<T>() where T : UIBase
+    public T FindUI<T>() where T : UIBase
     {
         foreach (var item in uiStack)
         {

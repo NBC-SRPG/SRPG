@@ -1,7 +1,5 @@
 using JetBrains.Annotations;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class AccountData
 {
@@ -11,17 +9,20 @@ public class AccountData
     public Dictionary<int, bool> missionClearData { get; set; }
     public Dictionary<int, int> inventory { get; set; }  //인벤토리 = 아이템 데이터, 보유 갯수. //Todo : 아이템 DB 작업 완료 후 ItemData → int itemId로 바꾸고 메서드 수정하기.
     public Dictionary<int, string[]> friendData { get; set; }
+    public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
+    public List<MailSO> mailBox { get; set; }
 
-    // Init 
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
         PlayerData playerData,
         Dictionary<int, bool> missionClearData,
-        Dictionary<int, int> inventory,
-        Dictionary<int, string[]> friendData
+        //Dictionary<ItemData, int> inventory,
+        Dictionary<int, string[]> friendData,
+        Dictionary<int, FormationData> formationData,
+        List<MailSO> mailBox
         )
     {
         this.stageClearData = stageClearData ?? new Dictionary<string, int>();
@@ -30,6 +31,8 @@ public class AccountData
         this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         this.inventory = inventory ?? new Dictionary<int, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
+        this.formationData = formationData ?? new Dictionary<int, FormationData>();
+        this.mailBox = mailBox ?? new List<MailSO>();
     }
 
     // 임시 메소드: inventory에 아이템 추가

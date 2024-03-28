@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Search;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Constants;
 
@@ -28,7 +26,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         get { return level; }
         set
         {
-            if (Managers.AccountData.playerData.Level >= maxLevel) 
+            if (Managers.AccountData.playerData.Level >= maxLevel)
             {
                 level = math.clamp(value, 1, maxLevel);
             }
@@ -149,6 +147,9 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public void Init(Character _character)
     {
         character = _character;
+        // TODO
+        // 테스트 데이터
+        // talent_Tier에는 DB에서 꺼내와서 넣기, DB에 없을 땐 null
         talent_Tier1 = character.characterData.talent_Tier1;
         talent_Tier2 = character.characterData.talent_Tier2[0];
         talent_Tier3 = character.characterData.talent_Tier3[0];
@@ -169,7 +170,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
 
         Level = 1;
         ExSkillLevel = 1;
-        PassiveSkillLevel = 1; 
+        PassiveSkillLevel = 1;
         affectionLevel = 1;
     }
 }

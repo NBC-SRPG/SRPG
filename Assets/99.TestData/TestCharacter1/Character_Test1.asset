@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36257601a5deb643a1aa8baf42377cf, type: 3}
+  m_Name: Character_Test1
+  m_EditorClassIdentifier: 
+  attackType: 0
+  characterAttribute: 1
+  character_Id: 10001000
+  health: 100
+  atk: 10
+  def: 10
+  mov: 1
+  atk_range: 5
+  growHealth: 15
+  growAtk: 15
+  growDef: 15
+  characterName: "\uD14C\uC2A4\uD2B8\uCE90\uB9AD\uD1301"
+  story: "\uD14C\uC2A4\uD2B8\uC2A4\uD1A0\uB9AC1"
+  belonging: 1
+  skill: {fileID: 11400000, guid: 47fae00793473e64a9456812ed3429df, type: 2}
+  passive: {fileID: 11400000, guid: 37bcbde9a342afa439a902787e6b7daf, type: 2}
+  talent_Tier1: {fileID: 11400000, guid: d2493e29c9297754f983eef11853da6f, type: 2}
+  talent_Tier2:
+  - {fileID: 11400000, guid: 832c64d5c5eefa04581c1ae1c5230288, type: 2}
+  - {fileID: 11400000, guid: 27c88922847e8ba4281fb8b871e60fbc, type: 2}
+  talent_Tier3:
+  - {fileID: 11400000, guid: 3ca8ec28db30262478ec5c579345aff3, type: 2}
+  - {fileID: 11400000, guid: c6dc869ecf626804db8d1f93808bbe8c, type: 2}
+  basicClass: {fileID: 11400000, guid: 10262c05614fca0408ab4a349189ea22, type: 2}
+  superiorClass:
+  - {fileID: 11400000, guid: 10262c05614fca0408ab4a349189ea22, type: 2}
+  - {fileID: 11400000, guid: 10262c05614fca0408ab4a349189ea22, type: 2}
+  weapon: {fileID: 11400000, guid: 32fca21ec5f158248a23788ff65c932a, type: 2}
+  armor: {fileID: 11400000, guid: 427452ca2f75a234a834a5d17aa07629, type: 2}
+  defaltStar: 90
