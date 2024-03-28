@@ -18,6 +18,8 @@ public class Database : MonoBehaviour
 
 
 
+    // test를 위해 MonoBehaviour 사용
+    // 추후 연결시 Init()으로 변경
     void Start()
     {
         user = FirebaseAuth.DefaultInstance.CurrentUser;

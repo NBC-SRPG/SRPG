@@ -66,6 +66,7 @@ public class Managers : MonoBehaviour
             s_mapManager.Init();
             s_battleManager.Init();
             s_gachamanager.Init();
+            //database.Init();
 
             // 테스트용 데이터
             s_accountData.Init(new Dictionary<string, int>(), 
