@@ -59,7 +59,7 @@ public class AnimationController : MonoBehaviour
 
     private void CharacterSetting(CharacterBase attacker, List<CharacterBase> victims)// 캐릭터 위치 지정
     {
-        CameraController.instance.SetCharacterCameraMove(1);
+        CameraController.instance.SetCharacterCameraMove(2);
 
         backGround.gameObject.SetActive(true);
         battleCanvas.gameObject.SetActive(true);

@@ -23,8 +23,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera BattleCameara;
     public CinemachineTargetGroup BattleTargetGroup;
 
-
     private CinemachineFramingTransposer characterComposer;
+    private CinemachineFramingTransposer characterGroupComposer;
 
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
@@ -50,6 +50,7 @@ public class CameraController : MonoBehaviour
         moveSpeed = 10f;
 
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
@@ -107,6 +108,13 @@ public class CameraController : MonoBehaviour
     {
         characterComposer.m_DeadZoneHeight = n;
         characterComposer.m_DeadZoneWidth = n;
+        characterComposer.m_SoftZoneHeight = n + 0.8f;
+        characterComposer.m_SoftZoneWidth = n + 0.8f;
+
+        characterGroupComposer.m_DeadZoneHeight = n;
+        characterGroupComposer.m_DeadZoneWidth = n;
+        characterGroupComposer.m_SoftZoneHeight = n + 0.8f;
+        characterGroupComposer.m_SoftZoneWidth = n + 0.8f;
     }
 
     //카메라가 캐릭터를 따라다니게
