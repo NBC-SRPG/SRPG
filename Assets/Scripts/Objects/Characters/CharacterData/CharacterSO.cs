@@ -18,9 +18,9 @@ public class CharacterSO : ScriptableObject
     [Range(0, 10)]public int range;     //공격 사정거리(근거리의 경우 0으로)
 
     [Header("StatusPerLevel")]      //캐릭터 성장 능력치. 1레벨 당 해당 value 값만큼 증가.
-    public float hpPerLv;
-    public float atkPerLv;
-    public float defPerLv;
+    public int hpPerLv;
+    public int atkPerLv;
+    public int defPerLv;
 
     [Header("Story")]
     public string characterName;        //캐릭터 이름

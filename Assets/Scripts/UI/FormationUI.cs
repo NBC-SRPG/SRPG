@@ -161,7 +161,7 @@ public class FormationUI : UIBase
             GetImage((int)formationAttributeImageEnum).color = Color.red;
 
             // 캐릭터 레벨 설정
-            int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].characterGrowth.Level;
+            int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.Level;
             GetText((int)formationLevelTextEnum).text = $"Lv. {characterLevel}";
 
             // 별 개수 꺼내오기 및 설정

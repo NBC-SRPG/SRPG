@@ -120,16 +120,16 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.AbilityButton).onClick.AddListener(() => ShowTab(PlayTab.Ability));
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
-        GetImage((int)Images.WeaponImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.weapon.equip_Id}");
-        GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.armor.equip_Id}");
+        GetImage((int)Images.WeaponImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.weapon.equip_Id}");
+        GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.armor.equip_Id}");
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
         GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
         GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
         GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
-        GetButton((int)Buttons.WeaponButton).onClick.AddListener(() => OnClickWeaponButton(character.characterData.weapon));
-        GetButton((int)Buttons.ArmorButton).onClick.AddListener(() => OnClickArmorButton(character.characterData.armor));
+        GetButton((int)Buttons.WeaponButton).onClick.AddListener(() => OnClickWeaponButton(character.SO.weapon));
+        GetButton((int)Buttons.ArmorButton).onClick.AddListener(() => OnClickArmorButton(character.SO.armor));
 
         ShowTab(PlayTab.Skill);
 
@@ -139,35 +139,35 @@ public class CharacterInfoUI : UIBase
         InitClassTab();
         InitCharacterInfo();
 
-        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(() => { character.characterGrowth.Exp += character.characterGrowth.maxExp; UpdateStat(); });
+        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(() => { character.Growth.Exp += character.Growth.maxExp; UpdateStat(); });
     }
 
     private void InitSkillTab()
     {
-        GetText((int)Texts.ExSkillText).text = $"{character.characterData.skill.skillName}"; // 뒤에 레벨도 붙어야 함
-        GetText((int)Texts.ExSkillDescriptionText).text = $"{character.characterData.skill.description}";
-        GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.skill.skill_ID}");
+        GetText((int)Texts.ExSkillText).text = $"{character.SO.skill.skillName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.ExSkillDescriptionText).text = $"{character.SO.skill.description}";
+        GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.skill.skill_ID}");
 
-        GetText((int)Texts.PassiveSkillText).text = $"{character.characterData.passive.PassiveName}"; // 뒤에 레벨도 붙어야 함
-        GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.characterData.passive.description}";
-        GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.passive.passive_Id}");
+        GetText((int)Texts.PassiveSkillText).text = $"{character.SO.passive.PassiveName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.SO.passive.description}";
+        GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.passive.passive_Id}");
     }
 
     private void InitAbilityTab()
     {
         // 특성 이미지 세팅
-        GetImage((int)Images.Ability1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.Ability_Tier1.Ability_Id}");
-        GetImage((int)Images.Ability2_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.Ability_Tier2[0].Ability_Id}");
-        GetImage((int)Images.Ability2_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.Ability_Tier2[1].Ability_Id}");
-        GetImage((int)Images.Ability3_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.Ability_Tier3[0].Ability_Id}");
-        GetImage((int)Images.Ability3_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.Ability_Tier3[1].Ability_Id}");
+        GetImage((int)Images.Ability1Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.Ability_Tier1.Ability_Id}");
+        GetImage((int)Images.Ability2_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.Ability_Tier2[0].Ability_Id}");
+        GetImage((int)Images.Ability2_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.Ability_Tier2[1].Ability_Id}");
+        GetImage((int)Images.Ability3_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.Ability_Tier3[0].Ability_Id}");
+        GetImage((int)Images.Ability3_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.Ability_Tier3[1].Ability_Id}");
 
         // 특성 버튼 세팅
-        GetButton((int)Buttons.Ability1Button).onClick.AddListener(() => OnClickAbilityButton(1, character.characterData.Ability_Tier1));
-        GetButton((int)Buttons.Ability2_1Button).onClick.AddListener(() => OnClickAbilityButton(2, character.characterData.Ability_Tier2[0]));
-        GetButton((int)Buttons.Ability2_2Button).onClick.AddListener(() => OnClickAbilityButton(2, character.characterData.Ability_Tier2[1]));
-        GetButton((int)Buttons.Ability3_1Button).onClick.AddListener(() => OnClickAbilityButton(3, character.characterData.Ability_Tier3[0]));
-        GetButton((int)Buttons.Ability3_2Button).onClick.AddListener(() => OnClickAbilityButton(3, character.characterData.Ability_Tier3[1]));
+        GetButton((int)Buttons.Ability1Button).onClick.AddListener(() => OnClickAbilityButton(1, character.SO.Ability_Tier1));
+        GetButton((int)Buttons.Ability2_1Button).onClick.AddListener(() => OnClickAbilityButton(2, character.SO.Ability_Tier2[0]));
+        GetButton((int)Buttons.Ability2_2Button).onClick.AddListener(() => OnClickAbilityButton(2, character.SO.Ability_Tier2[1]));
+        GetButton((int)Buttons.Ability3_1Button).onClick.AddListener(() => OnClickAbilityButton(3, character.SO.Ability_Tier3[0]));
+        GetButton((int)Buttons.Ability3_2Button).onClick.AddListener(() => OnClickAbilityButton(3, character.SO.Ability_Tier3[1]));
 
         AbilityPathUpdate();
     }
@@ -176,12 +176,12 @@ public class CharacterInfoUI : UIBase
     private void AbilityPathUpdate()
     {
         // 2단계 특성이 찍혀있다면
-        if (character.characterGrowth.Ability_Tier2 != null)
+        if (character.Growth.Ability_Tier2 != null)
         {
             GetImage((int)Images.AbilityPath2).color = Color.red;
 
             // 2-1 특성이 찍혀있다면
-            if (character.characterGrowth.Ability_Tier2 == character.characterData.Ability_Tier2[0])
+            if (character.Growth.Ability_Tier2 == character.SO.Ability_Tier2[0])
             {
                 GetImage((int)Images.AbilityPath2_1).color = Color.red;
                 GetImage((int)Images.AbilityPath2_2).color = Color.black;
@@ -201,12 +201,12 @@ public class CharacterInfoUI : UIBase
         }
 
         // 3번째 특성 찍었을 때
-        if (character.characterGrowth.Ability_Tier3 != null)
+        if (character.Growth.Ability_Tier3 != null)
         {
             GetImage((int)Images.AbilityPath3).color = Color.red;
 
             // 3-1 특성
-            if (character.characterGrowth.Ability_Tier3 == character.characterData.Ability_Tier3[0])
+            if (character.Growth.Ability_Tier3 == character.SO.Ability_Tier3[0])
             {
                 GetImage((int)Images.AbilityPath3_1).color = Color.red;
                 GetImage((int)Images.AbilityPath3_2).color = Color.black;
@@ -233,8 +233,8 @@ public class CharacterInfoUI : UIBase
 
     private void InitCharacterInfo()
     {
-        GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.characterData.character_Id}");
-        GetText((int)Texts.NameText).text = $"{character.characterData.characterName}";
+        GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.character_Id}");
+        GetText((int)Texts.NameText).text = $"{character.SO.characterName}";
 
         // int numberOfStars = character.characterData.defaltStar; // 별의 개수
         int numberOfStars = 3; // 별의 개수 // 테스트 데이터
@@ -261,9 +261,9 @@ public class CharacterInfoUI : UIBase
 
     private void UpdateStat()
     {
-        GetText((int)Texts.LevelText).text = $"Lv. {character.characterGrowth.Level} / {character.characterGrowth.maxLevel}";
-        GetText((int)Texts.ExpText).text = $"{character.characterGrowth.Exp} / {character.characterGrowth.maxExp}";
-        GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.characterGrowth.Exp / character.characterGrowth.maxExp;
+        GetText((int)Texts.LevelText).text = $"Lv. {character.Growth.Level} / {character.Growth.maxLevel}";
+        GetText((int)Texts.ExpText).text = $"{character.Growth.Exp} / {character.Growth.maxExp}";
+        GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.Growth.Exp / character.Growth.maxExp;
 
         GetText((int)Texts.HpText).text = $"{character.CalcHealth}";
         GetText((int)Texts.AtkText).text = $"{character.CalcAtk}";
@@ -397,12 +397,12 @@ public class CharacterInfoUI : UIBase
 
             case 2:
                 // 선택 가능한지 체크
-                if(character.characterGrowth.Level < 50)
+                if(character.Growth.Level < 50)
                 {
                     SetupUnselectableAbilityUI(AbilityTier);
                 }
                 // 이미 적용 된 특성이라면
-                else if (character.characterGrowth.Ability_Tier2 == Ability)
+                else if (character.Growth.Ability_Tier2 == Ability)
                 {
                     SetupSelectedAbilityUI();
                 }
@@ -415,12 +415,12 @@ public class CharacterInfoUI : UIBase
 
             case 3:
                 // 선택 가능한지 체크
-                if (character.characterGrowth.Level < 70 || character.characterGrowth.Ability_Tier2 == null)
+                if (character.Growth.Level < 70 || character.Growth.Ability_Tier2 == null)
                 {
                     SetupUnselectableAbilityUI(AbilityTier);
                 }
                 // 이미 적용 된 특성이라면
-                else if (character.characterGrowth.Ability_Tier3 == Ability)
+                else if (character.Growth.Ability_Tier3 == Ability)
                 {
                     SetupSelectedAbilityUI();
                 }
@@ -475,11 +475,11 @@ public class CharacterInfoUI : UIBase
 
         if (AbilityTier == 2)
         {
-            character.characterGrowth.SelectAbility_tier2(selectAbility);
+            character.Growth.SelectAbility_tier2(selectAbility);
         }
         else if (AbilityTier == 3)
         {
-            character.characterGrowth.SelectAbility_tier3(selectAbility);
+            character.Growth.SelectAbility_tier3(selectAbility);
         }
 
         AbilityPathUpdate();

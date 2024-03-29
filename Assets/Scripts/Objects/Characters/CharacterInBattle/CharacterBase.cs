@@ -251,7 +251,7 @@ public class CharacterBase : MonoBehaviour
 
         isWalking = false;
         didWalk = true;
-        if(character.characterData.attackType == Constants.AttackMethod.Melee)
+        if(character.SO.attackType == Constants.AttackMethod.Melee)
         {
             didAttack = true;
         }
