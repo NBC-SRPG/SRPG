@@ -174,4 +174,6 @@ public class Constants
 
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
+
+    public const int NONE_SELECTED = -1;
 }
