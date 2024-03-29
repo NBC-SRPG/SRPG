@@ -7,14 +7,13 @@ public class Constants
         Max,
     }
 
-    public enum AttackType
+    public enum AttackMethod
     {
         Melee,
         Range,
-        //Mage
     }
 
-    public enum CharacterAttribute
+    public enum ElementType
     {
         Fire,
         Water,
@@ -24,12 +23,12 @@ public class Constants
         Light
     }
 
-    public enum Belonging
+    public enum Faction
     {
         Demon,
-        League,
-        Order,
-        Vegabond
+        Cabal,
+        Cathedral,
+        Vagabond
     }
 
     public enum SkillScaleType
@@ -93,7 +92,7 @@ public class Constants
         Shooter,
         Assassin,
         Caster,
-        Priests
+        Priest
     }
 
     public enum LimitBreak // 한계돌파. (정수값 = 해당 성급의 최대 레벨)

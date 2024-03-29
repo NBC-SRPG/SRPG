@@ -6,8 +6,8 @@ using static Constants;
 [CreateAssetMenu(menuName = "CharacterData", fileName ="Character_")]
 public class CharacterSO : ScriptableObject
 {
-    public Constants.AttackType attackType;//공격 타입
-    public Constants.CharacterAttribute characterAttribute;//캐릭터 속성
+    public Constants.AttackMethod attackType;//공격 타입
+    public Constants.ElementType characterAttribute;//캐릭터 속성
     
     [Header("Develope")]
     public int character_Id;//캐릭터 식별자
@@ -27,7 +27,7 @@ public class CharacterSO : ScriptableObject
     [Header("Story")]
     public string characterName;//캐릭터 이름
     public string story;//캐릭터 스토리
-    public Constants.Belonging belonging;//캐릭터 소속
+    public Constants.Faction belonging;//캐릭터 소속
 
     [Header("SkillList")]
     public SkillSO skill;

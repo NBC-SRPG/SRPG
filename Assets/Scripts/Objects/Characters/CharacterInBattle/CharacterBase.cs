@@ -251,7 +251,7 @@ public class CharacterBase : MonoBehaviour
 
         isWalking = false;
         didWalk = true;
-        if(character.characterData.attackType == Constants.AttackType.Melee)
+        if(character.characterData.attackType == Constants.AttackMethod.Melee)
         {
             didAttack = true;
         }
@@ -343,7 +343,7 @@ public class CharacterBase : MonoBehaviour
         yield return animationWait;
 
         isAttacking = false;
-        if (character.CharacterAttackType == Constants.AttackType.Range)
+        if (character.CharacterAttackType == Constants.AttackMethod.Range)
         {
             didAttack = true;
 

@@ -69,7 +69,7 @@ public class BattleManager
         {
             curCharacter.OnPassEnemy(standingCharacter);
 
-            if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
+            if (curCharacter.character.CharacterAttackType == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.AttackTarget(standingCharacter);
                 yield return animationWait;// 애니메이션이 끝날 때 까지 대기

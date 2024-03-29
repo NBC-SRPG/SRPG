@@ -6,7 +6,7 @@ using static Constants;
 [CreateAssetMenu(menuName = "ItemData/skill/RankUp_skillData", fileName = "RankUp_skill_")]
 public class RankUp_skillSO : ItemData
 {
-    public Belonging belonging; //Áø¿µ Á¤º¸
+    public Faction belonging; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public RankUp_skillSO()
     {
