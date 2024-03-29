@@ -110,32 +110,6 @@ public class CharacterGrowth : MonoBehaviour
     }
 
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
-    public bool SelectTalent_tier2(int select)
-    {
-        //1 or 2 
-        if (select > 0 && select <= character.characterData.talent_Tier2.Length)
-        {
-            if (Level >= 50)
-            {
-                selectTalent_Tier2 = select;
-                ApplyAdditionStat();
-                return true;
-            }
-            else
-            {
-                Debug.Log("2티어 특성 설정 조건을 충족하지 못했습니다.");
-                return false;
-            }
-        }
-        else
-        {
-            Debug.Log("잘못된 접근값입니다.");
-            return false;
-        }
-    }
-    */
-
-    //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public void SelectTalent_tier2(TalentSO selectTalent)
     {
         talent_Tier2 = selectTalent;
@@ -145,30 +119,6 @@ public class CharacterGrowth : MonoBehaviour
     {
         talent_Tier3 = selectTalent;
         ApplyAdditionStat();
-    }
-
-    //3티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
-    public bool SelectTalent_tier3(int select)
-    {
-        if (select > 0 && select <= character.characterData.talent_Tier3.Length)
-        {
-            if (level >= 70 && selectTalent_Tier2 != 0)
-            {
-                selectTalent_Tier3 = select;
-                ApplyAdditionStat();
-                return true;
-            }
-            else
-            {
-                Debug.Log("3티어 특성 설정 조건을 충족하지 못했습니다.");
-                return false;
-            }
-        }
-        else
-        {
-            Debug.Log("잘못된 접근값입니다.");
-            return false;
-        }
     }
 
     //상위 클래스 선택 시 사용하는 메서드. UI와 연동 필요함.

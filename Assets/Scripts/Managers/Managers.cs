@@ -24,6 +24,9 @@ public class Managers : MonoBehaviour
 
     private static GachaManager s_gachamanager = new GachaManager();
     public static GachaManager GachaManager { get { Init(); return s_gachamanager; } }
+
+    private static MissionManager missionManager = new MissionManager();
+    public static MissionManager Mission { get { Init(); return missionManager; } }
     private void Start()
     {
         Init();
@@ -63,6 +66,7 @@ public class Managers : MonoBehaviour
             s_mapManager.Init();
             s_battleManager.Init();
             s_gachamanager.Init();
+            missionManager.Init();
 
             // 테스트용 데이터
             s_accountData.Init(new Dictionary<string, int>(), 

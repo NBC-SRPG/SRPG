@@ -1,92 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-
-public class MissionData : MonoBehaviour //ÇöÀç missionTrigger, nextMissions, missionConditions´Â ÀÓ½Ã·Î ÀÛ¼ºµÈ »óÅÂÀÔ´Ï´Ù. ¼öÁ¤ ¹× ±â´É ±¸Çö / Ãß°¡ º¸¿Ï ÀÛ¾÷ÀÌ ÇÊ¿äÇÕ´Ï´Ù.
+using static Constants;
+public class MissionData
 {
-    public Dictionary<MissionTrigger, int> missionTrigger { get; private set; } //¹Ì¼Ç Æ®¸®°Å. Æ®¸®°Å Å¸ÀÔ / Æ®¸®°Å Á¶°Ç °ª
-    public bool isActivate { get; private set; }
-    public string missionID { get; private set; }  //Äù½ºÆ® ID
-    public string missionName { get; private set; }  //UI¿¡ Ç¥½ÃµÉ Äù½ºÆ® ÀÌ¸§ 
-    public string missionDescription { get; private set; }  //UI¿¡ Ç¥½ÃµÉ Äù½ºÆ® ¼³¸í
-    public bool isAchievement { get; set; }  //´Ş¼º ¿©ºÎ. true ¡æ ´Ş¼º ¿Ï·á»óÅÂ. false ¡æ ¹Ì´Ş¼º »óÅÂ.
-    public MissionCategory missionCategory { get; private set; }  //Äù½ºÆ® ºĞ·ù. ÀÏÀÏ / ÁÖ°£ / ¾÷Àû / ÃÊº¸ÀÚ
-    public Dictionary<object, int> missionRewards { get; private set; } //Äù½ºÆ® º¸»ó. object ¡æ º¸»óÀÌ ¹«¾ùÀÎÁö. Int, string, enum, ItemData µîÀÌ ¿Ã ¼ö ÀÖÀ½. int¡æ º¸»óÀÇ ¾çÀÌ ¾ó¸¶ÀÎÁö.
-    public MissionData[] nextMissions { get; private set; } //ÀÌ Äù½ºÆ®°¡ Å¬¸®¾î µÈ´Ù¸é UnRock µÇ´Â ´ÙÀ½ Äù½ºÆ® ¸ñ·Ï
-    public struct missionConditions<T>
-    {
-        public T Number1 { get; set; } //¸Å°³º¯¼ö 1
-        public T Number2 { get; set; } //¸Å°³º¯¼ö 2 ¶Ç´Â »ó¼ö°ª
-        public int Number3 { get; set; } //Á¶°Ç¹® Çü½Ä
-    }
-
-    // 1. ¸Å°³º¯¼ö A¿Í B°¡ °°ÀºÁö.
-    public bool IsEqual<T>(T a, T b) where T : IComparable<T>
-    {
-        return a.CompareTo(b) == 0;
-    }
-
-    // 2. ¸Å°³º¯¼ö A°¡ B ÃÊ°úÀÎÁö.
-    public bool IsOver<T>(T a, T b) where T : IComparable<T>
-    {
-        return a.CompareTo(b) == 1;
-    }
-
-    // 3. ¸Å°³º¯¼ö A°¡ B ÀÌÇÏÀÎÁö.
-    public bool IsBelow<T>(T a, T b) where T : IComparable<T>
-    {
-        return a.CompareTo(b) == -1;
-    }
-
-    public enum MissionTrigger
-    {
-        FirstLogin,
-        TimeIn,
-        TriggerOn
-    }
-    public enum MissionCategory
-    {
-        Daily,
-        Weekly,
-        Achievements,
-        Newbie
-    }
-
-
-    // »ı¼ºÀÚ ¸Ş¼­µå
-    // ¹Ì¼Ç Á¶°Ç ÀúÀåÇÏ´Â ¹æ¹ı °¡ÀÌµå : T a¿¡ ¸Å°³º¯¼ö 1, T b¿¡ ¸Å°³º¯¼ö 1°ú ºñ±³ÇÒ ¸Å°³º¯¼ö ¶Ç´Â »ó¼ö°ª, T c¿¡ ºñ±³½Ä À¯ÇüÀ» ³Ö´Â´Ù.
-
-    // »ç¿ë ¿¹½Ã (¾Æ¹« ¸ó½ºÅÍ³ª 5È¸ Ã³Áö Á¶°ÇÀ» ÀúÀåÇÏ°í ½ÍÀº °æ¿ì )
-    // a¿¡ Àû ¸ó½ºÅÍ¸¦ Ã³Ä¡ÇÑ È½¼ö¸¦ ´ã´Â º¯¼ö¸¦ ÂüÁ¶ÇÏ°Ô ÇÑ´Ù. (ÀÌº¥Æ® / Äİ¹éÀ» ÅëÇØ ¿¬°á). b¿¡ »ó¼ö 5¸¦ ÀúÀåÇÑ´Ù. °ªÀÌ °°ÀºÁö Ã¼Å©ÇÏ¹Ç·Î c¿¡ 1À» ÀÔ·ÂÇÑ´Ù. 
-    public MissionData CreateMission<T>(
-                                        Dictionary<MissionTrigger, int> missionTrigger,
-                                      string missionID, string missionName, string missionDescription,
-                                      MissionCategory missionCategory,
-                                      Dictionary<object, int> missionRewards, T a, T b, int c,
-                                         MissionData[] nextMissions
-                                        )
-    {
-        MissionData missionData = new MissionData();
-        missionData.missionTrigger = missionTrigger;
-        missionData.missionID = missionID;
-        missionData.missionName = missionName;
-        missionData.missionDescription = missionDescription;
-        missionData.missionCategory = missionCategory;
-        missionData.missionRewards = missionRewards;
-        missionData.nextMissions = nextMissions;
-
-        // missionConditions ±¸Á¶Ã¼ ÃÊ±âÈ­
-        missionConditions<T> missionConditions = new missionConditions<T>
-        {
-            Number1 = a,
-            Number2 = b,
-            Number3 = c
-        };
-        return missionData;
-    }
-
-    void Start()
-    {
-    }
+    public int id { get; set; } // ë¯¸ì…˜ id
+    public string name { get; set; } // ë¯¸ì…˜ ì´ë¦„
+    public string description { get; set; } // ë¯¸ì…˜ ì„¤ëª…
+    public MissionType missionType { get; set; } // ë¯¸ì…˜ íƒ€ì… (ëª¬ìŠ¤í„° ì²˜ì¹˜, ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´ ...)
+    public MissionCategory missionCategory { get; set; } // ë¯¸ì…˜ ë¶„ë¥˜ (ì¼ì¼, ì£¼ê°„ ...)
+    public int target { get; set; } // ë¯¸ì…˜ íƒ€ê²Ÿ id (ëª¬ìŠ¤í„° id, ìŠ¤í…Œì´ì§€ id ...)
+    public int count { get; set; } // ë¯¸ì…˜ íƒ€ê²Ÿ ì¹´ìš´íŠ¸ (ëª¬ìŠ¤í„° në§ˆë¦¬, ìŠ¤í…Œì´ì§€ ë³„ nê°œ ì´ìƒ ...)
+    public int exp { get; set; } // ë¯¸ì…˜ ë³´ìƒ ê²¸í—˜ì¹˜
+    public int ap { get; set; } // ë¯¸ì…˜ ë³´ìƒ ap
+    public int gold { get; set; } // ë¯¸ì…˜ ë³´ìƒ ê³¨ë“œ
+    public int diamond { get; set; } // ë¯¸ì…˜ ë³´ìƒ ë‹¤ì´ì•„
 }
