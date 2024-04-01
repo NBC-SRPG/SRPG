@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -512,7 +513,14 @@ public class MissionUI : UIBase
 
                 foreach (Transform child in GetObject((int)GameObjects.WholeContent).transform)
                 {
-                    MissionData missionData = TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId);
+                    int missionId = child.GetComponent<MissionEntryUI>().missionId;
+                    // 완료 한 미션이 아니라면 continue
+                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    {
+                        continue;
+                    }
+
+                    MissionData missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -536,7 +544,14 @@ public class MissionUI : UIBase
             case PlayTab.Daily:
                 foreach (Transform child in GetObject((int)GameObjects.DailyContent).transform)
                 {
-                    MissionData missionData = TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId);
+                    int missionId = child.GetComponent<MissionEntryUI>().missionId;
+                    // 완료 한 미션이 아니라면 continue
+                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    {
+                        continue;
+                    }
+
+                    MissionData missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -560,7 +575,14 @@ public class MissionUI : UIBase
             case PlayTab.Weekly:
                 foreach (Transform child in GetObject((int)GameObjects.WeeklyContent).transform)
                 {
-                    MissionData missionData = TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId);
+                    int missionId = child.GetComponent<MissionEntryUI>().missionId;
+                    // 완료 한 미션이 아니라면 continue
+                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    {
+                        continue;
+                    }
+
+                    MissionData missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -584,7 +606,14 @@ public class MissionUI : UIBase
             case PlayTab.Achievement:
                 foreach (Transform child in GetObject((int)GameObjects.AchievementContent).transform)
                 {
-                    MissionData missionData = TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId);
+                    int missionId = child.GetComponent<MissionEntryUI>().missionId;
+                    // 완료 한 미션이 아니라면 continue
+                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    {
+                        continue;
+                    }
+
+                    MissionData missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -608,7 +637,14 @@ public class MissionUI : UIBase
             case PlayTab.Beginner:
                 foreach (Transform child in GetObject((int)GameObjects.BeginnerContent).transform)
                 {
-                    MissionData missionData = TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId);
+                    int missionId = child.GetComponent<MissionEntryUI>().missionId;
+                    // 완료 한 미션이 아니라면 continue
+                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    {
+                        continue;
+                    }
+
+                    MissionData missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -630,6 +666,16 @@ public class MissionUI : UIBase
                 break;
         }
 
+        // 보상이 있는지 확인
+        bool hasRewards = exp > 0 || ap > 0 || gold > 0 || diamond > 0 || rewards.Count > 0;
+
+        // 보상이 하나도 업다면 return
+        if (hasRewards == false)
+        {
+            return;
+        }
+
+        // 보상을 얻을 수 없다면 (수치 오류 or 한계 초과) return
         if (CanClaimReward() == false)
         {
             return;
