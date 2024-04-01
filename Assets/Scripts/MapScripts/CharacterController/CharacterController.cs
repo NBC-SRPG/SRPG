@@ -370,9 +370,9 @@ public class CharacterController : MonoBehaviour
         {
             GetMoveRangeTile();
         }
-        if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackMethod.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
+        if (curSelectedCharacter.character.SO.attackMethod == Constants.AttackMethod.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
         {
-            GetAttackRangeTile(curSelectedCharacter.character.SO.atk_range);// 공격 가능 범위 가져옴
+            GetAttackRangeTile(curSelectedCharacter.character.SO.range);// 공격 가능 범위 가져옴
         }
     }
 
@@ -575,7 +575,7 @@ public class CharacterController : MonoBehaviour
     //이동 가능 위치 탐색
     private void GetPathTile()
     {
-        if (movePath.Count <= curSelectedCharacter.character.Mov && !curSelectedCharacter.didWalk)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
+        if (movePath.Count <= curSelectedCharacter.character.mov && !curSelectedCharacter.didWalk)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 
@@ -631,7 +631,7 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
-        moveRangeTiles = rangeFinder.GetTilesInRange(curSelectedCharacter.curStandingTile.grid2DLocation, curSelectedCharacter.character.Mov, true);
+        moveRangeTiles = rangeFinder.GetTilesInRange(curSelectedCharacter.curStandingTile.grid2DLocation, curSelectedCharacter.character.mov, true);
 
         foreach (OverlayTile tile in moveRangeTiles)
         {
