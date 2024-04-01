@@ -40,4 +40,11 @@ public class TestGameManager : MonoBehaviour
 
         Managers.Mission.NotifyMission(MissionType.KillMonster, monsterId, 2);
     }
+
+    public void DailyReset()
+    {
+        Debug.Log("DailyReset");
+
+        Managers.Mission.DailyMissionInit();
+    }
 }

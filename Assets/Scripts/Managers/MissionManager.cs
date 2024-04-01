@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 using static Constants;
 
@@ -34,6 +35,7 @@ public class MissionManager
     {
         // TODO
         // 처음 기본 미션 설정 필요
+        // ongoingMissions, completeMission, receiveMissions DB에 저장 필요
         // 테스트 데이터
         MissionStart(90001000);
         MissionStart(90001001);
@@ -160,8 +162,9 @@ public class MissionManager
 
     // TODO
     // 0시 이후 첫 접속 시 일일 미션 초기화 해주기
-    private void DailyMissionInit()
+    public void DailyMissionInit()
     {
+        Debug.Log($"DailyMissionInit: last - {lastDailyReset.Date}");
         // 현재 시간 가져오기
         DateTime now = DateTime.Now;
 
@@ -169,13 +172,36 @@ public class MissionManager
         // DB에서 마지막 초기화 시간 가져와서 비교하기
         if (now.Date > lastDailyReset.Date)
         {
-            // TODO
             // 일일 미션 초기화 로직
+            foreach (var mission in completeMissions)
+            {
+                // 완료 미션 중 일일 미션인 경우
+                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                {
+                    completeMissions.Remove(mission);
+
+                    MissionStart(mission);
+                }
+            }
+
+            foreach (var mission in receiveMissions)
+            {
+                // 수령한 미션 중 일일 미션인 경우
+                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                {
+                    completeMissions.Remove(mission);
+
+                    MissionStart(mission);
+                }
+            }
 
             // 마지막 초기화 시간 업데이트
             lastDailyReset = now;
             // TODO
             // DB에 마지막 초기화 시간 저장
+
+            // 미션 시작 이벤트
+            OnMissionStartCallback?.Invoke(0);
         }
     }
 
@@ -189,8 +215,28 @@ public class MissionManager
         // 현재 요일이 월요일이고, 마지막 초기화한 주가 현재 주와 다른 경우
         if (now.DayOfWeek == DayOfWeek.Monday && GetWeekOfYear(now) != GetWeekOfYear(lastWeeklyReset))
         {
-            // TODO
             // 주간 미션 초기화 로직
+            foreach (var mission in completeMissions)
+            {
+                // 완료 미션 중 주간 미션인 경우
+                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                {
+                    completeMissions.Remove(mission);
+
+                    MissionStart(mission);
+                }
+            }
+
+            foreach (var mission in receiveMissions)
+            {
+                // 수령한 미션 중 주간 미션인 경우
+                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                {
+                    completeMissions.Remove(mission);
+
+                    MissionStart(mission);
+                }
+            }
 
             // 마지막 초기화 날짜 업데이트
             lastWeeklyReset = now;

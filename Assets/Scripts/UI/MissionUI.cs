@@ -41,7 +41,8 @@ public class MissionUI : UIBase
 
         TestGetItemButton,
         TestUseItemButton,
-        TestKillMonsterButton
+        TestKillMonsterButton,
+        TestDailyResetButton
     }
 
     private enum GameObjects
@@ -99,6 +100,7 @@ public class MissionUI : UIBase
         GetButton((int)Buttons.TestGetItemButton).onClick.AddListener(OnClickTestGetItemButton);
         GetButton((int)Buttons.TestUseItemButton).onClick.AddListener(OnClickTestUseItemButton);
         GetButton((int)Buttons.TestKillMonsterButton).onClick.AddListener(OnClickTestKillMonsterButton);
+        GetButton((int)Buttons.TestDailyResetButton).onClick.AddListener(OnClickTestDailyResetButton);
     }
 
     private void OnMissionUpdateUI(int missionId)
@@ -178,6 +180,10 @@ public class MissionUI : UIBase
     private void OnClickTestKillMonsterButton()
     {
         TestGameManager.Instance.KillMonster(70001000);
+    }
+    private void OnClickTestDailyResetButton()
+    {
+        TestGameManager.Instance.DailyReset();
     }
 
     private void WholeTabInit()
