@@ -83,16 +83,16 @@ public class Managers : MonoBehaviour
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
             Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
             Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            s_accountData.characterData.Add((testChatacter1.SO.character_Id), testChatacter1);
-            s_accountData.characterData.Add((testChatacter2.SO.character_Id), testChatacter2);
-            s_accountData.characterData.Add((testChatacter3.SO.character_Id), testChatacter3);
+            s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
+            s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
+            s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
 
-            testChatacter1.CharacterInit();
-            testChatacter2.CharacterInit();
-            testChatacter3.CharacterInit();
-            testChatacter1.Growth.InitialInit();
-            testChatacter2.Growth.InitialInit();
-            testChatacter3.Growth.InitialInit();
+            //testChatacter1.CharacterInit();
+            //testChatacter2.CharacterInit();
+            //testChatacter3.CharacterInit();
+            //testChatacter1.Growth.InitialInit();
+            //testChatacter2.Growth.InitialInit();
+            //testChatacter3.Growth.InitialInit();
 
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
             mailSO.id = "1";
