@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+
 public class Constants
 {
+
+    public static Dictionary<int, int> characterExpTable = new Dictionary<int, int>();
+
     public enum Sound
     {
         Bgm,

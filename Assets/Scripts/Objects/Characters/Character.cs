@@ -45,9 +45,7 @@ public class Character : MonoBehaviour
         this.SO = SO;
         this.Growth = Growth;
 
-        hp = SO.hp + SO.hpPerLv * Growth.level;
-        atk = SO.atk + SO.atkPerLv * Growth.level;
-        def = SO.def + SO.defPerLv * Growth.level;
+        CalculateStat();
         mov = SO.mov;
 
         atkIncrease = 0;
@@ -70,7 +68,14 @@ public class Character : MonoBehaviour
         //superiorClass = null;
     }
 
+    private void CalculateStat()
+    {
+        hp = SO.hp + SO.hpPerLv * Growth.level;
+        atk = SO.atk + SO.atkPerLv * Growth.level;
+        def = SO.def + SO.defPerLv * Growth.level;
+    }
 
+    
 
 
     /*
