@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using static Constants;
 public class MissionData
 {
@@ -12,4 +13,18 @@ public class MissionData
     public int ap { get; set; } // 미션 보상 ap
     public int gold { get; set; } // 미션 보상 골드
     public int diamond { get; set; } // 미션 보상 다이아
+    public List<Reward> rewards { get; set; } = new(); // 미션 보상 아이템
+    public List<int> nextMissions { get; set; } = new(); // 클리어 시 다음 해금 미션 id
+}
+
+public class Reward
+{
+    public int rewardId { get; }
+    public int rewardCount { get; }
+
+    public Reward(int rewardId, int rewardCount)
+    {
+        this.rewardId = rewardId;
+        this.rewardCount = rewardCount;
+    }
 }

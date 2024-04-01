@@ -161,7 +161,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickMissionButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<MissionUI>();
+        Managers.UI.ShowUI<MissionUI>();
     }
     private void OnClickProfileButton()
     {

@@ -18,7 +18,7 @@ public class MissionDB
         MissionData missionData = new MissionData();
         missionData.id = 90001000;
         missionData.name = "테스트 미션 1";
-        missionData.description = "테스트 미션 1입니다.";
+        missionData.description = "테스트 미션 1입니다. 80001000 아이템 1개 얻기";
         missionData.missionType = MissionType.GetItem;
         missionData.missionCategory = MissionCategory.Daily;
         missionData.target = 80001000;
@@ -32,7 +32,7 @@ public class MissionDB
         MissionData missionData1 = new MissionData();
         missionData1.id = 90001001;
         missionData1.name = "테스트 미션 2";
-        missionData1.description = "테스트 미션 2입니다.";
+        missionData1.description = "테스트 미션 2입니다. 70001000 몬스터 10마리 잡기";
         missionData1.missionType = MissionType.KillMonster;
         missionData1.missionCategory = MissionCategory.Weekly;
         missionData1.target = 70001000;
@@ -41,12 +41,13 @@ public class MissionDB
         missionData1.ap = 5;
         missionData1.gold = 2000;
         missionData1.diamond = 300;
+        missionData1.nextMissions.Add(90001002);
         entities.Add(missionData1);
 
         MissionData missionData2 = new MissionData();
         missionData2.id = 90001002;
-        missionData2.name = "테스트 미션 2";
-        missionData2.description = "테스트 미션 2입니다.";
+        missionData2.name = "테스트 미션 3";
+        missionData2.description = "테스트 미션 3입니다. 80001001 아이템 5개 사용";
         missionData2.missionType = MissionType.UseItem;
         missionData2.missionCategory = MissionCategory.Achievement;
         missionData2.target = 80001001;

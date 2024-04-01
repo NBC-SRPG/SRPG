@@ -6,16 +6,24 @@ using static Constants;
 
 public class MissionManager
 {
-    // 진행 중인 미션들
+    // 진행중인 미션들
     private Dictionary<int, Mission> ongoingMissions = new();
     // 완료 한 미션들
     private HashSet<int> completeMissions = new();
+    // 보상 수령한 미션들
+    private HashSet<int> receiveMissions = new();
+
+    public IReadOnlyDictionary<int, Mission> OngoingMissions => ongoingMissions;
+    public IReadOnlyCollection<int> CompleteMissions => completeMissions;
+    public IReadOnlyCollection<int> ReceiveMissions => receiveMissions;
 
     public event Action<int> OnMissionStartCallback;
     public event Action<int, int> OnMissionUpdateCallback;
     public event Action<int> OnMissionCompleteCallback;
+    public event Action<int> OnMissionReceiveCallback;
 
-    private Dictionary<Constants.MissionType, List<MissionData>> subscribeMissions = new();
+    // 구독중인 미션들
+    private Dictionary<MissionType, List<MissionData>> subscribeMissions = new();
 
     // 마지막 일일 미션 초기화 날짜
     private DateTime lastDailyReset;
@@ -24,7 +32,12 @@ public class MissionManager
 
     public void Init()
     {
-
+        // TODO
+        // 처음 기본 미션 설정 필요
+        // 테스트 데이터
+        MissionStart(90001000);
+        MissionStart(90001001);
+        //MissionStart(90001002);
     }
     public void SubscribeMission(int missionId)
     {
@@ -33,7 +46,9 @@ public class MissionManager
         var missionData = TestDatabase.Mission.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
+        {
             subscribeMissions[missionData.missionType] = new List<MissionData>();
+        }
 
         subscribeMissions[missionData.missionType].Add(missionData);
     }
@@ -41,10 +56,13 @@ public class MissionManager
     public void UnsubscribeMission(int missionId)
     {
         Debug.Log("UnsubscribeQuest " + missionId);
+
         var missionData = TestDatabase.Mission.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
+        {
             return;
+        }
 
         subscribeMissions[missionData.missionType].Remove(missionData);
     }
@@ -52,12 +70,16 @@ public class MissionManager
     public void NotifyMission(MissionType type, int target, int count)
     {
         if (subscribeMissions.ContainsKey(type) == false)
+        {
             return;
-
+        }
+            
         var filteredMissions = subscribeMissions[type];
         var targetMissions = filteredMissions.FindAll(q => q.target == target);
         foreach (var mission in targetMissions)
+        {
             MissionUpdate(mission.id, count);
+        }
     }
 
     // 미션 시작
@@ -72,7 +94,9 @@ public class MissionManager
         mission.Start();
 
         if (ongoingMissions.ContainsKey(missionId))
+        {
             return;
+        }
 
         ongoingMissions.Add(missionId, mission);
 
@@ -84,7 +108,9 @@ public class MissionManager
     public void MissionUpdate(int missionId, int amount)
     {
         if (ongoingMissions.ContainsKey(missionId) == false)
+        {
             return;
+        }
 
         var missiontData = TestDatabase.Mission.Get(missionId);
 
@@ -93,14 +119,18 @@ public class MissionManager
         OnMissionUpdateCallback?.Invoke(missionId, amount);
 
         if (currentCount >= missiontData.count)
+        {
             MissionClear(missionId);
+        }
     }
 
 
     public void MissionClear(int missionId)
     {
         if (ongoingMissions.ContainsKey(missionId) == false)
+        {
             return;
+        }
 
         ongoingMissions[missionId].Complete();
         ongoingMissions.Remove(missionId);
@@ -108,6 +138,19 @@ public class MissionManager
         completeMissions.Add(missionId);
 
         OnMissionCompleteCallback?.Invoke(missionId);
+    }
+
+    public void MissionReceive(int missionId)
+    {
+        if (completeMissions.Contains(missionId) == false)
+        {
+            return;
+        }
+
+        completeMissions.Remove(missionId);
+        receiveMissions.Add(missionId);
+
+        OnMissionReceiveCallback?.Invoke(missionId);
     }
 
     public bool IsClear(int id)
