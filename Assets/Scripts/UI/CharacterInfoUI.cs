@@ -374,7 +374,7 @@ public class CharacterInfoUI : UIBase
         GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(true);
     }
 
-    private void OnClickAbilityButton(int AbilityTier, AbilitySO Ability)
+    private void OnClickAbilityButton(int AbilityTier, int AbilityId)
     {
         Debug.Log("OnClickAbilityButton");
 
@@ -382,8 +382,10 @@ public class CharacterInfoUI : UIBase
         GetObject((int)GameObjects.AbilityInfoUI).SetActive(true);
 
         // 이미지, 설명 세팅
-        GetImage((int)Images.AbilityInfoImage).sprite = Managers.Resource.Load<Sprite>($"{Ability.id}");
-        GetText((int)Texts.AbilityDescriptionText).text = Ability.abilityDescription;
+        GetImage((int)Images.AbilityInfoImage).sprite = Managers.Resource.Load<Sprite>($"{AbilityId}");
+        // TODO
+        // 어빌리티Id로 어빌리티를 Get하여 어빌리티 설명 텍스트 적용
+        // GetText((int)Texts.AbilityDescriptionText).text = Ability.abilityDescription;
 
         // 버튼들 모두 비활성화 상태
         GetButton((int)Buttons.AbilityApplyButton).gameObject.SetActive(false);
@@ -405,32 +407,32 @@ public class CharacterInfoUI : UIBase
                     SetupUnselectableAbilityUI(AbilityTier);
                 }
                 // 이미 적용 된 특성이라면
-                else if (character.Growth.Ability_Tier2 == Ability)
+                else if (character.Growth.abilityT2 == AbilityId)
                 {
                     SetupSelectedAbilityUI();
                 }
                 // 적용 안된 특성이라면
                 else
                 {
-                    SetupUnselectedAbilityUI(AbilityTier, Ability);
+                    SetupUnselectedAbilityUI(AbilityTier, AbilityId);
                 }
                 break;
 
             case 3:
                 // 선택 가능한지 체크
-                if (character.Growth.level < 70 || character.Growth.Ability_Tier2 == null)
+                if (character.Growth.level < 70 || character.Growth.abilityT2 == NONE_SELECTED)
                 {
                     SetupUnselectableAbilityUI(AbilityTier);
                 }
                 // 이미 적용 된 특성이라면
-                else if (character.Growth.Ability_Tier3 == Ability)
+                else if (character.Growth.abilityT3 == AbilityId)
                 {
                     SetupSelectedAbilityUI();
                 }
                 // 적용 안된 특성이라면
                 else
                 {
-                    SetupUnselectedAbilityUI(AbilityTier, Ability);
+                    SetupUnselectedAbilityUI(AbilityTier, AbilityId);
                 }
                 break;
         }
@@ -445,7 +447,7 @@ public class CharacterInfoUI : UIBase
     }
 
     // 적용 안된 특성 UI 세팅
-    private void SetupUnselectedAbilityUI(int AbilityTier, AbilitySO Ability)
+    private void SetupUnselectedAbilityUI(int AbilityTier, int AbilityId)
     {
         GetImage((int)Images.AbilityInfoImage).transform.parent.GetComponent<Outline>().enabled = false;
 
@@ -453,7 +455,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.AbilityCancelButton).gameObject.SetActive(true);
 
         GetButton((int)Buttons.AbilityApplyButton).onClick.RemoveAllListeners();
-        GetButton((int)Buttons.AbilityApplyButton).onClick.AddListener(() => OnClickAbilityApplyButton(AbilityTier, Ability));
+        GetButton((int)Buttons.AbilityApplyButton).onClick.AddListener(() => OnClickAbilityApplyButton(AbilityTier, AbilityId));
     }
 
     // 특성 선택이 불가능할 때 UI 세팅
@@ -472,17 +474,17 @@ public class CharacterInfoUI : UIBase
         }
     }
 
-    private void OnClickAbilityApplyButton(int AbilityTier, AbilitySO selectAbility)
+    private void OnClickAbilityApplyButton(int AbilityTier, int selectAbilityId)
     {
         Debug.Log("OnClickAbilityApplyButton");
 
         if (AbilityTier == 2)
         {
-            character.Growth.SelectAbility_tier2(selectAbility);
+            character.Growth.abilityT2 = selectAbilityId;
         }
         else if (AbilityTier == 3)
         {
-            character.Growth.SelectAbility_tier3(selectAbility);
+            character.Growth.abilityT3 = selectAbilityId;
         }
 
         AbilityPathUpdate();
