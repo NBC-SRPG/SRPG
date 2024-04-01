@@ -16,9 +16,10 @@ public class MapTiles : MonoBehaviour
 
     private void Awake()
     {
+        Managers.UI.ShowUI<BattleUI>();
+
         Managers.MapManager.Init();
         Managers.BattleManager.Init();
-        Managers.UI.ShowUI<BattleUI>();
     }
 
     private void Start()

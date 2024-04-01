@@ -26,7 +26,9 @@ public class BattleUI : UIBase
         TargetLevel,
         TargetAtkText,
         TargetDefText,
-        TargetHealthText
+        TargetHealthText,
+        RoundText,
+
     }
 
     private enum GameObjects
@@ -36,6 +38,8 @@ public class BattleUI : UIBase
         SelectCharacterInfo,
         TargetCharacterInfo,
         RangeObject,
+        BufList,
+        TargetBufList,
 
     }
 
@@ -61,8 +65,8 @@ public class BattleUI : UIBase
     }
 
     //charactercontroller가 보내주는 캐릭터를 받아옴
-    public CharacterBase curSelectedCharacter;
-    public CharacterBase curTargetCharacter;
+    [HideInInspector] public CharacterBase curSelectedCharacter;
+    [HideInInspector] public CharacterBase curTargetCharacter;
 
     public event Action OnClickCancelButton;
     public event Action OnClickTurnEndButton;
@@ -72,8 +76,12 @@ public class BattleUI : UIBase
     public event Action OnClickAttackButton;
     public event Action OnClickSkillConFirmButton;
 
-    public VirtualJoyStick joyStick;
-    public DamageTextPool textPool;
+    [HideInInspector] public VirtualJoyStick joyStick;
+    [HideInInspector] public DamageTextPool textPool;
+
+    [SerializeField] private GameObject buf;
+    private List<GameObject> bufList;
+    private List<GameObject> targetBufList;
 
     private void Start()
     {
@@ -113,6 +121,23 @@ public class BattleUI : UIBase
         textPool = GetObject((int)GameObjects.TextPool).GetComponent<DamageTextPool>();
 
         RefreshUI();
+
+        bufList = new List<GameObject> ();
+        targetBufList = new List<GameObject> ();
+
+        for(int i = 0; i < 30; i++)
+        {
+            GameObject obj = Instantiate(buf, GetObject((int)GameObjects.BufList).transform);
+            bufList.Add(obj);
+            obj.SetActive(false);
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+            GameObject obj = Instantiate(buf, GetObject((int)GameObjects.TargetBufList).transform);
+            targetBufList.Add(obj);
+            obj.SetActive(false);
+        }
     }
 
     private void OnClickCancel()
@@ -244,6 +269,11 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.SkillConFirmButton).interactable = isTarget;
     }
 
+    public void ShowRound(int nowRound)
+    {
+        GetText((int)Texts.RoundText).text = nowRound.ToString();
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //Character Ui
 
@@ -280,6 +310,16 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() + " / " + curSelectedCharacter.health.MaxHealth.ToString();
         GetImage((int)Images.HealthBar).fillAmount = curSelectedCharacter.health.HealthRatio;
+
+        for(int i = 0; i < bufList.Count; i++)
+        {
+            if (curSelectedCharacter.curCharacterBufList.bufList.Count < i + 1)
+            {
+                bufList[i].GetComponent<BufIcon>().SetBufIcon(null);
+                continue;
+            }
+            bufList[i].GetComponent<BufIcon>().SetBufIcon(curSelectedCharacter.curCharacterBufList.bufList[i]);
+        }
     }
 
     public void ShowTargetInfo()
@@ -299,6 +339,16 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString();
         GetImage((int)Images.TargetHealthBar).fillAmount = curTargetCharacter.health.HealthRatio;
+
+        for (int i = 0; i < targetBufList.Count; i++)
+        {
+            if (curTargetCharacter.curCharacterBufList.bufList.Count < i + 1)
+            {
+                targetBufList[i].GetComponent<BufIcon>().SetBufIcon(null);
+                continue;
+            }
+            targetBufList[i].GetComponent<BufIcon>().SetBufIcon(curTargetCharacter.curCharacterBufList.bufList[i]);
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

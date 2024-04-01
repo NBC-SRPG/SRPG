@@ -14,6 +14,12 @@ public class OverlayTile : MonoBehaviour
     public Vector3Int gridLocation;//타일 위치(월드 위치랑 다름)
     public Vector2Int grid2DLocation { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
+    public int H { get; set; }//목적지까지 거리
+    public int G { get; set; }//목적지까지 걷는 횟수
+    public int F { get { return H + G; } }//최종 점수
+
+    public OverlayTile prevTile;// 길찾기를 위한 이전 타일
+
     public CharacterBase curStandingCharater;
 
     private void Start()

@@ -12,5 +12,6 @@ public class GamePlayer
     public int prioty;
     public bool isReady;
 
-    public List<Character> party;
+    public Character[] party = new Character[5];
+
 }

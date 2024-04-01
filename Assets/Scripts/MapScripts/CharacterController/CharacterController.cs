@@ -19,12 +19,10 @@ public class CharacterController : MonoBehaviour
         SkillTargetSelect
     }
 
-    public Button button;
-
     [SerializeField] private CharacterBase chaPrefabs;
     [SerializeField] private TargetTiles targetTiles;
 
-    [field: SerializeField] public GamePlayer player;
+    public GamePlayer player;
 
     private RangeFinder rangeFinder;
     private PathFinder pathFinder;
@@ -62,6 +60,11 @@ public class CharacterController : MonoBehaviour
     {
         canClick = false;
         nowPlayerTurn = false;
+
+        if (player.playerId == "")
+        {
+            player = Managers.GameManager.player;
+        }
 
         if (!Managers.BattleManager.players.Contains(player))
         {
@@ -149,8 +152,14 @@ public class CharacterController : MonoBehaviour
     public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
     {
         int i = 0;
+
         foreach (Character charac in player.party)
         {
+            if (charac == null)
+            {
+                continue;
+            }
+
             if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
             {
                 CharacterBase character = Instantiate(chaPrefabs, transform);

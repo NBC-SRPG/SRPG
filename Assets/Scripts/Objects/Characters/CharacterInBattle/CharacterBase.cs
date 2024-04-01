@@ -18,6 +18,7 @@ public class CharacterBase : MonoBehaviour
     public PassiveAbilityBase curCharacterPassive;
 
     public CharacterBufList curCharacterBufList;
+    public TempBonusStat tempBonusStat;
 
     public OverlayTile curStandingTile;
     public int leftWalkRange;
@@ -50,7 +51,7 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
-    public void InitCharacter(Character charac, string id)
+    public virtual void InitCharacter(Character charac, string id)
     {
         character = charac;
         playerId = id;
@@ -101,6 +102,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive.init(this);
 
         curCharacterBufList = new CharacterBufList(this);
+        tempBonusStat = new TempBonusStat();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -110,7 +112,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Attack + curCharacterBufList.GetAdditionalStat().ExtraAtk;
+            return character.Attack + curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk;
         } 
     }
 
@@ -118,7 +120,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Defence + curCharacterBufList.GetAdditionalStat().ExtraDefend;
+            return character.Defence + curCharacterBufList.GetAdditionalStat().ExtraDefend + tempBonusStat.GetTempStat().ExtraDefend;
         }
     }
 
@@ -134,7 +136,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Mov + curCharacterBufList.GetAdditionalStat().ExtraMov;
+            return character.Mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov;
         }
     }
 
@@ -226,6 +228,8 @@ public class CharacterBase : MonoBehaviour
     {
         curCharacterPassive?.OnRoundStart();
         curCharacterBufList?.OnRoundStart();
+
+        tempBonusStat.ClearAllStat();
     }
 
     public void OnStartPlayerTurn()// 턴 시작 시

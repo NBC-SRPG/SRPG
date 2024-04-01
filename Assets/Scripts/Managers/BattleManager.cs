@@ -24,6 +24,8 @@ public class BattleManager
     public bool isShowAnimation;
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
+    private BattleUI Ui;
+
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
 
@@ -34,6 +36,8 @@ public class BattleManager
         charactersAsTeam.Clear();
 
         isShowAnimation = false;
+
+        Ui = Managers.UI.FindUI<BattleUI>();
     }
 
     //플레이어가 준비되었는지 확인
@@ -381,6 +385,8 @@ public class BattleManager
     {
         nowRound++;
 
+        Ui.ShowRound(nowRound);
+        
         players = players.OrderByDescending(x => x.prioty).ToList();
 
         foreach (CharacterBase characters in charactersInBattle.FindAll(x => !x.isDead))

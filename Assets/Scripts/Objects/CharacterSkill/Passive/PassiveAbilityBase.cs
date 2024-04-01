@@ -153,4 +153,21 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용
 
         allyCharacter.health.HealHealth(10);
     }
+
+    BonusStat stat = new BonusStat();
+    public override void OnStartAttack(CharacterBase enemy)
+    {
+        base.OnStartAttack(enemy);
+
+        stat.ExtraAtk = character.Attack / 2;
+
+        character.tempBonusStat.AddBonusStat(stat);
+    }
+
+    public override void OnEndAttack(CharacterBase enemy)
+    {
+        base.OnEndAttack(enemy);
+
+        character.tempBonusStat.RemoveBonusStat(stat);
+    }
 }
