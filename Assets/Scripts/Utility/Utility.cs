@@ -1,0 +1,28 @@
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using static Constants;
+
+
+public static class Utility
+{
+    // 비동기 처리 후 호출할 콜백함수
+    public delegate void Callback<T>(T result);
+
+
+    // 타입, id, 콜백함수를 param으로 받아 사용
+    public static void Id2SO<T>(AddressableType type, int id, Callback<ScriptableObject> callback) where T : ScriptableObject
+    {
+        // 어드레서블 경로
+        string path = type.ToString() + "/" + id.ToString() + ".asset";
+
+        var op = Addressables.LoadAssetAsync<T>(path);
+        op.Completed += (handler) =>
+        {
+            // 로딩이 완료되면 콜백함수로 로직처리
+            callback(handler.Result);
+        };
+    }
+
+
+
+}

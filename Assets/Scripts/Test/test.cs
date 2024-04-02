@@ -1,24 +1,27 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using Newtonsoft.Json;
 
 [Serializable]
 public class test : MonoBehaviour
 {
     Database db;
+    int id;
     public CharacterSO so;
 
     void Start()
     {
         db = new Database();
+        id = 101;
     }
     
     public void OnClick()
     {
-        db.WriteWithJson(db.userDB.Child("characterData").Child(so.id.ToString()), so);
+        Utility.Id2SO<CharacterSO>(Constants.AddressableType.CharacterSO, id, (result) => 
+        {
+            so = (CharacterSO)result;
+
+            Debug.Log(so.characterName);
+        });
     }
 
 }

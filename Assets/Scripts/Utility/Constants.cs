@@ -12,6 +12,12 @@ public class Constants
         Max,
     }
 
+    public enum AddressableType
+    {
+        CharacterSO,
+        ClassSO
+    }
+
     public enum AttackMethod
     {
         Melee,
