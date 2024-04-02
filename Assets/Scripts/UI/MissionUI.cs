@@ -513,6 +513,12 @@ public class MissionUI : UIBase
     {
         Debug.Log("OnClickGetAllButton");
 
+        exp = 0;
+        ap = 0;
+        gold = 0;
+        diamond = 0;
+        rewards.Clear();
+
         switch (playTab)
         {
             case PlayTab.Whole:
