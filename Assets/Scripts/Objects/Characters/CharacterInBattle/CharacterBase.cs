@@ -59,19 +59,19 @@ public class CharacterBase : MonoBehaviour
         character = Instantiate(character, gameObject.transform);
         characterObject = character.gameObject;
 
-        character.CharacterInit();
+        //character.CharacterInit();
 
         characterAnim = GetComponentInChildren<CharAnimBase>();
         characterAnim.Init(this);
 
         health = GetComponent<HealthSystem>();
-        health.SetHealth(character.Health);
+        health.SetHealth(character.hp);
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
-        curCharacterSkill = character.InitSkills();
-        curCharacterPassive = character.InitPassive();
+        curCharacterSkill = character.skill;
+        curCharacterPassive = character.passiveAbility;
 
         SetSkillOwner();
 
@@ -287,7 +287,7 @@ public class CharacterBase : MonoBehaviour
 
         isWalking = false;
         didWalk = true;
-        if(character.characterData.attackType == Constants.AttackType.Melee)
+        if(character.SO.attackMethod == Constants.AttackMethod.Melee)
         {
             didAttack = true;
         }
@@ -416,7 +416,7 @@ public class CharacterBase : MonoBehaviour
     private void EndAttacking()// 공격 끝내기
     {
         isAttacking = false;
-        if (character.CharacterAttackType == Constants.AttackType.Range)
+        if (character.SO.attackMethod == Constants.AttackMethod.Range)
         {
             didAttack = true;
 

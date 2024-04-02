@@ -183,7 +183,7 @@ public class BattleManager
         {
             curCharacter.OnPassEnemy(standingCharacter);
 
-            if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
+            if (curCharacter.character.SO.attackMethod == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.SetAttackTarget(standingCharacter);
             }

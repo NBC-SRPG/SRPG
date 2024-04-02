@@ -6,33 +6,15 @@ using static Constants;
 public class ClassSO : ScriptableObject
 {
     [Header("Develope")]
-    public string class_Id;//Å¬·¡½º ½Äº°ÀÚ
-    public BaseClass bassClass; //»Ñ¸® Å¬·¡½º
+    public int id;      //í´ë˜ìŠ¤ ì‹ë³„ì
+    public BaseClass baseClass;     //ë¿Œë¦¬ í´ë˜ìŠ¤
 
-    [Header("Trait_description")]
-    public string className;//Å¬·¡½º ÀÌ¸§
-    public string classDescription;//Å¬·¡½º ¼³¸í
+    [Header("Class_description")]
+    public string className;        //í´ë˜ìŠ¤ ì´ë¦„
+    public string classDescription;     //í´ë˜ìŠ¤ ì„¤ëª…
 
-    [Header("Image")]
-    public Sprite classSprite;//Å¬·¡½º ½ºÇÁ¶óÀÌÆ®(=½æ³×ÀÏor¾ÆÀÌÄÜ)
-
-    [Header("Class_Status_basic")] //increase = ±ø½ºÅÈ Áõ°¡·®(ÇÕ¿¬»ê). multiply = ¹èÀ²(%) Áõ°¡·®(°ö¿¬»ê)
-    public int increaseHealth;
-    public int increaseAtk;
-    public int increaseDef;
-    public int increasecMov;
-
-    public float multiplyHealth;
-    public float multiplyAtk;
-    public float multiplyDef;
-
-    [Header("Trait_Status_addition")]
-    public float increasecCtr; //Ä¡¸íÅ¸ È®·ü +
-    public float increasecCtd; //Ä¡¸íÅ¸ ÇÇÇØ +
-    public float increaseInflictDamage; //ÁÖ´Â ÃÖÁ¾ ÇÇÇØ Áõ°¡ +
-    public float reducedTakenDamage; //¹Ş´Â ÃÖÁ¾ ÇÇÇØ °¨¼Ò -
-
+    
     [Header("Class_unique")]
-    public string uniqueID;//Å¬·¡½ºÀÇ º°µµ °íÀ¯ È¿°ú. ¼¼ºÎ·ÎÁ÷ ¹Ì±¸Çö.
-                           //Todo: Æ¯¼ºÀÌ ½ºÅÈ Áõ°¡ ¿Ü¿¡ Æ¯¼ö ±â´ÉÀ» ±¸ÇöÇÏ°í Àû¿ëÇÒ ¼ö ÀÖµµ·Ï ·ÎÁ÷ ¼³°è / ±¸Çö
+    public int uniqueID;//í´ë˜ìŠ¤ì˜ ë³„ë„ ê³ ìœ  íš¨ê³¼. ì„¸ë¶€ë¡œì§ ë¯¸êµ¬í˜„.
+                           //Todo: íŠ¹ì„±ì´ ìŠ¤íƒ¯ ì¦ê°€ ì™¸ì— íŠ¹ìˆ˜ ê¸°ëŠ¥ì„ êµ¬í˜„í•˜ê³  ì ìš©í•  ìˆ˜ ìˆë„ë¡ ë¡œì§ ì„¤ê³„ / êµ¬í˜„
 }

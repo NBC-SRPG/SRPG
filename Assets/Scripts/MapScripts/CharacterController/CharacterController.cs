@@ -395,9 +395,9 @@ public class CharacterController : MonoBehaviour
         {
             GetMoveRangeTile();
         }
-        if (curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
+        if (curSelectedCharacter.character.SO.attackMethod == Constants.AttackMethod.Range && !curSelectedCharacter.didAttack)// 해당 캐릭터가 원거리형 캐릭터고 공격하지 않았을 때 
         {
-            GetAttackRangeTile(curSelectedCharacter.character.characterData.atk_range);// 공격 가능 범위 가져옴
+            GetAttackRangeTile(curSelectedCharacter.character.SO.range);// 공격 가능 범위 가져옴
         }
     }
 
