@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class SkillAbilityBase
 {
-    CharacterBase character;
+    protected CharacterBase character;
 
     public virtual void init(CharacterBase character)// 스킬 소유자 설정
     {
@@ -12,6 +12,11 @@ public abstract class SkillAbilityBase
     }
 
     public virtual void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    {
+
+    }
+
+    public virtual void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
     {
 
     }
@@ -32,6 +37,15 @@ public class SkillAbility_ : SkillAbilityBase // 테스트용
     public override void init(CharacterBase character)
     {
         base.init(character);
-        Debug.Log("testSkill Init");
+    }
+
+    public override void UseSkill(List<CharacterBase> target)
+    {
+        base.UseSkill(target);
+
+        foreach(CharacterBase target2 in target)
+        {
+            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
+        }
     }
 }
