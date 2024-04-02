@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Constants;
 
-public class Character : MonoBehaviour
+public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
