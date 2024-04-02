@@ -45,6 +45,8 @@ public class AnimationController : MonoBehaviour
 
     private Action prevAnimation;
 
+    private WaitForSeconds delay = new WaitForSeconds(0.15f);
+
     //-----------------------------------------------------------------------------------------------------------------------
     //캐릭터 위치 조정
 
@@ -202,7 +204,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
-                    Debug.Log("attack end");
+                    yield return delay;
+
                     PlayNextAnimation();
 
                     break;
@@ -239,6 +242,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
+                    yield return delay;
+
                     PlayNextAnimation();
 
                     break;
@@ -292,6 +297,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
+                    yield return delay;
+
                     PlayNextAnimation();
 
                     break;
@@ -336,6 +343,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
+                    yield return delay;
+
                     PlayNextAnimation();
 
                     break;
@@ -374,6 +383,8 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
+                    yield return delay;
+
                     PlayNextAnimation();
 
                     break;
