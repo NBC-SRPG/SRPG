@@ -75,7 +75,7 @@ public class PathFinder
 
         OverlayTile curTile = targetTile;
 
-        while(curTile != startTile)// 역순으로 타일 리스트에 삽입
+        while (curTile != startTile)// 역순으로 타일 리스트에 삽입
         {
             pathList.Add(curTile);
             curTile = curTile.prevTile;

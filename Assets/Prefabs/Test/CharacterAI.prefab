@@ -85,11 +85,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8711474985685383734}
-  - component: {fileID: 6138315053240153307}
+  - component: {fileID: 7158100896091093529}
   - component: {fileID: 8782514378696709054}
   - component: {fileID: 795732350930966562}
   m_Layer: 0
-  m_Name: CharacterInBattle
+  m_Name: CharacterAI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,7 +111,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6138315053240153307
+--- !u!114 &7158100896091093529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2908134549041255622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a8b91b9c4b261a4284508af66e57a9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ce92090813db7d48a833caebd528e55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 0}
@@ -129,7 +129,7 @@ MonoBehaviour:
   health: {fileID: 0}
   playerId: 
   curStandingTile: {fileID: 0}
-  leftWalkRange: 5
+  leftWalkRange: 0
   isDead: 0
   isWalking: 0
   isAttacking: 0

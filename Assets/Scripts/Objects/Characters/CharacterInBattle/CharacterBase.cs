@@ -238,7 +238,7 @@ public class CharacterBase : MonoBehaviour
         tempBonusStat.ClearAllStat();
     }
 
-    public void OnStartPlayerTurn()// 턴 시작 시
+    public virtual void OnStartPlayerTurn()// 턴 시작 시
     {
         isWalking = false;
         isAttacking = false;

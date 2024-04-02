@@ -42,8 +42,6 @@ public class HealthSystem : MonoBehaviour
     {
         ChangeHealth(-damage);
 
-        Debug.Log("take damage " +  damage);
-
         if(CurHealth == 0)
         {
             Die?.Invoke();

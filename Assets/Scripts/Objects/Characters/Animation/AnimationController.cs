@@ -36,6 +36,7 @@ public class AnimationController : MonoBehaviour
     private List<CharacterBase> victims;
 
     private Dictionary<Action, List<Action>> stitchedAnim = new Dictionary<Action, List<Action>>();
+    private Dictionary<CharacterBase, Vector3> originPos = new Dictionary<CharacterBase, Vector3>();
 
     private bool isAnimationPlaying;
     private bool isWalkPlaying;
@@ -67,6 +68,8 @@ public class AnimationController : MonoBehaviour
         this.attacker = attacker;
         this.victims = victims.ConvertAll(data => data);
 
+        originPos.Add(attacker, attacker.transform.position);
+
         attacker.transform.position = attackerPosition.transform.position;
         attacker.transform.localScale = new Vector3(4, 4, 0);
 
@@ -85,6 +88,8 @@ public class AnimationController : MonoBehaviour
             {
                 continue;
             }
+
+            originPos.Add(this.victims[i], this.victims[i].transform.position);
 
             this.victims[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
             this.victims[i].transform.localScale = new Vector3(4, 4, 0);
@@ -120,7 +125,7 @@ public class AnimationController : MonoBehaviour
             return;
         }
 
-        attacker.transform.position = attacker.curStandingTile.transform.position;
+        attacker.transform.position = originPos[attacker];
         attacker.transform.localScale = new Vector3(1, 1, 0);
 
         SetCharacterLayer(attacker, 0);
@@ -131,8 +136,6 @@ public class AnimationController : MonoBehaviour
 
         attacker.health.healthBarCanvas.SetActive(true);
 
-        attacker = null;
-
         if(victims.Count == 0)
         {
             return;
@@ -140,17 +143,22 @@ public class AnimationController : MonoBehaviour
 
         for (int i = 0; i < victims.Count; i++)
         {
-            victims[i].transform.position = victims[i].curStandingTile.transform.position;
+            victims[i].transform.position = originPos[victims[i]];
             victims[i].transform.localScale = new Vector3(1, 1, 0);
 
             SetCharacterLayer(victims[i], 0);
 
             victims[i].characterAnim.EndAnimation(victims[i].isWalking);
+            victims[i].characterAnim.FlipCharacter(attacker.transform.position, false);
             //victims[i].characterAnim.SetDamage(0);
 
             victims[i].health.healthBarCanvas.SetActive(true);
         }
+
+        attacker.characterAnim.FlipCharacter(victims[0].transform.position, false);
+        attacker = null;
         victims.Clear();
+        originPos.Clear();
     }
 
     public void EndAimation()
@@ -183,6 +191,7 @@ public class AnimationController : MonoBehaviour
 
     private IEnumerator PlayAttackAnimation(CharacterBase attacker, CharacterBase victim)// 공격 애니메이션
     {
+        Debug.Log("attakc Animation");
         attacker.characterAnim.PlayAttackAnimation(victim);
 
         while (true)
@@ -193,6 +202,7 @@ public class AnimationController : MonoBehaviour
 
                 if (animTime > 0.9f)
                 {
+                    Debug.Log("attack end");
                     PlayNextAnimation();
 
                     break;
@@ -392,6 +402,7 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 이동 애니메이션
     {
+        Debug.Log("move to " + targetTile.grid2DLocation);
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);

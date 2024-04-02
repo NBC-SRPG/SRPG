@@ -43,7 +43,7 @@ public class BattleManager
     //플레이어가 준비되었는지 확인
     public void GetReady()
     {
-        if (players.FindAll(x => x.isReady).Count == players.Count)
+        if (players.Count >= 2 && players.FindAll(x => x.isReady).Count == players.Count)
         {
             InitBattle();
         }

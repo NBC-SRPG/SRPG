@@ -155,6 +155,18 @@ public class CharAnimBase : MonoBehaviour
         return direction;
     }
 
+    public Vector2 GetDirectionOfCharacter()
+    {
+        if (transform.localScale.x >= 0)
+        {
+            return Vector2.right;
+        }
+        else
+        {
+            return Vector2.left;
+        }
+    }
+
     public void FlipCharacterDirection(Vector2 direction)
     {
         if(direction == Vector2.right)
@@ -165,8 +177,6 @@ public class CharAnimBase : MonoBehaviour
         {
             transform.localScale = new Vector2(1 * Mathf.Abs(transform.localScale.x), transform.localScale.y);
         }
-
-        
     }
 
     public void FlipCharacter(Vector2 targetPosiition, bool back)

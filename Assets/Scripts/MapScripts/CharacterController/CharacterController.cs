@@ -472,7 +472,7 @@ public class CharacterController : MonoBehaviour
 
     private void MoveCharacter()// 캐릭터 이동
     {
-        if (movePath[movePath.Count - 1].curStandingCharater == null)
+        if (movePath.Last().curStandingCharater == null)
         {
             canClick = false;
             ResetTileOnMove(surroundPath);
