@@ -117,7 +117,7 @@ public class PassiveAbilityBase
     }
 }
 
-public class PassiveAbility_ : PassiveAbilityBase // 테스트용
+public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝나면 비어있는 패시브로 활용)
 {
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {

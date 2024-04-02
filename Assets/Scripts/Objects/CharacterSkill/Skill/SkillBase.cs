@@ -23,7 +23,11 @@ public class SkillBase
     {
         this.character = character;
 
-        skillAbility.init(character);
+        if (skillAbility != null)
+        {
+            skillAbility.init(character);
+        }
+
         InitSkillRange();
     }
 
@@ -39,6 +43,11 @@ public class SkillBase
     private void InitSkillAbility()
     {
         Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
+
+        if (skillAbillityType == null)
+        {
+            return;
+        }
 
         object obj = Activator.CreateInstance(skillAbillityType);
         skillAbility = obj as SkillAbilityBase;

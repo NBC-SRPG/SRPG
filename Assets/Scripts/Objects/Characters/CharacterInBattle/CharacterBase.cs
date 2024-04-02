@@ -97,9 +97,15 @@ public class CharacterBase : MonoBehaviour
     //스킬 및 패시브 시전자 설정
     private void SetSkillOwner()
     {
-        curCharacterSkill.Init(this);
+        if (curCharacterSkill != null)
+        {
+            curCharacterSkill.Init(this);
+        }
 
-        curCharacterPassive.init(this);
+        if (curCharacterPassive != null)
+        {
+            curCharacterPassive.init(this);
+        }
 
         curCharacterBufList = new CharacterBufList(this);
         tempBonusStat = new TempBonusStat();

@@ -89,6 +89,11 @@ public class Character : MonoBehaviour
     {
         Type passiveType = Type.GetType("PassiveAbility_" + characterData.passive.passive_Id);
 
+        if(passiveType == null)
+        {
+            return null;
+        }
+
         object obj = Activator.CreateInstance(passiveType);
         passiveAbility = obj as PassiveAbilityBase;
 

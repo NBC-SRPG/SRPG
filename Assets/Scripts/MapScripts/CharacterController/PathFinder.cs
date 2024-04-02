@@ -23,6 +23,8 @@ public class PathFinder
         return surroundTiles;
     }
 
+
+    //A* 알고리즘 적용
     public List<OverlayTile> FindPath(OverlayTile startTile, OverlayTile targetTile)
     {
         List<OverlayTile> openList = new List<OverlayTile>();// 탐색할 타일

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,19 +15,21 @@ public class MapTiles : MonoBehaviour
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
 
+    public event Action SetUpMap;
+
     private void Awake()
     {
         Managers.UI.ShowUI<BattleUI>();
 
         Managers.MapManager.Init();
         Managers.BattleManager.Init();
+
+        InitiateMapTile();
+        InitiateStartTile();
     }
 
     private void Start()
     {
-        InitiateMapTile();
-        InitiateStartTile();
-        //InitiateCharacter();
     }
 
     private void InitiateMapTile()// 타일맵으로부터 overlayTile 생성
