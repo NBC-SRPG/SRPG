@@ -110,7 +110,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Attack + curCharacterBufList.GetAdditionalStat().ExtraAtk;
+            return character.atk + curCharacterBufList.GetAdditionalStat().ExtraAtk;
         } 
     }
 
@@ -118,7 +118,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Defence + curCharacterBufList.GetAdditionalStat().ExtraDefend;
+            return character.def + curCharacterBufList.GetAdditionalStat().ExtraDefend;
         }
     }
 
@@ -126,7 +126,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Health;
+            return character.hp;
         }
     }
 
@@ -134,7 +134,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.Mov + curCharacterBufList.GetAdditionalStat().ExtraMov;
+            return character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov;
         }
     }
 
