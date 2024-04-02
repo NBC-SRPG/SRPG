@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: 8108932c120d79b44a99bf64ff7d732a
   m_currentHash:
     serializedVersion: 2
-    Hash: 3d35b005ebbc3b8f61d48789763f6ec0
+    Hash: cad6df9a5fea5de6f45667b60d243198
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -35,10 +35,10 @@ MonoBehaviour:
   m_CheckForContentUpdateRestrictionsOption: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: b28eb6f78f2862943adc357443f4d0bb
   m_RemoteCatalogLoadPath:
-    m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+    m_Id: e79b0cd9a9ae6784a9f0675a94cc355f
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -48,6 +48,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7141ef81aba31e042ab1b09b2271c93f, type: 2}
   - {fileID: 11400000, guid: 2df9e372eeafc7d4f94d9a9e359ac165, type: 2}
   - {fileID: 11400000, guid: e4ca1607db98b294fa3efd8574f29626, type: 2}
+  - {fileID: 11400000, guid: 47eade0cb1ea1a84dbb82f6c77ad4e4c, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -68,7 +69,7 @@ MonoBehaviour:
       - m_Id: b28eb6f78f2862943adc357443f4d0bb
         m_Value: ServerData/[BuildTarget]
       - m_Id: e79b0cd9a9ae6784a9f0675a94cc355f
-        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+        m_Value: gs://nbc-srpg.appspot.com/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: 3d56a9aabc31ba24e82891c78401f55a
       m_Name: BuildTarget
@@ -89,6 +90,8 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - CharacterSO
+    - ClassSO
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 0b54d283ab21b9e41a0d123d9769766d, type: 2}
