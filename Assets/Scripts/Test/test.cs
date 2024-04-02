@@ -8,29 +8,17 @@ using Newtonsoft.Json;
 [Serializable]
 public class test : MonoBehaviour
 {
-    public Text text;
-    private List<int> list;
-
-    private string str = "miku";
+    Database db;
+    public CharacterSO so;
 
     void Start()
     {
-        list = new List<int>();
-        list.Add(1);
-        list.Add(3);
+        db = new Database();
     }
     
     public void OnClick()
     {
-        string json = JsonConvert.SerializeObject(str);
-        
-        foreach(int i in list)
-        {
-            Debug.Log(i);
-        }
-
-        Debug.Log(json);
-        text.text = json;
+        db.WriteWithJson(db.userDB.Child("characterData").Child(so.id.ToString()), so);
     }
 
 }
