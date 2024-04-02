@@ -57,7 +57,7 @@ public class CharacterBase : MonoBehaviour
         character = Instantiate(character, gameObject.transform);
         characterObject = character.gameObject;
 
-        character.CharacterInit();
+        //character.CharacterInit();
 
         characterAnim = GetComponentInChildren<CharAnimBase>();
         characterAnim.Init(this);
@@ -67,8 +67,8 @@ public class CharacterBase : MonoBehaviour
         health.Die += CharacterDie;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
-        curCharacterSkill = character.InitSkills();
-        curCharacterPassive = character.InitPassive();
+        curCharacterSkill = character.skill;
+        curCharacterPassive = character.passiveAbility;
 
         SetSkillOwner();
 
