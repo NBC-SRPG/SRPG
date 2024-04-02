@@ -57,22 +57,22 @@ public class CharacterBase : MonoBehaviour
         character = Instantiate(character, gameObject.transform);
         characterObject = character.gameObject;
 
-        character.CharacterInit();
+        //character.CharacterInit();
 
         characterAnim = GetComponentInChildren<CharAnimBase>();
         characterAnim.Init(this);
 
         health = GetComponent<HealthSystem>();
-        health.SetHealth(character.Health);
+        health.SetHealth(character.hp);
         health.Die += CharacterDie;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
-        curCharacterSkill = character.InitSkills();
-        curCharacterPassive = character.InitPassive();
+        curCharacterSkill = character.skill;
+        curCharacterPassive = character.passiveAbility;
 
         SetSkillOwner();
 
-        leftWalkRange = character.Mov;
+        leftWalkRange = character.mov;
 
         isDead = false;
         isWalking = false;
@@ -208,7 +208,7 @@ public class CharacterBase : MonoBehaviour
         canSkill = true;
         canActing = true;
 
-        leftWalkRange = character.Mov;
+        leftWalkRange = character.mov;
 
         curCharacterPassive?.OnStartTurn();
     }
@@ -251,7 +251,7 @@ public class CharacterBase : MonoBehaviour
 
         isWalking = false;
         didWalk = true;
-        if(character.SO.attackType == Constants.AttackMethod.Melee)
+        if(character.SO.attackMethod == Constants.AttackMethod.Melee)
         {
             didAttack = true;
         }
@@ -343,7 +343,7 @@ public class CharacterBase : MonoBehaviour
         yield return animationWait;
 
         isAttacking = false;
-        if (character.CharacterAttackType == Constants.AttackMethod.Range)
+        if (character.SO.attackMethod == Constants.AttackMethod.Range)
         {
             didAttack = true;
 

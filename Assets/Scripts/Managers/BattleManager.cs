@@ -69,7 +69,7 @@ public class BattleManager
         {
             curCharacter.OnPassEnemy(standingCharacter);
 
-            if (curCharacter.character.CharacterAttackType == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
+            if (curCharacter.character.SO.attackMethod == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.AttackTarget(standingCharacter);
                 yield return animationWait;// 애니메이션이 끝날 때 까지 대기
@@ -94,7 +94,7 @@ public class BattleManager
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
+        int damage = attacker.character.atk - victim.character.def;// 임시 데미지 계산식
         //------
         
         attacker.characterAnim.SetDamage(damage);
@@ -131,7 +131,7 @@ public class BattleManager
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = attacker.character.Attack - victim.character.Defence;// 임시 데미지 계산식
+        int damage = attacker.character.atk - victim.character.def;// 임시 데미지 계산식
         //------
 
         attacker.characterAnim.SetDamage(damage);
