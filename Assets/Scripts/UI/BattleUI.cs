@@ -287,19 +287,19 @@ public class BattleUI : UIBase
 
         GetObject((int)GameObjects.SelectCharacterInfo).SetActive(true);
 
-        GetText((int)Texts.CharacterName).text = curSelectedCharacter.character.characterData.characterName;
+        GetText((int)Texts.CharacterName).text = curSelectedCharacter.character.SO.characterName;
         //GetText((int)Texts.LvText).text = curSelectedCharacter.character.
 
         GetText((int)Texts.AtkText).text = curSelectedCharacter.Attack.ToString();
         GetText((int)Texts.DefText).text = curSelectedCharacter.Defend.ToString();
         GetText((int)Texts.MovText).text = curSelectedCharacter.Mov.ToString();
 
-        if(curSelectedCharacter.character.CharacterAttackType == Constants.AttackType.Range)
+        if(curSelectedCharacter.character.SO.attackMethod == Constants.AttackMethod.Range)
         {
             GetText((int)Texts.TypeText).text = "원거리";
 
             GetObject((int)GameObjects.RangeObject).SetActive(true);
-            GetText((int)Texts.RangeText).text = curSelectedCharacter.character.characterData.atk_range.ToString();
+            GetText((int)Texts.RangeText).text = curSelectedCharacter.character.SO.range.ToString();
         }
         else
         {
@@ -332,7 +332,7 @@ public class BattleUI : UIBase
 
         GetObject((int)GameObjects.TargetCharacterInfo).SetActive(true);
 
-        GetText((int)Texts.TargetName).text = curTargetCharacter.character.characterData.characterName;
+        GetText((int)Texts.TargetName).text = curTargetCharacter.character.SO.characterName;
         //GetText((int)Texts.TargetLevel).text = 
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();

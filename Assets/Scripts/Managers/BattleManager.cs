@@ -95,14 +95,14 @@ public class BattleManager
 
     private float ExtraDmgbyAttribute(CharacterBase attacker, CharacterBase victim)
     {
-        switch (attacker.character.characterData.characterAttribute)
+        switch (attacker.character.SO.elementType)
         {
-            case Constants.CharacterAttribute.Fire:
-                if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+            case Constants.ElementType.Fire:
+                if(victim.character.SO.elementType == Constants.ElementType.Water)
                 {
                     return 0.75f;
                 }
-                else if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+                else if(victim.character.SO.elementType == Constants.ElementType.Grass)
                 {
                     return 1.5f;
                 }
@@ -110,12 +110,12 @@ public class BattleManager
                 {
                     return 1;
                 }
-            case Constants.CharacterAttribute.Water:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+            case Constants.ElementType.Water:
+                if (victim.character.SO.elementType == Constants.ElementType.Bolt)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+                else if (victim.character.SO.elementType == Constants.ElementType.Fire)
                 {
                     return 1.5f;
                 }
@@ -123,12 +123,12 @@ public class BattleManager
                 {
                     return 1;
                 }
-            case Constants.CharacterAttribute.Bolt:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+            case Constants.ElementType.Bolt:
+                if (victim.character.SO.elementType == Constants.ElementType.Grass)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+                else if (victim.character.SO.elementType == Constants.ElementType.Water)
                 {
                     return 1.5f;
                 }
@@ -136,12 +136,12 @@ public class BattleManager
                 {
                     return 1;
                 }
-            case Constants.CharacterAttribute.Grass:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+            case Constants.ElementType.Grass:
+                if (victim.character.SO.elementType == Constants.ElementType.Fire)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+                else if (victim.character.SO.elementType == Constants.ElementType.Bolt)
                 {
                     return 1.5f;
                 }
@@ -149,8 +149,8 @@ public class BattleManager
                 {
                     return 1;
                 }
-            case Constants.CharacterAttribute.Light:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Dark)
+            case Constants.ElementType.Light:
+                if (victim.character.SO.elementType == Constants.ElementType.Dark)
                 {
                     return 1.5f;
                 }
@@ -158,8 +158,8 @@ public class BattleManager
                 {
                     return 1;
                 }
-            case Constants.CharacterAttribute.Dark:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Light)
+            case Constants.ElementType.Dark:
+                if (victim.character.SO.elementType == Constants.ElementType.Light)
                 {
                     return 1.5f;
                 }
@@ -187,7 +187,7 @@ public class BattleManager
         {
             curCharacter.OnPassEnemy(standingCharacter);
 
-            if (curCharacter.character.CharacterAttackType == Constants.AttackType.Melee)// 근거리 캐릭터라면
+            if (curCharacter.character.SO.attackMethod == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.SetAttackTarget(standingCharacter);
             }

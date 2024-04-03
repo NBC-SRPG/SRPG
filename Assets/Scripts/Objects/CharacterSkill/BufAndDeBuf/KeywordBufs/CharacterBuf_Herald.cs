@@ -14,7 +14,7 @@ public class CharacterBuf_Herald : CharacterBuf
     {
         return new BonusStat
         {
-            ExtraDefend = character.character.Defence / 2,
+            ExtraDefend = character.character.def / 2,
             ExtraMov = 2
         };
     }
