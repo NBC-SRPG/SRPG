@@ -13,6 +13,9 @@ public class EnemyController : MonoBehaviour
 
     private int index;
 
+    public List<Character> characters = new List<Character>();
+    public List<TempGrowth> tempList = new List<TempGrowth>();
+
     private void Awake()
     {
         characterList = new List<CharacterAI>();
@@ -30,6 +33,14 @@ public class EnemyController : MonoBehaviour
         Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
+
+        foreach(TempGrowth tempGrowth in tempList)
+        {
+            tempGrowth.Init();
+            characters.Add(new Character(tempGrowth.tempCharacter, tempGrowth.growth));
+        }
+
+        player.party = characters.ToArray();
 
         InitiateCharacter();
     }

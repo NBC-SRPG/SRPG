@@ -363,10 +363,58 @@ MonoBehaviour:
     playerNumber: 1
     prioty: 2
     isReady: 0
-    party:
-    - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
-    - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
-    - {fileID: -633739403144427890, guid: b085b2e88985b8a45baf9ca8d7a98598, type: 3}
+  tempList:
+  - tempCharacter: {fileID: 11400000, guid: 59cb75d2b9eb44f4bb4ee91dc1d61c83, type: 2}
+  - tempCharacter: {fileID: 11400000, guid: 59cb75d2b9eb44f4bb4ee91dc1d61c83, type: 2}
+  - tempCharacter: {fileID: 11400000, guid: 59cb75d2b9eb44f4bb4ee91dc1d61c83, type: 2}
+--- !u!1 &306224574
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 306224576}
+  - component: {fileID: 306224575}
+  m_Layer: 0
+  m_Name: TestCharacterCreater
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &306224575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306224574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ee18f0aeffc5f44b6e7770ff635ee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temp:
+  - tempCharacter: {fileID: 11400000, guid: 068842d9cf81972478f110e5ddce4f84, type: 2}
+  - tempCharacter: {fileID: 11400000, guid: 068842d9cf81972478f110e5ddce4f84, type: 2}
+  - tempCharacter: {fileID: 11400000, guid: 068842d9cf81972478f110e5ddce4f84, type: 2}
+--- !u!4 &306224576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 306224574}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &334040346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,14 +1154,10 @@ MonoBehaviour:
   chaPrefabs: {fileID: 6138315053240153307, guid: f8fe4ac42f04acb4499c1d33b967a23e, type: 3}
   targetTiles: {fileID: 2942906996224312592, guid: 70627d848b9a8254bb6ac057b9abe288, type: 3}
   player:
-    playerId: 1
+    playerId: 
     playerNumber: 0
     prioty: 10
     isReady: 0
-    party:
-    - {fileID: 7562966821073230812, guid: 48a5101d420713641ab786df2432c183, type: 3}
-    - {fileID: 7562966821073230812, guid: 48a5101d420713641ab786df2432c183, type: 3}
-    - {fileID: 7562966821073230812, guid: 48a5101d420713641ab786df2432c183, type: 3}
   movePath: []
   nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}

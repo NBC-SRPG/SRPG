@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Constants;
 
-public class Character : MonoBehaviour
+public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
@@ -75,22 +75,20 @@ public class Character : MonoBehaviour
         def = SO.def + SO.defPerLv * Growth.level;
     }
 
-    
 
 
-    /*
-    //스킬 선언
+
     public SkillBase InitSkills()
     {
-        skill = new SkillBase(characterData.skill);
+        skill = new SkillBase(5);
 
         return skill;
     }
 
-    //패시브 선언
+
     public PassiveAbilityBase InitPassive()
     {
-        Type passiveType = Type.GetType("PassiveAbility_" + characterData.passive.passive_Id);
+        Type passiveType = Type.GetType("PassiveAbility_" + SO.PassiveSkill);
 
         if(passiveType == null)
         {
@@ -102,6 +100,5 @@ public class Character : MonoBehaviour
 
         return passiveAbility;
     }
-    */
 
 }

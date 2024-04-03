@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "CharacterData", fileName ="Character_")]
+[CreateAssetMenu(menuName = "CharacterData/CharacterData", fileName ="Character_")]
 public class CharacterSO : ScriptableObject
 {
     public AttackMethod attackMethod;     //공격 타입
@@ -51,4 +51,7 @@ public class CharacterSO : ScriptableObject
 
     [Header("Star")]
     public int basicStar; //기본 성급
+
+    [Header("Prefabs")]
+    public GameObject characterPrefabs;
 }

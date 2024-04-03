@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "CharacterData", fileName = "Enemy_")]
+[CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "Enemy_")]
 public class EnemySO : CharacterSO
 {
     [Header("EnemyType")]

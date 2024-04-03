@@ -35,6 +35,8 @@ public class CharacterController : MonoBehaviour
 
     private List<CharacterBase> skillTargets = new List<CharacterBase>();
 
+    private List<CharacterBase> characterList = new List<CharacterBase>();
+
     [SerializeField] private bool nowPlayerTurn;
     private bool canClick;//false일 때 터치 안되게
 
@@ -73,6 +75,19 @@ public class CharacterController : MonoBehaviour
         Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
+
+        foreach(Character charac in Managers.GameManager.player.party)
+        {
+            if (charac == null)
+            {
+                continue;
+            }
+
+            CharacterBase character = Instantiate(chaPrefabs, transform);
+            character.InitCharacter(charac, player.playerId);
+
+            characterList.Add(character);
+        }
 
         Ui = Managers.UI.FindUI<BattleUI>();
     }
@@ -153,22 +168,13 @@ public class CharacterController : MonoBehaviour
     {
         int i = 0;
 
-        foreach (Character charac in player.party)
+        foreach (CharacterBase character in characterList)
         {
-            if (charac == null)
-            {
-                continue;
-            }
-
             if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
             {
-                CharacterBase character = Instantiate(chaPrefabs, transform);
-                character.InitCharacter(charac, player.playerId);
+                character.transform.SetParent(transform);
 
-                character.curStandingTile = Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]];
-                character.curStandingTile.curStandingCharater = character;
-
-                character.transform.position = character.curStandingTile.transform.position;
+                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]]);
                 i++;
             }
         }

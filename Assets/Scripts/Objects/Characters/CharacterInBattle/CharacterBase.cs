@@ -1,3 +1,4 @@
+using GooglePlayGames.BasicApi;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -51,14 +52,23 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
+    public void SpawnCharacter(OverlayTile spawnPosition)
+    {
+        curStandingTile = spawnPosition;
+        curStandingTile.curStandingCharater = this;
+
+        transform.position = curStandingTile.transform.position;
+    }
+
     public virtual void InitCharacter(Character charac, string id)
     {
         character = charac;
         playerId = id;
 
         Managers.MapManager.OnCompleteMove += CheckCurTile;
-        character = Instantiate(character, gameObject.transform);
-        characterObject = character.gameObject;
+        characterObject = Managers.Resource.Instantiate("character", transform);
+        characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
+        characterObject.AddComponent<CharAnim_Test>();
 
         //character.CharacterInit();
 
@@ -71,8 +81,8 @@ public class CharacterBase : MonoBehaviour
         health.DieAnimation += DieAnimation;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
-        curCharacterSkill = character.skill;
-        curCharacterPassive = character.passiveAbility;
+        curCharacterSkill = character.InitSkills();
+        curCharacterPassive = character.InitPassive();
 
         SetSkillOwner();
 

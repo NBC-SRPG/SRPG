@@ -39,6 +39,14 @@ public class SkillBase
         InitSkillAbility();
     }
 
+    public SkillBase(int cost)
+    {
+        this.skillData = new SkillSO();
+        this.skillData.cost = cost;
+
+        InitSkillAbility();
+    }
+
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {

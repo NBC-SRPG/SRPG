@@ -106,7 +106,7 @@ public class CharacterAI : CharacterBase
 
         }
 
-        if (character.CharacterAttackType == Constants.AttackType.Melee)// 근접 캐릭터라면
+        if (character.SO.attackMethod == Constants.AttackMethod.Melee)// 근접 캐릭터라면
         {
             if (!attractTarget.isDead && canActing)
             {
@@ -439,7 +439,7 @@ public class CharacterAI : CharacterBase
     {
         List<CharacterBase> characterInRange = new List<CharacterBase>();
 
-        if (character.CharacterAttackType == Constants.AttackType.Melee)
+        if (character.SO.attackMethod == Constants.AttackMethod.Melee)
         {
             foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, Mov, true))
             {
@@ -451,7 +451,7 @@ public class CharacterAI : CharacterBase
         }
         else
         {
-            foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.characterData.atk_range, false))
+            foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.SO.range, false))
             {
                 if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
                 {
@@ -465,7 +465,7 @@ public class CharacterAI : CharacterBase
 
     private bool CheckEnemyInAttackRange()
     {
-        List<OverlayTile> range = rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.characterData.atk_range, false);
+        List<OverlayTile> range = rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.SO.range, false);
 
         if (range.Contains(attractTarget.curStandingTile))
         {
@@ -560,8 +560,8 @@ public class CharacterAI : CharacterBase
     {
         int leftWalk = Mov + 1;
 
-        List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
-        List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range - 1, false);
+        List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
+        List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - 1, false);
 
         kiteRange = kiteRange.Except(range).ToList();// 끝 사거리만 가져옴
 

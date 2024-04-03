@@ -85,12 +85,12 @@ public class Managers : MonoBehaviour
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());
 
-            Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
-            Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
-            Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
-            s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
-            s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
+            //Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
+            //Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
+            //Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
+            //s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
+            //s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
+            //s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
 
             //testChatacter1.CharacterInit();
             //testChatacter2.CharacterInit();

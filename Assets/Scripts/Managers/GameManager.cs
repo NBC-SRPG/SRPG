@@ -11,5 +11,6 @@ public class GameManager
         player = new GamePlayer();
         //player.playerId = Managers.AccountData.playerData.uId;
         player.playerId = "test";
+        player.prioty = 10;
     }
 }
