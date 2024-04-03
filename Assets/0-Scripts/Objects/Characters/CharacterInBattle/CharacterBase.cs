@@ -14,8 +14,8 @@ public class CharacterBase : MonoBehaviour
     public HealthSystem health;
     public string playerId;
 
-    public SkillBase curCharacterSkill;
-    public PassiveAbilityBase curCharacterPassive;
+    public ExSkillBase curCharacterSkill;
+    public PassiveSkillBase curCharacterPassive;
 
     public CharacterBufList curCharacterBufList;
 
@@ -70,8 +70,8 @@ public class CharacterBase : MonoBehaviour
         health.DieAnimation += DieAnimation;
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
-        curCharacterSkill = character.skill;
-        curCharacterPassive = character.passiveAbility;
+        curCharacterSkill = character.exSkill;
+        curCharacterPassive = character.passiveSkill;
 
         SetSkillOwner();
 

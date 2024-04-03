@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PassiveAbilityBase
+public class PassiveSkillBase
 {
     protected CharacterBase character;
 
@@ -117,7 +117,7 @@ public class PassiveAbilityBase
     }
 }
 
-public class PassiveAbility_ : PassiveAbilityBase // 테스트용
+public class PassiveAbility_ : PassiveSkillBase // 테스트용
 {
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {

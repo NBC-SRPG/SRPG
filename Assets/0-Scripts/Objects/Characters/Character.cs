@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Constants;
 
-public class Character
+public class Character : MonoBehaviour
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
@@ -29,8 +29,8 @@ public class Character
 
     [Header("Skill")]
     // TODO: refactor with chai227chai
-    public SkillBase skill;
-    public PassiveAbilityBase passiveAbility;
+    public ExSkillBase exSkill;
+    public PassiveSkillBase passiveSkill;
 
 
     public AbilitySO abilityT1;
@@ -58,9 +58,18 @@ public class Character
         ReducedDmg = 0;
 
         // TODO: Skills
-        //skill = null;
+        Utility.Id2SO<SkillSO>(AddressableType.SkillSO, SO.id, (result) =>
+        {
+            exSkill = new ExSkillBase((SkillSO)result);
+        });
+
+
         //passiveAbility = null;
 
+        Utility.Id2SO<AbilitySO>(AddressableType.AbilitySO, SO.id, (result) =>
+        {
+            exSkill = new ExSkillBase((SkillSO)result);
+        });
         //abilityT1 = null;
         //abilityT2 = null;
         //abilityT3 = null;

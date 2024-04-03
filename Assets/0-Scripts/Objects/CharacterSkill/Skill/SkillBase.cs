@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillBase
+public class ExSkillBase
 {
     public SkillSO skillData;
     public SkillAbilityBase skillAbility;
@@ -28,7 +28,7 @@ public class SkillBase
     }
 
     //스킬 생성자
-    public SkillBase(SkillSO skillData)
+    public ExSkillBase(SkillSO skillData)
     {
         this.skillData = skillData;
 
