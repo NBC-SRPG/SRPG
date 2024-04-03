@@ -10,7 +10,6 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public int limitBreak; //현재 한계 돌파 정도. 0 = 한돌x
     public int ExSkillLevel;//Ex스킬 레벨 //Todo: 스킬 레벨에 따라 스킬 계수 적용시키기, 실제 인게임에서 스킬 레벨에 따라 효과 달라지게 하기
 
-    public int abilityT1;
     public int abilityT2;
     public int abilityT3;
 
@@ -35,7 +34,6 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
 
         ExSkillLevel = 1;
 
-        abilityT1 = NONE_SELECTED;
         abilityT2 = NONE_SELECTED;
         abilityT3 = NONE_SELECTED;
 

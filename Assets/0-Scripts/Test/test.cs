@@ -16,7 +16,7 @@ public class test : MonoBehaviour
     
     public void OnClick()
     {
-        Utility.Id2SO<CharacterSO>(Constants.AddressableType.CharacterSO, id, (result) => 
+        Utility.Id2SO<CharacterSO>(id, (result) => 
         {
             so = (CharacterSO)result;
 

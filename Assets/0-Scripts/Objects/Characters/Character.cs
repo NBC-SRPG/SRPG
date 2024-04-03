@@ -37,6 +37,7 @@ public class Character : MonoBehaviour
     public AbilitySO abilityT2;
     public AbilitySO abilityT3;
 
+    public ClassSO basicClass;
     public ClassSO superiorClass;
 
 
@@ -57,24 +58,41 @@ public class Character : MonoBehaviour
         EnhancedDmg = 0;
         ReducedDmg = 0;
 
-        // TODO: Skills
-        Utility.Id2SO<SkillSO>(AddressableType.SkillSO, SO.id, (result) =>
+        // EX스킬 초기화
+        Utility.Id2SO<SkillSO>(SO.id, (result) =>
         {
             exSkill = new ExSkillBase((SkillSO)result);
         });
 
+        // TODO: passiveSkill 초기화
 
-        //passiveAbility = null;
 
-        Utility.Id2SO<AbilitySO>(AddressableType.AbilitySO, SO.id, (result) =>
+        // 특성 초기화
+        Utility.Id2SO<AbilitySO>(SO.abilityT1, (result) =>
         {
-            exSkill = new ExSkillBase((SkillSO)result);
+            abilityT1 = (AbilitySO)result;
         });
-        //abilityT1 = null;
-        //abilityT2 = null;
-        //abilityT3 = null;
 
-        //superiorClass = null;
+        Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
+        {
+            abilityT2 = (AbilitySO)result;
+        });
+
+        Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
+        {
+            abilityT3 = (AbilitySO)result;
+        });
+
+        // 클래스 초기화
+        Utility.Id2SO<ClassSO>(SO.basicClass, (result) =>
+        {
+            basicClass = (ClassSO)result;
+        });
+
+        Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
+        {
+            superiorClass = (ClassSO)result;
+        });
     }
 
     private void CalculateStat()
@@ -84,7 +102,7 @@ public class Character : MonoBehaviour
         def = SO.def + SO.defPerLv * Growth.level;
     }
 
-    
+
 
 
     /*

@@ -10,10 +10,10 @@ public static class Utility
 
 
     // 타입, id, 콜백함수를 param으로 받아 사용
-    public static void Id2SO<T>(AddressableType type, int id, Callback<ScriptableObject> callback) where T : ScriptableObject
+    public static void Id2SO<T>(int id, Callback<ScriptableObject> callback) where T : ScriptableObject
     {
         // 어드레서블 경로
-        string path = type.ToString() + "/" + id.ToString() + ".asset";
+        string path = typeof(T).ToString() + "/" + id.ToString() + ".asset";
 
         var op = Addressables.LoadAssetAsync<T>(path);
         op.Completed += (handler) =>

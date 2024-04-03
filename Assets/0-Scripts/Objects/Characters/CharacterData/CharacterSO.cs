@@ -27,10 +27,12 @@ public class CharacterSO : ScriptableObject
     public string story;        //캐릭터 스토리
     public Faction faction;     //캐릭터 소속
 
+    /*
     [Header("Skill")]
     public int ExSkill;
     public int PassiveSkill;
-
+    */
+    
     [Header("Ability")]      //특성SO.
     public int abilityT1;
     public int[] abilityT2; //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장.
