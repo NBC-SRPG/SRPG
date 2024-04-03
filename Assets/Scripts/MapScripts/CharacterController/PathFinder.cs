@@ -69,6 +69,52 @@ public class PathFinder
 
     }
 
+    public List<OverlayTile> FindPathAnother(OverlayTile startTile, OverlayTile targetTile, List<OverlayTile> already)
+    {
+        List<OverlayTile> openList = new List<OverlayTile>();// 탐색할 타일
+        List<OverlayTile> closedList = new List<OverlayTile>();// 탐색한 타일
+
+        closedList.AddRange(already);
+
+        openList.Add(startTile);
+
+        while (openList.Count > 0)
+        {
+            OverlayTile curTile = openList.OrderBy(x => x.F).First();// F값이 가장 작은 타일 가져옴
+
+            openList.Remove(curTile);
+            closedList.Add(curTile);
+
+            if (curTile == targetTile)
+            {
+                return GetPathList(startTile, targetTile);
+            }
+
+            List<OverlayTile> surroundTile = Managers.MapManager.GetSurroundingTiles(curTile.grid2DLocation, true);
+
+            foreach (OverlayTile tile in surroundTile)
+            {
+                if (closedList.Contains(tile))// 이미 탐색한 타일이면
+                {
+                    continue;
+                }
+
+                tile.G = curTile.G + 1;// 걸음 횟수 증가
+                tile.H = GetManhattenDistance(targetTile, tile);// 현재 타일에서 목표까지 거리
+
+                tile.prevTile = curTile;
+
+                if (!openList.Contains(tile))
+                {
+                    openList.Add(tile);
+                }
+            }
+        }
+
+        return null;
+
+    }
+
     private List<OverlayTile> GetPathList(OverlayTile startTile, OverlayTile targetTile)
     {
         List<OverlayTile> pathList = new List<OverlayTile> ();

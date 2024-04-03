@@ -193,7 +193,6 @@ public class AnimationController : MonoBehaviour
 
     private IEnumerator PlayAttackAnimation(CharacterBase attacker, CharacterBase victim)// 공격 애니메이션
     {
-        Debug.Log("attakc Animation");
         attacker.characterAnim.PlayAttackAnimation(victim);
 
         while (true)
@@ -413,7 +412,6 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 이동 애니메이션
     {
-        Debug.Log("move to " + targetTile.grid2DLocation);
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);

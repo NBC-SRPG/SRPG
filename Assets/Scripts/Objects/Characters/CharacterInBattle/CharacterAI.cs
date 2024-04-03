@@ -2,21 +2,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 
 public class CharacterAI : CharacterBase
 {
+    protected enum State
+    {
+        Waiting,// 대기
+        Watching,// 경계
+        Finding,// 색적
+        Chasing// 추격
+    }
+
+
+    [SerializeField]protected State state;
+
     protected PathFinder pathFinder;
     protected RangeFinder rangeFinder;
 
     protected CharacterBase attractTarget;
+    protected CharacterAI ally;
 
     public bool waiting;
 
-    public event Action Waiting;
-    public event Action Acting;
+    public event Action Wait;
+    public event Action Act;
 
-    private WaitForSeconds delay = new WaitForSeconds(0.5f);
+    protected WaitForSeconds delay = new WaitForSeconds(0.5f);
+
+    protected bool hasSkill = false;
+
+    //protected EnemySO enemyData;
 
     //-----------------------------------------------------------------------------------------------------------------------
     //override 함수
@@ -27,6 +44,15 @@ public class CharacterAI : CharacterBase
 
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
+
+        state = State.Finding;
+
+        //enemyData = (EnemySO)character.characterData;// 적 데이터를 따로 받아옴
+
+        //if (enemyData.isElite)
+        //{
+
+        //}
     }
 
     public override void OnStartPlayerTurn()
@@ -41,37 +67,62 @@ public class CharacterAI : CharacterBase
 
     public void StartAI()
     {
-        CharacterBase nearsetCharacter = FindAttractEnemy();// 공격 가능 범위에 적이 있는지 탐색
-
         AnimationController.instance.onAnimationEnd += EndActing;
 
-        if(attractTarget == null || attractTarget.isDead || (nearsetCharacter != null && attractTarget != nearsetCharacter))// 어그로에 끌린 적이 없거나 어그로 끌린 적이 죽었거나 가까운 적이 바뀌었다면
+        switch (state)
         {
-            attractTarget = nearsetCharacter;
+            case State.Waiting:
+                Waiting();
+                break;
+            case State.Finding:
+                Finding();
+                break;
+            case State.Watching:
+                Watching();
+                break;
+            case State.Chasing:
+                Chasing(); 
+                break;
         }
 
-        if (attractTarget == null || !canActing)// 적이 없거나 현재 행동 불가 상태라면
-        {
-            //다음 순서로 넘어감
-            Waiting?.Invoke();
-
-            AnimationController.instance.onAnimationEnd -= EndActing;
-            return;
-        }
-
-        StartCoroutine(nameof(DoActing));
     }
 
-    private IEnumerator DoActing()
+    private void AlertEnemy()
     {
-        if (character.CharacterAttackType == Constants.AttackType.Melee)
+        foreach(CharacterAI ally in FindNearAlly())
         {
-            yield return delay;
-
-            movePath = FindMeleePath();
-            MoveCharacter();
+            if (!ally.isDead)
+            {
+                ally.GetAlert(this);
+            }
         }
-        else
+    }
+
+    private IEnumerator ChaseEnemy()
+    {
+
+        if (hasSkill)// 엘리트 몹 전용
+        {
+
+        }
+
+        if (character.CharacterAttackType == Constants.AttackType.Melee)// 근접 캐릭터라면
+        {
+            if (!attractTarget.isDead && canActing)
+            {
+                yield return delay;
+
+                movePath = FindMeleePath();
+                MoveCharacter();
+            }
+            else
+            {
+                Wait?.Invoke();
+
+                AnimationController.instance.onAnimationEnd -= EndActing;
+            }
+        }
+        else// 원거리 캐릭터라면
         {
             if (!attractTarget.isDead && !didWalk)
             {
@@ -89,7 +140,7 @@ public class CharacterAI : CharacterBase
             }
             else
             {
-                Waiting?.Invoke();
+                Wait?.Invoke();
 
                 AnimationController.instance.onAnimationEnd -= EndActing;
             }
@@ -98,16 +149,222 @@ public class CharacterAI : CharacterBase
 
     public void EndActing()
     {
-        if (!canActing)
+        if(attractTarget != null && attractTarget.isDead)// 추적 대상이 죽었다면
         {
-            Acting?.Invoke();
+            ChangeState(State.Finding);// 색적 상태로 전환
+            return;
+        }
+
+        if (!canActing)// 행동 불가 상태면
+        {
+            Act?.Invoke();// 행동 끝 콜백
 
             AnimationController.instance.onAnimationEnd -= EndActing;
         }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
+    //상태에 따른 행동
+
+    private void Finding()// 색적 행동
+    {
+        if (!canActing)// 행동 불가 상태면
+        {
+            Act?.Invoke();// 행동 끝 콜백
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+            return;
+        }
+
+        CharacterBase nearsetCharacter = FindAttractEnemy();
+
+        if (nearsetCharacter != null)// 적이 공격 범위에 들어왔을 시
+        {
+            attractTarget = nearsetCharacter;// 해당 적을 목표로 설정
+
+            AlertEnemy();// 주위 아군을 경계상태로 만듬
+            ChangeState(State.Chasing);// 추격 시작
+        }
+        else// 적이 공격 범위에 없을 시
+        {
+            //다음 순서로 넘어감
+            Wait?.Invoke();
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+            return;
+        }
+    }
+
+    private void Chasing()// 추격 행동
+    {
+        if (!canActing)// 행동 불가 상태면
+        {
+            Act?.Invoke();// 행동 끝 콜백
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+            return;
+        }
+
+        CharacterBase nearsetCharacter = FindAttractEnemy();
+
+        if (attractTarget.isDead || (nearsetCharacter != null && attractTarget != nearsetCharacter))// 어그로 끌린 적이 죽었거나 가까운 적이 바뀌었다면
+        {
+            attractTarget = nearsetCharacter;
+        }
+
+        if(attractTarget == null)// 가까운 적이 없다면
+        {
+            ChangeState (State.Finding);// 색적 상태로 전환
+        }
+
+        StartCoroutine(nameof(ChaseEnemy));
+    }
+
+    private void Watching()// 경계 행동
+    {
+        if (!canActing)// 행동 불가 상태면
+        {
+            Act?.Invoke();// 행동 끝 콜백
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+            return;
+        }
+
+        if (ally.isDead)// 추격중인 아군이 죽었다면
+        {
+            ChangeState(State.Finding);// 색적상태로 전환
+        }
+
+        if (!ally.isDead && !didWalk)
+        {
+            movePath = FindCoverTile();// 아군 주위 무작위 위치로 이동
+            MoveCharacter();
+        }
+
+        CharacterBase nearsetCharacter = FindAttractEnemy();// 이동 이후 적이 있는지 탐색
+
+        if(nearsetCharacter != null)// 적이 있다면
+        {
+            attractTarget = nearsetCharacter;
+            ChangeState(State.Chasing);// 추격 상태로 전환
+        }
+    }
+
+    private void Waiting()// 대기 행동
+    {
+        CharacterBase nearsetCharacter = FindAttractEnemy();// 적이 있는지 탐색
+
+        if (nearsetCharacter != null)// 적이 있다면
+        {
+            attractTarget = nearsetCharacter;
+            ChangeState(State.Chasing);// 추격 상태로 전환
+        }
+        else // 없다면
+        {
+            //다음 순서로 넘어감
+            Wait?.Invoke();
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //상태 관련 함수들
+
+    protected void ChangeState(State state)
+    {
+        this.state = state;
+
+        switch (state)
+        {
+            case State.Chasing:
+                ally = null;
+                Chasing();
+                break;
+            case State.Finding:
+                ally = null;
+                Finding();
+                break;
+        }
+    }
+
+    public void GetAlert(CharacterAI character)
+    {
+        if(this.state == State.Finding)// 색적 상태였다면
+        {
+            ChangeState(State.Watching);// 경계상태로 전환
+        }
+
+        ally = character;
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
     //길찾기 함수들
+
+    public List<OverlayTile> FindCoverTile()
+    {
+        int leftWalk = Mov + 1;
+
+        List<OverlayTile> list = rangeFinder.GetTilesInRange(ally.curStandingTile.grid2DLocation, 3, false);// 아군의 주위 타일 가져옴
+
+        int randomTile = UnityEngine.Random.Range(0, list.Count);
+
+        OverlayTile coverTile = list[randomTile];
+        list = pathFinder.FindPath(curStandingTile, coverTile);
+
+        leftWalk -= list.Count;
+
+        if (leftWalk <= 0)// 현재 경로가 이동 횟수를 넘어갔다면
+        {
+            list = list.GetRange(0, Mov);// 이동 횟수에 맞게 경로 자르기
+        }
+
+        if (list.Count <= 1)// 이동 가능한 거리가 없다면, 움직이지 않음
+        {
+            return new List<OverlayTile> { curStandingTile };
+        }
+
+        while (list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
+        {
+            if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
+            {
+                foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
+                {
+                    if (tile.curStandingCharater == null && !list.Contains(tile))
+                    {
+                        list.Add(tile);
+                        break;
+                    }
+                }
+
+                if (list.Last().curStandingCharater != null)// 주위에도 남은 타일이 없다면, 한칸 뒤로
+                {
+                    list.Remove(list.Last());
+                }
+            }
+            else// 남아있지 않다면, 그 이전 위치로 이동
+            {
+                list.Remove(list.Last());
+            }
+        }
+
+        return list;
+    }
+
+    public List<CharacterAI> FindNearAlly()
+    {
+        List<CharacterAI> characterInRange = new List<CharacterAI>();
+
+        foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, 5, false))// 5칸 이내의 아군을 찾음
+        {
+            if (tile.curStandingCharater != null && !tile.curStandingCharater.CheckEnenmy(this))
+            {
+                characterInRange.Add((CharacterAI)tile.curStandingCharater);
+            }
+        }
+
+        return characterInRange;
+    }
 
     public OverlayTile FindNearestTile(List<OverlayTile> tiles, OverlayTile curTile)// 가장 가까운 타일 구하기
     {
@@ -222,10 +479,12 @@ public class CharacterAI : CharacterBase
 
     public List<OverlayTile> FindMeleePath()// 근거리 캐릭터 이동 경로 찾기
     {
-        int leftWalk = Mov;
+        int leftWalk = Mov + 1;
         List<CharacterBase> checkCharacter = new List<CharacterBase>();
 
-        List<OverlayTile> list = pathFinder.FindPath(curStandingTile, attractTarget.curStandingTile);// 현재 어그로 끌린 캐릭터를 향하는 경로
+        List<OverlayTile> list = new List<OverlayTile> { curStandingTile };
+        list.AddRange(pathFinder.FindPath(curStandingTile, attractTarget.curStandingTile));// 현재 어그로 끌린 캐릭터를 향하는 경로
+
         checkCharacter.Add(attractTarget);
 
         leftWalk -= list.Count;
@@ -248,9 +507,15 @@ public class CharacterAI : CharacterBase
                 break;
             }
 
-            list.AddRange(pathFinder.FindPath(list.Last(), nearestCharacter.curStandingTile));//다음으로 가까운 적을 향해 이동
+            List<OverlayTile> anotherPath = pathFinder.FindPathAnother(list.Last(), nearestCharacter.curStandingTile, list);
 
-            leftWalk = Mov;
+            if (anotherPath == null)
+            {
+                break;
+            }
+            list.AddRange(anotherPath);//다음으로 가까운 적을 향해 이동
+
+            leftWalk = Mov + 1;
             leftWalk -= list.Count;
         }
 
@@ -266,7 +531,7 @@ public class CharacterAI : CharacterBase
 
         while(list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
         {
-            if (Mov - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
+            if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
@@ -293,7 +558,7 @@ public class CharacterAI : CharacterBase
 
     public List<OverlayTile> FindRangePath()// 원거리 이동 경로 찾기
     {
-        int leftWalk = Mov;
+        int leftWalk = Mov + 1;
 
         List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
         List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range - 1, false);
@@ -331,7 +596,7 @@ public class CharacterAI : CharacterBase
         {
             Debug.Log("there is");
 
-            if (Mov - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
+            if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {

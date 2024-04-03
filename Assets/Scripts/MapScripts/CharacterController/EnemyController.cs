@@ -87,18 +87,18 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        characterList[index].Waiting += CheckWait;// 해당 AI가 행동했는지 확인
-        characterList[index].Acting += CheckActing;
+        characterList[index].Wait += CheckWait;// 해당 AI가 행동했는지 확인
+        characterList[index].Act += CheckActing;
 
-        //Debug.Log(index + " start Act");
+        Debug.Log(index + " start Act");
         characterList[index].StartAI();// AI 작동 시작
     }
 
     private void CheckWait()// Ai가 대기 상태일 때
     {
         //Debug.Log(index + " is waiting");
-        characterList[index].Waiting -= CheckWait;
-        characterList[index].Acting -= CheckActing;
+        characterList[index].Wait -= CheckWait;
+        characterList[index].Act -= CheckActing;
 
         index++;// 다음 AI 차례로 넘어감
 
@@ -108,8 +108,8 @@ public class EnemyController : MonoBehaviour
     private void CheckActing()// AI가 행동했을 때
     {
         //Debug.Log(index + " is acting");
-        characterList[index].Waiting -= CheckWait;
-        characterList[index].Acting -= CheckActing;
+        characterList[index].Wait -= CheckWait;
+        characterList[index].Act -= CheckActing;
 
         index = 0;// 다시 처음부터 행동 가능한 캐릭터가 행동함
 
