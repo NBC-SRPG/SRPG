@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class test : MonoBehaviour
+public class AddressableTest : MonoBehaviour
 {
     Database db;
     int id;
