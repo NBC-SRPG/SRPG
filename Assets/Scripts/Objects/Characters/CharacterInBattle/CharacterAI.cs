@@ -215,6 +215,7 @@ public class CharacterAI : CharacterBase
         if(attractTarget == null)// 가까운 적이 없다면
         {
             ChangeState (State.Finding);// 색적 상태로 전환
+            return;
         }
 
         StartCoroutine(nameof(ChaseEnemy));
@@ -233,6 +234,16 @@ public class CharacterAI : CharacterBase
         if (ally.isDead)// 추격중인 아군이 죽었다면
         {
             ChangeState(State.Finding);// 색적상태로 전환
+            return;
+        }
+
+        CharacterBase nearsetCharacter = FindAttractEnemy();// 이동 전에 적이 있는지 탐색
+
+        if (nearsetCharacter != null)// 적이 있다면
+        {
+            attractTarget = nearsetCharacter;
+            ChangeState(State.Chasing);// 추격 상태로 전환
+            return;
         }
 
         if (!ally.isDead && !didWalk)
@@ -241,7 +252,7 @@ public class CharacterAI : CharacterBase
             MoveCharacter();
         }
 
-        CharacterBase nearsetCharacter = FindAttractEnemy();// 이동 이후 적이 있는지 탐색
+        nearsetCharacter = FindAttractEnemy();// 이동 이후 적이 있는지 탐색
 
         if(nearsetCharacter != null)// 적이 있다면
         {
