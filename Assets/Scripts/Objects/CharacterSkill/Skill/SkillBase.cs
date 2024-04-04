@@ -76,6 +76,9 @@ public class SkillBase
             case Constants.SkillScaleType.Rhombus:
                 skillScaleClass = new SkillScale_Rhombus(character, scale);
                 break;
+            case Constants.SkillScaleType.Moon:
+                skillScaleClass = new SkillScale_Moon(character, scale);
+                break;
         }
     }
 }

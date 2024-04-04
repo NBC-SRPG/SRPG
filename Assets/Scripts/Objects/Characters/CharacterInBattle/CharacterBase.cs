@@ -46,6 +46,9 @@ public class CharacterBase : MonoBehaviour
     public event Action OnEndAttacking;
     public event Action OnEndUseSkill;
 
+    public PathFinder pathFinder;
+    public RangeFinder rangeFinder;
+
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -102,6 +105,9 @@ public class CharacterBase : MonoBehaviour
         canActing = false;
 
         AnimationController.instance.onAnimationEnd += CheckActivated;
+
+        pathFinder = new PathFinder();
+        rangeFinder = new RangeFinder();
     }
 
     //스킬 및 패시브 시전자 설정

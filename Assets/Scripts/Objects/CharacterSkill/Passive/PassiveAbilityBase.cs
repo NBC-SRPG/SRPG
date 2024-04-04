@@ -159,6 +159,19 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
         allyCharacter.health.HealHealth(10);
     }
 
+    public override void OnUpdate()// 캐릭터 주변 아군에게 공격력 버프를 걸어주는 오라 테스트
+    {
+        base.OnUpdate();
+
+        foreach(OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 3, false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+        {
+            if(tile.curStandingCharater.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.AtkAura, character) == null && tile.curStandingCharater != character)
+            {
+                tile.curStandingCharater.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.AtkAura, 2, character);
+            }
+        }
+    }
+
     //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
     //public override void OnStartAttack(CharacterBase enemy)
     //{

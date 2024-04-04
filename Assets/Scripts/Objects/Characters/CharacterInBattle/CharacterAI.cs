@@ -18,9 +18,6 @@ public class CharacterAI : CharacterBase
 
     [SerializeField]protected State state;
 
-    protected PathFinder pathFinder;
-    protected RangeFinder rangeFinder;
-
     protected CharacterBase attractTarget;
     protected CharacterAI ally;
 
@@ -41,9 +38,6 @@ public class CharacterAI : CharacterBase
     public override void InitCharacter(Character charac, string id)
     {
         base.InitCharacter(charac, id);
-
-        pathFinder = new PathFinder();
-        rangeFinder = new RangeFinder();
 
         state = State.Finding;
 
