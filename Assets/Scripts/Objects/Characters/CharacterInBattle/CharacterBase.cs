@@ -68,7 +68,7 @@ public class CharacterBase : MonoBehaviour
         Managers.MapManager.OnCompleteMove += CheckCurTile;
         characterObject = Managers.Resource.Instantiate("character", transform);
         characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
-        characterObject.AddComponent<CharAnim_Test>();
+        characterObject.AddComponent(Type.GetType("CharAnim_" + character.SO.animatorName));
 
         //character.CharacterInit();
 
@@ -128,7 +128,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.atk + curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk;
+            return (int)((float)character.atk * (float)(100f + (curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk)) / 100f);
         } 
     }
 
@@ -414,6 +414,7 @@ public class CharacterBase : MonoBehaviour
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         curCharacterPassive?.OnStartAttack(enemy);
+        if (curCharacterPassive is OnstartAttack) { ((OnstartAttack)curCharacterPassive).OnDoAttack(enemy); }
         curCharacterBufList?.OnStartAttack(enemy);
 
         isAttacking = true;
@@ -428,6 +429,7 @@ public class CharacterBase : MonoBehaviour
     public void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {
         curCharacterPassive?.OnEndAttack(enemy);
+        if (curCharacterPassive is OnstartAttack) ((OnstartAttack)curCharacterPassive).OnEnAttack(enemy);
         curCharacterBufList?.OnEndAttack(enemy);
         
         EndAttacking();

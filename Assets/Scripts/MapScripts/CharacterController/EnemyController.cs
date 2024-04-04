@@ -26,6 +26,18 @@ public class EnemyController : MonoBehaviour
         player.playerId = "enemy";
         player.playerNumber = 1;
 
+        characters = Managers.GameManager.enemy.party.ToList();
+
+        if (characters.All(x => x == null))
+        {
+            characters.Clear();
+            foreach (TempGrowth tempGrowth in tempList)
+            {
+                tempGrowth.Init();
+                characters.Add(new Character(tempGrowth.tempCharacter, tempGrowth.growth));
+            }
+        }
+
         if (!Managers.BattleManager.players.Contains(player))
         {
             Managers.BattleManager.players.Add(player);
@@ -33,12 +45,6 @@ public class EnemyController : MonoBehaviour
         Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
-
-        foreach(TempGrowth tempGrowth in tempList)
-        {
-            tempGrowth.Init();
-            characters.Add(new Character(tempGrowth.tempCharacter, tempGrowth.growth));
-        }
 
         player.party = characters.ToArray();
 

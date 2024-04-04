@@ -429,7 +429,14 @@ public class BattleManager
 
                 if(numbers == charactersAsTeam[player.playerId].Count)
                 {
-                    Debug.Log(player.playerId + " is lose");
+                    if(player.playerId == Managers.GameManager.player.playerId)
+                    {
+                        Debug.Log("lose");
+                    }
+                    else
+                    {
+                        Debug.Log("win");
+                    }
                 }
             }
         }

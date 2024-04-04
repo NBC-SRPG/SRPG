@@ -32,7 +32,7 @@ public abstract class SkillAbilityBase
     }
 }
 
-public class SkillAbility_ : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
+public class SkillAbility_0 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
 {
     public override void init(CharacterBase character)
     {

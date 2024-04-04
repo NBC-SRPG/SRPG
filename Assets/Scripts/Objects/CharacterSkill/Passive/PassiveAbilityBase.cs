@@ -117,17 +117,17 @@ public class PassiveAbilityBase
     }
 }
 
-public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝나면 비어있는 패시브로 활용)
+public class PassiveAbility_0 : PassiveAbilityBase, OnstartAttack // 테스트용 (테스트 끝나면 비어있는 패시브로 활용)
 {
-    //public override void OnEnemyPassesMe(CharacterBase enemy)
-    //{
-    //    base.OnEnemyPassesMe(enemy);
+    public override void OnEnemyPassesMe(CharacterBase enemy)
+    {
+        base.OnEnemyPassesMe(enemy);
 
-    //    AnimationController.instance.EnqueuedefendAnimation(enemy, character);
-    //    character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
+        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
 
-    //    enemy.BlockMoving();//ZOC 테스트 
-    //}
+        enemy.BlockMoving();//ZOC 테스트 
+    }
 
     //public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
     //{
@@ -159,7 +159,7 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
     //{
     //    base.OnStartAttack(enemy);
 
-    //    stat.ExtraAtk = character.Attack / 2;
+    //    stat.ExtraAtk = 5;
 
     //    character.tempBonusStat.AddBonusStat(stat);
     //}
@@ -170,4 +170,24 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
 
     //    character.tempBonusStat.RemoveBonusStat(stat);
     //}
+
+    BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+    public void OnDoAttack(CharacterBase enemy)
+    {
+        stat.ExtraAtk = 50;
+
+        character.tempBonusStat.AddBonusStat(stat);
+    }
+
+    public void OnEnAttack(CharacterBase enemy)
+    {
+        character.tempBonusStat.RemoveBonusStat(stat);
+    }
+}
+
+public interface OnstartAttack
+{
+    public void OnDoAttack(CharacterBase enemy);
+
+    public void OnEnAttack(CharacterBase enemy);
 }

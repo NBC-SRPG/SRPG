@@ -316,7 +316,7 @@ public class CharacterAI : CharacterBase
     {
         int leftWalk = Mov + 1;
 
-        List<OverlayTile> list = rangeFinder.GetTilesInRange(ally.curStandingTile.grid2DLocation, 3, false);// 아군의 주위 타일 가져옴
+        List<OverlayTile> list = rangeFinder.GetTilesInRange(ally.curStandingTile.grid2DLocation, 3, true);// 아군의 주위 타일 가져옴
 
         int randomTile = UnityEngine.Random.Range(0, list.Count);
 
