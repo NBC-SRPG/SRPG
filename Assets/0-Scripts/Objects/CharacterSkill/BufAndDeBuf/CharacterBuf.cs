@@ -14,14 +14,19 @@ public class CharacterBuf
 
     public virtual string Keyword {  get; protected set; }
 
-    public int stack;
+    public int stack;// 스택
+    public int power;// 위력
 
     public CharacterBase Buffer { get; protected set; }// 버프 건 캐릭터
+
+    public bool dontDestroy = false;// 외부 효과로 파괴되지 않는 경우
+    public bool isPermanent = false;// 영구 지속 효과라면
 
     public virtual void Init(CharacterBase character, CharacterBase buffer)
     {
         this.character = character;
         stack = 0;
+        power = 0;
         IsDestroyed = false;
         Buffer = buffer;
     }
@@ -36,7 +41,7 @@ public class CharacterBuf
 
     }
 
-    protected void DestoyBuf()
+    public void DestoyBuf()
     {
         stack = 0;
         IsDestroyed = true;

@@ -19,6 +19,7 @@ public class BattleKeyWords
         Defend,
         Quikness,
 
+        AtkAura,
         Test_UniqBuf,
 
     }
