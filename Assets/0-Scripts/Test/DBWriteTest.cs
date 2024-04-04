@@ -6,12 +6,12 @@ public class DBWriteTest : MonoBehaviour
 {
     Database db;
     int id;
-    public CharacterGrowth growth;
+    CharacterGrowth growth;
 
     void Start()
     {
         db = new Database();
-        id = 101;
+        id = 102;
         Utility.Id2SO<CharacterSO>(id, (result) => 
         {
             growth = new CharacterGrowth((CharacterSO)result);
@@ -21,9 +21,8 @@ public class DBWriteTest : MonoBehaviour
     public void OnClick()
     {
         Debug.Log(growth.maxExp);
-
         db.WriteWithJson(db.userDB.Child("characterData").Child(id.ToString()), growth);
-
+        Debug.Log("Complete");
     }
 
 }

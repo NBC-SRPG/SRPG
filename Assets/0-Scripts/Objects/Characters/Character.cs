@@ -73,15 +73,23 @@ public class Character : MonoBehaviour
             abilityT1 = (AbilitySO)result;
         });
 
-        Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
+        if (Growth.abilityT2 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
         {
             abilityT2 = (AbilitySO)result;
         });
 
-        Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
+        }
+
+        if (Growth.abilityT3 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
         {
             abilityT3 = (AbilitySO)result;
         });
+        }
+
 
         // 클래스 초기화
         Utility.Id2SO<ClassSO>(SO.basicClass, (result) =>
@@ -89,10 +97,14 @@ public class Character : MonoBehaviour
             basicClass = (ClassSO)result;
         });
 
-        Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
+        if (Growth.superiorClass !=-1)
+        {
+            Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
         {
             superiorClass = (ClassSO)result;
         });
+        }
+
     }
 
     private void CalculateStat()

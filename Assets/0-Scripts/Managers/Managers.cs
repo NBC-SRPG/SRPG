@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 public class Managers : MonoBehaviour
 {
@@ -80,12 +81,28 @@ public class Managers : MonoBehaviour
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());
 
-            Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
-            Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
-            Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
-            s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
-            s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
+            /*
+            // DB와 어드레서블로 캐릭터 정보를 불러와 생성
+            DB.Read(DB.userDB.Child("characterData"), (snapshot) =>
+            {
+                foreach (var character in snapshot.Children)
+                {
+                    CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
+                    Utility.Id2SO<CharacterSO>(growth.id, (result) => 
+                    {
+                        CharacterSO so = (CharacterSO)result;
+                        AccountData.characterData.Add(growth.id, new Character(so, growth));
+                    });
+                }
+            });
+            */
+
+            //Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
+            //Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
+            //Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
+            //s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
+            //s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
+            //s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
 
             //testChatacter1.CharacterInit();
             //testChatacter2.CharacterInit();

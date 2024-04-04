@@ -32,7 +32,25 @@ public abstract class SkillAbilityBase
     }
 }
 
-public class SkillAbility_ : SkillAbilityBase // 테스트용
+public class SkillAbility_101 : SkillAbilityBase // 테스트용
+{
+    public override void init(CharacterBase character)
+    {
+        base.init(character);
+    }
+
+    public override void UseSkill(List<CharacterBase> target)
+    {
+        base.UseSkill(target);
+
+        foreach(CharacterBase target2 in target)
+        {
+            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
+        }
+    }
+}
+
+public class SkillAbility_102 : SkillAbilityBase // 테스트용
 {
     public override void init(CharacterBase character)
     {

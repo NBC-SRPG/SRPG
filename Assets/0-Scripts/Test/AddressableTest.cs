@@ -6,7 +6,7 @@ public class AddressableTest : MonoBehaviour
 {
     Database db;
     int id;
-    public CharacterSO so;
+    CharacterSO so;
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class AddressableTest : MonoBehaviour
         {
             so = (CharacterSO)result;
 
-            Debug.Log(so.characterName);
+            Debug.Log(so.id);
         });
     }
 
