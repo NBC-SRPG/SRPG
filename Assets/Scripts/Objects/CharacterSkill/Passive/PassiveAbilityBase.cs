@@ -115,6 +115,11 @@ public class PassiveAbilityBase
     {
 
     }
+
+    public virtual void OnUpdate()// 실시간 판정
+    {
+
+    }
 }
 
 public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝나면 비어있는 패시브로 활용)
@@ -147,12 +152,12 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
     //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
     //}
 
-    //public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
-    //{
-    //    base.OnPassAlly(allyCharacter);
+    public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
+    {
+        base.OnPassAlly(allyCharacter);
 
-    //    allyCharacter.health.HealHealth(10);
-    //}
+        allyCharacter.health.HealHealth(10);
+    }
 
     //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
     //public override void OnStartAttack(CharacterBase enemy)

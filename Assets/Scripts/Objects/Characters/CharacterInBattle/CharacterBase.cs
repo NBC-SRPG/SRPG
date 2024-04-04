@@ -51,6 +51,19 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
+    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent)
+    {
+        transform.SetParent(parent);
+
+        curStandingTile = spawnPosition;
+        curStandingTile.curStandingCharater = this;
+
+        transform.position = curStandingTile.transform.position;
+
+        Managers.BattleManager.charactersInBattle.Add(this);
+        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
+    }
+
     public virtual void InitCharacter(Character charac, string id)
     {
         character = charac;
@@ -87,9 +100,6 @@ public class CharacterBase : MonoBehaviour
 
         canSkill = false;
         canActing = false;
-
-        Managers.BattleManager.charactersInBattle.Add(this);
-        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
 
         AnimationController.instance.onAnimationEnd += CheckActivated;
     }
@@ -146,6 +156,14 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------
+    // Update
+    private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
+    {
+        curCharacterPassive?.OnUpdate();
+        curCharacterSkill.skillAbility?.OnUpdate();
+        curCharacterBufList.OnUpdate();
+    }
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 이동 관련 함수
@@ -245,10 +263,10 @@ public class CharacterBase : MonoBehaviour
 
         didAttack = false;
         didWalk = false;
-        didUseSkill = false;
 
-        canSkill = true;
         canActing = true;
+
+        ActivateSkill();
 
         leftWalkRange = Mov;
 
@@ -350,7 +368,6 @@ public class CharacterBase : MonoBehaviour
 
         if((didAttack && didWalk) || didUseSkill)
         {
-            canSkill = false;
             canActing = false;
         }
     }
@@ -395,7 +412,7 @@ public class CharacterBase : MonoBehaviour
         Managers.BattleManager.DoAttack(this, target);
     }
 
-    public void CounterAttack(CharacterBase enemy)
+    public void CounterAttack(CharacterBase enemy)// 반격
     {
         target = enemy;
         Managers.BattleManager.CounterAttack(this, target);
@@ -434,10 +451,12 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
+    public void OnTakeDamage(int damage, CharacterBase enemy)// 공격 받았을 때
     {
         curCharacterPassive?.OnTakeDamage(enemy);
         curCharacterBufList?.OnTakeDamage(enemy);
+
+        health.TakeDamage(damage);
     }
 
     private void GetAttackTarget()// 공격 타겟 가져오기
@@ -460,6 +479,11 @@ public class CharacterBase : MonoBehaviour
         GetSkillTarget();
 
         Managers.BattleManager.UseSkill(this, targets);
+    }
+
+    public void GetSkillScale(List<OverlayTile> skillScale)
+    {
+        this.skillScale = skillScale;
     }
 
     private void GetSkillTarget()// 스킬 타겟 가져오기
@@ -511,11 +535,23 @@ public class CharacterBase : MonoBehaviour
     public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
         didUseSkill = true;
+        DeActivateSkill();
 
         curCharacterPassive.OnEndSkill(target);
         curCharacterSkill.skillAbility?.OnEndSkill(target);
 
         OnEndActing();
+    }
+
+    public void ActivateSkill()// 스킬 사용 가능하게 만듬
+    {
+        didUseSkill = false;
+        canSkill = true;
+    }
+
+    public void DeActivateSkill()
+    {
+        canSkill = false;
     }
 
     //---------------------------------------------------------------------------

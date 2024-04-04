@@ -44,10 +44,7 @@ public class EnemyController : MonoBehaviour
                 CharacterAI character = Instantiate(chaPrefabs, transform);
                 character.InitCharacter(charac, player.playerId);
 
-                character.curStandingTile = Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]];
-                character.curStandingTile.curStandingCharater = character;
-
-                character.transform.position = character.curStandingTile.transform.position;
+                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]], transform);
                 i++;
 
                 characterList.Add(character);
