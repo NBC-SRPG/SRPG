@@ -81,35 +81,21 @@ public class Managers : MonoBehaviour
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());
 
-            /*
-            // DB와 어드레서블로 캐릭터 정보를 불러와 생성
+            // 테스트용 캐릭터 추가 (테스트 종료시 Login시 실행되도록 이동)
             DB.Read(DB.userDB.Child("characterData"), (snapshot) =>
             {
                 foreach (var character in snapshot.Children)
                 {
                     CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
+
                     Utility.Id2SO<CharacterSO>(growth.id, (result) => 
                     {
                         CharacterSO so = (CharacterSO)result;
                         AccountData.characterData.Add(growth.id, new Character(so, growth));
                     });
+                    
                 }
             });
-            */
-
-            //Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
-            //Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
-            //Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            //s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
-            //s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
-            //s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
-
-            //testChatacter1.CharacterInit();
-            //testChatacter2.CharacterInit();
-            //testChatacter3.CharacterInit();
-            //testChatacter1.Growth.InitialInit();
-            //testChatacter2.Growth.InitialInit();
-            //testChatacter3.Growth.InitialInit();
 
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
             mailSO.id = "1";
