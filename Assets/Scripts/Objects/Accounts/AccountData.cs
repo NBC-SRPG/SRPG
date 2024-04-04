@@ -5,7 +5,10 @@ public class AccountData
     public Dictionary<string, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
-    public Dictionary<int, bool> missionClearData { get; set; }
+    public List<int> ongoingMissions { get; set; }
+    public List<int> completeMissions { get; set; }
+    public List<int> receiveMissions { get; set; }
+
     //public Dictionary<int, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
@@ -13,11 +16,20 @@ public class AccountData
     public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
+    /*
+    public void Init()
+    {
+        
+    }
+    */
+    
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
         PlayerData playerData,
-        Dictionary<int, bool> missionClearData,
+        //List<int> ongoingMissions,
+        //List<int> completeMissions,
+        //List<int> receiveMissions,
         //Dictionary<int, int> inventory,
         Dictionary<int, string[]> friendData,
         Dictionary<int, FormationData> formationData,
@@ -27,7 +39,6 @@ public class AccountData
         this.stageClearData = stageClearData ?? new Dictionary<string, int>();
         this.characterData = characterData ?? new Dictionary<int, Character>();
         this.playerData = playerData ?? new PlayerData();
-        this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
         //this.inventory = inventory ?? new Dictionary<int, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
         this.formationData = formationData ?? new Dictionary<int, FormationData>();

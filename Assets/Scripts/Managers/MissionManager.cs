@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -31,16 +32,50 @@ public class MissionManager
     // 마지막 주간 미션 초기화 날짜
     private DateTime lastWeeklyReset;
 
+    private bool isInit = false;
+
     public void Init()
     {
+        if (isInit == true)
+        {
+            return;
+        }
+
+        isInit = true;
         // TODO
         // 처음 기본 미션 설정 필요
         // ongoingMissions, completeMission, receiveMissions DB에 저장 필요
-        // 테스트 데이터
-        MissionStart(90001000);
-        MissionStart(90001001);
-        //MissionStart(90001002);
+
+        Managers.DB.Read(Managers.DB.userDB.Child("ongoingMissionsData"), OngoingMissionInit);
+        Managers.DB.Read(Managers.DB.userDB.Child("completeMissionsData"), CompleteMissionInit);
     }
+
+    private void OngoingMissionInit(DataSnapshot snapshot)
+    {
+        foreach (DataSnapshot mission in snapshot.Children)
+        {
+            MainThreadExecutor.ExecuteInMainThread(() => MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
+
+            Debug.Log(mission.Key + ":" + mission.Value);
+        }
+    }
+
+    private void CompleteMissionInit(DataSnapshot snapshot)
+    {
+        foreach (DataSnapshot mission in snapshot.Children)
+        {
+            MainThreadExecutor.ExecuteInMainThread(() => MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count));
+            MainThreadExecutor.ExecuteInMainThread(() => MissionClear(int.Parse(mission.Key)));
+           
+            if ((bool)mission.Value)
+            {
+                MainThreadExecutor.ExecuteInMainThread(() => MissionReceive(int.Parse(mission.Key)));
+            }
+
+            Debug.Log(mission.Key + ":" + mission.Value);
+        }
+    }
+
     public void SubscribeMission(int missionId)
     {
         Debug.Log("SubscribeMission " + missionId);
@@ -80,20 +115,30 @@ public class MissionManager
         var targetMissions = filteredMissions.FindAll(q => q.target == target);
         foreach (var mission in targetMissions)
         {
-            MissionUpdate(mission.id, count);
+            MissionUpdate(mission.missionId, count);
         }
     }
 
     // 미션 시작
-    public void MissionStart(int missionId)
+    public void MissionStart(int missionId, int missionProgress = 0)
     {
+        Debug.Log($"MissionStart: {missionId}");
         if (IsClear(missionId))
         {
             return;
         }
 
-        var mission = new Mission(missionId);
-        mission.Start();
+        Mission mission;
+
+        if (missionProgress == 0)
+        {
+            mission = new Mission(missionId); // 메인 쓰레드에서만 객체 생성 가능하므로 비동기 콜백 불가능 MainThreadExecutor사용
+            mission.Start();
+        }
+        else
+        {
+            mission = new Mission(missionId, missionProgress);
+        }
 
         if (ongoingMissions.ContainsKey(missionId))
         {

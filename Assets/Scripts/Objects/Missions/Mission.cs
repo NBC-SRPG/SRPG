@@ -31,6 +31,13 @@ public class Mission
         MissionProgress = 0;
         MissionState = MissionState.Waite;
     }
+    public Mission(int missionId, int progress)
+    {
+        MissionId = missionId;
+        MissionProgress = progress;
+        MissionState = MissionState.Progress;
+    }
+
     public void Start()
     {
         MissionState = MissionState.Progress;

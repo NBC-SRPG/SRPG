@@ -63,6 +63,7 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
 
             // 들고있는 매니저들 Init
+            database.Init();
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();
@@ -70,17 +71,16 @@ public class Managers : MonoBehaviour
             s_battleManager.Init();
             s_gachamanager.Init();
             missionManager.Init();
-            //database.Init();
 
             // 테스트용 데이터
             s_accountData.Init(new Dictionary<string, int>(), 
                 new Dictionary<int, Character>(), 
                 new PlayerData(), 
-                new Dictionary<int, bool>(), 
+                //new Dictionary<int, bool>(), 
                 new Dictionary<int, string[]>(), 
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());
-
+            
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
             Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
             Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();

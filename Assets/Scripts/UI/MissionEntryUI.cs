@@ -61,7 +61,7 @@ public class MissionEntryUI : UIBase
         missionData = TestDatabase.Mission.Get(missionId);
 
         GetText((int)Texts.MissionNameText).text = missionData.name;
-        GetText((int)Texts.MissionDescriptionText).text = missionData.description;
+        GetText((int)Texts.MissionDescriptionText).text = missionData.missionDescription;
 
         // 경험치 보상 아이콘 생성
         if (missionData.exp > 0)

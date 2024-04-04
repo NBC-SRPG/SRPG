@@ -162,7 +162,8 @@ public class Constants
     {
         Waite, // 진행 전
         Progress, // 진행 중
-        Complete // 완료
+        Complete, // 완료
+        Receive // 보상 수령
     }
 
     public const int MaxDiamond = 999999;
