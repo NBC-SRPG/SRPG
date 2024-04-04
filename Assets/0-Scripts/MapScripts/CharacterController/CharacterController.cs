@@ -63,10 +63,7 @@ public class CharacterController : MonoBehaviour
         canClick = false;
         nowPlayerTurn = false;
 
-        if (player.playerId == "")
-        {
-            player = Managers.GameManager.player;
-        }
+        player = Managers.GameManager.player;
 
         if (!Managers.BattleManager.players.Contains(player))
         {
@@ -177,7 +174,13 @@ public class CharacterController : MonoBehaviour
                 character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]]);
                 i++;
             }
+            else
+            {
+                Destroy(character.gameObject);
+                i++;
+            }
         }
+
         ChangePhase(PlayerPhase.Idle);
 
         manaCost = 4;

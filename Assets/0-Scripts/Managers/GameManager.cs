@@ -16,7 +16,6 @@ public class GameManager
         //player.playerId = Managers.AccountData.playerData.uId;
         player.playerId = "test";
         player.prioty = 10;
-
     }
 
     public void SetEnemy(GamePlayer enemy)

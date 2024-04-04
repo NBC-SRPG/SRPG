@@ -104,6 +104,9 @@ public class Managers : MonoBehaviour
                     {
                         CharacterSO so = (CharacterSO)result;
                         AccountData.characterData.Add(growth.id, new Character(so, growth));
+
+
+                        Debug.Log(growth.id);
                     });
                     
                 }

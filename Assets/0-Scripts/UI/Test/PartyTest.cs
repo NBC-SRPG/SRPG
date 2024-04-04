@@ -9,8 +9,15 @@ public class PartyTest : MonoBehaviour
 {
     public Character character;
 
+    private void Awake()
+    {
+        Managers.GameManager.player.playerId = "test";
+    }
+
     public void Onclick(int n)
     {
+        character = Managers.AccountData.characterData[101];
+
         if (Managers.GameManager.player.party[n] == null)
         {
             Managers.GameManager.player.party[n] = character;

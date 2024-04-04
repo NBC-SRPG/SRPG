@@ -28,15 +28,15 @@ public class EnemyController : MonoBehaviour
 
         characters = Managers.GameManager.enemy.party.ToList();
 
-        if (characters.All(x => x == null))
-        {
-            characters.Clear();
-            foreach (TempGrowth tempGrowth in tempList)
-            {
-                tempGrowth.Init();
-                characters.Add(new Character(tempGrowth.tempCharacter, tempGrowth.growth));
-            }
-        }
+        //if (characters.All(x => x == null))
+        //{
+        //    characters.Clear();
+        //    foreach (TempGrowth tempGrowth in tempList)
+        //    {
+        //        tempGrowth.Init();
+        //        characters.Add(new Character(tempGrowth.tempCharacter, tempGrowth.growth));
+        //    }
+        //}
 
         if (!Managers.BattleManager.players.Contains(player))
         {
@@ -46,7 +46,7 @@ public class EnemyController : MonoBehaviour
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
 
-        player.party = characters.ToArray();
+        player.party = Managers.GameManager.enemy.party;
 
         InitiateCharacter();
     }

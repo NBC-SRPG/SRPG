@@ -68,19 +68,8 @@ public class Character
         Utility.Id2SO<PassiveSO>(SO.id, (result) =>
         {
             passive = (PassiveSO)result;
+            passiveSkill = GetPassive(passive.passive_Id);
         });
-
-        if(passive == null)
-        {
-            Debug.Log("123456");
-        }
-
-        if(GetPassive(passive.passive_Id) == null)
-        {
-            Debug.Log("11111");
-        }
-
-        passiveSkill = GetPassive(passive.passive_Id);
 
         // 특성 초기화
         Utility.Id2SO<AbilitySO>(SO.abilityT1, (result) =>

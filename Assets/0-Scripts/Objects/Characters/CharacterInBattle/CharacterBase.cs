@@ -82,6 +82,7 @@ public class CharacterBase : MonoBehaviour
 
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
         curCharacterSkill = character.exSkill;
+
         curCharacterPassive = character.passiveSkill;
 
         SetSkillOwner();
@@ -564,6 +565,11 @@ public class CharacterBase : MonoBehaviour
 
     private void OnDisable()
     {
+        if(curStandingTile == null)
+        {
+            return;
+        }
+
         curStandingTile.curStandingCharater = null;
         curStandingTile = null;
     }
