@@ -20,7 +20,7 @@ public class MissionManager
     public IReadOnlyCollection<int> ReceiveMissions => receiveMissions;
 
     public event Action<int> OnMissionStartCallback;
-    public event Action<int, int> OnMissionUpdateCallback;
+    public event Action<int, int> OnMissionUpdateCallback; // TODO : 업데이트 콜백에서 미션 저장
     public event Action<int> OnMissionCompleteCallback;
     public event Action<int> OnMissionReceiveCallback;
 
@@ -33,6 +33,10 @@ public class MissionManager
     private DateTime lastWeeklyReset;
 
     private bool isInit = false;
+    private bool isOngoingMissionsLoaded = false;
+    private bool isCompleteMissionsLoaded = false;
+    private bool hasOngoingMissions = false;
+    private bool hasCompleteMissions = false;
 
     public void Init()
     {
@@ -42,9 +46,6 @@ public class MissionManager
         }
 
         isInit = true;
-        // TODO
-        // 처음 기본 미션 설정 필요
-        // ongoingMissions, completeMission, receiveMissions DB에 저장 필요
 
         Managers.DB.Read(Managers.DB.userDB.Child("ongoingMissionsData"), OngoingMissionInit);
         Managers.DB.Read(Managers.DB.userDB.Child("completeMissionsData"), CompleteMissionInit);
@@ -52,27 +53,83 @@ public class MissionManager
 
     private void OngoingMissionInit(DataSnapshot snapshot)
     {
-        foreach (DataSnapshot mission in snapshot.Children)
+        // 데이터가 존재하는지 확인
+        if (snapshot.Exists && snapshot.ChildrenCount > 0)
         {
-            MainThreadExecutor.ExecuteInMainThread(() => MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
-
-            Debug.Log(mission.Key + ":" + mission.Value);
+            // 데이터가 있다면 순회
+            foreach (DataSnapshot mission in snapshot.Children)
+            {
+                // 데이터의 키(미션Id)와 값(진행정도)으로 MissionStart를 메인쓰레드에서 실행 
+                MainThreadExecutor.ExecuteInMainThread(() => MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
+                Debug.Log(mission.Key + ":" + mission.Value);
+            }
+            // 데이터가 있음을 체크
+            hasOngoingMissions = true;
         }
+        else
+        {
+            // 데이터가 없으면 hasOngoingMissions은 false
+            hasOngoingMissions = false;
+        }
+        // 진행 중 미션 초기화 완료
+        isOngoingMissionsLoaded = true;
+        
+        CheckAndInitializeDefaultMissions();
     }
 
     private void CompleteMissionInit(DataSnapshot snapshot)
     {
-        foreach (DataSnapshot mission in snapshot.Children)
+        // 데이터가 존재하는지 확인
+        if (snapshot.Exists && snapshot.ChildrenCount > 0)
         {
-            MainThreadExecutor.ExecuteInMainThread(() => MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count));
-            MainThreadExecutor.ExecuteInMainThread(() => MissionClear(int.Parse(mission.Key)));
-           
-            if ((bool)mission.Value)
+            // 데이터가 있다면 순회
+            foreach (DataSnapshot mission in snapshot.Children)
             {
-                MainThreadExecutor.ExecuteInMainThread(() => MissionReceive(int.Parse(mission.Key)));
-            }
+                // 데이터의 키(미션Id)로 미션 시작, 진행 정도는 완료 미션이기 때문에 해당 미션의 count를 그대로 적용
+                MainThreadExecutor.ExecuteInMainThread(() => {
+                    MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count);
+                    // 바로 클리어 처리
+                    MissionClear(int.Parse(mission.Key));
 
-            Debug.Log(mission.Key + ":" + mission.Value);
+                    // 데이터의 값이 true라면 보상 수령을 한 것
+                    if ((bool)mission.Value)
+                    {
+                        // 보상 수령 처리
+                        MissionReceive(int.Parse(mission.Key));
+                    }
+                });
+                Debug.Log(mission.Key + ":" + mission.Value);
+            }
+            // 데이터가 있음을 체크
+            hasCompleteMissions = true;
+        }
+        else
+        {
+            // 데이터가 없으면 hasCompleteMissions은 false
+            hasCompleteMissions = false;
+        }
+        // 완료 미션 초기화 완료
+        isCompleteMissionsLoaded = true;
+
+        CheckAndInitializeDefaultMissions();
+    }
+
+    private void CheckAndInitializeDefaultMissions()
+    {
+        // 두 데이터 로드가 모두 완료되었는지 확인
+        if (isOngoingMissionsLoaded && isCompleteMissionsLoaded)
+        {
+            // 두 데이터가 모두 비어 있으면 기본 미션 설정
+            if (!hasOngoingMissions && !hasCompleteMissions)
+            {
+                MainThreadExecutor.ExecuteInMainThread(() =>
+                {
+                    // 여기에 기본 미션들을 설정
+                    MissionStart(90001000);
+                    MissionStart(90001001);
+                    MissionStart(90001002);
+                });
+            }
         }
     }
 
