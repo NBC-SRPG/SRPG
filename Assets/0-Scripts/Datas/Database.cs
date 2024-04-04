@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -58,7 +59,8 @@ public class Database
     /// <param name="obj"> Json으로 변환할 값 </param>
     public void WriteWithJson(DatabaseReference path, object obj)
     {
-        string json = JsonUtility.ToJson(obj);
+        string json = JsonConvert.SerializeObject(obj);
+        Debug.Log(json);
         path.SetRawJsonValueAsync(json);
     }
 
