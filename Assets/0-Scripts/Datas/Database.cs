@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
+using Firebase.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -93,7 +94,7 @@ public class Database
     {
         // 스냅샷 생성
         DataSnapshot snapshot = null;
-        path.GetValueAsync().ContinueWith(task => 
+        path.GetValueAsync().ContinueWithOnMainThread(task => 
         {
             // 데이터 읽기 실패
             if  (task.IsFaulted)
