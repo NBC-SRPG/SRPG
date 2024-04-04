@@ -32,7 +32,7 @@ public abstract class SkillAbilityBase
     }
 }
 
-public class SkillAbility_0 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
+public class SkillAbility_101 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
 {
     public override void init(CharacterBase character)
     {
@@ -44,6 +44,24 @@ public class SkillAbility_0 : SkillAbilityBase // 테스트용(테스트 끝나�
         base.UseSkill(target);
 
         foreach(CharacterBase target2 in target)
+        {
+            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
+        }
+    }
+}
+
+public class SkillAbility_102 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
+{
+    public override void init(CharacterBase character)
+    {
+        base.init(character);
+    }
+
+    public override void UseSkill(List<CharacterBase> target)
+    {
+        base.UseSkill(target);
+
+        foreach (CharacterBase target2 in target)
         {
             target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
         }

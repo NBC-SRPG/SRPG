@@ -13,7 +13,7 @@ public class TempGrowth
 
     public void Init()
     {
-        growth.Init(tempCharacter);
+        growth = new CharacterGrowth(tempCharacter);
     }
 }
 

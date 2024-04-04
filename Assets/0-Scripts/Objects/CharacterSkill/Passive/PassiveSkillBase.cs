@@ -117,7 +117,74 @@ public class PassiveSkillBase
     }
 }
 
-public class PassiveAbility_ : PassiveSkillBase // 테스트용
+public class PassiveAbility_101 : PassiveSkillBase // 테스트용
+{
+    public override void OnEnemyPassesMe(CharacterBase enemy)
+    {
+        base.OnEnemyPassesMe(enemy);
+
+        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
+
+        enemy.BlockMoving();//ZOC 테스트 
+    }
+
+    //public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
+    //{
+    //    base.OnTakeAttacked(enemy);
+
+    //    if (!character.isDead)
+    //    {
+    //        character.CounterAttack(enemy);
+    //    }
+    //}
+
+    //public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    //{
+    //    base.OnAttackSuccess(enemy, damage);
+
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
+    //}
+
+    //public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
+    //{
+    //    base.OnPassAlly(allyCharacter);
+
+    //    allyCharacter.health.HealHealth(10);
+    //}
+
+    //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+    //public override void OnStartAttack(CharacterBase enemy)
+    //{
+    //    base.OnStartAttack(enemy);
+
+    //    stat.ExtraAtk = 5;
+
+    //    character.tempBonusStat.AddBonusStat(stat);
+    //}
+
+    //public override void OnEndAttack(CharacterBase enemy)
+    //{
+    //    base.OnEndAttack(enemy);
+
+    //    character.tempBonusStat.RemoveBonusStat(stat);
+    //}
+
+    BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+    public void OnDoAttack(CharacterBase enemy)
+    {
+        stat.ExtraAtk = 50;
+
+        character.tempBonusStat.AddBonusStat(stat);
+    }
+
+    public void OnEnAttack(CharacterBase enemy)
+    {
+        character.tempBonusStat.RemoveBonusStat(stat);
+    }
+}
+public class PassiveAbility_102 : PassiveSkillBase // 테스트용
 {
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {

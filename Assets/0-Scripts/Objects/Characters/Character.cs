@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using static Constants;
 
-public class Character : MonoBehaviour
+public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
@@ -31,7 +31,7 @@ public class Character : MonoBehaviour
     // TODO: refactor with chai227chai
     public ExSkillBase exSkill;
     public PassiveSkillBase passiveSkill;
-
+    public PassiveSO passive;
 
     public AbilitySO abilityT1;
     public AbilitySO abilityT2;
@@ -65,7 +65,22 @@ public class Character : MonoBehaviour
         });
 
         // TODO: passiveSkill 초기화
+        Utility.Id2SO<PassiveSO>(SO.id, (result) =>
+        {
+            passive = (PassiveSO)result;
+        });
 
+        if(passive == null)
+        {
+            Debug.Log("123456");
+        }
+
+        if(GetPassive(passive.passive_Id) == null)
+        {
+            Debug.Log("11111");
+        }
+
+        passiveSkill = GetPassive(passive.passive_Id);
 
         // 특성 초기화
         Utility.Id2SO<AbilitySO>(SO.abilityT1, (result) =>
@@ -115,27 +130,40 @@ public class Character : MonoBehaviour
     }
 
 
+    //public SkillBase InitSkills()
+    //{
+    //    skill = new SkillBase(5);
 
+    //    return skill;
+    //}
 
-    /*
-    //스킬 선언
-    public SkillBase InitSkills()
+    public PassiveSkillBase GetPassive(int id)
     {
-        skill = new SkillBase(characterData.skill);
+        Type passiveType = Type.GetType("PassiveAbility_" + id);
 
-        return skill;
-    }
-
-    //패시브 선언
-    public PassiveAbilityBase InitPassive()
-    {
-        Type passiveType = Type.GetType("PassiveAbility_" + characterData.passive.passive_Id);
+        if (passiveType == null)
+        {
+            return null;
+        }
 
         object obj = Activator.CreateInstance(passiveType);
-        passiveAbility = obj as PassiveAbilityBase;
+        PassiveSkillBase passive = obj as PassiveSkillBase;
 
-        return passiveAbility;
+        return passive;
     }
-    */
+    //public PassiveAbilityBase InitPassive()
+    //{
+    //    Type passiveType = Type.GetType("PassiveAbility_" + SO.PassiveSkill);
+
+    //    if (passiveType == null)
+    //    {
+    //        return null;
+    //    }
+
+    //    object obj = Activator.CreateInstance(passiveType);
+    //    passiveAbility = obj as PassiveAbilityBase;
+
+    //    return passiveAbility;
+    //}
 
 }
