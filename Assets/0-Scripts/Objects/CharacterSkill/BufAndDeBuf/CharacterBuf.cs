@@ -127,4 +127,9 @@ public class CharacterBuf
     {
 
     }
+
+    public virtual void OnUpdate()// 실시간 판정
+    {
+
+    }
 }

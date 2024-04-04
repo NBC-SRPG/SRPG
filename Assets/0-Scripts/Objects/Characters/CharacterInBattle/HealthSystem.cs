@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class HealthSystem : MonoBehaviour
 {
     public GameObject healthBarCanvas;
+    private CharAnimBase characterAnim;
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
@@ -21,7 +22,7 @@ public class HealthSystem : MonoBehaviour
 
     private void Start()
     {
-
+        characterAnim = GetComponentInChildren<CharAnimBase>();
     }
 
     public void SetHealth(int health)
@@ -42,7 +43,9 @@ public class HealthSystem : MonoBehaviour
     {
         ChangeHealth(-damage);
 
-        if(CurHealth == 0)
+        characterAnim.SetDamage(damage);
+
+        if (CurHealth == 0)
         {
             Die?.Invoke();
         }
@@ -61,6 +64,8 @@ public class HealthSystem : MonoBehaviour
     public void HealHealth(int n)// 실제 체력 회복
     {
         ChangeHealth(n);
+
+        characterAnim.SetDamage(n);
 
         if (!AnimationController.instance.CheckAnimation())
         {

@@ -234,15 +234,11 @@ public class BattleManager
 
         //--------------------------------------------------
 
-        victim.characterAnim.SetDamage(damage);
-
         AnimationController.instance.EnqueueAttackAnimation(attacker, victim);
 
-        victim.health.TakeDamage(damage);
+        victim.OnTakeDamage(damage, attacker);
 
         attacker.OnAttackSuccess(victim, damage);
-
-        victim.OnTakeDamage(attacker);
 
         attacker.OnEndAttack(victim);
 
@@ -254,15 +250,11 @@ public class BattleManager
 
         //--------------------------------------------------
 
-        victim.characterAnim.SetDamage(damage);
-
         AnimationController.instance.EnqueueCounterAttackAnimation(attacker, victim);
 
-        victim.health.TakeDamage(damage);
+        victim.OnTakeDamage(damage, attacker);
 
         attacker.OnAttackSuccess(victim, damage);
-
-        victim.OnTakeDamage(attacker);
 
         attacker.OnEndAttack(victim);
 
@@ -307,9 +299,7 @@ public class BattleManager
             int damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
             //------
 
-            victim.characterAnim.SetDamage(damage);
-
-            victim.health.TakeDamage(damage);
+            victim.OnTakeDamage(damage, skillUser);
 
             skillUser.OnSkillAttackSuccess(victim, damage);
         }
@@ -327,8 +317,6 @@ public class BattleManager
             //다른 클라이언트는 서버가 준 데미지를 받아옴
             int figure = skillUser.curCharacterSkill.SkillFigure;
             //------
-
-            victim.characterAnim.SetDamage(figure);
 
             victim.health.HealHealth(figure);
 
@@ -348,9 +336,7 @@ public class BattleManager
             int damage = CheckSkillDamage(skillUser, figure, victim);
             //------
 
-            victim.characterAnim.SetDamage(damage);
-
-            victim.health.TakeDamage(damage);
+            victim.OnTakeDamage(damage, skillUser);
 
             skillUser.OnSkillAttackSuccess(victim, damage);
         }
@@ -438,7 +424,7 @@ public class BattleManager
 
                 if(numbers == charactersAsTeam[player.playerId].Count)
                 {
-                    if(player.playerId == Managers.GameManager.player.playerId)
+                    if (player.playerId == Managers.GameManager.player.playerId)
                     {
                         Debug.Log("lose");
                     }

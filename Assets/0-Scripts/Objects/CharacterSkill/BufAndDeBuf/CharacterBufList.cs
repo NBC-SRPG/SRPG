@@ -79,7 +79,14 @@ public class CharacterBufList
         return buf;
     }
 
-    public List<CharacterBuf> FindPositiveBuf(int number)// 긍정적 버프 가져오기
+    public List<CharacterBuf> FindPositiveBufAll()// 모든 긍정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindPositiveBuf(int number)// 긍정적 버프 특정 갯수 가져오기
     {
         List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
 
@@ -88,13 +95,58 @@ public class CharacterBufList
         return bufs;
     }
 
-    public List<CharacterBuf> FindNegativeBuf(int number)// 부정적 버프 가져오기
+    public List<CharacterBuf> FindPositiveBufRandom(int number)// 무작위 긍정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+        List<CharacterBuf> randomBufs = new List<CharacterBuf>();
+
+        while (randomBufs.Count < number)
+        {
+            int ran = UnityEngine.Random.Range(0, bufs.Count);
+
+            CharacterBuf buf = bufs[ran];
+            if (!randomBufs.Contains(buf))
+            {
+                randomBufs.Add(buf);
+            }
+        }
+
+        return randomBufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBufAll()// 모든 부정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBuf(int number)// 부정적 버프 특정 갯수 가져오기
     {
         List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
 
         bufs = bufs.Take(number).ToList();
 
         return bufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBufRandom(int number)// 무작위 부정적 버프 가져오기
+    {
+        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+        List<CharacterBuf> randomBufs = new List<CharacterBuf>();
+
+        while (randomBufs.Count < number)
+        {
+            int ran = UnityEngine.Random.Range(0, bufs.Count);
+
+            CharacterBuf buf = bufs[ran];
+            if (!randomBufs.Contains(buf))
+            {
+                randomBufs.Add(buf);
+            }
+        }
+
+        return randomBufs;
     }
 
     public void RemoveBuf()// 버프 제거
@@ -294,6 +346,17 @@ public class CharacterBufList
             if (buf != null && !buf.IsDestroyed)
             {
                 buf.OnDie();
+            }
+        }
+    }
+
+    public void OnUpdate()// 실시간 판정
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnUpdate();
             }
         }
     }

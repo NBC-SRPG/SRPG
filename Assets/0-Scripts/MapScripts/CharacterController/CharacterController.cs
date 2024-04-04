@@ -384,8 +384,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && manaCost >= curSelectedCharacter.curCharacterSkill.skillData.cost);
-        Ui.SetNoManaText(manaCost < curSelectedCharacter.curCharacterSkill.skillData.cost);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && manaCost >= curSelectedCharacter.curCharacterSkill?.skillData.cost);
+        Ui.SetNoManaText(manaCost < curSelectedCharacter.curCharacterSkill?.skillData.cost);
     }
 
     private void OnClickMoveAndAttack()
@@ -593,7 +593,7 @@ public class CharacterController : MonoBehaviour
                     }
                 }
             }
-            else
+            else// 단일 지정 스킬일 때
             {
                 hit = GetTouchOnce();
 
@@ -632,14 +632,17 @@ public class CharacterController : MonoBehaviour
 
     private void UseSkill()// 스킬 사용
     {
-        canClick = false;
+        if (curSelectedCharacter.canSkill)
+        {
+            canClick = false;
 
-        manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
+            manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
 
-        AnimationController.instance.onAnimationEnd += EndSkill;
+            AnimationController.instance.onAnimationEnd += EndSkill;
 
-        curSelectedCharacter.targets = skillTargets;
-        curSelectedCharacter.UseSkill();
+            curSelectedCharacter.targets = skillTargets;
+            curSelectedCharacter.UseSkill();
+        }
     }
 
     private void EndSkill()// 캐릭터의 공격이 끝났을 시
@@ -770,7 +773,7 @@ public class CharacterController : MonoBehaviour
             tile.ShowAsScale();
         }
 
-        curSelectedCharacter.skillScale = skillScale;
+        curSelectedCharacter.GetSkillScale(skillScale);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
