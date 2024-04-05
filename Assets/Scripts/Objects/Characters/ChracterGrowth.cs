@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Search;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Constants;
 
@@ -12,14 +10,14 @@ public class CharacterGrowth : MonoBehaviour
     private Character character;
 
     //'현재 선택중인 특성 번호' ( 0 = None )
-    // 이 변수들을 설정해 배열의 index 번호를 지정한다.
     // 특성1은 30레벨에 해금 -> 해금 시 바로 찍혀있음
+    //이 변수들을 설정해 배열의 index 번호를 지정한다.
     public int selectTalent_Tier2 { get; private set; }
     public int selectTalent_Tier3 { get; private set; }
     public int selectSuperialClass { get; private set; }
 
 
-    //'현재 선택 중인 특성 번호의 특성/클래스의 SO 를 참조함' 
+    //'현재 선택 중인 특성 번호의 특성/클래스의 SO 를 참조함'
     public TalentSO talent_Tier1 { get; private set; }
     public TalentSO talent_Tier2 { get; private set; }
     public TalentSO talent_Tier3 { get; private set; }
@@ -45,7 +43,7 @@ public class CharacterGrowth : MonoBehaviour
             }
             ApplyGrowStat();
             ApplyAdditionStat(); //레벨업 시 성장 스탯 및 특성/클래스 스탯 리프레시.
-            maxExp = (level * 100 + maxLevel * level * 20); //임의로 최대 경험치값(레벨업하는데 필요한 경험치 값)을 설정. 
+            maxExp = (level * 100 + maxLevel * level * 20); //임의로 최대 경험치값(레벨업하는데 필요한 경험치 값)을 설정.
         }
     }
 
@@ -111,7 +109,30 @@ public class CharacterGrowth : MonoBehaviour
         PassiveSkillLevel = 1;
         affectionLevel = 1;
     }
-
+    //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
+    public bool SelectTalent_tier2(int select)
+    {
+        //1 or 2
+        if (select > 0 && select <= character.characterData.talent_Tier2.Length)
+        {
+            if (Level >= 50)
+            {
+                selectTalent_Tier2 = select;
+                ApplyAdditionStat();
+                return true;
+            }
+            else
+            {
+                Debug.Log("2티어 특성 설정 조건을 충족하지 못했습니다.");
+                return false;
+            }
+        }
+        else
+        {
+            Debug.Log("잘못된 접근값입니다.");
+            return false;
+        }
+    }
     //2티어 특성 선택 시 사용하는 메서드. UI와 연동 필요함
     public void SelectTalent_tier2(TalentSO selectTalent)
     {
@@ -155,7 +176,7 @@ public class CharacterGrowth : MonoBehaviour
         {
             return 0;
         }
-        if (level == maxLevel && piece >= (int)star + 30) //현재 캐릭터 레벨이 최대치이고, 보유 조각 개수가 돌파 요건값 이상일 경우. (돌파 요건값 = 현재 최대레벨 + 30) 
+        if (level == maxLevel && piece >= (int)star + 30) //현재 캐릭터 레벨이 최대치이고, 보유 조각 개수가 돌파 요건값 이상일 경우. (돌파 요건값 = 현재 최대레벨 + 30)
         {
             int paidPiece = (int)star + 30;
             if ((int)star <= 70) //현재 성급이 5성 미만일 경우, 최대 레벨 10 증가.
@@ -171,12 +192,12 @@ public class CharacterGrowth : MonoBehaviour
         }
         else
         {
-            return 0;
             //돌파 요건 미충족.
+            return 0;
         }
     }
 
-    public void ApplyGrowStat() //캐릭터 성장 스탯(레벨) 적용 메서드. 레벨값이 바뀔 때마다 호출된다. 계산한 뒤 Character의 기본 스탯에 저장한다. 
+    public void ApplyGrowStat() //캐릭터 성장 스탯(레벨) 적용 메서드. 레벨값이 바뀔 때마다 호출된다. 계산한 뒤 Character의 기본 스탯에 저장한다.
     {
         //캐릭터의 스탯 값을 (기본 스탯값 + 레벨에 의해 증가한 수치값)으로 저장한다.
         //계산식 : 스탯값 = 원본캐릭터의 기본 스탯 + (원본 캐릭터의 성장 스탯 * 이 캐릭터 개체의 현재 레벨)
@@ -185,7 +206,7 @@ public class CharacterGrowth : MonoBehaviour
         character.Defence = (character.characterData.def + (character.characterData.growDef * level));
     }
 
-    public void ApplyAdditionStat() //캐릭터 특성 / 클래스 / 장비 스탯 적용 메서드, 계산한 뒤 값을 Character의 Calc 스탯에 저장한다. 
+    public void ApplyAdditionStat() //캐릭터 특성 / 클래스 / 장비 스탯 적용 메서드, 계산한 뒤 값을 Character의 Calc 스탯에 저장한다.
     {
         //특성으로 올라가는 능력치들의 합계를 저장할 변수를 선언한다.
         int talentIncrHp_sum = 0; //체력 상수 증가치 합계
@@ -221,7 +242,7 @@ public class CharacterGrowth : MonoBehaviour
 
             if (talent_Tier2 != null) //'선택한 2티어 특성'값이 0이라면 특성이 개방되지 않았거나 아직 선택하지 않은 경우.
             {
-                //selectTrait_Tier 값이 0이 아니라면 특성을 선택했다는 뜻. 캐릭터SO가 가진 '선택가능한 티어 2 특성 배열'에서 일치하는 특성을 가져와 그 증가값을 합계에 더한다. 
+                //selectTrait_Tier 값이 0이 아니라면 특성을 선택했다는 뜻. 캐릭터SO가 가진 '선택가능한 티어 2 특성 배열'에서 일치하는 특성을 가져와 그 증가값을 합계에 더한다.
                 talentIncrHp_sum += talent_Tier2.increaseHealth;
                 talentIncrDef_sum += talent_Tier2.increaseDef;
                 talentIncrAtk_sum += talent_Tier2.increaseAtk;

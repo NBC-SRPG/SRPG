@@ -19,7 +19,7 @@ public class TargetTiles : MonoBehaviour
     public void ShowTargetTile(CharacterBase curTarget)
     {
         curTargetTile.SetActive(curTarget);
-        if (curTarget)
+        if (curTarget && curTarget.curStandingTile)
         {
             curTargetTile.transform.position = curTarget.curStandingTile.transform.position;
         }

@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class CharAnim_Test : CharAnimBase
 {
-    public override void PlayAttackAnimation(CharacterBase targetCharacter)
+    public void AttackingTiming()
     {
-        base.PlayAttackAnimation(targetCharacter);
+        AttackEnemy();
+        KnockBackEnemy(10);
 
+        targetCharacter.characterAnim.ShakeCharacter();
     }
 
-    public override void HitEnemy(int scale)
+    public void Damage()
     {
-        base.HitEnemy(scale);
-
-        Debug.Log(damage);
-        targetCharacter.health.TakeDamageHealthBar(damage);
+        targetCharacter.characterAnim.ShowDamage();
     }
 
     public void MoveToPosition()
@@ -26,7 +25,7 @@ public class CharAnim_Test : CharAnimBase
 
         FlipCharacter(moveTarget, false);
 
-        StartCoroutine(MoveToTarget(moveTarget));
+        StartCoroutine(MoveToTarget(moveTarget, 200f));
     }
 
 }
