@@ -42,7 +42,17 @@ public class BattleManager
     //플레이어가 준비되었는지 확인
     public void GetReady()
     {
-        if (players.Count >= 2 && players.FindAll(x => x.isReady).Count == players.Count)
+        int cnt = 0;
+
+        foreach (GamePlayer player in players)
+        {
+            if (player.isReady)
+            {
+                cnt++;
+            }
+        }
+
+        if (players.Count >= 2 && cnt == players.Count)
         {
             InitBattle();
         }
@@ -61,8 +71,10 @@ public class BattleManager
     //-----------------------------------------------------------------------------------------------------------------------
     //전투 관련 함수들
 
-    private int CheckAttackDamage(CharacterBase attacker, CharacterBase victim)
+    private BattleKeyWords.Damage CheckAttackDamage(CharacterBase attacker, CharacterBase victim)
     {
+        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+
         attacker.OnStartAttack(victim);
 
         //------
@@ -78,12 +90,14 @@ public class BattleManager
         }
 
         damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
+        damagest.damage = damage;
 
-        return damage;
+        return damagest;
     }
 
-    private int CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim)
+    private BattleKeyWords.Damage CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim)
     {
+        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
 
         //------
         //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
@@ -98,8 +112,21 @@ public class BattleManager
         }
 
         damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
+        damagest.damage = damage;
 
-        return damage;
+        return damagest;
+    }
+
+    private BattleKeyWords.Damage CheckSkillHealDamage(CharacterBase skillUser, int figure)
+    {
+        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+
+        int damage = figure;
+
+        damage = figure;
+        damagest.damage = damage;
+
+        return damagest;
     }
 
     private float ExtraDmgbyAttribute(CharacterBase attacker, CharacterBase victim)
@@ -216,12 +243,12 @@ public class BattleManager
     {
         attacker.AttackTarget(victim);
 
-        victim.TakeAttacked(attacker);
+        victim.AfterTakeAttacked(attacker);
 
         if (victim.isDead)
         {
-            Debug.Log("dead");
             victim.OnDieInBattle(attacker);
+            attacker.OnKillEnemy(victim);
         }
 
         AnimationController.instance.StartAnimationQueue();
@@ -230,15 +257,17 @@ public class BattleManager
     //-----------------코드 어떤식으로 나눌지 고민 중
     public void DoAttack(CharacterBase attacker, CharacterBase victim)// 공격
     {
-        int damage = CheckAttackDamage(attacker, victim);
+        victim.OnTakeAttack(attacker);
+
+        BattleKeyWords.Damage damage = CheckAttackDamage(attacker, victim);
 
         //--------------------------------------------------
 
         AnimationController.instance.EnqueueAttackAnimation(attacker, victim);
 
-        victim.OnTakeDamage(damage, attacker);
+        victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
 
-        attacker.OnAttackSuccess(victim, damage);
+        attacker.OnAttackSuccess(victim, damage.damage);
 
         attacker.OnEndAttack(victim);
 
@@ -246,15 +275,17 @@ public class BattleManager
 
     public void CounterAttack(CharacterBase attacker, CharacterBase victim)// 반격
     {
-        int damage = CheckAttackDamage(attacker, victim);
+        victim.OnTakeAttack(attacker);
+
+        BattleKeyWords.Damage damage = CheckAttackDamage(attacker, victim);
 
         //--------------------------------------------------
 
         AnimationController.instance.EnqueueCounterAttackAnimation(attacker, victim);
 
-        victim.OnTakeDamage(damage, attacker);
+        victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
 
-        attacker.OnAttackSuccess(victim, damage);
+        attacker.OnAttackSuccess(victim, damage.damage);
 
         attacker.OnEndAttack(victim);
 
@@ -272,16 +303,6 @@ public class BattleManager
 
         AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
 
-        foreach (var t in target)
-        {
-            Debug.Log(t + " take skill");
-
-            if (t.isDead)
-            {
-                t.OnDieInBattle(skillUser);
-            }
-        }
-
         skillUser.OnEndSkill(target);
 
         AnimationController.instance.StartAnimationQueue();
@@ -296,12 +317,21 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            int damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
+            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
             //------
 
-            victim.OnTakeDamage(damage, skillUser);
+            victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, damage);
+            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+        }
+
+        foreach (var t in target)
+        {
+            if (t.isDead)
+            {
+                t.OnDieInBattle(skillUser);
+                skillUser.OnKillEnemy(t);
+            }
         }
 
     }
@@ -315,12 +345,21 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            int figure = skillUser.curCharacterSkill.SkillFigure;
+            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser ,skillUser.curCharacterSkill.SkillFigure);
             //------
 
-            victim.health.HealHealth(figure);
+            victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, figure);
+            skillUser.OnSkillAttackSuccess(victim, figure.damage);
+        }
+
+        foreach (var t in target)
+        {
+            if (t.isDead)
+            {
+                t.OnDieInBattle(skillUser);
+                skillUser.OnKillEnemy(t);
+            }
         }
     }
 
@@ -333,12 +372,48 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            int damage = CheckSkillDamage(skillUser, figure, victim);
+            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, figure, victim);
             //------
 
-            victim.OnTakeDamage(damage, skillUser);
+            victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, damage);
+            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+        }
+
+        foreach (var t in target)
+        {
+            if (t.isDead)
+            {
+                t.OnDieInBattle(skillUser);
+                skillUser.OnKillEnemy(t);
+            }
+        }
+    }
+
+    public void SkillHealDirect(CharacterBase skillUser, int figure, List<CharacterBase> target)// 기타 스킬(추가타 등)
+    {
+        foreach (CharacterBase victim in target)
+        {
+            //------
+            //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
+            //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
+            //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
+            //다른 클라이언트는 서버가 준 데미지를 받아옴
+            BattleKeyWords.Damage damage = CheckSkillHealDamage(skillUser, figure);
+            //------
+
+            victim.OnTakeHeal(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
+
+            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+        }
+
+        foreach (var t in target)
+        {
+            if (t.isDead)
+            {
+                t.OnDieInBattle(skillUser);
+                skillUser.OnKillEnemy(t);
+            }
         }
     }
 

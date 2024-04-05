@@ -112,7 +112,21 @@ public class CharacterBuf
 
     }
 
-    public virtual void OnTakeDamage(CharacterBase character)
+    public virtual void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
+    {
+
+    }
+
+    public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null, 
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, 
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입을 때
+    {
+
+    }
+
+    public virtual void OnTakeHeal(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 힐을 받을 때
     {
 
     }

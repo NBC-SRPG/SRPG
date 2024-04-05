@@ -364,18 +364,25 @@ public class BattleUI : UIBase
 
         obj.gameObject.SetActive(true);
 
-        obj.transform.position = new Vector2(transform.position.x, transform.position.y + 5f);
+        obj.transform.position = new Vector2(transform.position.x, transform.position.y + 2.5f);
+
         text.gameObject.layer = transform.gameObject.layer;
         obj.transform.localScale = transform.localScale.magnitude > 2f ?  transform.localScale / 2.5f : obj.transform.localScale;
 
         return text;
     }
 
-    public void ShowDamageText(int damage, Transform transform, bool isHeal = false)
+    public void ShowDamageText(BattleKeyWords.Damage damage, Transform transform, bool isHeal = false)
     {
         TextMeshPro text = ShowText(transform);
 
-        text.text = damage.ToString();
+        text.text = damage.damage.ToString();
+
+        if (damage.isCriticalHit)
+        {
+            //---
+        }
+
         if (isHeal)
         {
             text.color = Color.green;

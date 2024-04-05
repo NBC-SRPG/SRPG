@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class BattleKeyWords
 {
+    public struct Damage// 치명타 피해 판정을 체크하기 위한 데미지 구조체
+    {
+        public int damage;
+        public bool isCriticalHit;
+    }
+
+    public enum AttackDamageType
+    {
+        None,
+        Attack,
+        Skill,
+        Buf,
+        Passive
+    }
+
     public enum BufType
     {
         Positive,
@@ -12,6 +27,7 @@ public class BattleKeyWords
 
     public enum BufKeyword
     {
+        None,
         Burn,
         Bleed,
         Poison,

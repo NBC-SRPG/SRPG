@@ -410,9 +410,9 @@ public class CharacterBase : MonoBehaviour
         Managers.BattleManager.Attack(this, target);
     }
 
-    public void TakeAttacked(CharacterBase enemy)// 공격 대상이 되었을 때
+    public void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
     {
-        curCharacterPassive?.OnTakeAttacked(enemy);
+        curCharacterPassive?.AfterTakeAttacked(enemy);
     }
 
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
@@ -460,12 +460,11 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void OnTakeDamage(int damage, CharacterBase enemy)// 공격 받았을 때
+    public void OnTakeAttack(CharacterBase enemy)// 공격 당할 때
     {
-        curCharacterPassive?.OnTakeDamage(enemy);
-        curCharacterBufList?.OnTakeDamage(enemy);
+        curCharacterPassive?.OnTakeAttack(enemy);
+        curCharacterBufList?.OnTakeAttack(enemy);
 
-        health.TakeDamage(damage);
     }
 
     private void GetAttackTarget()// 공격 타겟 가져오기
@@ -478,6 +477,69 @@ public class CharacterBase : MonoBehaviour
         {
             targets.Add(scale.curStandingCharater);
         }
+    }
+
+    //---------------------------------------------------------------------------
+    // 데미지 관련
+
+    public void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 공격 받았을 때
+    {
+        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 각각 넣어주세요)
+        //{
+        //}
+
+        curCharacterPassive?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+
+        damage.damage = -damage.damage;
+
+        health.ChangeHealth(damage);
+    }
+
+    public void TakeDamageByInt(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// int만 받아 데미지(주로 버프효과에 의해)
+    {
+        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
+        //{
+        //}
+
+        curCharacterPassive?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+
+        damage = -damage;
+
+        health.ChangeHealthByInt(damage);
+    }
+
+    public void OnTakeHeal(ref BattleKeyWords.Damage heal, CharacterBase skillUser,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 회복 받았을 때
+    {
+        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
+        //{
+        //}
+
+        curCharacterPassive?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
+
+        health.ChangeHealth(heal);
+    }
+
+    public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// int만 받아 힐(주로 버프효과에 의해)
+    {
+        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
+        //{
+        //}
+
+        curCharacterPassive?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
+
+        health.ChangeHealthByInt(heal);
     }
 
     //---------------------------------------------------------------------------
@@ -565,6 +627,11 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 캐릭터 사망 시
+
+    public void OnKillEnemy(CharacterBase target, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
+    {
+        curCharacterPassive?.OnKillEnemy(target, characterAttribute);
+    }
 
     private void CharacterDie()// 캐릭터 사망
     {

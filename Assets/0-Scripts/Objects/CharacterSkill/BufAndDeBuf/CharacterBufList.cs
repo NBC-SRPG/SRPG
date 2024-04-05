@@ -12,17 +12,21 @@ public class CharacterBufList
     public List<CharacterBuf> bufList;
     private List<CharacterBuf> removeList;
 
+    private List<CharacterBuf> bufs;
+
     public CharacterBufList(CharacterBase character)
     {
         this.character = character;
         bufList = new List<CharacterBuf>();
         removeList = new List<CharacterBuf>();
+
+        bufs = new List<CharacterBuf>();
     }
 
     //-------------------------------------------------------------------------------------------------------------------
     // 버프 컨트롤
 
-    public void AddBuf(BattleKeyWords.BufKeyword key, int stack, CharacterBase buffer = null)
+    public void AddBuf(BattleKeyWords.BufKeyword key, int stack, CharacterBase buffer = null, int power = 0)
     {
         CharacterBuf buf;
 
@@ -63,6 +67,11 @@ public class CharacterBufList
 
         if (buf != null)//리스트에 버프가 있다면, 스택 증가
         {
+            if(power != 0)
+            {
+                buf.power += power;
+            }
+
             if (buf.isPermanent)// 영구 지속 버프라면 스택을 99로 고정
             {
                 buf.stack = 99;
@@ -93,7 +102,15 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindPositiveBufAll(bool forDestroy = false)// 모든 긍정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if(buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
 
         if (forDestroy)// 디버프 파괴용이라면
         {
@@ -105,7 +122,15 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindPositiveBuf(int number, bool forDestroy = false)// 긍정적 버프 특정 갯수 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
 
         if (forDestroy)// 디버프 파괴용이라면
         {
@@ -118,7 +143,16 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindPositiveBufRandom(int number, bool forDestroy = false)// 무작위 긍정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
+
         List<CharacterBuf> randomBufs = new List<CharacterBuf>();
 
         if (forDestroy)// 디버프 파괴용이라면
@@ -142,7 +176,15 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindNegativeBufAll(bool forDestroy = false)// 모든 부정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
 
         if (forDestroy)// 디버프 파괴용이라면
         {
@@ -154,7 +196,15 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindNegativeBuf(int number, bool forDestroy = false)// 부정적 버프 특정 갯수 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
 
         if (forDestroy)// 디버프 파괴용이라면
         {
@@ -168,7 +218,15 @@ public class CharacterBufList
 
     public List<CharacterBuf> FindNegativeBufRandom(int number, bool forDestroy = false)// 무작위 부정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
         List<CharacterBuf> randomBufs = new List<CharacterBuf>();
 
         if (forDestroy)// 디버프 파괴용이라면
@@ -384,13 +442,39 @@ public class CharacterBufList
         }
     }
 
-    public void OnTakeDamage(CharacterBase character)
+    public void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
     {
         foreach (CharacterBuf buf in bufList)
         {
             if (buf != null && !buf.IsDestroyed)
             {
-                buf.OnTakeDamage(character);
+                buf.OnTakeAttack(enemy);
+            }
+        }
+    }
+
+    public void OnTakeDamage(ref int damage, CharacterBase character = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입을 때
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnTakeDamage(ref damage, character, damageType, characterAttribute);
+            }
+        }
+    }
+
+    public void OnTakeHeal(ref int damage, CharacterBase character = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 힐을 받을 때
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnTakeHeal(ref damage, character, damageType, characterAttribute);
             }
         }
     }

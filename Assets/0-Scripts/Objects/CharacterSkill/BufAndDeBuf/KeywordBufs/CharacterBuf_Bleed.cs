@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static BattleKeyWords;
 
 public class CharacterBuf_Bleed : CharacterBuf
 {
@@ -21,7 +22,7 @@ public class CharacterBuf_Bleed : CharacterBuf
     {
         base.OnEndActing();
 
-        character.health.TakeDamage(stack);
+        character.TakeDamageByInt(ref stack, null, BattleKeyWords.AttackDamageType.Buf);
 
         stack /= 2;
 

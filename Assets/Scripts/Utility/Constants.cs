@@ -16,6 +16,7 @@ public class Constants
 
     public enum CharacterAttribute
     {
+        None,
         Fire,
         Water,
         Grass,
@@ -26,6 +27,7 @@ public class Constants
 
     public enum Belonging
     {
+        None,
         Demon,
         League,
         Order,
