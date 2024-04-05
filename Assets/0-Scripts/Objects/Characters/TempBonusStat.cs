@@ -23,6 +23,19 @@ public class TempBonusStat
         return stat;
     }
 
+    public BonusStat FindBonusStat(BonusStat stat)
+    {
+        foreach(BonusStat bonusStat in statList)
+        {
+            if( bonusStat == stat)
+            {
+                return bonusStat;
+            }
+        }
+
+        return null;
+    }
+
     public void AddBonusStat(BonusStat bonusStat)
     {
         statList.Add(bonusStat);

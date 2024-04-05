@@ -486,42 +486,40 @@ public class CharacterBase : MonoBehaviour
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 공격 받았을 때
     {
-        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 각각 넣어주세요)
-        //{
-        //}
-
-        curCharacterPassive?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
-        curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+        if (damageType != BattleKeyWords.AttackDamageType.Extra)// 추가 피해가 아닌 경우에만 발동
+        {
+            curCharacterPassive?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+            curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+        }
 
         damage.damage = -damage.damage;
 
         health.ChangeHealth(damage);
+
+        AfterTakeDamage(damage.damage, enemy, damageType, characterAttribute);
     }
 
     public void TakeDamageByInt(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// int만 받아 데미지(주로 버프효과에 의해)
     {
-        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
-        //{
-        //}
-
-        curCharacterPassive?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
-        curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+        if (damageType != BattleKeyWords.AttackDamageType.Extra)
+        {
+            curCharacterPassive?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+            curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+        }
 
         damage = -damage;
 
         health.ChangeHealthByInt(damage);
+
+        AfterTakeDamage(damage, enemy, damageType, characterAttribute);
     }
 
     public void OnTakeHeal(ref BattleKeyWords.Damage heal, CharacterBase skillUser,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 회복 받았을 때
     {
-        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
-        //{
-        //}
-
         curCharacterPassive?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
         curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
 
@@ -532,14 +530,18 @@ public class CharacterBase : MonoBehaviour
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// int만 받아 힐(주로 버프효과에 의해)
     {
-        //if (damageType != BattleKeyWords.AttackDamageType.Buf)// 버프효과로 인한 피해가 아니면 패시브 발동(이 부분은 나중에 캐릭터 패시브와 특성에 따라서 각각 넣어주세요)
-        //{
-        //}
-
         curCharacterPassive?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
-
+        
         health.ChangeHealthByInt(heal);
+    }
+
+    public void AfterTakeDamage(int damage, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입은 이후에
+    {
+        curCharacterPassive?.AfterTakeDamage(damage, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.AfterTakeDamage(damage, skillUser, damageType, characterAttribute);
     }
 
     //---------------------------------------------------------------------------
