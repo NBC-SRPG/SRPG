@@ -576,6 +576,18 @@ public class AnimationController : MonoBehaviour
         }
     }
 
+    public bool IsWalkingAnimation()
+    {
+        if (isWalkPlaying)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void StitchAnimation(Action action)
     {
         Debug.Log("Stitched");

@@ -52,7 +52,6 @@ public class EnemyController : MonoBehaviour
         }
 
         player.isReady = true;
-        Managers.BattleManager.GetReady();
     }
 
     private void GetPlayerTurn()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class PassiveAbilityBase
 {
@@ -71,12 +72,26 @@ public class PassiveAbilityBase
 
     }
 
-    public virtual void OnTakeAttacked(CharacterBase enemy)// 공격 타겟이 되었을 때
+    public virtual void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
     {
 
     }
 
-    public virtual void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
+    public virtual void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
+    {
+
+    }
+
+    public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입을 때
+    {
+
+    }
+
+    public virtual void OnTakeHeal(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 힐을 받을 때
     {
 
     }
@@ -102,6 +117,11 @@ public class PassiveAbilityBase
     }
 
     public virtual void OnTurnEnd()// 턴이 끝날 때
+    {
+
+    }
+
+    public virtual void OnKillEnemy(CharacterBase enemy, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 적 처치 시
     {
 
     }
@@ -156,21 +176,50 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
     {
         base.OnPassAlly(allyCharacter);
 
-        allyCharacter.health.HealHealth(10);
+        int n = 10;
+
+        allyCharacter.TakeHealByInt(ref n, character, BattleKeyWords.AttackDamageType.Passive);
     }
 
-    public override void OnUpdate()// 캐릭터 주변 아군에게 공격력 버프를 걸어주는 오라 테스트
-    {
-        base.OnUpdate();
+    //public override void OnTakeDamage(ref int damage, CharacterBase enemy = null)// 데미지 참조 테스트
+    //{
+    //    base.OnTakeDamage(ref damage, enemy);
 
-        foreach(OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 3, false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+    //    if (damage == 1)
+    //    {
+    //        damage = 5;
+    //    }
+    //}
+
+    /// <summary>
+    /// // 데미지 반전 테스트
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="enemy"></param>
+    /// <param name="damageType"></param>
+    /// <param name="characterAttribute"></param>
+    public override void OnTakeHeal(ref int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
+    {
+        base.OnTakeHeal(ref damage, enemy, damageType, characterAttribute);
+
+        if(damageType == BattleKeyWords.AttackDamageType.Passive)
         {
-            if(tile.curStandingCharater.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.AtkAura, character) == null && tile.curStandingCharater != character)
-            {
-                tile.curStandingCharater.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.AtkAura, 2, character);
-            }
+            damage = -damage;
         }
     }
+
+    //public override void OnUpdate()// 캐릭터 주변 아군에게 공격력 버프를 걸어주는 오라 테스트
+    //{
+    //    base.OnUpdate();
+
+    //    foreach(OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 3, false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+    //    {
+    //        if(tile.curStandingCharater.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.AtkAura, character) == null && tile.curStandingCharater != character)
+    //        {
+    //            tile.curStandingCharater.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.AtkAura, 2, character);
+    //        }
+    //    }
+    //}
 
     //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
     //public override void OnStartAttack(CharacterBase enemy)

@@ -30,7 +30,7 @@ public class CharAnimBase : MonoBehaviour
     public int Die { get; private set; }
     public int defend { get; private set; }
 
-    protected Queue<int> damages;
+    protected Queue<BattleKeyWords.Damage> damages;
 
     public void Init(CharacterBase thisCharacter)
     {
@@ -50,7 +50,7 @@ public class CharAnimBase : MonoBehaviour
         rb = GetComponentInParent<Rigidbody2D>();
         particles = GetComponent<Particles>();
 
-        damages = new Queue<int>();
+        damages = new Queue<BattleKeyWords.Damage>();
     }
 
     public void DeActivate()
@@ -63,16 +63,18 @@ public class CharAnimBase : MonoBehaviour
         sprite.color = color;
     }
 
-    public void SetDamage(int damage)
+    public void SetDamage(BattleKeyWords.Damage damage)
     {
         damages.Enqueue(damage);
     }
 
     public virtual void ShowDamage()
     {
-        int damage = damages.Dequeue();
-
-        Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent);
+        if (damages.Count > 0)
+        {
+            BattleKeyWords.Damage damage = damages.Dequeue();
+            Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
+        }
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)

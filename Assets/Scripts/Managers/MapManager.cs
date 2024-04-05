@@ -18,10 +18,14 @@ public class MapManager
 
     public event Action OnCompleteMove;
 
+    List<OverlayTile> surroundingTiles;
+
     public void Init()// 모든 타일 초기화
     {
         map.Clear();
         startTiles.Clear();
+
+        surroundingTiles = new List<OverlayTile>();
     }
 
     public void CompleteMove()// 이동 완료 시 이벤트
@@ -31,7 +35,7 @@ public class MapManager
 
     public List<OverlayTile> GetSurroundingTiles(Vector2Int originTile, bool clickable = false)//4 방향 타일 가져오기
     {
-        List<OverlayTile> surroundingTiles = new List<OverlayTile>();
+        surroundingTiles.Clear();
         Vector2Int TileToCheck;
 
         for (int i = 0; i < 4; i++)
@@ -58,7 +62,7 @@ public class MapManager
 
     public List<OverlayTile> GetSurroundingAllTiles(Vector2Int originTile, bool clickable = false)//8 방향 타일 가져오기
     {
-        List<OverlayTile> surroundingTiles = new List<OverlayTile>();
+        surroundingTiles.Clear();
         Vector2Int TileToCheck;
 
         for (int i = 0; i < direction.Length; i++)
