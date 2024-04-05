@@ -16,7 +16,8 @@ public class BattleKeyWords
         Attack,
         Skill,
         Buf,
-        Passive
+        Passive,
+        Extra
     }
 
     public enum BufType

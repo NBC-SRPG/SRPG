@@ -96,6 +96,13 @@ public class PassiveAbilityBase
 
     }
 
+    public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 받은 이후에
+    {
+
+    }
+
     public virtual void OnStartMoving()// 이동 시
     {
 
@@ -164,13 +171,13 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
     //    }
     //}
 
-    //public override void OnAttackSuccess(CharacterBase enemy, int damage)
-    //{
-    //    base.OnAttackSuccess(enemy, damage);
+    public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    {
+        base.OnAttackSuccess(enemy, damage);
 
-    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
-    //    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
-    //}
+        enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+        //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
+    }
 
     public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
     {
@@ -198,30 +205,49 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
     /// <param name="enemy"></param>
     /// <param name="damageType"></param>
     /// <param name="characterAttribute"></param>
-    public override void OnTakeHeal(ref int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
-    {
-        base.OnTakeHeal(ref damage, enemy, damageType, characterAttribute);
+    //public override void OnTakeHeal(ref int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
+    //{
+    //    base.OnTakeHeal(ref damage, enemy, damageType, characterAttribute);
 
-        if(damageType == BattleKeyWords.AttackDamageType.Passive)
-        {
-            damage = -damage;
-        }
-    }
+    //    if (damageType == BattleKeyWords.AttackDamageType.Passive)
+    //    {
+    //        damage = -damage;
+    //    }
+    //}
 
     //public override void OnUpdate()// 캐릭터 주변 아군에게 공격력 버프를 걸어주는 오라 테스트
     //{
     //    base.OnUpdate();
 
-    //    foreach(OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 3, false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+    //    foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 3, false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
     //    {
-    //        if(tile.curStandingCharater.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.AtkAura, character) == null && tile.curStandingCharater != character)
+    //        if (tile.curStandingCharater.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.AtkAura, character) == null && tile.curStandingCharater != character)
     //        {
     //            tile.curStandingCharater.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.AtkAura, 2, character);
     //        }
     //    }
     //}
 
-    //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+    BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+
+    //public override void OnUpdate()// 체력이 풀피일 때, 공격력이 증가하는 패시브 테스트
+    //{
+    //    base.OnUpdate();
+
+    //    stat.ExtraAtk = 5;
+    //    if (character.health.CurHealth == character.health.MaxHealth)
+    //    {
+    //        if(character.tempBonusStat.FindBonusStat(stat) == null)
+    //        {
+    //            character.tempBonusStat.AddBonusStat(stat);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        character.tempBonusStat.RemoveBonusStat(stat);
+    //    }
+    //}
+
     //public override void OnStartAttack(CharacterBase enemy)
     //{
     //    base.OnStartAttack(enemy);
@@ -237,4 +263,20 @@ public class PassiveAbility_ : PassiveAbilityBase // 테스트용 (테스트 끝
 
     //    character.tempBonusStat.RemoveBonusStat(stat);
     //}
+
+    public override void OnTakeAttack(CharacterBase enemy)
+    {
+        base.OnTakeAttack(enemy);
+
+        stat.ExtraDefend = 10;
+
+        character.tempBonusStat.AddBonusStat(stat);
+    }
+
+    public override void AfterTakeDamage(int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
+    {
+        base.AfterTakeDamage(damage, enemy, damageType, characterAttribute);
+
+        character.tempBonusStat.RemoveBonusStat(stat);
+    }
 }

@@ -131,6 +131,13 @@ public class CharacterBuf
 
     }
 
+    public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 받은 이후에
+    {
+
+    }
+
     public virtual void OnUseSkill()
     {
 
