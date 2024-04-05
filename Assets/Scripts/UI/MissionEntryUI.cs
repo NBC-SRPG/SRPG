@@ -109,17 +109,17 @@ public class MissionEntryUI : UIBase
         GetImage((int)Images.ReceiveBackImage).gameObject.SetActive(false);
 
         // 진행 중인 미션
-        if (Managers.Mission.OngoingMissions.ContainsKey(missionId))
+        if (Managers.AccountData.ongoingMissions.ContainsKey(missionId))
         {
             OngoingMissionInit();
         }
         // 완료 미션
-        else if (Managers.Mission.CompleteMissions.Contains(missionId))
+        else if (Managers.AccountData.completeMissions.Contains(missionId))
         {
             CompleteMissionInit();
         }
         // 수령 미션
-        else if (Managers.Mission.ReceiveMissions.Contains(missionId))
+        else if (Managers.AccountData.receiveMissions.Contains(missionId))
         {
             ReceiveMissionInit();
         }
@@ -142,7 +142,7 @@ public class MissionEntryUI : UIBase
     // 진행 미션 초기화
     private void OngoingMissionInit()
     {
-        Mission mission = Managers.Mission.OngoingMissions[missionId];
+        Mission mission = Managers.AccountData.ongoingMissions[missionId];
 
         GetText((int)Texts.MissionProgressText).text = $"{mission.MissionProgress} / {missionData.count}";
         GetImage((int)Images.MissionFrontProgressImage).fillAmount = (float)mission.MissionProgress/ missionData.count;
@@ -176,7 +176,7 @@ public class MissionEntryUI : UIBase
         // 업데이트 된 미션 id와 같은 id를 가졌을 때만 업데이트
         if (missionId == updateMissionId)
         {
-            Mission mission = Managers.Mission.OngoingMissions[updateMissionId];
+            Mission mission = Managers.AccountData.ongoingMissions[updateMissionId];
 
             GetText((int)Texts.MissionProgressText).text = $"{mission.MissionProgress} / {missionData.count}";
             GetImage((int)Images.MissionFrontProgressImage).fillAmount = (float)mission.MissionProgress / missionData.count;

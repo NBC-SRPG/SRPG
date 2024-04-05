@@ -194,7 +194,7 @@ public class MissionUI : UIBase
         }
 
         // 완료 미션
-        foreach (var completeMissionId in Managers.Mission.CompleteMissions)
+        foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             GameObject go = Managers.Resource.Instantiate(
                 Managers.Resource.Load<GameObject>("Prefabs/UI/MissionEntryUI"),
@@ -203,7 +203,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(completeMissionId);
         }
         // 진행 중인 미션 생성
-        foreach (var ongoingMissionId in Managers.Mission.OngoingMissions.Keys)
+        foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             GameObject go = Managers.Resource.Instantiate(
                 Managers.Resource.Load<GameObject>("Prefabs/UI/MissionEntryUI"),
@@ -212,7 +212,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(ongoingMissionId);
         }
         // 수령 미션
-        foreach (var receiveMissionId in Managers.Mission.ReceiveMissions)
+        foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             GameObject go = Managers.Resource.Instantiate(
                 Managers.Resource.Load<GameObject>("Prefabs/UI/MissionEntryUI"),
@@ -228,7 +228,7 @@ public class MissionUI : UIBase
             Destroy(child.gameObject);
         }
         // 완료 미션
-        foreach (var completeMissionId in Managers.Mission.CompleteMissions)
+        foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 일일 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Daily )
@@ -243,7 +243,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(completeMissionId);
         }
         // 진행 중인 미션 생성
-        foreach (var ongoingMissionId in Managers.Mission.OngoingMissions.Keys)
+        foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 일일 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Daily)
@@ -258,7 +258,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(ongoingMissionId);
         }
         // 수령 미션
-        foreach (var receiveMissionId in Managers.Mission.ReceiveMissions)
+        foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 일일 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Daily)
@@ -280,7 +280,7 @@ public class MissionUI : UIBase
             Destroy(child.gameObject);
         }
         // 완료 미션
-        foreach (var completeMissionId in Managers.Mission.CompleteMissions)
+        foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 주간 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Weekly)
@@ -295,7 +295,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(completeMissionId);
         }
         // 진행 중인 미션 생성
-        foreach (var ongoingMissionId in Managers.Mission.OngoingMissions.Keys)
+        foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 주간 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Weekly)
@@ -310,7 +310,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(ongoingMissionId);
         }
         // 수령 미션
-        foreach (var receiveMissionId in Managers.Mission.ReceiveMissions)
+        foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 주간 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Weekly)
@@ -332,7 +332,7 @@ public class MissionUI : UIBase
             Destroy(child.gameObject);
         }
         // 완료 미션
-        foreach (var completeMissionId in Managers.Mission.CompleteMissions)
+        foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 업적이 아니라면 통과
             if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Achievement)
@@ -347,7 +347,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(completeMissionId);
         }
         // 진행 중인 미션 생성
-        foreach (var ongoingMissionId in Managers.Mission.OngoingMissions.Keys)
+        foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 업적이 아니라면 통과
             if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Achievement)
@@ -362,7 +362,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(ongoingMissionId);
         }
         // 수령 미션
-        foreach (var receiveMissionId in Managers.Mission.ReceiveMissions)
+        foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 업적이 아니라면 통과
             if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Achievement)
@@ -384,7 +384,7 @@ public class MissionUI : UIBase
             Destroy(child.gameObject);
         }
         // 완료 미션
-        foreach (var completeMissionId in Managers.Mission.CompleteMissions)
+        foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 초보자 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Beginner)
@@ -399,7 +399,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(completeMissionId);
         }
         // 진행 중인 미션 생성
-        foreach (var ongoingMissionId in Managers.Mission.OngoingMissions.Keys)
+        foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 초보자 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Beginner)
@@ -414,7 +414,7 @@ public class MissionUI : UIBase
             go.GetComponent<MissionEntryUI>().Init(ongoingMissionId);
         }
         // 수령 미션
-        foreach (var receiveMissionId in Managers.Mission.ReceiveMissions)
+        foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 초보자 미션이 아니라면 통과
             if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Beginner)
@@ -527,7 +527,7 @@ public class MissionUI : UIBase
                 {
                     int missionId = child.GetComponent<MissionEntryUI>().missionId;
                     // 완료 한 미션이 아니라면 continue
-                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    if (Managers.AccountData.completeMissions.Contains(missionId) == false)
                     {
                         continue;
                     }
@@ -558,7 +558,7 @@ public class MissionUI : UIBase
                 {
                     int missionId = child.GetComponent<MissionEntryUI>().missionId;
                     // 완료 한 미션이 아니라면 continue
-                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    if (Managers.AccountData.completeMissions.Contains(missionId) == false)
                     {
                         continue;
                     }
@@ -589,7 +589,7 @@ public class MissionUI : UIBase
                 {
                     int missionId = child.GetComponent<MissionEntryUI>().missionId;
                     // 완료 한 미션이 아니라면 continue
-                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    if (Managers.AccountData.completeMissions.Contains(missionId) == false)
                     {
                         continue;
                     }
@@ -620,7 +620,7 @@ public class MissionUI : UIBase
                 {
                     int missionId = child.GetComponent<MissionEntryUI>().missionId;
                     // 완료 한 미션이 아니라면 continue
-                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    if (Managers.AccountData.completeMissions.Contains(missionId) == false)
                     {
                         continue;
                     }
@@ -651,7 +651,7 @@ public class MissionUI : UIBase
                 {
                     int missionId = child.GetComponent<MissionEntryUI>().missionId;
                     // 완료 한 미션이 아니라면 continue
-                    if (Managers.Mission.CompleteMissions.Contains(missionId) == false)
+                    if (Managers.AccountData.completeMissions.Contains(missionId) == false)
                     {
                         continue;
                     }
