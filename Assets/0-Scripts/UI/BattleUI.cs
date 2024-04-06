@@ -387,6 +387,10 @@ public class BattleUI : UIBase
         {
             text.color = Color.green;
         }
+        else
+        {
+            text.color = Color.white;
+        }
     }
 
 

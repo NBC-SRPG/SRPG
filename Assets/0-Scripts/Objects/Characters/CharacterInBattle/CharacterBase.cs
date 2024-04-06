@@ -33,6 +33,7 @@ public class CharacterBase : MonoBehaviour
 
     [HideInInspector] public bool canSkill;
     [HideInInspector] public bool canActing;
+    [HideInInspector] public bool canMoveSkil;
 
     [HideInInspector] public bool hasAnimationBeforDIe = false;
 
@@ -206,8 +207,10 @@ public class CharacterBase : MonoBehaviour
 
             if (movePath[i].curStandingCharater != null)
             {
+                Debug.Log(pathedTiles.Count);
                 target = movePath[i].curStandingCharater;
                 Managers.BattleManager.OnPassCharacter(this, target);
+                Debug.Log(pathedTiles.Count);
             }
 
             if (isDead)
@@ -221,6 +224,7 @@ public class CharacterBase : MonoBehaviour
 
         MoveTile(curStandingTile);
 
+        Debug.Log(pathedTiles.Count);
         OnEndMoving();
 
         if (isDead)
@@ -233,19 +237,22 @@ public class CharacterBase : MonoBehaviour
 
     public void BlockMoving()//이동 막힘
     {
-        movePath.Clear();
-
-        OverlayTile prevTile = pathedTiles.First();
-
-        foreach(OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
+        if (pathedTiles.Count > 0)
         {
-            if(tile.curStandingCharater == null || tile.curStandingCharater == this)
+            movePath.Clear();
+
+            OverlayTile prevTile = pathedTiles.First();
+
+            foreach (OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
             {
-                curStandingTile = tile;
+                if (tile.curStandingCharater == null || tile.curStandingCharater == this)
+                {
+                    curStandingTile = tile;
 
-                AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
+                    AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
 
-                break;
+                    break;
+                }
             }
         }
     }
@@ -274,6 +281,7 @@ public class CharacterBase : MonoBehaviour
         didWalk = false;
 
         canActing = true;
+        canMoveSkil = true;
 
         ActivateSkill();
 

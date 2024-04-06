@@ -110,7 +110,7 @@ public class BattleManager
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        int damage = (attacker.Attack * figure) - victim.Defend;// 임시 데미지 계산식
+        int damage = figure - victim.Defend;// 임시 데미지 계산식
 
         if (damage < 0)
         {
@@ -324,7 +324,7 @@ public class BattleManager
         AnimationController.instance.StartAnimationQueue();
     }
 
-    public void SkillAttack(CharacterBase skillUser, List<CharacterBase> target)// 스킬 공격
+    public void EXSkillAttack(CharacterBase skillUser, List<CharacterBase> target)// 스킬 공격
     {
         foreach (CharacterBase victim in target)
         {
@@ -352,7 +352,7 @@ public class BattleManager
 
     }
 
-    public void SkillHeal(CharacterBase skillUser, List<CharacterBase> target)// 힐
+    public void EXSkillHeal(CharacterBase skillUser, List<CharacterBase> target)// 힐
     {
         foreach (CharacterBase victim in target)
         {
@@ -361,7 +361,7 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser ,skillUser.curCharacterSkill.SkillFigure);
+            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser , skillUser.curCharacterSkill.SkillFigure);
             //------
 
             victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);

@@ -157,10 +157,10 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
     {
         base.OnEnemyPassesMe(enemy);
 
-        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
-        character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
+        //AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        //character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
 
-        enemy.BlockMoving();//ZOC 테스트 
+        //enemy.BlockMoving();//ZOC 테스트 
     }
 
     //public override void OnTakeAttacked(CharacterBase enemy)// 반격 테스트
@@ -177,8 +177,10 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
     {
         base.OnAttackSuccess(enemy, damage);
 
-        enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+        //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
         //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
+        //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bind, 1, character);// 상태이상 속박 테스트
+        //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, 1, character);// 상태이상 기절 테스트
     }
 
     public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트
@@ -230,16 +232,19 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
     //    }
     //}
 
-    BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
+    //BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
 
-    //public override void OnUpdate()// 체력이 풀피일 때, 공격력이 증가하는 패시브 테스트
+    /// <summary>
+    /// 체력이 풀피일 때, 공격력이 증가하는 패시브 테스트
+    /// </summary>
+    //public override void OnUpdate()
     //{
     //    base.OnUpdate();
 
     //    stat.ExtraAtk = 5;
     //    if (character.health.CurHealth == character.health.MaxHealth)
     //    {
-    //        if(character.tempBonusStat.FindBonusStat(stat) == null)
+    //        if (character.tempBonusStat.FindBonusStat(stat) == null)
     //        {
     //            character.tempBonusStat.AddBonusStat(stat);
     //        }
@@ -249,7 +254,12 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
     //        character.tempBonusStat.RemoveBonusStat(stat);
     //    }
     //}
+    ///
 
+    /// <summary>
+    /// 공격 시 공격력 증가 테스트
+    /// </summary>
+    /// <param name="enemy"></param>
     //public override void OnStartAttack(CharacterBase enemy)
     //{
     //    base.OnStartAttack(enemy);
@@ -332,20 +342,26 @@ public class PassiveAbility_102 : PassiveSkillBase // 테스트용
 
     //    character.tempBonusStat.RemoveBonusStat(stat);
     //}
+    ///
 
-    public override void OnTakeAttack(CharacterBase enemy)
-    {
-        base.OnTakeAttack(enemy);
+    /// <summary>
+    /// 공격 받을 때 방어력 증가 테스트
+    /// </summary>
+    /// <param name="enemy"></param>
+    //public override void OnTakeAttack(CharacterBase enemy)
+    //{
+    //    base.OnTakeAttack(enemy);
 
-        stat.ExtraDefend = 10;
+    //    stat.ExtraDefend = 10;
 
-        character.tempBonusStat.AddBonusStat(stat);
-    }
+    //    character.tempBonusStat.AddBonusStat(stat);
+    //}
 
-    public override void AfterTakeDamage(int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
-    {
-        base.AfterTakeDamage(damage, enemy, damageType, characterAttribute);
+    //public override void AfterTakeDamage(int damage, CharacterBase enemy = null, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)
+    //{
+    //    base.AfterTakeDamage(damage, enemy, damageType, characterAttribute);
 
-        character.tempBonusStat.RemoveBonusStat(stat);
-    }
+    //    character.tempBonusStat.RemoveBonusStat(stat);
+    //}
+    ///
 }

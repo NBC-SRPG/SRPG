@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBuf_Herald : CharacterBuf
+public class CharacterBuf_AtkIncrease : CharacterBuf
 {
-    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.Herald;
+    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.AtkIncrease;
 
     public override BattleKeyWords.BufType BufType { get; protected set; } = BattleKeyWords.BufType.Positive;
 
-    public override string Keyword { get; protected set; } = "Unique";
+    public override string Keyword { get; protected set; } = "AtkIncrease";
+
+    public override void Init(CharacterBase character, CharacterBase buffer)
+    {
+        base.Init(character, buffer);
+    }
 
     public override BonusStat GetAdditionalStat()
     {
         return new BonusStat
         {
-            ExtraDefend = character.character.def / 2,
-            ExtraMov = 2
+            ExtraAtk = power
         };
     }
 
@@ -30,4 +34,5 @@ public class CharacterBuf_Herald : CharacterBuf
 
         turnCnt++;
     }
+
 }
