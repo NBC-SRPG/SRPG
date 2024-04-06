@@ -146,14 +146,6 @@ public class Constants
         Robe //로브
     }
 
-    public enum Status
-    {
-        Atk,
-        Def,
-        Health,
-        Mov,
-    }
-
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
 }
