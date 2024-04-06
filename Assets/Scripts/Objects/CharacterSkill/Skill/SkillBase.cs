@@ -15,7 +15,7 @@ public class SkillBase
 
     public int SkillFigure
     {
-        get { return (int)(skillData.coefficient * character.character.Attack); }
+        get { return (int)(skillData.coefficient * character.Attack); }
     }
 
     //스킬 시전자 설정

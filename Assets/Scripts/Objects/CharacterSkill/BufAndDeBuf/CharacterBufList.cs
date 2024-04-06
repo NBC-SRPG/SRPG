@@ -38,7 +38,7 @@ public class CharacterBufList
 
         buf = bufList.Find(x => x.BufKeyword == key && x.Buffer == buffer && !x.IsDestroyed);
 
-        if (buf == null)// 없다면 새로 생성
+        if (buf == null || (buf != null && buf.cantStack))// 없다면 새로 생성
         {
             switch (key)
             {
@@ -48,11 +48,17 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.Bleed:
                     buf = new CharacterBuf_Bleed();
                     break;
+                case BattleKeyWords.BufKeyword.Bind:
+                    buf = new CharacterBuf_Bind();
+                    break;
+                case BattleKeyWords.BufKeyword.Stun:
+                    buf = new CharacterBuf_Stun();
+                    break;
 
                 case BattleKeyWords.BufKeyword.AtkAura:
                     buf = new CharacterBuf_AtkAura();
                     break;
-                case BattleKeyWords.BufKeyword.Test_UniqBuf:
+                case BattleKeyWords.BufKeyword.Herald:
                     buf = new CharacterBuf_Herald();
                     break;
             }
@@ -60,6 +66,24 @@ public class CharacterBufList
             if (buf != null)// 버프 생성 이후 리스트에 삽입
             {
                 buf.Init(character, buffer);
+
+                if (buf.cantStack)// 중첩 불가 버프의 경우
+                {
+                    CharacterBuf originBuf = FindBuf(key);// 기존의 존재하던 버프를 찾아서
+
+                    if (originBuf != null)
+                    {
+                        if (originBuf.stack <= stack)// 스택이 큰 쪽으로 덮어씌움
+                        {
+                            originBuf.DestoyBuf();
+                        }
+                        else
+                        {
+                            buf.DestoyBuf();
+                        }
+                    }
+                }
+
                 bufList.Add(buf);
                 buf.OnAddBuf();
             }
@@ -67,9 +91,12 @@ public class CharacterBufList
 
         if (buf != null)//리스트에 버프가 있다면, 스택 증가
         {
-            if(power != 0)
+            if(power != 0)// 위력 수치가 있다면
             {
-                buf.power += power;
+                if(buf.power < power)// 큰쪽으로 덮어씀
+                {
+                    buf.power = power;
+                }
             }
 
             if (buf.isPermanent)// 영구 지속 버프라면 스택을 99로 고정

@@ -50,22 +50,22 @@ public class SkillAbility_ : SkillAbilityBase // 테스트용(테스트 끝나�
 
         foreach(CharacterBase target2 in target)
         {
-            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Test_UniqBuf, 3, this.character);
+            target2.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Herald, 3, this.character);
         }
     }
 
-    public override void OnUpdate()// 스킬 타겟 위치에 적이 있다면, 스킬 사용 불가능하도록 테스트
-    {
-        base.OnUpdate();
+    //public override void OnUpdate()// 스킬 타겟 위치에 적이 있다면, 스킬 사용 불가능하도록 테스트
+    //{
+    //    base.OnUpdate();
 
-        if (character.skillScale.Count > 0 && character.skillScale[0].curStandingCharater != null)
-        {
-            character.DeActivateSkill();
-        }
-        else
-        {
-            character.ActivateSkill();
-        }
-    }
+    //    if (character.skillScale.Count > 0 && character.skillScale[0].curStandingCharater != null)
+    //    {
+    //        character.DeActivateSkill();
+    //    }
+    //    else
+    //    {
+    //        character.ActivateSkill();
+    //    }
+    //}
 
 }

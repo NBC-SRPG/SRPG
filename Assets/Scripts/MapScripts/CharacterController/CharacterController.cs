@@ -661,7 +661,7 @@ public class CharacterController : MonoBehaviour
     //이동 가능 위치 탐색
     private void GetPathTile()
     {
-        if (movePath.Count <= curSelectedCharacter.Mov && !curSelectedCharacter.didWalk)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
+        if (movePath.Count <= curSelectedCharacter.leftWalkRange && !curSelectedCharacter.didWalk)// 선택한 캐릭터의 걸음 횟수가 남아있다면 
         {
             surroundPath = pathFinder.MakePath(movePath[movePath.Count - 1], movePath);
 

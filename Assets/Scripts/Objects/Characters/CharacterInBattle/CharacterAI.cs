@@ -308,7 +308,7 @@ public class CharacterAI : CharacterBase
 
     public List<OverlayTile> FindCoverTile()
     {
-        int leftWalk = Mov + 1;
+        int leftWalk = leftWalkRange + 1;
 
         List<OverlayTile> list = rangeFinder.GetTilesInRange(ally.curStandingTile.grid2DLocation, 3, true);// 아군의 주위 타일 가져옴
 
@@ -321,7 +321,7 @@ public class CharacterAI : CharacterBase
 
         if (leftWalk <= 0)// 현재 경로가 이동 횟수를 넘어갔다면
         {
-            list = list.GetRange(0, Mov);// 이동 횟수에 맞게 경로 자르기
+            list = list.GetRange(0, leftWalkRange);// 이동 횟수에 맞게 경로 자르기
         }
 
         if (list.Count <= 1)// 이동 가능한 거리가 없다면, 움직이지 않음
@@ -331,7 +331,7 @@ public class CharacterAI : CharacterBase
 
         while (list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
         {
-            if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
+            if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
@@ -402,9 +402,9 @@ public class CharacterAI : CharacterBase
                 continue;
             }
 
-            int distance = pathFinder.FindPath(curTile, character.curStandingTile).Count;
+            int distance = pathFinder.FindPath(curTile, character.curStandingTile) != null ? pathFinder.FindPath(curTile, character.curStandingTile).Count : -1 ;
 
-            if ((distance < min || min == -1) && distance != 0)
+            if ((distance < min || min == -1) && distance != 0 && distance != -1)
             {
                 min = distance;
                 nearestCharacter = character;
@@ -446,7 +446,7 @@ public class CharacterAI : CharacterBase
 
         if (character.CharacterAttackType == Constants.AttackType.Melee)
         {
-            foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, Mov, true))
+            foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, leftWalkRange, true))
             {
                 if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
                 {
@@ -484,7 +484,7 @@ public class CharacterAI : CharacterBase
 
     public List<OverlayTile> FindMeleePath()// 근거리 캐릭터 이동 경로 찾기
     {
-        int leftWalk = Mov + 1;
+        int leftWalk = leftWalkRange + 1;
         List<CharacterBase> checkCharacter = new List<CharacterBase>();
 
         List<OverlayTile> list = new List<OverlayTile> { curStandingTile };
@@ -520,13 +520,13 @@ public class CharacterAI : CharacterBase
             }
             list.AddRange(anotherPath);//다음으로 가까운 적을 향해 이동
 
-            leftWalk = Mov + 1;
+            leftWalk = leftWalkRange + 1;
             leftWalk -= list.Count;
         }
 
         if(leftWalk <= 0)// 현재 경로가 이동 횟수를 넘어갔다면
         {
-            list = list.GetRange(0, Mov);// 이동 횟수에 맞게 경로 자르기
+            list = list.GetRange(0, leftWalkRange);// 이동 횟수에 맞게 경로 자르기
         }
 
         if(list.Count <= 1)// 이동 가능한 거리가 없다면, 움직이지 않음
@@ -536,7 +536,7 @@ public class CharacterAI : CharacterBase
 
         while(list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
         {
-            if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
+            if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
@@ -563,7 +563,7 @@ public class CharacterAI : CharacterBase
 
     public List<OverlayTile> FindRangePath()// 원거리 이동 경로 찾기
     {
-        int leftWalk = Mov + 1;
+        int leftWalk = leftWalkRange + 1;
 
         List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
         List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.characterData.atk_range - 1, false);
@@ -589,7 +589,7 @@ public class CharacterAI : CharacterBase
 
         if (leftWalk <= 0)// 현재 경로가 이동 횟수를 넘어갔다면
         {
-            list = list.GetRange(0, Mov);// 이동 횟수에 맞게 경로 자르기
+            list = list.GetRange(0, leftWalkRange);// 이동 횟수에 맞게 경로 자르기
         }
 
         if(list.Count == 0)

@@ -17,10 +17,13 @@ public class CharacterBuf
     public int stack;// 스택
     public int power;// 위력
 
+    protected int turnCnt = 0;// 내 다음 턴 까지 지속되야 할 때
+
     public CharacterBase Buffer { get; protected set; }// 버프 건 캐릭터
 
     public bool dontDestroy = false;// 외부 효과로 파괴되지 않는 경우
     public bool isPermanent = false;// 영구 지속 효과라면
+    public bool cantStack = false;// 중첩 불가 버프라면(같은 버프를 받을 때, 효과가 갱신됨)
 
     public virtual void Init(CharacterBase character, CharacterBase buffer)
     {
@@ -36,6 +39,21 @@ public class CharacterBuf
         return null;
     }
 
+    public virtual void DecreaseStack(int n)
+    {
+        if(n < 1)
+        {
+            n = 1;
+        }
+
+        stack -= n;
+
+        if (stack == 0)
+        {
+            DestoyBuf();
+        }
+    }
+
     public virtual void OnAddBuf()
     {
 
@@ -43,6 +61,8 @@ public class CharacterBuf
 
     public void DestoyBuf()
     {
+        OnDestroy();
+
         stack = 0;
         IsDestroyed = true;
     }

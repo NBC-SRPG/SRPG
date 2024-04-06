@@ -24,11 +24,6 @@ public class CharacterBuf_Bleed : CharacterBuf
 
         character.TakeDamageByInt(ref stack, null, BattleKeyWords.AttackDamageType.Buf);
 
-        stack /= 2;
-
-        if(stack <= 0)
-        {
-            DestoyBuf();
-        }
+        DecreaseStack(stack/2);
     }
 }

@@ -31,13 +31,15 @@ public class BattleKeyWords
         None,
         Burn,
         Bleed,
-        Poison,
-        Power,
-        Defend,
+        AtkIncrease,
+        DefIncrease,
         Quikness,
+        Bind,
+        Stun,
+        ReversalHeal,
 
         AtkAura,
-        Test_UniqBuf,
+        Herald,
 
     }
 }
