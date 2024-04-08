@@ -1,4 +1,5 @@
-using JetBrains.Annotations;
+using Firebase.Database;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,19 +8,44 @@ public class AccountData
     public Dictionary<string, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
-    public Dictionary<int, bool> missionClearData { get; set; }
-    public Dictionary<int, int> inventory { get; set; }  //인벤토리 = 아이템 데이터, 보유 갯수. //Todo : 아이템 DB 작업 완료 후 ItemData → int itemId로 바꾸고 메서드 수정하기.
+ 
+    //public Dictionary<int, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
     public Dictionary<int, string[]> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
+    public Dictionary<int, Mission> ongoingMissions { get; set; } = new(); // 진행중인 미션들
+
+    public HashSet<int> completeMissions { get; set; } = new(); // 완료 한 미션들
+
+    public HashSet<int> receiveMissions { get; set; } = new();// 보상 수령한 미션들
+
+    //public IReadOnlyDictionary<int, Mission> OngoingMissions => ongoingMissions;
+    //public IReadOnlyCollection<int> CompleteMissions => completeMissions;
+    //public IReadOnlyCollection<int> ReceiveMissions => receiveMissions;
+
+    private bool isInit = false;
+    private bool isOngoingMissionsLoaded = false;
+    private bool isCompleteMissionsLoaded = false;
+    private bool hasOngoingMissions = false;
+    private bool hasCompleteMissions = false;
+
+    /*
+    public void Init()
+    {
+        
+    }
+    */
+
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
         PlayerData playerData,
-        Dictionary<int, bool> missionClearData,
+        //List<int> ongoingMissions,
+        //List<int> completeMissions,
+        //List<int> receiveMissions,
         //Dictionary<int, int> inventory,
         Dictionary<int, string[]> friendData,
         Dictionary<int, FormationData> formationData,
@@ -29,101 +55,101 @@ public class AccountData
         this.stageClearData = stageClearData ?? new Dictionary<string, int>();
         this.characterData = characterData ?? new Dictionary<int, Character>();
         this.playerData = playerData ?? new PlayerData();
-        this.missionClearData = missionClearData ?? new Dictionary<int, bool>();
-        this.inventory = inventory ?? new Dictionary<int, int>();
+        //this.inventory = inventory ?? new Dictionary<int, int>();
         this.friendData = friendData ?? new Dictionary<int, string[]>();
         this.formationData = formationData ?? new Dictionary<int, FormationData>();
         this.mailBox = mailBox ?? new List<MailSO>();
+
+        if (isInit == true)
+        {
+            return;
+        }
+
+        isInit = true;
+
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("ongoingMissionsData"), OngoingMissionInit);
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("completeMissionsData"), CompleteMissionInit);
     }
 
-    // 임시 메소드: inventory에 아이템 추가
-    public bool AddItem(int itemId, int quantity)
+    private void OngoingMissionInit(DataSnapshot snapshot)
     {
-        // 이미 최대치에 도달한 경우 추가하지 않음
-        if (inventory.ContainsKey(itemId) && inventory[itemId] >= 999) //999를 아이템 DB 추가 후에 Item의 MaxReserve 값으로 바꿀 것
+        // 데이터가 존재하는지 확인
+        if (snapshot.Exists && snapshot.ChildrenCount > 0)
         {
-            Debug.LogWarning("아이템 갯수가 최대치입니다.");
-            return false;
-        }
-
-        // 최대치에 도달하지 않았을 경우 아이템을 추가
-        if (inventory.ContainsKey(itemId))
-        {
-            // 이미 아이템이 inventory에 있으면 수량을 증가시킴
-            inventory[itemId] += quantity;
-            return true;
-        }
-        else
-        {
-            // 아이템이 inventory에 없으면 새로 추가
-            inventory.Add(itemId, quantity);
-            return true;
-        }
-    }
-
-    // 임시 메소드: inventory에서 아이템 제거
-    public void RemoveItem(int itemId, int quantity)
-    {
-        if (inventory.ContainsKey(itemId))
-        {
-            // 해당 아이템이 inventory에 있으면 수량을 감소시킴
-            inventory[itemId] -= quantity;
-
-            // 만약 수량이 0 이하로 떨어졌을 경우 아이템을 제거함
-            if (inventory[itemId] <= 0)
+            // 데이터가 있다면 순회
+            foreach (DataSnapshot mission in snapshot.Children)
             {
-                inventory.Remove(itemId);
+                // 데이터의 키(미션Id)와 값(진행정도)으로 MissionStart를 메인쓰레드에서 실행 
+                MainThreadExecutor.ExecuteInMainThread(() => Managers.Mission.MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
+                Debug.Log(mission.Key + ":" + mission.Value);
             }
+            // 데이터가 있음을 체크
+            hasOngoingMissions = true;
         }
         else
         {
-            Debug.LogWarning("아이템이 인벤토리에 없습니다.");
+            // 데이터가 없으면 hasOngoingMissions은 false
+            hasOngoingMissions = false;
         }
+        // 진행 중 미션 초기화 완료
+        isOngoingMissionsLoaded = true;
+
+        CheckAndInitializeDefaultMissions();
     }
 
-    // 임시 메소드: inventory의 아이템을 출력
-    public void PrintInventory()
+    private void CompleteMissionInit(DataSnapshot snapshot)
     {
-        foreach (var item in inventory)
+        // 데이터가 존재하는지 확인
+        if (snapshot.Exists && snapshot.ChildrenCount > 0)
         {
-            //Debug.Log(item.Key.item_Id + " " + item.Key.itemName + ": " + item.Value); 
-        }
-    }
-
-    // 인벤토리에서 아이템을 사용할 때 보유량을 확인하고, 보유량이 충분하다면 그 갯수만큼 아이템 갯수를 차감하고, bool값을 반환하는 메서드
-    public bool UseItem(int itemId, int requiredQuantity)
-    {
-        if (inventory.ContainsKey(itemId))
-        {
-            if (inventory[itemId] >= requiredQuantity) // 아이템을 사용할 수 있는 경우
+            // 데이터가 있다면 순회
+            foreach (DataSnapshot mission in snapshot.Children)
             {
-                RemoveItem(itemId, requiredQuantity); //아이템 갯수만큼 차감
+                // 데이터의 키(미션Id)로 미션 시작, 진행 정도는 완료 미션이기 때문에 해당 미션의 count를 그대로 적용
+                MainThreadExecutor.ExecuteInMainThread(() => {
+                    Managers.Mission.MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count);
+                    // 바로 클리어 처리
+                    Managers.Mission.MissionClear(int.Parse(mission.Key));
 
-                return true; 
+                    // 데이터의 값이 true라면 보상 수령을 한 것
+                    if ((bool)mission.Value)
+                    {
+                        // 보상 수령 처리
+                        Managers.Mission.MissionReceive(int.Parse(mission.Key));
+                    }
+                });
+                Debug.Log(mission.Key + ":" + mission.Value);
             }
-            else
-            {
-                Debug.LogWarning("Insufficient quantity of " + itemId);
-                return false; // 아이템 보유량 부족
-            }
+            // 데이터가 있음을 체크
+            hasCompleteMissions = true;
         }
         else
         {
-            Debug.LogWarning(itemId + " is not in the inventory.");
-            return false; // 아이템이 인벤토리에 없음
+            // 데이터가 없으면 hasCompleteMissions은 false
+            hasCompleteMissions = false;
         }
+        // 완료 미션 초기화 완료
+        isCompleteMissionsLoaded = true;
+
+        CheckAndInitializeDefaultMissions();
     }
 
-    // 인벤토리에서 특정 아이템이 있는지 없는지, 있다면 몇개인지 리턴하는 메서드
-    public int GetItemQuantity(int itemId)
+    private void CheckAndInitializeDefaultMissions()
     {
-        if (inventory.ContainsKey(itemId))
+        // 두 데이터 로드가 모두 완료되었는지 확인
+        if (isOngoingMissionsLoaded && isCompleteMissionsLoaded)
         {
-            return inventory[itemId];
-        }
-        else
-        {
-            return 0; // 아이템이 인벤토리에 없으면 0을 반환
+            // 두 데이터가 모두 비어 있으면 기본 미션 설정
+            if (!hasOngoingMissions && !hasCompleteMissions)
+            {
+                MainThreadExecutor.ExecuteInMainThread(() =>
+                {
+                    // 기본 미션들을 설정
+                    Managers.Mission.MissionStart(90001000);
+                    Managers.Mission.MissionStart(90001001);
+                    Managers.Mission.MissionStart(90001002);
+                });
+            }
         }
     }
 }
