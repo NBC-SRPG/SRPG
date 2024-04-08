@@ -401,7 +401,7 @@ public class BattleUI : UIBase
         text.text = "반격";
     }
 
-    public void ShowDefendText(Transform transform)
+    public void ShowBlockText(Transform transform)
     {
         TextMeshPro text = ShowText(transform);
 

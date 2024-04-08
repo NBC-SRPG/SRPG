@@ -8,16 +8,17 @@ public class BattleKeyWords
     {
         public int damage;
         public bool isCriticalHit;
+        public AttackDamageType attackType;
     }
 
     public enum AttackDamageType
     {
         None,
-        Attack,
-        Skill,
-        Buf,
-        Passive,
-        Extra
+        Attack,// 기본 공격
+        Skill,// 스킬 공격
+        Buf,// 버프로 인한 데미지
+        Passive,// 패시브로 인한 데미지
+        Extra// 추가타
     }
 
     public enum BufType

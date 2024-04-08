@@ -49,7 +49,7 @@ public class PassiveSkillBase
 
     }
 
-    public virtual void OnAttackSuccess(CharacterBase enemy, int damage)// 공격 적중 시
+    public virtual void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
 
     }
@@ -64,7 +64,7 @@ public class PassiveSkillBase
 
     }
 
-    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 적중 시
+    public virtual void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
 
     }
@@ -173,7 +173,7 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
     //    }
     //}
 
-    public override void OnAttackSuccess(CharacterBase enemy, int damage)
+    public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)
     {
         base.OnAttackSuccess(enemy, damage);
 
@@ -181,6 +181,14 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
         //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bleed, 10);// 상태이상 출혈 테스트
         //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Bind, 1, character);// 상태이상 속박 테스트
         //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, 1, character);// 상태이상 기절 테스트
+    }
+
+    public override void OnEndAttack(CharacterBase enemy)
+    {
+        base.OnEndAttack(enemy);
+
+        //Managers.BattleManager.ExtraSkillAttack(character, character.Attack * 2, new List<CharacterBase> { enemy }, BattleKeyWords.AttackDamageType.Skill, "counter_attack");
+        //Managers.BattleManager.ExtraSkillAttack(character, character.Attack * 2, new List<CharacterBase> { enemy });
     }
 
     public override void OnPassAlly(CharacterBase allyCharacter)// 체력 회복 테스트

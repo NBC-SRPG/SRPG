@@ -207,10 +207,8 @@ public class CharacterBase : MonoBehaviour
 
             if (movePath[i].curStandingCharater != null)
             {
-                Debug.Log(pathedTiles.Count);
                 target = movePath[i].curStandingCharater;
                 Managers.BattleManager.OnPassCharacter(this, target);
-                Debug.Log(pathedTiles.Count);
             }
 
             if (isDead)
@@ -224,7 +222,6 @@ public class CharacterBase : MonoBehaviour
 
         MoveTile(curStandingTile);
 
-        Debug.Log(pathedTiles.Count);
         OnEndMoving();
 
         if (isDead)
@@ -443,7 +440,7 @@ public class CharacterBase : MonoBehaviour
         isAttacking = true;
     }
 
-    public void OnAttackSuccess(CharacterBase enemy, int damage)// 공격 적중 시
+    public void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
         curCharacterPassive?.OnAttackSuccess(enemy, damage);
         curCharacterBufList?.OnAttackSuccess(enemy, damage);
@@ -603,7 +600,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.skillAbility?.OnUseSkill(target);
     }
 
-    public void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 공격 적중 시
+    public void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 공격 적중 시
     {
         if (curCharacterSkill.skillData.onhit)
         {

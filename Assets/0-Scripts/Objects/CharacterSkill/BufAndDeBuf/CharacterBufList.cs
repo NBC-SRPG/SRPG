@@ -447,7 +447,7 @@ public class CharacterBufList
         }
     }
 
-    public void OnAttackSuccess(CharacterBase character, int damage = 0)
+    public void OnAttackSuccess(CharacterBase character, BattleKeyWords.Damage damage = new BattleKeyWords.Damage())
     {
         foreach (CharacterBuf buf in bufList)
         {

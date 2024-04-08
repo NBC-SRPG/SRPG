@@ -6,8 +6,11 @@ using UnityEngine.UI;
 
 public class BufIcon : MonoBehaviour
 {
-    public Image bufIcon;
-    public TextMeshProUGUI stack;
+    [SerializeField] private Image bufIcon;
+    [SerializeField] private TextMeshProUGUI stack;
+
+    [SerializeField] private GameObject positive;
+    [SerializeField] private GameObject negative;
 
     public void SetBufIcon(CharacterBuf buf)
     {
@@ -20,5 +23,16 @@ public class BufIcon : MonoBehaviour
         gameObject.SetActive(true);
         //bufIcon = 
         stack.text = buf.stack.ToString();
+
+        if(buf.BufType == BattleKeyWords.BufType.Positive)
+        {
+            positive.SetActive(true);
+            negative.SetActive(false);
+        }
+        else
+        {
+            positive.SetActive(false);
+            negative.SetActive(true);
+        }
     }
 }

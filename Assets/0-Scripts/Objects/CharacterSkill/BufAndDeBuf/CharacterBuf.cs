@@ -122,7 +122,7 @@ public class CharacterBuf
 
     }
 
-    public virtual void OnAttackSuccess(CharacterBase character, int damage = 0)
+    public virtual void OnAttackSuccess(CharacterBase character, BattleKeyWords.Damage damage = new BattleKeyWords.Damage())
     {
 
     }
