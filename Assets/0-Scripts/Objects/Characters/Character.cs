@@ -40,6 +40,9 @@ public class Character
     public ClassSO basicClass;
     public ClassSO superiorClass;
 
+    public EquipSO weapon;
+    public EquipSO armor;
+
 
     public Character(CharacterSO SO, CharacterGrowth Growth)
     {
@@ -68,7 +71,7 @@ public class Character
         Utility.Id2SO<PassiveSO>(SO.id, (result) =>
         {
             passive = (PassiveSO)result;
-            passiveSkill = GetPassive(passive.passive_Id);
+            passiveSkill = Utility.GetAbilityBySO(passive);
         });
 
         // 특성 초기화
@@ -109,6 +112,16 @@ public class Character
         });
         }
 
+        // 장비 초기화
+        Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
+        {
+            weapon = (EquipSO)result;
+        });
+
+        Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
+        {
+            armor = (EquipSO)result;
+        });
     }
 
     private void CalculateStat()
@@ -117,42 +130,5 @@ public class Character
         atk = SO.atk + SO.atkPerLv * Growth.level;
         def = SO.def + SO.defPerLv * Growth.level;
     }
-
-
-    //public SkillBase InitSkills()
-    //{
-    //    skill = new SkillBase(5);
-
-    //    return skill;
-    //}
-
-    public PassiveSkillBase GetPassive(int id)
-    {
-        Type passiveType = Type.GetType("PassiveAbility_" + id);
-
-        if (passiveType == null)
-        {
-            return null;
-        }
-
-        object obj = Activator.CreateInstance(passiveType);
-        PassiveSkillBase passive = obj as PassiveSkillBase;
-
-        return passive;
-    }
-    //public PassiveAbilityBase InitPassive()
-    //{
-    //    Type passiveType = Type.GetType("PassiveAbility_" + SO.PassiveSkill);
-
-    //    if (passiveType == null)
-    //    {
-    //        return null;
-    //    }
-
-    //    object obj = Activator.CreateInstance(passiveType);
-    //    passiveAbility = obj as PassiveAbilityBase;
-
-    //    return passiveAbility;
-    //}
 
 }

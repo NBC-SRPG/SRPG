@@ -5,36 +5,36 @@ using static Constants;
 
 
 [CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
-public class EquipSO : ScriptableObject
+public class EquipSO : ReflectionableSO
 {
-    [Header("Equip_description")]
-    public string equipName;//Àåºñ ÀÌ¸§
-    public string equipDescription;//Àåºñ ¼³¸í
-    
-
-    [Header("Equip_Status_basic")] //increase = ±ø½ºÅÈ Áõ°¡·®(ÇÕ¿¬»ê). multiply = ¹èÀ²(%) Áõ°¡·®(°ö¿¬»ê)
-    public int increaseHealth;
-    public int increaseAtk;
-    public int increaseDef;
-    public int increasecMov;
-
-    public float multiplyHealth; //°ö¿¬»êÀº °è»êÇÒ ¶§ 1À» ´õÇÏ°í ½ÃÀÛÇÏ¹Ç·Î, ÀÌ Æ¯¼ºÀ¸·Î 10%¸¦ Áõ°¡½ÃÅ°°í ½Í´Ù¸é 0.1·Î ¼³Á¤ÇÏ´Â ¹æ½ÄÀ¸·Î ¼³Á¤ÇÏ¸é µË´Ï´Ù.
-    public float multiplyAtk;
-    public float multiplyDef;
-
-    [Header("Equip_Status_addition")]
-    public float increasecCtr; //Ä¡¸íÅ¸ È®·ü +
-    public float increasecCtd; //Ä¡¸íÅ¸ ÇÇÇØ +
-    public float increaseInflictDamage; //ÁÖ´Â ÃÖÁ¾ ÇÇÇØ Áõ°¡ +
-    public float reducedTakenDamage; //¹Ş´Â ÃÖÁ¾ ÇÇÇØ °¨¼Ò -
-
-
-    [Header("Equip_special")]
-    public int speciaID;//ÀåºñÀÇ º°µµ °íÀ¯ È¿°ú. ¼¼ºÎ·ÎÁ÷ ¹Ì±¸Çö.
-
     [Header("Develope")]
-    public int equip_Id;//Àåºñ ½Äº°ÀÚ
-    public EquipType equipType; //Àåºñ Å¸ÀÔ
-    public ItemRank ItemRank;
-    public Dictionary<int, int> rankUpMaterials; //µ¹ÆÄÇÏ´Âµ¥ ÇÊ¿äÇÑ ¼ÒÀç ¾ÆÀÌÅÛÀÇ ID°ª / ÇÊ¿äÇÑ °¹¼ö µñ¼Å³Ê¸®
+    public int id;
+
+    [Header("Equip_description")]
+    public string equipName;
+    public string description;
+    public int star;
+    
+    [Header("VisibleStatus")]
+    public int hp;
+    public int atk;
+    public int def;
+    public int mov;
+
+    [Header("InvisibleStatus")]
+    public int atkIncrease;     // ê³µê²©ë ¥ %ì¦ê°€ëŸ‰ (ê³±ì—°ì‚°)
+    public int defIncrease;     // ë°©ì–´ë ¥ %ì¦ê°€ëŸ‰ (ê³±ì—°ì‚°)
+
+    public int critRate;       // ì¹˜ëª…íƒ€ í™•ë¥  (í•©ì—°ì‚°)
+    public int critDmg;         // ì¹˜ëª…íƒ€ ë°ë¯¸ì§€ (í•©ì—°ì‚°)
+
+    public int EnhancedDmg;     // ë°ë¯¸ì§€ ì¦ê°€ (í•©ì—°ì‚°)
+    public int ReducedDmg;     // ë°›ëŠ” ë°ë¯¸ì§€ ê°ì†Œ (ê³±ì—°ì‚°)
+
+
+    [Header("Upgrade")]
+    public int upgradeLevel;
+    public Dictionary<int, int> upgradeMaterials;
+    public int gold;
+
 }

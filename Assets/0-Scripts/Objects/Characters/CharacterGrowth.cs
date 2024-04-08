@@ -15,10 +15,10 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
 
     public int superiorClass { get; set; }
     
-    /*
-    public WeaponSO weapon
-    public ArmorSO armor
-    */
+    
+    public int weapon;
+    public int armor;
+
 
     public CharacterGrowth() {}
 
@@ -40,6 +40,9 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         abilityT3 = NONE_SELECTED;
 
         superiorClass = NONE_SELECTED;
+
+        weapon = 0;
+        armor = 0;
     }
 
 

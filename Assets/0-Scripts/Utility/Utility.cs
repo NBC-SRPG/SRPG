@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using static Constants;
@@ -25,5 +27,21 @@ public static class Utility
 
     //taskAsync
 
+
+    public static PassiveSkillBase GetAbilityBySO<T>(T so) where T : ReflectionableSO
+    {
+        Type passiveType = Type.GetType(so.reflection);
+
+        if (passiveType == null)
+        {
+            return null;
+        }
+
+        object obj = Activator.CreateInstance(passiveType);
+        PassiveSkillBase passive = obj as PassiveSkillBase;
+        passive.coefficient = so.coefficients.ToList();
+
+        return passive;
+    }
 
 }

@@ -6,6 +6,8 @@ public class PassiveSkillBase
 {
     protected CharacterBase character;
 
+    public List<int> coefficient;
+
     public virtual void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
