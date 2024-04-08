@@ -21,6 +21,7 @@ public class Constants
 
     public enum ElementType
     {
+        None,
         Fire,
         Water,
         Grass,
@@ -44,7 +45,8 @@ public class Constants
         Cross,// 십자형 범위
         Square,// 사각형 범위
         Line,// 직선 범위
-        Rhombus// 마름모 범위
+        Rhombus,// 마름모 범위
+        Moon// 초승달 모양
     }
 
     /* //데미지 타입은 기획안에서 더이상 사용하지 않기로 했으므로 일단 주석처리했습니다.

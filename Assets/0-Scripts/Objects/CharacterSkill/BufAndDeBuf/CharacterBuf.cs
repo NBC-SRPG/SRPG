@@ -14,14 +14,22 @@ public class CharacterBuf
 
     public virtual string Keyword {  get; protected set; }
 
-    public int stack;
+    public int stack;// 스택
+    public int power;// 위력
+
+    protected int turnCnt = 0;// 내 다음 턴 까지 지속되야 할 때
 
     public CharacterBase Buffer { get; protected set; }// 버프 건 캐릭터
+
+    public bool dontDestroy = false;// 외부 효과로 파괴되지 않는 경우
+    public bool isPermanent = false;// 영구 지속 효과라면
+    public bool cantStack = false;// 중첩 불가 버프라면(같은 버프를 받을 때, 효과가 갱신됨)
 
     public virtual void Init(CharacterBase character, CharacterBase buffer)
     {
         this.character = character;
         stack = 0;
+        power = 0;
         IsDestroyed = false;
         Buffer = buffer;
     }
@@ -31,13 +39,30 @@ public class CharacterBuf
         return null;
     }
 
+    public virtual void DecreaseStack(int n)
+    {
+        if(n < 1)
+        {
+            n = 1;
+        }
+
+        stack -= n;
+
+        if (stack == 0)
+        {
+            DestoyBuf();
+        }
+    }
+
     public virtual void OnAddBuf()
     {
 
     }
 
-    protected void DestoyBuf()
+    public void DestoyBuf()
     {
+        OnDestroy();
+
         stack = 0;
         IsDestroyed = true;
     }
@@ -97,7 +122,7 @@ public class CharacterBuf
 
     }
 
-    public virtual void OnAttackSuccess(CharacterBase character, int damage = 0)
+    public virtual void OnAttackSuccess(CharacterBase character, BattleKeyWords.Damage damage = new BattleKeyWords.Damage())
     {
 
     }
@@ -107,7 +132,28 @@ public class CharacterBuf
 
     }
 
-    public virtual void OnTakeDamage(CharacterBase character)
+    public virtual void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
+    {
+
+    }
+
+    public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null, 
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, 
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
+    {
+
+    }
+
+    public virtual void OnTakeHeal(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
+    {
+
+    }
+
+    public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
     {
 
     }
@@ -124,6 +170,11 @@ public class CharacterBuf
 
 
     public virtual void OnDie()
+    {
+
+    }
+
+    public virtual void OnUpdate()// 실시간 판정
     {
 
     }

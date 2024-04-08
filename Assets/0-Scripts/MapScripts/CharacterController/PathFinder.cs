@@ -34,7 +34,7 @@ public class PathFinder
 
         startTile.G = 0;
 
-        while(openList.Count > 0)
+        while (openList.Count > 0)
         {
             OverlayTile curTile = openList.OrderBy(x => x.F).First();// F값이 가장 작은 타일 가져옴
 

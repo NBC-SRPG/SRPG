@@ -33,6 +33,7 @@ public class CharacterBase : MonoBehaviour
 
     [HideInInspector] public bool canSkill;
     [HideInInspector] public bool canActing;
+    [HideInInspector] public bool canMoveSkil;
 
     [HideInInspector] public bool hasAnimationBeforDIe = false;
 
@@ -47,17 +48,25 @@ public class CharacterBase : MonoBehaviour
     public event Action OnEndAttacking;
     public event Action OnEndUseSkill;
 
+    public PathFinder pathFinder;
+    public RangeFinder rangeFinder;
+
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
-    public void SpawnCharacter(OverlayTile spawnPosition)
+    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent)
     {
+        transform.SetParent(parent);
+
         curStandingTile = spawnPosition;
         curStandingTile.curStandingCharater = this;
 
         transform.position = curStandingTile.transform.position;
+
+        Managers.BattleManager.charactersInBattle.Add(this);
+        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
     }
 
     public virtual void InitCharacter(Character charac, string id)
@@ -99,10 +108,10 @@ public class CharacterBase : MonoBehaviour
         canSkill = false;
         canActing = false;
 
-        Managers.BattleManager.charactersInBattle.Add(this);
-        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
-
         AnimationController.instance.onAnimationEnd += CheckActivated;
+
+        pathFinder = new PathFinder();
+        rangeFinder = new RangeFinder();
     }
 
     //스킬 및 패시브 시전자 설정
@@ -157,6 +166,14 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    //-----------------------------------------------------------------------------------------------------------------------
+    // Update
+    private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
+    {
+        curCharacterPassive?.OnUpdate();
+        curCharacterSkill.skillAbility?.OnUpdate();
+        curCharacterBufList.OnUpdate();
+    }
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 이동 관련 함수
@@ -217,19 +234,22 @@ public class CharacterBase : MonoBehaviour
 
     public void BlockMoving()//이동 막힘
     {
-        movePath.Clear();
-
-        OverlayTile prevTile = pathedTiles.First();
-
-        foreach(OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
+        if (pathedTiles.Count > 0)
         {
-            if(tile.curStandingCharater == null || tile.curStandingCharater == this)
+            movePath.Clear();
+
+            OverlayTile prevTile = pathedTiles.First();
+
+            foreach (OverlayTile tile in pathedTiles)//지나간 타일에서 비어있는 타일 선택
             {
-                curStandingTile = tile;
+                if (tile.curStandingCharater == null || tile.curStandingCharater == this)
+                {
+                    curStandingTile = tile;
 
-                AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
+                    AnimationController.instance.EnqueueBackAnimation(this, prevTile, tile);
 
-                break;
+                    break;
+                }
             }
         }
     }
@@ -256,10 +276,11 @@ public class CharacterBase : MonoBehaviour
 
         didAttack = false;
         didWalk = false;
-        didUseSkill = false;
 
-        canSkill = true;
         canActing = true;
+        canMoveSkil = true;
+
+        ActivateSkill();
 
         leftWalkRange = Mov;
 
@@ -361,7 +382,6 @@ public class CharacterBase : MonoBehaviour
 
         if((didAttack && didWalk) || didUseSkill)
         {
-            canSkill = false;
             canActing = false;
         }
     }
@@ -395,9 +415,9 @@ public class CharacterBase : MonoBehaviour
         Managers.BattleManager.Attack(this, target);
     }
 
-    public void TakeAttacked(CharacterBase enemy)// 공격 대상이 되었을 때
+    public void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
     {
-        curCharacterPassive?.OnTakeAttacked(enemy);
+        curCharacterPassive?.AfterTakeAttacked(enemy);
     }
 
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
@@ -406,7 +426,7 @@ public class CharacterBase : MonoBehaviour
         Managers.BattleManager.DoAttack(this, target);
     }
 
-    public void CounterAttack(CharacterBase enemy)
+    public void CounterAttack(CharacterBase enemy)// 반격
     {
         target = enemy;
         Managers.BattleManager.CounterAttack(this, target);
@@ -420,7 +440,7 @@ public class CharacterBase : MonoBehaviour
         isAttacking = true;
     }
 
-    public void OnAttackSuccess(CharacterBase enemy, int damage)// 공격 적중 시
+    public void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
         curCharacterPassive?.OnAttackSuccess(enemy, damage);
         curCharacterBufList?.OnAttackSuccess(enemy, damage);
@@ -445,10 +465,11 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void OnTakeDamage(CharacterBase enemy)// 공격 받았을 때
+    public void OnTakeAttack(CharacterBase enemy)// 공격 당할 때
     {
-        curCharacterPassive?.OnTakeDamage(enemy);
-        curCharacterBufList?.OnTakeDamage(enemy);
+        curCharacterPassive?.OnTakeAttack(enemy);
+        curCharacterBufList?.OnTakeAttack(enemy);
+
     }
 
     private void GetAttackTarget()// 공격 타겟 가져오기
@@ -464,6 +485,71 @@ public class CharacterBase : MonoBehaviour
     }
 
     //---------------------------------------------------------------------------
+    // 데미지 관련
+
+    public void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 공격 받았을 때
+    {
+        if (damageType != BattleKeyWords.AttackDamageType.Extra)// 추가 피해가 아닌 경우에만 발동
+        {
+            curCharacterPassive?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+            curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
+        }
+
+        damage.damage = -damage.damage;
+
+        health.ChangeHealth(damage);
+
+        AfterTakeDamage(damage.damage, enemy, damageType, characterAttribute);
+    }
+
+    public void TakeDamageByInt(ref int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 데미지(주로 버프효과에 의해)
+    {
+        if (damageType != BattleKeyWords.AttackDamageType.Extra)
+        {
+            curCharacterPassive?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+            curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
+        }
+
+        damage = -damage;
+
+        health.ChangeHealthByInt(damage);
+
+        AfterTakeDamage(damage, enemy, damageType, characterAttribute);
+    }
+
+    public void OnTakeHeal(ref BattleKeyWords.Damage heal, CharacterBase skillUser,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 회복 받았을 때
+    {
+        curCharacterPassive?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
+
+        health.ChangeHealth(heal);
+    }
+
+    public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 힐(주로 버프효과에 의해)
+    {
+        curCharacterPassive?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
+        
+        health.ChangeHealthByInt(heal);
+    }
+
+    public void AfterTakeDamage(int damage, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입은 이후에
+    {
+        curCharacterPassive?.AfterTakeDamage(damage, skillUser, damageType, characterAttribute);
+        curCharacterBufList?.AfterTakeDamage(damage, skillUser, damageType, characterAttribute);
+    }
+
+    //---------------------------------------------------------------------------
     // 스킬 관련
 
     public void UseSkill()// 스킬 사용
@@ -471,6 +557,11 @@ public class CharacterBase : MonoBehaviour
         GetSkillTarget();
 
         Managers.BattleManager.UseSkill(this, targets);
+    }
+
+    public void GetSkillScale(List<OverlayTile> skillScale)
+    {
+        this.skillScale = skillScale;
     }
 
     private void GetSkillTarget()// 스킬 타겟 가져오기
@@ -509,7 +600,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.skillAbility?.OnUseSkill(target);
     }
 
-    public void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 공격 적중 시
+    public void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 공격 적중 시
     {
         if (curCharacterSkill.skillData.onhit)
         {
@@ -522,6 +613,7 @@ public class CharacterBase : MonoBehaviour
     public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
         didUseSkill = true;
+        DeActivateSkill();
 
         curCharacterPassive.OnEndSkill(target);
         curCharacterSkill.skillAbility?.OnEndSkill(target);
@@ -529,8 +621,24 @@ public class CharacterBase : MonoBehaviour
         OnEndActing();
     }
 
+    public void ActivateSkill()// 스킬 사용 가능하게 만듬
+    {
+        didUseSkill = false;
+        canSkill = true;
+    }
+
+    public void DeActivateSkill()
+    {
+        canSkill = false;
+    }
+
     //---------------------------------------------------------------------------
     // 캐릭터 사망 시
+
+    public void OnKillEnemy(CharacterBase target, Constants.ElementType characterAttribute = Constants.ElementType.None)
+    {
+        curCharacterPassive?.OnKillEnemy(target, characterAttribute);
+    }
 
     private void CharacterDie()// 캐릭터 사망
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterBufList
@@ -11,17 +12,21 @@ public class CharacterBufList
     public List<CharacterBuf> bufList;
     private List<CharacterBuf> removeList;
 
+    private List<CharacterBuf> bufs;
+
     public CharacterBufList(CharacterBase character)
     {
         this.character = character;
         bufList = new List<CharacterBuf>();
         removeList = new List<CharacterBuf>();
+
+        bufs = new List<CharacterBuf>();
     }
 
     //-------------------------------------------------------------------------------------------------------------------
     // 버프 컨트롤
 
-    public void AddBuf(BattleKeyWords.BufKeyword key, int stack, CharacterBase buffer = null)
+    public void AddBuf(BattleKeyWords.BufKeyword key, int stack, CharacterBase buffer = null, int power = 0)
     {
         CharacterBuf buf;
 
@@ -31,9 +36,9 @@ public class CharacterBufList
             buffer = character;
         }
 
-        buf = bufList.Find(x => x.BufKeyword == key && !x.IsDestroyed);
+        buf = bufList.Find(x => x.BufKeyword == key && x.Buffer == buffer && !x.IsDestroyed);
 
-        if (buf == null)// 없다면 새로 생성
+        if (buf == null || (buf != null && buf.cantStack))// 없다면 새로 생성
         {
             switch (key)
             {
@@ -43,8 +48,17 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.Bleed:
                     buf = new CharacterBuf_Bleed();
                     break;
+                case BattleKeyWords.BufKeyword.Bind:
+                    buf = new CharacterBuf_Bind();
+                    break;
+                case BattleKeyWords.BufKeyword.Stun:
+                    buf = new CharacterBuf_Stun();
+                    break;
 
-                case BattleKeyWords.BufKeyword.Test_UniqBuf:
+                case BattleKeyWords.BufKeyword.AtkAura:
+                    buf = new CharacterBuf_AtkAura();
+                    break;
+                case BattleKeyWords.BufKeyword.Herald:
                     buf = new CharacterBuf_Herald();
                     break;
             }
@@ -52,6 +66,24 @@ public class CharacterBufList
             if (buf != null)// 버프 생성 이후 리스트에 삽입
             {
                 buf.Init(character, buffer);
+
+                if (buf.cantStack)// 중첩 불가 버프의 경우
+                {
+                    CharacterBuf originBuf = FindBuf(key);// 기존의 존재하던 버프를 찾아서
+
+                    if (originBuf != null)
+                    {
+                        if (originBuf.stack <= stack)// 스택이 큰 쪽으로 덮어씌움
+                        {
+                            originBuf.DestoyBuf();
+                        }
+                        else
+                        {
+                            buf.DestoyBuf();
+                        }
+                    }
+                }
+
                 bufList.Add(buf);
                 buf.OnAddBuf();
             }
@@ -59,7 +91,23 @@ public class CharacterBufList
 
         if (buf != null)//리스트에 버프가 있다면, 스택 증가
         {
-            buf.stack += stack;
+            if(power != 0)// 위력 수치가 있다면
+            {
+                if(buf.power < power)// 큰쪽으로 덮어씀
+                {
+                    buf.power = power;
+                }
+            }
+
+            if (buf.isPermanent)// 영구 지속 버프라면 스택을 99로 고정
+            {
+                buf.stack = 99;
+                buf.power += stack;//대신 스킬 위력을 스택만큼 추가
+            }
+            else
+            {
+                buf.stack += stack;
+            }
         }
     }
 
@@ -79,25 +127,170 @@ public class CharacterBufList
         return buf;
     }
 
-    public List<CharacterBuf> FindPositiveBuf(int number)// 긍정적 버프 가져오기
+    public List<CharacterBuf> FindPositiveBufAll(bool forDestroy = false)// 모든 긍정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Positive);
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if(buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
+
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
+
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindPositiveBuf(int number, bool forDestroy = false)// 긍정적 버프 특정 갯수 가져오기
+    {
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
+
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
+
+        bufs = bufs.Take(number).ToList();
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindPositiveBufRandom(int number, bool forDestroy = false)// 무작위 긍정적 버프 가져오기
+    {
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Positive)
+            {
+                bufs.Add(buf);
+            }
+        }
+
+        List<CharacterBuf> randomBufs = new List<CharacterBuf>();
+
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
+
+        while (randomBufs.Count < number)
+        {
+            int ran = UnityEngine.Random.Range(0, bufs.Count);
+
+            CharacterBuf buf = bufs[ran];
+            if (!randomBufs.Contains(buf))
+            {
+                randomBufs.Add(buf);
+            }
+        }
+
+        return randomBufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBufAll(bool forDestroy = false)// 모든 부정적 버프 가져오기
+    {
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
+
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
+
+        return bufs;
+    }
+
+    public List<CharacterBuf> FindNegativeBuf(int number, bool forDestroy = false)// 부정적 버프 특정 갯수 가져오기
+    {
+        bufs.Clear();
+
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
+
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
 
         bufs = bufs.Take(number).ToList();
 
         return bufs;
     }
 
-    public List<CharacterBuf> FindNegativeBuf(int number)// 부정적 버프 가져오기
+    public List<CharacterBuf> FindNegativeBufRandom(int number, bool forDestroy = false)// 무작위 부정적 버프 가져오기
     {
-        List<CharacterBuf> bufs = bufList.FindAll(x => x.BufType == BattleKeyWords.BufType.Negative);
+        bufs.Clear();
 
-        bufs = bufs.Take(number).ToList();
+        foreach (CharacterBuf buf in bufs)
+        {
+            if (buf.BufType == BattleKeyWords.BufType.Negative)
+            {
+                bufs.Add(buf);
+            }
+        }
+        List<CharacterBuf> randomBufs = new List<CharacterBuf>();
 
-        return bufs;
+        if (forDestroy)// 디버프 파괴용이라면
+        {
+            bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
+        }
+
+        while (randomBufs.Count < number)
+        {
+            int ran = UnityEngine.Random.Range(0, bufs.Count);
+
+            CharacterBuf buf = bufs[ran];
+            if (!randomBufs.Contains(buf))
+            {
+                randomBufs.Add(buf);
+            }
+        }
+
+        return randomBufs;
+    }
+    
+    public void RemoveBuf(CharacterBuf buf)// 버프 제거(주로 외부에서 접근)
+    {
+        buf.DestoyBuf();
     }
 
-    public void RemoveBuf()// 버프 제거
+    public void ReduceBufStack(CharacterBuf buf, int power)// 버프 스택 감소(주로 외부에서 접근)
+    {
+        buf.stack -= power;
+
+        if(buf.stack <= 0)
+        {
+            buf.DestoyBuf();
+        }
+    }
+
+    public void ApplyRemovedBuf()// 버프 제거 목록에서 버프 제거
     {
         foreach(CharacterBuf buf in removeList)
         {
@@ -119,7 +312,7 @@ public class CharacterBufList
             }
         }
 
-        RemoveBuf();
+        ApplyRemovedBuf();
     }
 
 
@@ -254,7 +447,7 @@ public class CharacterBufList
         }
     }
 
-    public void OnAttackSuccess(CharacterBase character, int damage = 0)
+    public void OnAttackSuccess(CharacterBase character, BattleKeyWords.Damage damage = new BattleKeyWords.Damage())
     {
         foreach (CharacterBuf buf in bufList)
         {
@@ -276,13 +469,52 @@ public class CharacterBufList
         }
     }
 
-    public void OnTakeDamage(CharacterBase character)
+    public void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
     {
         foreach (CharacterBuf buf in bufList)
         {
             if (buf != null && !buf.IsDestroyed)
             {
-                buf.OnTakeDamage(character);
+                buf.OnTakeAttack(enemy);
+            }
+        }
+    }
+
+    public void OnTakeDamage(ref int damage, CharacterBase character = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnTakeDamage(ref damage, character, damageType, characterAttribute);
+            }
+        }
+    }
+
+    public void OnTakeHeal(ref int damage, CharacterBase character = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnTakeHeal(ref damage, character, damageType, characterAttribute);
+            }
+        }
+    }
+
+    public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.AfterTakeDamage(damage, character, damageType, characterAttribute);
             }
         }
     }
@@ -294,6 +526,17 @@ public class CharacterBufList
             if (buf != null && !buf.IsDestroyed)
             {
                 buf.OnDie();
+            }
+        }
+    }
+
+    public void OnUpdate()// 실시간 판정
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnUpdate();
             }
         }
     }
