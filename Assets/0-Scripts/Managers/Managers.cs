@@ -33,6 +33,8 @@ public class Managers : MonoBehaviour
     public static GameManager GameManager { get { Init(); return s_gameManager; } }
 
 
+    private static MissionManager missionManager = new MissionManager();
+    public static MissionManager Mission { get { Init(); return missionManager; } }
     private void Start()
     {
         Init();
@@ -66,13 +68,14 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
 
             // 들고있는 매니저들 Init
+            database.Init();
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();
             s_mapManager.Init();
             s_battleManager.Init();
             s_gachamanager.Init();
-            //database.Init();
+            missionManager.Init();
 
 
             s_gameManager.Init();
@@ -81,7 +84,7 @@ public class Managers : MonoBehaviour
             s_accountData.Init(new Dictionary<string, int>(), 
                 new Dictionary<int, Character>(), 
                 new PlayerData(), 
-                new Dictionary<int, bool>(), 
+                //new Dictionary<int, bool>(), 
                 new Dictionary<int, string[]>(), 
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());

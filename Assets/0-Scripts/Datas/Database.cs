@@ -22,7 +22,7 @@ public class Database
 
     // test를 위해 MonoBehaviour 사용
     // 추후 연결시 Init()으로 변경
-    public Database()
+    public void Init()
     {
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         uid = user != null ? user.UserId : null;

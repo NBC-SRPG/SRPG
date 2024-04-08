@@ -1,5 +1,6 @@
 using System;
 using Unity.Mathematics;
+using UnityEditor.Experimental;
 using UnityEngine;
 using static Constants;
 
@@ -156,25 +157,24 @@ public class PlayerData
         }
     }
 
-    public bool AddDiamond(int amount) //다이아 획득
+    public bool CanAddDiamond(int amount)
     {
-        int calcedDiamond = Diamond + amount;
-
         if (amount < 0)
         {
-            Debug.Log("더하려는 값이 음수값입니다.");
             return false;
         }
-        else if (calcedDiamond <= MaxDiamond)
+
+        if (Diamond + amount > MaxDiamond)
         {
-            Diamond = calcedDiamond;
-            return true;
-        }
-        else
-        {
-            Debug.Log("다이아 보유 한도 초과");
             return false;
         }
+
+        return true;
+    }
+
+    public void AddDiamond(int amount) //다이아 획득
+    {
+        Diamond += amount;
     }
 
     public bool ReduceDiamond(int amount) //다이아 지불
@@ -192,25 +192,24 @@ public class PlayerData
             return false;
         }
     }
-
-    public bool AddGold(int amount) //골드 획득
+    public bool CanAddGold(int amount)
     {
-        int calcedGold = Gold + amount;
-        if ( amount < 0)
+        if (amount < 0)
         {
-            Debug.Log("더하려는 값이 음수값입니다.");
             return false;
         }
-        else if (calcedGold <= MaxGold)
+
+        if (Gold + amount > MaxGold)
         {
-            Gold = calcedGold;
-            return true;
-        }
-        else
-        {
-            Debug.Log("골드 보유 한도 초과");
             return false;
         }
+
+        return true;
+    }
+
+    public void AddGold(int amount) //골드 획득
+    {
+         Gold += amount;
     }
 
     public bool ReduceGold(int amount) //골드 지불
