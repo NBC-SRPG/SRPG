@@ -172,6 +172,7 @@ public class Constants
         Diamond,
         Character,
         Item
+    }
     public enum MissionCategory
     {
         Daily, // 일일 퀘스트
