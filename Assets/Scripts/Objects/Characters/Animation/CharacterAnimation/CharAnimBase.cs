@@ -21,6 +21,7 @@ public class CharAnimBase : MonoBehaviour
     private string hitParameter = "hit";
     private string dieParameter = "die";
     private string defendParameter = "defend";
+    private string blockParameter = "block";
 
     public int Idle { get; private set; }
     public int Move { get; private set; }
@@ -28,7 +29,8 @@ public class CharAnimBase : MonoBehaviour
     public int Skill { get; private set; }
     public int Hit { get; private set; }
     public int Die { get; private set; }
-    public int defend { get; private set; }
+    public int Defend { get; private set; }
+    public int Block { get; private set; }
 
     protected Queue<BattleKeyWords.Damage> damages;
 
@@ -42,7 +44,8 @@ public class CharAnimBase : MonoBehaviour
         Skill = Animator.StringToHash(skillParameter);
         Hit = Animator.StringToHash(hitParameter);
         Die = Animator.StringToHash(dieParameter);
-        defend = Animator.StringToHash(defendParameter);
+        Defend = Animator.StringToHash(defendParameter);
+        Block = Animator.StringToHash(blockParameter);
 
         sprite = GetComponent<SpriteRenderer>();
         color = sprite.color;
@@ -90,24 +93,24 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Skill);
     }
 
-    public virtual void PlayDefendAnimation(CharacterBase targetCharacter)
+    public virtual void PlayBlockAnimation(CharacterBase targetCharacter)
     {
         this.targetCharacter = targetCharacter;
 
         targetCharacter.transform.position = new Vector3(transform.parent.position.x - 3f, transform.parent.position.y, transform.parent.position.z);
 
-        Animator.SetTrigger(defend);
+        Animator.SetTrigger(Block);
     }
 
-    public void PlayExtraAnimation(CharacterBase targetCharacter, string anim)
+    public void PlayExtraAnimation(List<CharacterBase> victims, string anim)
     {
-        this.targetCharacter = targetCharacter;
+        this.targetList = victims;
         Animator.SetTrigger(anim);
     }
 
-    public virtual void ShowDefend()
+    public virtual void ShowBlock()
     {
-        Managers.UI.FindUI<BattleUI>().ShowDefendText(targetCharacter.transform);
+        Managers.UI.FindUI<BattleUI>().ShowBlockText(targetCharacter.transform);
     }
 
     public virtual void AttackEnemy()
@@ -142,6 +145,11 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Die);
     }
 
+    public void PlayDefendAnimation()
+    {
+        Animator.SetBool(Defend, true);
+    }
+
     public void ReleaseTargets()
     {
         targetCharacter = null;
@@ -152,6 +160,7 @@ public class CharAnimBase : MonoBehaviour
     {
         Animator.SetBool(Move, isWalking);
         Animator.SetBool(Hit, false);
+        Animator.SetBool(Defend, false);
     }
 
     protected Vector2 Getdirection(Vector3 target)

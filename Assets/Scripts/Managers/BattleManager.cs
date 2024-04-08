@@ -85,7 +85,7 @@ public class BattleManager
         //다른 클라이언트는 서버가 준 데미지를 받아옴
         int damage = attacker.Attack - victim.Defend;// 임시 데미지 계산식
 
-        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.characterData.characterAttribute, victim.character.characterData.characterAttribute));
 
         if(damage < 0)
         {
@@ -93,6 +93,7 @@ public class BattleManager
         }
 
         damagest.damage = damage;
+        damagest.attackType = BattleKeyWords.AttackDamageType.Attack;
 
         return damagest;
     }
@@ -108,7 +109,7 @@ public class BattleManager
         //다른 클라이언트는 서버가 준 데미지를 받아옴
         int damage = figure - victim.Defend;// 임시 데미지 계산식
 
-        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker, victim));
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.characterData.characterAttribute, victim.character.characterData.characterAttribute));
 
         if (damage < 0)
         {
@@ -116,6 +117,7 @@ public class BattleManager
         }
 
         damagest.damage = damage;
+        damagest.attackType = BattleKeyWords.AttackDamageType.Skill;
 
         return damagest;
     }
@@ -132,20 +134,40 @@ public class BattleManager
         }
 
         damagest.damage = damage;
+        damagest.attackType = BattleKeyWords.AttackDamageType.Skill;
 
         return damagest;
     }
 
-    private float ExtraDmgbyAttribute(CharacterBase attacker, CharacterBase victim)
+    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase victim, int figure, Constants.CharacterAttribute damageType, BattleKeyWords.AttackDamageType attackType)
     {
-        switch (attacker.character.characterData.characterAttribute)
+        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+
+        int damage = figure - victim.Defend;
+
+        damage = (int)((float)damage * ExtraDmgbyAttribute(damageType, victim.character.characterData.characterAttribute));
+
+        if (damage < 0)
+        {
+            damage = 0;
+        }
+
+        damagest.damage = damage;
+        damagest.attackType = attackType;
+
+        return damagest;
+    }
+
+    private float ExtraDmgbyAttribute(Constants.CharacterAttribute attackerAttribute, Constants.CharacterAttribute victimAttribute)
+    {
+        switch (attackerAttribute)
         {
             case Constants.CharacterAttribute.Fire:
-                if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+                if(victimAttribute == Constants.CharacterAttribute.Water)
                 {
                     return 0.75f;
                 }
-                else if(victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+                else if(victimAttribute == Constants.CharacterAttribute.Grass)
                 {
                     return 1.5f;
                 }
@@ -154,11 +176,11 @@ public class BattleManager
                     return 1;
                 }
             case Constants.CharacterAttribute.Water:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+                if (victimAttribute == Constants.CharacterAttribute.Bolt)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+                else if (victimAttribute == Constants.CharacterAttribute.Fire)
                 {
                     return 1.5f;
                 }
@@ -167,11 +189,11 @@ public class BattleManager
                     return 1;
                 }
             case Constants.CharacterAttribute.Bolt:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Grass)
+                if (victimAttribute == Constants.CharacterAttribute.Grass)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Water)
+                else if (victimAttribute == Constants.CharacterAttribute.Water)
                 {
                     return 1.5f;
                 }
@@ -180,11 +202,11 @@ public class BattleManager
                     return 1;
                 }
             case Constants.CharacterAttribute.Grass:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Fire)
+                if (victimAttribute == Constants.CharacterAttribute.Fire)
                 {
                     return 0.75f;
                 }
-                else if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Bolt)
+                else if (victimAttribute == Constants.CharacterAttribute.Bolt)
                 {
                     return 1.5f;
                 }
@@ -193,7 +215,7 @@ public class BattleManager
                     return 1;
                 }
             case Constants.CharacterAttribute.Light:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Dark)
+                if (victimAttribute == Constants.CharacterAttribute.Dark)
                 {
                     return 1.5f;
                 }
@@ -202,7 +224,7 @@ public class BattleManager
                     return 1;
                 }
             case Constants.CharacterAttribute.Dark:
-                if (victim.character.characterData.characterAttribute == Constants.CharacterAttribute.Light)
+                if (victimAttribute == Constants.CharacterAttribute.Light)
                 {
                     return 1.5f;
                 }
@@ -261,7 +283,6 @@ public class BattleManager
         AnimationController.instance.StartAnimationQueue();
     }
 
-    //-----------------코드 어떤식으로 나눌지 고민 중
     public void DoAttack(CharacterBase attacker, CharacterBase victim)// 공격
     {
         victim.OnTakeAttack(attacker);
@@ -274,8 +295,8 @@ public class BattleManager
 
         victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
 
-        attacker.OnAttackSuccess(victim, damage.damage);
-
+        attacker.OnAttackSuccess(victim, damage);
+            
         attacker.OnEndAttack(victim);
 
     }
@@ -292,7 +313,7 @@ public class BattleManager
 
         victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
 
-        attacker.OnAttackSuccess(victim, damage.damage);
+        attacker.OnAttackSuccess(victim, damage);
 
         attacker.OnEndAttack(victim);
 
@@ -329,7 +350,7 @@ public class BattleManager
 
             victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+            skillUser.OnSkillAttackSuccess(victim, damage);
         }
 
         foreach (var t in target)
@@ -357,7 +378,7 @@ public class BattleManager
 
             victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, figure.damage);
+            skillUser.OnSkillAttackSuccess(victim, figure);
         }
 
         foreach (var t in target)
@@ -370,8 +391,13 @@ public class BattleManager
         }
     }
 
-    public void SkillAttackDirect(CharacterBase skillUser, int figure, List<CharacterBase> target)// 기타 스킬(추가타 등)
+    public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill, string anim = null)// 기타 스킬(추가타 등)
     {
+        if(anim != null)
+        {
+            AnimationController.instance.EnqueueExtraAnimation(skillUser, target, anim);
+        }
+
         foreach (CharacterBase victim in target)
         {
             //------
@@ -379,12 +405,33 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, figure, victim);
+            BattleKeyWords.Damage damage;
+
+            if(attackType == BattleKeyWords.AttackDamageType.Skill)
+            {
+                damage = CheckSkillDamage(skillUser, figure, victim);
+            }
+            else if(attackType == BattleKeyWords.AttackDamageType.Attack)
+            {
+                damage = CheckAttackDamage(skillUser, victim);
+            }
+            else
+            {
+                damage = CheckExtraDamage(victim, figure, skillUser.character.characterData.characterAttribute, attackType);
+            }
+
             //------
 
-            victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
+            victim.OnTakeDamage(ref damage, skillUser, attackType);
 
-            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+            if (attackType == BattleKeyWords.AttackDamageType.Skill)
+            {
+                skillUser.OnSkillAttackSuccess(victim, damage);
+            }
+            else if (attackType == BattleKeyWords.AttackDamageType.Attack)
+            {
+                skillUser.OnAttackSuccess(victim, damage);
+            }
         }
 
         foreach (var t in target)
@@ -397,7 +444,7 @@ public class BattleManager
         }
     }
 
-    public void SkillHealDirect(CharacterBase skillUser, int figure, List<CharacterBase> target)// 기타 스킬(추가타 등)
+    public void ExtraSkillHeal(CharacterBase skillUser, int figure, List<CharacterBase> target, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill)// 기타 스킬(추가타 등)
     {
         foreach (CharacterBase victim in target)
         {
@@ -409,9 +456,12 @@ public class BattleManager
             BattleKeyWords.Damage damage = CheckSkillHealDamage(skillUser, figure);
             //------
 
-            victim.OnTakeHeal(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
+            victim.OnTakeHeal(ref damage, skillUser, attackType);
 
-            skillUser.OnSkillAttackSuccess(victim, damage.damage);
+            if (attackType == BattleKeyWords.AttackDamageType.Skill)
+            {
+                skillUser.OnSkillAttackSuccess(victim, damage);
+            }
         }
 
         foreach (var t in target)

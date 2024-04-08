@@ -21,7 +21,7 @@ public abstract class SkillAbilityBase
 
     }
 
-    public virtual void OnSkillAttackSuccess(CharacterBase target, int damage)// 스킬 적중 시
+    public virtual void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
 
     }
