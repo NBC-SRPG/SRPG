@@ -28,7 +28,7 @@ public static class Utility
     //taskAsync
 
 
-    public static PassiveBase GetAbilityBySO<T>(T so) where T : PassiveSO
+    public static PassiveLogic GetAbilityBySO<T>(T so) where T : PassiveSO
     {
         Type passiveType = Type.GetType(so.reflection);
 
@@ -38,7 +38,7 @@ public static class Utility
         }
 
         object obj = Activator.CreateInstance(passiveType);
-        PassiveBase passive = obj as PassiveBase;
+        PassiveLogic passive = obj as PassiveLogic;
         passive.coefficient = so.coefficients.ToList();
 
         return passive;

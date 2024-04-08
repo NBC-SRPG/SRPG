@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ExSkillBase
 {
-    public SkillSO skillData;
-    public SkillAbilityBase skillAbility;
+    public ExSkillSO skillData;
+    public ExSkillLogic skillAbility;
     public SkillScaleBase skillScaleClass;
 
     public CharacterBase character;
@@ -32,7 +32,7 @@ public class ExSkillBase
     }
 
     //스킬 생성자
-    public ExSkillBase(SkillSO skillData)
+    public ExSkillBase(ExSkillSO skillData)
     {
         this.skillData = skillData;
 
@@ -50,7 +50,7 @@ public class ExSkillBase
         }
 
         object obj = Activator.CreateInstance(skillAbillityType);
-        skillAbility = obj as SkillAbilityBase;
+        skillAbility = obj as ExSkillLogic;
     }
 
     private void InitSkillRange()//스킬 범위 생성자

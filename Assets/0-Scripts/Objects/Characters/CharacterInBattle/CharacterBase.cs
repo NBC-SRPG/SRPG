@@ -16,7 +16,7 @@ public class CharacterBase : MonoBehaviour
     public string playerId;
 
     public ExSkillBase curCharacterSkill;
-    public PassiveBase curCharacterPassive;
+    public PassiveLogic curCharacterPassive;
 
     public CharacterBufList curCharacterBufList;
     public TempBonusStat tempBonusStat;

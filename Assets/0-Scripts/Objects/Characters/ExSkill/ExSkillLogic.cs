@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SkillAbilityBase
+public abstract class ExSkillLogic
 {
     protected CharacterBase character;
 
@@ -37,7 +37,7 @@ public abstract class SkillAbilityBase
     }
 }
 
-public class SkillAbility_101 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
+public class SkillAbility_101 : ExSkillLogic // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
 {
     public override void init(CharacterBase character)
     {
@@ -69,7 +69,7 @@ public class SkillAbility_101 : SkillAbilityBase // 테스트용(테스트 끝�
     }
 }
 
-public class SkillAbility_102 : SkillAbilityBase // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
+public class SkillAbility_102 : ExSkillLogic // 테스트용(테스트 끝나면 비어있는 스킬로 활용)
 {
     public override void init(CharacterBase character)
     {
