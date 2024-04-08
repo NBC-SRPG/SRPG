@@ -86,21 +86,21 @@ public class PassiveSkillBase
 
     public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입을 때
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
     {
 
     }
 
     public virtual void OnTakeHeal(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 힐을 받을 때
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
     {
 
     }
 
     public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 받은 이후에
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
     {
 
     }
@@ -130,7 +130,7 @@ public class PassiveSkillBase
 
     }
 
-    public virtual void OnKillEnemy(CharacterBase enemy, Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 적 처치 시
+    public virtual void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
     {
 
     }
@@ -303,7 +303,7 @@ public class PassiveAbility_102 : PassiveSkillBase // 테스트용
     {
         base.OnEnemyPassesMe(enemy);
 
-        AnimationController.instance.EnqueuedefendAnimation(enemy, character);
+        AnimationController.instance.EnqueueblockAnimation(enemy, character);
         character.CounterAttack(enemy);// 이동 방해중에 반격 테스트(BlockMoving 함수에 애니메이션 추가 코드가 들어있어 움직임을 막기 전에 먼저 반격해야됨)
 
         enemy.BlockMoving();//ZOC 테스트 

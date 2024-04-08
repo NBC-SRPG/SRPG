@@ -139,21 +139,21 @@ public class CharacterBuf
 
     public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null, 
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, 
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 입을 때
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
     {
 
     }
 
     public virtual void OnTakeHeal(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 힐을 받을 때
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
     {
 
     }
 
     public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.CharacterAttribute characterAttribute = Constants.CharacterAttribute.None)// 데미지를 받은 이후에
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
     {
 
     }

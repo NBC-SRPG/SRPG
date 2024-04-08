@@ -84,7 +84,7 @@ public class BattleManager
         //다른 클라이언트는 서버가 준 데미지를 받아옴
         int damage = attacker.Attack - victim.Defend;// 임시 데미지 계산식
 
-        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.characterData.characterAttribute, victim.character.characterData.characterAttribute));
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType));
 
         if(damage < 0)
         {
@@ -108,7 +108,7 @@ public class BattleManager
         //다른 클라이언트는 서버가 준 데미지를 받아옴
         int damage = figure - victim.Defend;// 임시 데미지 계산식
 
-        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.characterData.characterAttribute, victim.character.characterData.characterAttribute));
+        damage = (int)((float)damage * ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType));
 
         if (damage < 0)
         {
@@ -157,7 +157,7 @@ public class BattleManager
         return damagest;
     }
 
-    private float ExtraDmgbyAttribute(Constants.CharacterAttribute attackerAttribute, Constants.CharacterAttribute victimAttribute)
+    private float ExtraDmgbyAttribute(Constants.ElementType attackerAttribute, Constants.ElementType victimAttribute)
     {
         switch (attackerAttribute)
         {
@@ -416,7 +416,7 @@ public class BattleManager
             }
             else
             {
-                damage = CheckExtraDamage(victim, figure, skillUser.character.characterData.characterAttribute, attackType);
+                damage = CheckExtraDamage(victim, figure, skillUser.character.SO.elementType, attackType);
             }
 
             //------

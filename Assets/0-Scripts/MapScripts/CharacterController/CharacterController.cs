@@ -171,7 +171,7 @@ public class CharacterController : MonoBehaviour
             {
                 character.transform.SetParent(transform);
 
-                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]]);
+                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]], transform);
                 i++;
             }
             else
