@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
-public class PassiveSkillBase
+public class PassiveBase
 {
     protected CharacterBase character;
 
@@ -151,7 +151,7 @@ public class PassiveSkillBase
     }
 }
 
-public class PassiveAbility_101 : PassiveSkillBase // 테스트용
+public class PassiveAbility_101 : PassiveBase // 테스트용
 {
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {
@@ -297,7 +297,7 @@ public class PassiveAbility_101 : PassiveSkillBase // 테스트용
         character.tempBonusStat.RemoveBonusStat(stat);
     }
 }
-public class PassiveAbility_102 : PassiveSkillBase // 테스트용
+public class PassiveAbility_102 : PassiveBase // 테스트용
 {
     public override void OnEnemyPassesMe(CharacterBase enemy)
     {

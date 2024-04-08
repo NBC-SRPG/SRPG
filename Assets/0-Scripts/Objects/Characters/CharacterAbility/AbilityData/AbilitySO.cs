@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(menuName = "AbilityData", fileName = "Ability_")]
-public class AbilitySO : ReflectionableSO
+public class AbilitySO : PassiveSO
 {
     [Header("Develope")]
     public int id;

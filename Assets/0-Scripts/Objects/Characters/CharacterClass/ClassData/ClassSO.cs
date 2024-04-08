@@ -3,7 +3,7 @@ using static Constants;
 
 
 [CreateAssetMenu(menuName = "ClassData", fileName = "Class_")]
-public class ClassSO : ReflectionableSO
+public class ClassSO : PassiveSO
 {
     [Header("Develope")]
     public int id;      //클래스 식별자

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "SkillData/PassiveData", fileName = "Passive_")]
-public class PassiveSO : ReflectionableSO
+public class PassiveSkillSO : PassiveSO
 {
     [Header("Develope")]
     public int id;
