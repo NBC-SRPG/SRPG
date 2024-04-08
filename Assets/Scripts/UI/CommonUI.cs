@@ -59,7 +59,6 @@ public class CommonUI : UIBase
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        //BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.ApButton).onClick.AddListener(OnClickApButton);
@@ -104,6 +103,8 @@ public class CommonUI : UIBase
         // AP가 MAX라면 타이머 끄기
         else
         {
+            // 회복 외의 방법으로 MAX가 되었을 경우 타이머 초기화 해주어야 함
+            recoveryTimer = recoveryApTime;
             GetText((int)Texts.ApTimerText).text = "";
         }
     }

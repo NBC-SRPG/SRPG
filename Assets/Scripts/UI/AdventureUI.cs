@@ -7,8 +7,7 @@ public class AdventureUI : UIBase
     private enum Buttons
     {
         PVPButton,
-        WeeklyContentButton,
-        CommodityFarmingButton,
+        SpecialButton,
         MainStoryButton,
         BackButton
     }
@@ -25,8 +24,7 @@ public class AdventureUI : UIBase
         BindButton(typeof(Buttons));
 
         GetButton((int)Buttons.PVPButton).onClick.AddListener(OnClickPVPButton);
-        GetButton((int)Buttons.WeeklyContentButton).onClick.AddListener(OnClickWeeklyContentButton);
-        GetButton((int)Buttons.CommodityFarmingButton).onClick.AddListener(OnClickCommodityFarmingButton);
+        GetButton((int)Buttons.SpecialButton).onClick.AddListener(OnClickSpecialButtonButton);
         GetButton((int)Buttons.MainStoryButton).onClick.AddListener(OnClickMainStoryButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
     }
@@ -35,13 +33,9 @@ public class AdventureUI : UIBase
     {
         Debug.Log("OnClickPVPButton");
     }
-    private void OnClickWeeklyContentButton()
+    private void OnClickSpecialButtonButton()
     {
-        Debug.Log("OnClickWeeklyContentButton");
-    }
-    private void OnClickCommodityFarmingButton()
-    {
-        Debug.Log("OnClickCommodityFarmingButton");
+        Debug.Log("OnClickSpecialButtonButton");
     }
     private void OnClickMainStoryButton()
     {

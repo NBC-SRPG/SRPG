@@ -7,10 +7,7 @@ public class ProfileUI : UIBase
 {
     private enum Texts
     {
-        NicknameText,
         UIDText,
-        BirthdayText,
-        ComentText,
         LevelText,
         ExpText,
         FriendText
@@ -25,6 +22,7 @@ public class ProfileUI : UIBase
     
     private enum Buttons
     {
+        CharacterProfileButton,
         EditNicknameButton,
         EditBirthdayButton,
         EditComentButton,
@@ -33,7 +31,7 @@ public class ProfileUI : UIBase
 
     private enum Images
     {
-        IconImage,
+        CharacterProfileImage,
         IllustrationImage
     }
 
@@ -55,35 +53,39 @@ public class ProfileUI : UIBase
         GetButton((int)Buttons.EditNicknameButton).onClick.AddListener(OnClickEditNicknameButton);
         GetButton((int)Buttons.EditBirthdayButton).onClick.AddListener(OnClickEditBirthdayButton);
         GetButton((int)Buttons.EditComentButton).onClick.AddListener(OnClickEditComentButton);
-        Get<TMP_InputField>((int)InputFields.NicknameInputField).gameObject.SetActive(false);
-        Get<TMP_InputField>((int)InputFields.BirthdayInputField).gameObject.SetActive(false);
-        Get<TMP_InputField>((int)InputFields.ComentInputField).gameObject.SetActive(false);
+
         Get<TMP_InputField>((int)InputFields.NicknameInputField).onEndEdit.AddListener(ChangeNickname);
         Get<TMP_InputField>((int)InputFields.BirthdayInputField).onEndEdit.AddListener(ChangeBirthday);
         Get<TMP_InputField>((int)InputFields.ComentInputField).onEndEdit.AddListener(ChangeComent);
 
-        GetText((int)Texts.BirthdayText).text = Managers.AccountData.playerData.birthday;
+        GetText((int)Texts.UIDText).text = $"UID:{Managers.AccountData.playerData.uId}";
+        GetText((int)Texts.LevelText).text = $"LV. {Managers.AccountData.playerData.Level}";
+        GetText((int)Texts.ExpText).text = $"{Managers.AccountData.playerData.exp} / {Managers.AccountData.playerData.maxExp}";
+
+        Get<TMP_InputField>((int)InputFields.NicknameInputField).text = $"{Managers.AccountData.playerData.playerName}";
+        Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = $"{Managers.AccountData.playerData.birthday}";
+        Get<TMP_InputField>((int)InputFields.ComentInputField).text = $"{Managers.AccountData.playerData.playerComment}";
     }
 
     private void OnClickEditNicknameButton()
     {
         Debug.Log("OnClickEditNicknameButton");
 
-        Get<TMP_InputField>((int)InputFields.NicknameInputField).gameObject.SetActive(true);
+        Get<TMP_InputField>((int)InputFields.NicknameInputField).interactable = true;
         Get<TMP_InputField>((int)InputFields.NicknameInputField).Select();
     }
     private void OnClickEditBirthdayButton()
     {
         Debug.Log("OnClickEditBirthdayButton");
 
-        Get<TMP_InputField>((int)InputFields.BirthdayInputField).gameObject.SetActive(true);
+        Get<TMP_InputField>((int)InputFields.BirthdayInputField).interactable = true;
         Get<TMP_InputField>((int)InputFields.BirthdayInputField).Select();
     }
     private void OnClickEditComentButton()
     {
         Debug.Log("OnClickEditComentButton");
 
-        Get<TMP_InputField>((int)InputFields.ComentInputField).gameObject.SetActive(true);
+        Get<TMP_InputField>((int)InputFields.ComentInputField).interactable = true;
         Get<TMP_InputField>((int)InputFields.ComentInputField).Select();
     }
 
@@ -98,13 +100,23 @@ public class ProfileUI : UIBase
     {
         if (!string.IsNullOrEmpty(newNickname))
         {
-            // TODO
-            // 계정 데이터의 닉네임 업데이트
             Debug.Log("New nickname: " + newNickname);
 
-            GetText((int)Texts.NicknameText).text = newNickname;
-            Get<TMP_InputField>((int)InputFields.NicknameInputField).gameObject.SetActive(false);
+            // 닉네임 가능 글자 수 체크
+            if (Managers.AccountData.playerData.SetPlayerName(newNickname) == false)
+            {
+                // 불가능하면 경고 UI 생성
+                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
+                warningUi.SetText("8글자 이하의 닉네임만 가능합니다.");
+
+                // 설정 전 닉네임으로 변경
+                Get<TMP_InputField>((int)InputFields.NicknameInputField).text = Managers.AccountData.playerData.playerName;
+            }
+
+            // 닉네임이 가능하다면 SetPlayerName()의 내부에서 업데이트
         }
+
+        Get<TMP_InputField>((int)InputFields.NicknameInputField).interactable = false;
     }
     private void ChangeBirthday(string newBirthday)
     {
@@ -115,20 +127,43 @@ public class ProfileUI : UIBase
             // 올바른 날짜형식인지 체크 필요
             Debug.Log("New birthday: " + newBirthday);
 
-            GetText((int)Texts.BirthdayText).text = newBirthday;
-            Get<TMP_InputField>((int)InputFields.BirthdayInputField).gameObject.SetActive(false);
+
+            // 생일이 가능한지 체크
+            if (Managers.AccountData.playerData.SetBirthDay(newBirthday) == false)
+            {
+                // 불가능하면 경고 UI 생성
+                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
+                warningUi.SetText("올바른 날짜 형식이 아닙니다.");
+
+                // 설정 전 생일로 변경
+                Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = Managers.AccountData.playerData.birthday;
+            }
+
+            // 생일이 가능하다면 SetBirthDay()의 내부에서 업데이트
         }
+
+        Get<TMP_InputField>((int)InputFields.BirthdayInputField).interactable = false;
     }
     private void ChangeComent(string newComent)
     {
         if (!string.IsNullOrEmpty(newComent))
         {
-            // TODO
-            // 계정 데이터의 코멘트 업데이트
             Debug.Log("New coment: " + newComent);
 
-            GetText((int)Texts.ComentText).text = newComent;
-            Get<TMP_InputField>((int)InputFields.ComentInputField).gameObject.SetActive(false);
+            // 코멘트 가능 글자 수 체크
+            if (Managers.AccountData.playerData.SetPlayerComment(newComent) == false)
+            {
+                // 불가능하면 경고 UI 생성
+                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
+                warningUi.SetText("40글자 이하의 코멘트만 가능합니다.");
+
+                // 설정 전 코멘트로 변경
+                Get<TMP_InputField>((int)InputFields.ComentInputField).text = Managers.AccountData.playerData.playerComment;
+            }
+
+            // 코멘트가 가능하다면 SetPlayerComment()의 내부에서 업데이트
         }
+
+        Get<TMP_InputField>((int)InputFields.ComentInputField).interactable = false;
     }
 }

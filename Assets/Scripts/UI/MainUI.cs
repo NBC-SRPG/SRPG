@@ -28,7 +28,7 @@ public class MainUI : UIBase
 
     private enum Images
     {
-
+        IllustrationImage
     }
 
     private enum GameObjects
@@ -69,6 +69,10 @@ public class MainUI : UIBase
         GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
+
+        // TODO
+        // 선택한 캐릭터의 일러스트 표시
+        //GetImage((int)Images.IllustrationImage).sprite = 
 
         RefreshUI();
 
