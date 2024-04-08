@@ -7,7 +7,7 @@ using Firebase.Database;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Database : MonoBehaviour
+public class Database
 {
     private FirebaseUser user;
     private DatabaseReference reference = null;

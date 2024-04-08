@@ -80,7 +80,7 @@ public class Managers : MonoBehaviour
                 new Dictionary<int, string[]>(), 
                 new Dictionary<int, FormationData>(),
                 new List<MailSO>());
-            
+            /*
             Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
             Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
             Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
@@ -94,7 +94,7 @@ public class Managers : MonoBehaviour
             testChatacter1.characterGrowth.InitialInit();
             testChatacter2.characterGrowth.InitialInit();
             testChatacter3.characterGrowth.InitialInit();
-
+            */
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
             mailSO.id = "1";
             mailSO.title = "테스트 메일입니다.";
