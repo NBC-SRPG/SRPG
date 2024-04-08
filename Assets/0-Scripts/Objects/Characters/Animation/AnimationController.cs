@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.U2D;
@@ -12,6 +13,7 @@ public class AnimationController : MonoBehaviour
 {
     public static AnimationController instance;
     private Queue<Action> animationQueue = new Queue<Action>();
+    private Queue<Action> animationAtRelease = new Queue<Action>();
 
     private void Awake()
     {
@@ -33,13 +35,14 @@ public class AnimationController : MonoBehaviour
     [SerializeField] private CinemachineTargetGroup group;
 
     private CharacterBase attacker;
-    private List<CharacterBase> victims;
+    private List<CharacterBase> attackTargets;
 
     private Dictionary<Action, List<Action>> stitchedAnim = new Dictionary<Action, List<Action>>();
     private Dictionary<CharacterBase, Vector3> originPos = new Dictionary<CharacterBase, Vector3>();
 
     private bool isAnimationPlaying;
     private bool isWalkPlaying;
+    private bool isSetting;
 
     public event Action onAnimationEnd;
 
@@ -62,13 +65,15 @@ public class AnimationController : MonoBehaviour
 
     private void CharacterSetting(CharacterBase attacker, List<CharacterBase> victims)// 캐릭터 위치 지정
     {
+        isSetting = true;
+
         CameraController.instance.SetCharacterCameraMove(2);
 
         backGround.gameObject.SetActive(true);
         battleCanvas.gameObject.SetActive(true);
 
         this.attacker = attacker;
-        this.victims = victims.ConvertAll(data => data);
+        this.attackTargets = victims.ConvertAll(data => data);
 
         originPos.Add(attacker, attacker.transform.position);
 
@@ -84,31 +89,33 @@ public class AnimationController : MonoBehaviour
 
         group.AddMember(attacker.transform, 1, 2);
 
-        for (int i = 0; i < this.victims.Count; i++)
+        for (int i = 0; i < this.attackTargets.Count; i++)
         {
-            if (this.victims[i] == attacker)
+            if (this.attackTargets[i] == attacker)
             {
                 continue;
             }
 
-            originPos.Add(this.victims[i], this.victims[i].transform.position);
+            originPos.Add(this.attackTargets[i], this.attackTargets[i].transform.position);
 
-            this.victims[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
-            this.victims[i].transform.localScale = new Vector3(4, 4, 0);
+            this.attackTargets[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
+            this.attackTargets[i].transform.localScale = new Vector3(4, 4, 0);
 
-            SetCharacterLayer(this.victims[i], 31);
+            SetCharacterLayer(this.attackTargets[i], 31);
 
-            this.victims[i].characterAnim.Activate();
-            this.victims[i].characterAnim.FlipCharacterDirection(Vector2.left);
+            this.attackTargets[i].characterAnim.Activate();
+            this.attackTargets[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
-            this.victims[i].health.healthBarCanvas.SetActive(false);
+            this.attackTargets[i].health.healthBarCanvas.SetActive(false);
 
-            group.AddMember(this.victims[i].transform, 1, 2);
+            group.AddMember(this.attackTargets[i].transform, 1, 2);
         }
     }
 
     private void CharacterRelease() // 캐릭터 제자리로
     {
+        isSetting = false;
+
         CameraController.instance.SetCharacterCameraMove(0);
 
         backGround.gameObject.SetActive(false);
@@ -138,29 +145,34 @@ public class AnimationController : MonoBehaviour
 
         attacker.health.healthBarCanvas.SetActive(true);
 
-        if(victims.Count == 0)
+        if(attackTargets.Count == 0)
         {
             return;
         }
 
-        for (int i = 0; i < victims.Count; i++)
+        for (int i = 0; i < attackTargets.Count; i++)
         {
-            victims[i].transform.position = originPos[victims[i]];
-            victims[i].transform.localScale = new Vector3(1, 1, 0);
+            attackTargets[i].transform.position = originPos[attackTargets[i]];
+            attackTargets[i].transform.localScale = new Vector3(1, 1, 0);
 
-            SetCharacterLayer(victims[i], 0);
+            SetCharacterLayer(attackTargets[i], 0);
 
-            victims[i].characterAnim.EndAnimation(victims[i].isWalking);
-            victims[i].characterAnim.FlipCharacter(attacker.transform.position, false);
+            attackTargets[i].characterAnim.EndAnimation(attackTargets[i].isWalking);
+            attackTargets[i].characterAnim.FlipCharacter(attacker.transform.position, false);
             //victims[i].characterAnim.SetDamage(0);
 
-            victims[i].health.healthBarCanvas.SetActive(true);
+            attackTargets[i].health.healthBarCanvas.SetActive(true);
         }
 
-        attacker.characterAnim.FlipCharacter(victims[0].transform.position, false);
+        attacker.characterAnim.FlipCharacter(attackTargets[0].transform.position, false);
         attacker = null;
-        victims.Clear();
+        attackTargets.Clear();
         originPos.Clear();
+
+        while (animationAtRelease.Count > 0)
+        {
+            animationAtRelease.Dequeue()?.Invoke();
+        }
     }
 
     public void EndAimation()
@@ -231,7 +243,7 @@ public class AnimationController : MonoBehaviour
     private IEnumerator PlayCounterAttackAnimation(CharacterBase attacker, CharacterBase victim)// 반격 애니메이션
     {
         Managers.UI.FindUI<BattleUI>().ShowCounterText(attacker.transform);
-        attacker.characterAnim.PlayExtraAnimation(victim, "counter_attack");
+        attacker.characterAnim.PlayExtraAnimation(new List<CharacterBase> { victim }, "counter_attack");
 
         while (true)
         {
@@ -311,13 +323,13 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 방어 애니메이션
 
-    public void EnqueuedefendAnimation(CharacterBase attacker, CharacterBase defender)
+    public void EnqueueblockAnimation(CharacterBase attacker, CharacterBase defender)
     {
         Debug.Log("Enqueue defend");
-        animationQueue.Enqueue(() => StartDefendAnimation(attacker, defender));
+        animationQueue.Enqueue(() => StartBlockAnimation(attacker, defender));
     }
 
-    public void StartDefendAnimation(CharacterBase attacker, CharacterBase defender)// 방어 애니메이션 재생
+    public void StartBlockAnimation(CharacterBase attacker, CharacterBase defender)// 방어 애니메이션 재생
     {
         CharacterRelease();
 
@@ -327,16 +339,16 @@ public class AnimationController : MonoBehaviour
 
         CharacterSetting(attacker, victims);
 
-        StartCoroutine(PlayDefendAnimation(defender));
+        StartCoroutine(PlayBlockAnimation(defender));
     }
 
-    private IEnumerator PlayDefendAnimation(CharacterBase defender)// 방어 애니메이션
+    private IEnumerator PlayBlockAnimation(CharacterBase defender)// 방어 애니메이션
     {
-        defender.characterAnim.PlayDefendAnimation(attacker);
+        defender.characterAnim.PlayBlockAnimation(attacker);
 
         while (true)
         {
-            if (defender.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("defend"))
+            if (defender.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).IsName("block"))
             {
                 float animTime = defender.characterAnim.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
 
@@ -357,22 +369,32 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 애니메이션
 
-    public void EnqueueExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)
+    public void EnqueueExtraAnimation(CharacterBase attacker, List<CharacterBase> victims, string anim, bool needSetting = false)
     {
         Debug.Log("Enqueue Extra");
-        animationQueue.Enqueue(() => StartExtraAnimation(attacker, victim, anim));
+        animationQueue.Enqueue(() => StartExtraAnimation(attacker, victims, anim, needSetting));
     }
 
-    private void StartExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)// 기타 애니메이션 재생
+    private void StartExtraAnimation(CharacterBase attacker, List<CharacterBase> victims, string anim, bool needSetting = false)// 기타 애니메이션 재생
     {
+        if (needSetting)
+        {
+            CharacterRelease();
+        }
+
         isAnimationPlaying = true;
 
-        StartCoroutine(PlayExtraAnimation(attacker, victim, anim));
+        if (needSetting)
+        {
+            CharacterSetting(attacker, victims);
+        }
+
+        StartCoroutine(PlayExtraAnimation(attacker, victims, anim));
     }
 
-    private IEnumerator PlayExtraAnimation(CharacterBase attacker, CharacterBase victim, string anim)// 기타 애니메이션
+    private IEnumerator PlayExtraAnimation(CharacterBase attacker, List<CharacterBase> victims, string anim)// 기타 애니메이션
     {
-        attacker.characterAnim.PlayExtraAnimation(victim, anim);
+        attacker.characterAnim.PlayExtraAnimation(victims, anim);
 
         while (true)
         {
@@ -495,12 +517,23 @@ public class AnimationController : MonoBehaviour
 
     private void PlayNextAnimation()// 다음 애니메이션 재생
     {
+        Action animation = null;
+
         if (stitchedAnim.ContainsKey(prevAnimation))
         {
-
-            foreach(Action action in stitchedAnim[prevAnimation])
+            if (isSetting)
             {
-                action.Invoke();
+                foreach (Action action in stitchedAnim[prevAnimation])
+                {
+                    animationAtRelease.Enqueue(action);
+                }
+            }
+            else
+            {
+                foreach (Action action in stitchedAnim[prevAnimation])
+                {
+                    animation += action;
+                }
             }
 
             stitchedAnim.Remove(prevAnimation);
@@ -510,10 +543,12 @@ public class AnimationController : MonoBehaviour
         {
             prevAnimation = animationQueue.Dequeue();
             prevAnimation?.Invoke();
+            animation?.Invoke();
         }
         else
         {
             CharacterRelease();
+            animation?.Invoke();
             EndAimation();
         }
     }
@@ -564,9 +599,26 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 기타 함수들
 
+    public bool CheckSetting()
+    {
+        return isSetting;
+    }
+
     public bool CheckAnimation()
     {
         if(animationQueue.Count > 0 || isAnimationPlaying)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool IsWalkingAnimation()
+    {
+        if (isWalkPlaying)
         {
             return true;
         }
@@ -587,6 +639,18 @@ public class AnimationController : MonoBehaviour
         else
         {
             stitchedAnim.Add(animationQueue.Last(), new List<Action>() { action });
+        }
+    }
+
+    public void StitchAnimationAtFirst(Action action)
+    {
+        if (stitchedAnim.ContainsKey(animationQueue.First()))
+        {
+            stitchedAnim[animationQueue.First()].Add(action);
+        }
+        else
+        {
+            stitchedAnim.Add(animationQueue.First(), new List<Action>() { action });
         }
     }
 }

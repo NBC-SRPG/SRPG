@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class HealthSystem : MonoBehaviour
 {
     public GameObject healthBarCanvas;
+    private CharAnimBase characterAnim;
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
@@ -21,7 +22,7 @@ public class HealthSystem : MonoBehaviour
 
     private void Start()
     {
-
+        characterAnim = GetComponentInChildren<CharAnimBase>();
     }
 
     public void SetHealth(int health)
@@ -38,19 +39,19 @@ public class HealthSystem : MonoBehaviour
         get { return (float)CurHealth / (float)MaxHealth; }
     }
 
-    public void TakeDamage(int damage)// 실제 데미지 입힘
+    public void TakeDamage(BattleKeyWords.Damage damage)// 실제 데미지 입힘
     {
-        ChangeHealth(-damage);
+        characterAnim.SetDamage(damage);
 
-        if(CurHealth == 0)
+        if (CurHealth == 0)
         {
             Die?.Invoke();
         }
 
         if (!AnimationController.instance.CheckAnimation())// 애니메이션 재생중이 아니면 곧바로 체력바 갱신
         {
+            characterAnim.ShowDamage();
             TakeDamageHealthBar(damage);
-            Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform);
         }
         else
         {
@@ -58,9 +59,18 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    public void HealHealth(int n)// 실제 체력 회복
+    public void TakeDamageByInt(int n)// int만 입력받아 데미지
     {
-        ChangeHealth(n);
+        BattleKeyWords.Damage damage = new BattleKeyWords.Damage();
+
+        damage.damage = -n;
+
+        ChangeHealth(damage);
+    }
+
+    public void HealHealth(BattleKeyWords.Damage n)// 실제 체력 회복
+    {
+        characterAnim.SetDamage(n);
 
         if (!AnimationController.instance.CheckAnimation())
         {
@@ -72,9 +82,18 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    private void ChangeHealth(int n)//체력 변화
+    public void HealHealthByInt(int n)// int만 입력받아 체력 회복
     {
-        CurHealth += n;
+        BattleKeyWords.Damage damage = new BattleKeyWords.Damage();
+
+        damage.damage = n;
+
+        ChangeHealth(damage);
+    }
+
+    public void ChangeHealth(BattleKeyWords.Damage n)//체력 변화
+    {
+        CurHealth += n.damage;
 
         if(CurHealth > MaxHealth)
         {
@@ -85,13 +104,37 @@ public class HealthSystem : MonoBehaviour
         {
             CurHealth = 0;
         }
+
+        if(n.damage < 0)
+        {
+            TakeDamage(n);
+        }
+        else
+        {
+            HealHealth(n);
+        }
     }
 
-    public void TakeDamageHealthBar(int n)// 데미지 입힘
+    public void ChangeHealthByInt(int n)
+    {
+        if(n < 0)
+        {
+            n = -n;
+            TakeDamageByInt(n);
+        }
+        else
+        {
+            HealHealthByInt(n);
+        }
+    }
+
+    public void TakeDamageHealthBar(BattleKeyWords.Damage n)// 데미지 입힘
     {
         StartCoroutine(TakeHealthBar(false));
 
         healthText.text = CurHealth.ToString();
+
+        characterAnim.ShowDamage();
 
         if (CurHealth <= 0)
         {
@@ -99,13 +142,13 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    public void HealHealthBar(int n)// 체력 회복함
+    public void HealHealthBar(BattleKeyWords.Damage n)// 체력 회복함
     {
         StartCoroutine(TakeHealthBar(true));
 
         healthText.text = CurHealth.ToString();
 
-        Managers.UI.FindUI<BattleUI>().ShowDamageText(n, transform, true);
+        characterAnim.ShowDamage();
     }
 
 

@@ -21,13 +21,15 @@ public class CharacterBuf_Burn : CharacterBuf
     {
         base.OnTurnEnd();
 
-        character.health.TakeDamage(stack);
+        int damage = (int)((float)character.health.MaxHealth * 0.08f);
 
-        stack /= 2;
-
-        if(stack <= 0)
+        if(damage < 1)
         {
-            DestoyBuf();
+            damage = 1;
         }
+
+        character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf);
+
+        DecreaseStack(1);
     }
 }
