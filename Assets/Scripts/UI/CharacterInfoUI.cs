@@ -52,6 +52,7 @@ public class CharacterInfoUI : UIBase
         TalentApplyButton,
         TalentCancelButton,
         TalentCheckButton,
+
         TestLevelUpButton // 테스트 버튼
     }
     private enum Images
