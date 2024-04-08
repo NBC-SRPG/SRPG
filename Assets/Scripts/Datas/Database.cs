@@ -11,7 +11,7 @@ public class Database : MonoBehaviour
 {
     private FirebaseUser user;
     private DatabaseReference reference = null;
-    private DatabaseReference userDB = null;
+    public DatabaseReference userDB = null;
     private string uid;
 
     public delegate void Func(DataSnapshot snapshot);
@@ -20,7 +20,7 @@ public class Database : MonoBehaviour
 
     // test를 위해 MonoBehaviour 사용
     // 추후 연결시 Init()으로 변경
-    void Start()
+    public void Init()
     {
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         uid = user != null ? user.UserId : null;

@@ -143,6 +143,33 @@ public class Constants
         Robe //로브
     }
 
+    public enum MissionCategory
+    {
+        Daily, // 일일 퀘스트
+        Weekly, // 주간 퀘스트
+        Achievement, // 업적
+        Beginner // 초보자 퀘스트
+    }
+
+    public enum MissionType
+    {
+        GetItem, // 아이템 획득
+        UseItem, // 아이템 사용
+        KillMonster, // 몬스터 처치
+        Login // 로그인
+    }
+    public enum MissionState
+    {
+        Waite, // 진행 전
+        Progress, // 진행 중
+        Complete, // 완료
+        Receive // 보상 수령
+    }
+
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
+    public const int TestApImage = 60001000;
+    public const int TestExpImage = 60001001;
+    public const int TestGoldImage = 60001002;
+    public const int TestDiamondImage = 60001003;
 }
