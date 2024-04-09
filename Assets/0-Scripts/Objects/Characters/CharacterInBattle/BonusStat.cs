@@ -17,3 +17,9 @@ public class BonusStat
         ExtraMov += stat.ExtraMov;
     }
 }
+
+public class ShieldStat
+{
+    public int Shield { get; set; }
+
+}

@@ -10,11 +10,29 @@ public class CharacterBuf_Herald : CharacterBuf
 
     public override string Keyword { get; protected set; } = "Unique";
 
+    ShieldStat shield;
+
+    public override void Init(CharacterBase character, CharacterBase buffer)
+    {
+        base.Init(character, buffer);
+
+        shield = new ShieldStat();
+    }
+
+    public override void OnAddBuf()
+    {
+        base.OnAddBuf();
+
+        shield.Shield = (int)((float)character.health.MaxHealth * 0.1);
+
+        character.health.AddShield(shield);
+    }
+
     public override BonusStat GetAdditionalStat()
     {
         return new BonusStat
         {
-            ExtraDefend = character.character.def / 2,
+            ExtraDefend = 50,
             ExtraMov = 2
         };
     }
@@ -29,5 +47,12 @@ public class CharacterBuf_Herald : CharacterBuf
         }
 
         turnCnt++;
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        character.health.RemoveShield(shield);
     }
 }
