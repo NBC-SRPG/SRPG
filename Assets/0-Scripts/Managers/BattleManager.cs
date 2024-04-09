@@ -503,8 +503,8 @@ public class BattleManager
             characters.OnStartPlayerTurn();
         }
 
-        TurnStart?.Invoke();
         Debug.Log("nowPlayer" + nowPlayer.playerId);
+        TurnStart?.Invoke();
     }
 
     private void StartRound()//라운드 시작

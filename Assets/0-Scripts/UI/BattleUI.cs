@@ -60,8 +60,10 @@ public class BattleUI : UIBase
         JoyStick,
         CharacterImage,
         HealthBar,
+        ShieldBar,
         TargetImage,
-        TargetHealthBar
+        TargetHealthBar,
+        TargetShieldBar
     }
 
     //charactercontroller가 보내주는 캐릭터를 받아옴
@@ -310,8 +312,9 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() + " / " + curSelectedCharacter.health.MaxHealth.ToString();
         GetImage((int)Images.HealthBar).fillAmount = curSelectedCharacter.health.HealthRatio;
+        GetImage((int)Images.ShieldBar).fillAmount = curSelectedCharacter.health.ShieldRatio;
 
-        for(int i = 0; i < bufList.Count; i++)
+        for (int i = 0; i < bufList.Count; i++)
         {
             if (curSelectedCharacter.curCharacterBufList.bufList.Count < i + 1)
             {
@@ -339,6 +342,7 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString();
         GetImage((int)Images.TargetHealthBar).fillAmount = curTargetCharacter.health.HealthRatio;
+        GetImage((int)Images.TargetShieldBar).fillAmount = curTargetCharacter.health.ShieldRatio;
 
         for (int i = 0; i < targetBufList.Count; i++)
         {
