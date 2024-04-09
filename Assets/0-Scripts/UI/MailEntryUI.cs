@@ -50,6 +50,9 @@ public class MailEntryUI : UIBase
             GetText((int)Texts.MailRemainingTimeText).text = formattedTime;
             lastMin = curMin;
         }
+        
+        // TODO
+        // 남은 시간이 0이라면 삭제
     }
 
     private void Init()

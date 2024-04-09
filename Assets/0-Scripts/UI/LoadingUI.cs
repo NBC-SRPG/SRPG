@@ -1,11 +1,7 @@
-using Firebase.Database;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class LoadingUI : UIBase
 {
@@ -26,6 +22,11 @@ public class LoadingUI : UIBase
         Init();
     }
 
+    private void OnDestroy()
+    {
+        Database.OnLoadingProgressChanged -= UpdateProgress;
+    }
+
     private void Update()
     {
         if (isDataLoaded && Input.GetMouseButtonDown(0))
@@ -41,9 +42,26 @@ public class LoadingUI : UIBase
         BindText(typeof(Texts));
         BindImage(typeof(Images));
 
-        StartCoroutine(LoadAllData());
+        Database.OnLoadingProgressChanged += UpdateProgress;
+
+        StartCoroutine(Managers.DB.DataLoad());
+        //StartCoroutine(LoadAllData());
     }
 
+    private void UpdateProgress(float progress)
+    {
+        GetImage((int)Images.ProgressBar).fillAmount += progress;
+        int progressPercentage = Mathf.FloorToInt(GetImage((int)Images.ProgressBar).fillAmount * 100);
+        GetText((int)Texts.StatusText).text = $"로딩 중... ({progressPercentage}%)";
+
+        if (progressPercentage >= 100)
+        {
+            isDataLoaded = true;
+            GetText((int)Texts.StatusText).text = "로딩 완료! 화면을 클릭하여 시작하세요.";
+        }
+    }
+
+    /*
     private IEnumerator LoadAllData()
     {
         string[] dataPaths = { "stageClearData", "characterData", "playerData", "friendData", "formationData", "versionData", "gachaPoint", "mailBox", "missionData" };
@@ -87,4 +105,5 @@ public class LoadingUI : UIBase
             onComplete?.Invoke();
         }
     }
+    */
 }

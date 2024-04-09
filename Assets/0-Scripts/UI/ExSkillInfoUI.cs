@@ -27,21 +27,21 @@ public class ExSkillInfoUI : UIBase
     public void Init(int characterId)
     {
         this.characterId = characterId;
-        string exSkillDescription = Managers.AccountData.characterData[characterId].characterData.skill.description;
+        string exSkillDescription = Managers.AccountData.characterData[characterId].exSkill.skillData.description;
 
         //Managers.AccountData.characterData[characterId].characterGrowth.OnExSkillLevelChanged += UpdateDescription;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        GetText((int)Texts.ExSkillNameText).text = $"Ex 스킬 / {Managers.AccountData.characterData[characterId].characterData.skill.skillName}";
-        GetText((int)Texts.ExSkillLevelText).text = $"Lv. {Managers.AccountData.characterData[characterId].characterGrowth.ExSkillLevel}";
-        GetText((int)Texts.ExSkilCostText).text = $"코스트: {Managers.AccountData.characterData[characterId].characterData.skill.cost}";
+        GetText((int)Texts.ExSkillNameText).text = $"Ex 스킬 / {Managers.AccountData.characterData[characterId].exSkill.skillData.skillName}";
+        GetText((int)Texts.ExSkillLevelText).text = $"Lv. {Managers.AccountData.characterData[characterId].Growth.exSkillLevel}";
+        GetText((int)Texts.ExSkilCostText).text = $"코스트: {Managers.AccountData.characterData[characterId].exSkill.skillData.cost}";
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
 
-        UpdateDescription(Managers.AccountData.characterData[characterId].characterData.skill.description);
+        UpdateDescription(Managers.AccountData.characterData[characterId].exSkill.skillData.description);
     }
     private void UpdateDescription(string newDescription)
     {
@@ -66,7 +66,7 @@ public class ExSkillInfoUI : UIBase
         // Ap, 골드, 다이아에 했던 것 처럼 이벤트 걸기
         // 스킬 레벨이 변경 되면 스킬 설명 업데이트 하기
 
-        Managers.AccountData.characterData[characterId].characterGrowth.ExSkillLevelUp(1);
+        Managers.AccountData.characterData[characterId].Growth.exSkillLevel++;
     }
     private void CloseUI()
     {

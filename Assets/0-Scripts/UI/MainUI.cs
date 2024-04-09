@@ -41,13 +41,6 @@ public class MainUI : UIBase
         Init();
     }
 
-    private void Update()
-    {
-        // TODO
-        // AP가 MAX가 아니라면 타이머 작동
-        // AP, Gold, Diamond를 각 UI마다 둘 것인지? or AP, Gold, Diamond만 있는 UI 생성 후 가장 위에 두기
-    }
-
     public void Init()
     {
         Managers.UI.SetCanvas(gameObject);
@@ -90,7 +83,6 @@ public class MainUI : UIBase
     {
 
     }
-
 
     private void OnClickCharacterButton()
     {

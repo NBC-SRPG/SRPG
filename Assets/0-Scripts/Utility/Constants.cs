@@ -69,7 +69,7 @@ public class Constants
 
     public enum PlayerCons
     {
-        DefaltLevel = 100,
+        DefaltLevel = 1,
         DefaltMaxExp = 100,
         MaxLevel = 90,
         DefaltMaxAp = 160

@@ -1,4 +1,5 @@
 using Firebase.Database;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,23 +23,181 @@ public class AccountData
 
     public HashSet<int> receiveMissions { get; set; } = new();// 보상 수령한 미션들
 
-    //public IReadOnlyDictionary<int, Mission> OngoingMissions => ongoingMissions;
-    //public IReadOnlyCollection<int> CompleteMissions => completeMissions;
-    //public IReadOnlyCollection<int> ReceiveMissions => receiveMissions;
-
-    private bool isInit = false;
     private bool isOngoingMissionsLoaded = false;
     private bool isCompleteMissionsLoaded = false;
     private bool hasOngoingMissions = false;
     private bool hasCompleteMissions = false;
 
-    /*
+    public void InitStageClearData(DataSnapshot snapshot)
+    {
+        Dictionary<string, int> data = snapshot.Exists ? JsonUtility.FromJson<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
+        stageClearData = data;
+    }
+    public void InitCharacterData(DataSnapshot snapshot)
+    {
+        /*
+        foreach (var character in snapshot.Children)
+        {
+            characterData = new();
+
+            CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
+
+            Utility.Id2SO<CharacterSO>(growth.id, (result) =>
+            {
+                CharacterSO so = (CharacterSO)result;
+                characterData.Add(growth.id, new Character(so, growth));
+
+
+                Debug.Log(growth.id);
+            });
+        }
+        */
+    }
+    public void InitPlayerData(DataSnapshot snapshot)
+    {
+        // PlayerData의 변수들이 private set이라 DB에서 불러온 값 적용 불가
+        /*
+        PlayerData data = snapshot.Exists ? JsonUtility.FromJson<PlayerData>(snapshot.GetRawJsonValue()) : new PlayerData();
+        playerData = data;
+        */
+        playerData = new();
+
+        if (snapshot.Exists)
+        {
+            playerData.Init(
+                snapshot.Child("uId").Value as string,
+                snapshot.Child("playerName").Value as string,
+                snapshot.Child("playerComment").Value as string,
+                Convert.ToInt32(snapshot.Child("Diamond").Value),
+                Convert.ToInt32(snapshot.Child("Gold").Value),
+                Convert.ToInt32(snapshot.Child("Ap").Value),
+                Convert.ToInt32(snapshot.Child("maxAp").Value),
+                Convert.ToInt32(snapshot.Child("Level").Value),
+                Convert.ToInt32(snapshot.Child("exp").Value),
+                Convert.ToInt32(snapshot.Child("maxExp").Value),
+                snapshot.Child("birthday").Value as string,
+                snapshot.Child("favoriteCharacter").Value as int[],
+                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value),
+                Convert.ToInt32(snapshot.Child("characterIcon").Value)
+            );
+        }
+        else
+        {
+            // TODO
+            // 저장된 값이 없을 때 기본 세팅
+        }
+    }
+    public void InitFriendData(DataSnapshot snapshot)
+    {
+        friendData = new();
+
+        // TODO
+        // 몇번 키가 어떤 목록을 들고 있을지?
+        // 이거 헷갈리는데 Constants에서 들고있게 하기
+        // 현재는 알파벳 순으로 넣어놨음
+        DataSnapshot applyingSnapshot = snapshot.Child("Applying");
+        DataSnapshot friendSnapshot = snapshot.Child("Friend");
+        DataSnapshot waitingSnapshot = snapshot.Child("Waiting");
+
+        string[] applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
+        string[] friendUids = ExtractUidsFromSnapshot(friendSnapshot);
+        string[] waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
+
+        friendData.Add(0, applyingUids);
+        friendData.Add(1, friendUids);
+        friendData.Add(2, waitingUids);
+    }
+    private string[] ExtractUidsFromSnapshot(DataSnapshot snapshot)
+    {
+        List<string> uids = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            string uid = childSnapshot.Value.ToString();
+            uids.Add(uid);
+        }
+
+        return uids.ToArray();
+    }
+    public void InitFormationData(DataSnapshot snapshot)
+    {
+        formationData = new();
+
+        foreach (var formation in snapshot.Children)
+        {
+            FormationData formationdata = new();
+
+            formationdata.partyName = formation.Child("partyName").Value.ToString();
+            
+            foreach (var character in formation.Child("characterId").Children)
+            {
+                formationdata.characterId[int.Parse(character.Key)] = Convert.ToInt32(character.Value);
+            }
+
+            formationData.Add(int.Parse(formation.Key), formationdata);
+        }
+    }
+    public void InitVersionData(DataSnapshot snapshot)
+    {
+        versionData = new();
+        versionData.curGacha = new();
+        versionData.curEvents = new();
+
+        versionData.version = snapshot.Child("version").Value.ToString();
+
+        foreach (var curGacha in snapshot.Child("curGacha").Children)
+        {
+            versionData.curGacha.Add(Convert.ToInt32(curGacha.Value));
+        }
+
+        foreach (var curEvent in snapshot.Child("curEvent").Children)
+        {
+            versionData.curEvents.Add((string)curEvent.Value);
+        }
+    }
+    public void InitGachaPoint(DataSnapshot snapshot)
+    {
+        int data = snapshot.Exists ? Convert.ToInt32(snapshot.Value) : 0;
+        gachaPoint = data;
+    }
+    public void InitMailBox(DataSnapshot snapshot)
+    {
+        mailBox = new();
+
+        foreach (var mail in snapshot.Children)
+        {
+            MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
+            mailSO.id = mail.Child("id").Value.ToString();
+            mailSO.title = mail.Child("title").Value.ToString();
+            mailSO.sender = mail.Child("sender").Value.ToString();
+            string dateString = mail.Child("dateSent").Value.ToString();
+            DateTime dateSent = DateTime.Parse(dateString);
+            mailSO.dateSent = dateSent;
+            DateTime expireDate = mailSO.dateSent.AddDays(14);
+            mailSO.remainingTime = expireDate - DateTime.Now;
+            if (expireDate <= DateTime.Now)
+            {
+                mailSO.remainingTime = TimeSpan.Zero;
+            }
+            else
+            {
+                mailSO.remainingTime = expireDate - DateTime.Now;
+            }
+            mailBox.Add(mailSO);
+        }
+    }
+    public void InitMissionData(DataSnapshot snapshot)
+    {
+        OngoingMissionInit(snapshot.Child("ongoingMissionsData"));
+        CompleteMissionInit(snapshot.Child("completeMissionsData"));
+    }
+    
     public void Init()
     {
         
     }
-    */
-
+    
+    /*
     public void Init(
         Dictionary<string, int> stageClearData,
         Dictionary<int, Character> characterData,
@@ -59,18 +218,8 @@ public class AccountData
         this.friendData = friendData ?? new Dictionary<int, string[]>();
         this.formationData = formationData ?? new Dictionary<int, FormationData>();
         this.mailBox = mailBox ?? new List<MailSO>();
-
-        if (isInit == true)
-        {
-            return;
-        }
-
-        isInit = true;
-
-        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("ongoingMissionsData"), OngoingMissionInit);
-        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("completeMissionsData"), CompleteMissionInit);
     }
-
+    */
     private void OngoingMissionInit(DataSnapshot snapshot)
     {
         // 데이터가 존재하는지 확인
