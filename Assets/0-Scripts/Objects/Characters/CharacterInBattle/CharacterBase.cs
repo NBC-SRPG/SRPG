@@ -506,7 +506,7 @@ public class CharacterBase : MonoBehaviour
 
     public void TakeDamageByInt(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 데미지(주로 버프효과에 의해)
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 데미지(치명타가 발생하지 않는 것들)
     {
         if (damageType != BattleKeyWords.AttackDamageType.Extra)
         {
@@ -533,7 +533,7 @@ public class CharacterBase : MonoBehaviour
 
     public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 힐(주로 버프효과에 의해)
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 힐(치명타가 발생하지 않는 것들)
     {
         curCharacterPassive?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);

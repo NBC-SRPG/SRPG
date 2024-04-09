@@ -30,7 +30,7 @@ public class CharacterBuf_Stun : CharacterBuf
 
         character.canActing = false;
 
-        character.characterAnim.PlayHitAnimation();
+        character.characterAnim.Animator.SetBool(character.characterAnim.Hit, true);
 
         turnCnt++;
     }
