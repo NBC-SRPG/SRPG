@@ -5,7 +5,7 @@ using static Constants;
 
 
 [CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
-public class EquipSO : ReflectionableSO
+public class EquipSO : PassiveSO
 {
     [Header("Develope")]
     public int id;

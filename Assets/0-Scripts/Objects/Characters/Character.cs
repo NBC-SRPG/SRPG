@@ -30,8 +30,8 @@ public class Character
     [Header("Skill")]
     // TODO: refactor with chai227chai
     public ExSkillBase exSkill;
-    public PassiveSkillBase passiveSkill;
-    public PassiveSO passive;
+    public PassiveLogic passiveSkill;
+    public PassiveSkillSO passive;
 
     public AbilitySO abilityT1;
     public AbilitySO abilityT2;
@@ -62,15 +62,15 @@ public class Character
         ReducedDmg = 0;
 
         // EX스킬 초기화
-        Utility.Id2SO<SkillSO>(SO.id, (result) =>
+        Utility.Id2SO<ExSkillSO>(SO.id, (result) =>
         {
-            exSkill = new ExSkillBase((SkillSO)result);
+            exSkill = new ExSkillBase((ExSkillSO)result);
         });
 
         // TODO: passiveSkill 초기화
-        Utility.Id2SO<PassiveSO>(SO.id, (result) =>
+        Utility.Id2SO<PassiveSkillSO>(SO.id, (result) =>
         {
-            passive = (PassiveSO)result;
+            passive = (PassiveSkillSO)result;
             passiveSkill = Utility.GetAbilityBySO(passive);
         });
 

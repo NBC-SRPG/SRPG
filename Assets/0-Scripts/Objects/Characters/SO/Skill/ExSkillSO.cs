@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="Skill_")]
-public class SkillSO : ScriptableObject
+public class ExSkillSO : ScriptableObject
 {
     [Header("Develope")]
     public int skill_ID;//스킬 식별자
