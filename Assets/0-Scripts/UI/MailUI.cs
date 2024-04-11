@@ -38,7 +38,6 @@ public class MailUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetText((int)Texts.WaitingReceiveText).text = $"수령대기 {Managers.AccountData.mailBox.Count}건";
 
-        // 테스트 데이터
         foreach (var mail in Managers.AccountData.mailBox)
         {
             GameObject go = Managers.Resource.Instantiate("UI/MailEntryUI", GetObject((int)GameObjects.Content).transform);
@@ -62,6 +61,9 @@ public class MailUI : UIBase
         {
             MailEntryUI mailEntryUI = child.GetComponent<MailEntryUI>();
             mailEntryUI.OnClickReceiveButton();
+
+            // TODO
+            // 모두 수령은 보상을 한번에 보여주어야 함
         }
     }
 

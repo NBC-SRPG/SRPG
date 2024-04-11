@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 using static Constants;
 
@@ -170,7 +167,7 @@ public class FormationUI : UIBase
             GetText((int)formationLevelTextEnum).text = $"Lv. {characterLevel}";
 
             // 별 개수 꺼내오기 및 설정
-            int numberOfStars = 3; // 테스트 데이터, 실제 값으로 교체 필요
+            int numberOfStars = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.star; // 테스트 데이터, 실제 값으로 교체 필요
             float starWidth = 50f; // 별 이미지의 너비
             for (int starIndex = 0; starIndex < numberOfStars; starIndex++)
             {

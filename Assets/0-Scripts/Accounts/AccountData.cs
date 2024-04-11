@@ -1,5 +1,4 @@
 using Firebase.Database;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -91,21 +90,17 @@ public class AccountData
     {
         friendData = new();
 
-        // TODO
-        // 몇번 키가 어떤 목록을 들고 있을지?
-        // 이거 헷갈리는데 Constants에서 들고있게 하기
-        // 현재는 알파벳 순으로 넣어놨음
-        DataSnapshot applyingSnapshot = snapshot.Child("Applying");
         DataSnapshot friendSnapshot = snapshot.Child("Friend");
+        DataSnapshot applyingSnapshot = snapshot.Child("Applying");
         DataSnapshot waitingSnapshot = snapshot.Child("Waiting");
 
-        string[] applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
         string[] friendUids = ExtractUidsFromSnapshot(friendSnapshot);
+        string[] applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
         string[] waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
 
-        friendData.Add(0, applyingUids);
-        friendData.Add(1, friendUids);
-        friendData.Add(2, waitingUids);
+        friendData.Add(Constants.FriendTabs, friendUids);
+        friendData.Add(Constants.ApplyingTabs, applyingUids);
+        friendData.Add(Constants.WaitingTabs, waitingUids);
     }
     private string[] ExtractUidsFromSnapshot(DataSnapshot snapshot)
     {

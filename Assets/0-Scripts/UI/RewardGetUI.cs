@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
@@ -38,7 +37,7 @@ public class RewardGetUI : UIBase
         // 아이템 리워드 아이콘 생성
         foreach (var itemReward in missionData.rewards)
         {
-            CreateRewardIcon(itemReward.rewardCount, itemReward.rewardId);
+            CreateRewardIcon(itemReward.Key, itemReward.Value);
         }
     }
 

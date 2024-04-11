@@ -91,6 +91,15 @@ public class Database
             UpdateLoadingProgress(1.0f / dataCount);
         });
     }
+
+    public IEnumerator MailLoad()
+    {
+        yield return Read(userDB.Child("mailBox"), data =>
+        {
+            Managers.AccountData.InitMailBox(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+    }
     #region CRUD
 
     /// <summary>

@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,9 +51,12 @@ public class MailEntryUI : UIBase
             GetText((int)Texts.MailRemainingTimeText).text = formattedTime;
             lastMin = curMin;
         }
-        
-        // TODO
+       
         // 남은 시간이 0이라면 삭제
+        if (mailSO.remainingTime.Days * 24 * 60 + mailSO.remainingTime.Hours * 60 + mailSO.remainingTime.Minutes <= 0)
+        {
+            DeleteMailEntry();
+        }
     }
 
     private void Init()
@@ -85,8 +89,17 @@ public class MailEntryUI : UIBase
         // TODO
         // 아이템 인벤토리에 수령
         // 수령 완료 팝업
+        DeleteMailEntry();
+    }
+
+    private void DeleteMailEntry()
+    {
         Managers.AccountData.mailBox.Remove(mailSO);
         Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
+
+        DatabaseReference mailRef = Managers.DB.userDB.Child("mailBox").Child(mailSO.id);
+        Managers.DB.Delete(mailRef);
+
         Destroy(gameObject);
     }
 }

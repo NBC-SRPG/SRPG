@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using static Constants;
@@ -239,8 +235,7 @@ public class CharacterInfoUI : UIBase
         GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.id}");
         GetText((int)Texts.NameText).text = $"{character.SO.characterName}";
 
-        // int numberOfStars = character.characterData.defaltStar; // 별의 개수
-        int numberOfStars = 3; // 별의 개수 // 테스트 데이터
+        int numberOfStars = character.Growth.star; // 별의 개수
         float starWidth = 100f; // 별 이미지의 너비
         float spacing = 10f; // 별 사이의 간격
 
@@ -277,7 +272,9 @@ public class CharacterInfoUI : UIBase
     {
         // 이미 탭에 열려있는 정보를 누르면 아무것도 하지않음
         if (playTab == tab)
+        {
             return;
+        }
 
         // 현재 열려있는 탭 업데이트
         playTab = tab;

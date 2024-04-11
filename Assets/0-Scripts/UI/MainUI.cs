@@ -1,9 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
-
 public class MainUI : UIBase
 {
     private enum Texts
@@ -65,7 +61,7 @@ public class MainUI : UIBase
 
         // TODO
         // 선택한 캐릭터의 일러스트 표시
-        //GetImage((int)Images.IllustrationImage).sprite = 
+        // GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>(Managers.AccountData.playerData.lobbyCharacter.ToString());
 
         RefreshUI();
 
@@ -143,8 +139,18 @@ public class MainUI : UIBase
         Debug.Log("OnClickMailButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
+
+        // 메일은 게임 진행 중에 새로 올 수도 있음
+        // 메일을 열 때마다 데이터 받아오기
+        StartCoroutine(ShowMailUI());
+        //Managers.UI.ShowUI<MailUI>();
+    }
+    private IEnumerator ShowMailUI()
+    {
+        yield return Managers.DB.MailLoad();
         Managers.UI.ShowUI<MailUI>();
     }
+
     private void OnClickNoticeButton()
     {
         Debug.Log("OnClickNoticeButton");
