@@ -14,6 +14,8 @@ public class CharAnimBase : MonoBehaviour
     protected Rigidbody2D rb;
     protected Particles particles;
 
+    protected HealthSystem healthSystem;
+
     private string idleParameter = "idle";
     private string moveParameter = "move";
     private string attackParameter = "attack";
@@ -34,7 +36,7 @@ public class CharAnimBase : MonoBehaviour
 
     protected Queue<BattleKeyWords.Damage> damages;
 
-    public void Init(CharacterBase thisCharacter)
+    public void Init(HealthSystem characterHealth)
     {
         Animator = GetComponent<Animator>();
 
@@ -54,6 +56,8 @@ public class CharAnimBase : MonoBehaviour
         particles = GetComponent<Particles>();
 
         damages = new Queue<BattleKeyWords.Damage>();
+
+        healthSystem = characterHealth;
     }
 
     public void DeActivate()
@@ -137,7 +141,14 @@ public class CharAnimBase : MonoBehaviour
 
     public void PlayHitAnimation()
     {
-        Animator.SetBool(Hit, true);
+        if (healthSystem.GetShield() <= 0)
+        {
+            Animator.SetBool(Hit, true);
+        }
+        else
+        {
+            Animator.SetBool(Defend, true);
+        }
     }
 
     public void PlayDieAnimation()

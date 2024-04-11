@@ -39,6 +39,11 @@ public class CharacterBuf
         return null;
     }
 
+    public virtual BonusStat GetDecreaseStat()
+    {
+        return null;
+    }
+
     public virtual void DecreaseStack(int n)
     {
         if(n < 1)
@@ -61,10 +66,10 @@ public class CharacterBuf
 
     public void DestoyBuf()
     {
-        OnDestroy();
-
         stack = 0;
         IsDestroyed = true;
+
+        OnDestroy();
     }
 
     public virtual void OnDestroy()

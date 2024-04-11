@@ -176,7 +176,7 @@ public class CharacterController : MonoBehaviour
             }
             else
             {
-                Destroy(character.gameObject);
+                character.gameObject.SetActive(false);
                 i++;
             }
         }
