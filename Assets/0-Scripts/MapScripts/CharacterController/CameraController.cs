@@ -73,7 +73,10 @@ public class CameraController : MonoBehaviour
             mainCamera.transform.position = PrimeCamera.position;
         }
 
-        BattleTargetGroup.transform.position = PrimeCamera.position;
+        if (!AnimationController.instance.CheckAnimation())
+        {
+            BattleTargetGroup.transform.position = Vector3.zero;
+        }
     }
 
 

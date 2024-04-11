@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static BattleKeyWords;
 
 public class CharacterBufList
 {
@@ -335,6 +336,21 @@ public class CharacterBufList
         return stat;
     }
 
+    public BonusStat GetDecreaseStat()// 감소 스탯 적용
+    {
+        BonusStat stat = new BonusStat();
+
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (!buf.IsDestroyed && buf.GetAdditionalStat() != null)
+            {
+                stat.AddStat(buf.GetAdditionalStat());
+            }
+        }
+
+        return stat;
+    }
+
     public void OnRoundStart()
     {
         foreach (CharacterBuf buf in bufList)
@@ -515,6 +531,63 @@ public class CharacterBufList
             if (buf != null && !buf.IsDestroyed)
             {
                 buf.AfterTakeDamage(damage, character, damageType, characterAttribute);
+            }
+        }
+    }
+
+    public virtual void AfterTakeHeal(int heal, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.AfterTakeHeal(heal, character, damageType, characterAttribute);
+            }
+        }
+    }
+
+    public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnUseSkill(target);
+            }
+        }
+    }
+
+    public void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnSkillAttackSuccess(target, damage);
+            }
+        }
+    }
+
+    public void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnSkillHealSuccess(target, heal);
+            }
+        }
+    }
+
+    public void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.OnEndSkill(target);
             }
         }
     }

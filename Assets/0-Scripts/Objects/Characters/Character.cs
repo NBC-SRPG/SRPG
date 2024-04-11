@@ -7,7 +7,8 @@ public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
-    
+    public EnemySO enemySO;     // enemy로 사용할 경우에만 사용
+
 
     [Header("VisibleStatus")]
     public int hp;
@@ -29,9 +30,8 @@ public class Character
 
     [Header("Skill")]
     // TODO: refactor with chai227chai
-    public ExSkillBase exSkill;
-    public PassiveLogic passiveSkill;
-    public PassiveSkillSO passive;
+    public ExSkillSO exSkill;
+    public PassiveSkillSO passiveSkill;
 
     public AbilitySO abilityT1;
     public AbilitySO abilityT2;
@@ -48,8 +48,8 @@ public class Character
     {
         this.SO = SO;
         this.Growth = Growth;
+        enemySO = null;
 
-        CalculateStat();
         mov = SO.mov;
 
         atkIncrease = 0;
@@ -64,14 +64,13 @@ public class Character
         // EX스킬 초기화
         Utility.Id2SO<ExSkillSO>(SO.id, (result) =>
         {
-            exSkill = new ExSkillBase((ExSkillSO)result);
+            exSkill = (ExSkillSO)result;
         });
 
-        // TODO: passiveSkill 초기화
+        // passiveSkill 초기화
         Utility.Id2SO<PassiveSkillSO>(SO.id, (result) =>
         {
-            passive = (PassiveSkillSO)result;
-            passiveSkill = Utility.GetAbilityBySO(passive);
+            passiveSkill = (PassiveSkillSO)result;
         });
 
         // 특성 초기화
@@ -116,19 +115,52 @@ public class Character
         Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
         {
             weapon = (EquipSO)result;
+
+            Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
+            {
+                armor = (EquipSO)result;
+                CalculateStat();
+            });
         });
 
-        Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
-        {
-            armor = (EquipSO)result;
-        });
+    }
+
+    public Character(EnemySO so)
+    {
+        SO = null;
+        Growth = null;
+        enemySO = so;
+
+        hp = so.hp;
+        atk = so.atk;
+        def = so.def;
+        mov = so.mov;
+
+        atkIncrease = 0;
+        defIncrease = 0;
+
+        critRate = 20;      // 기본 치명타 확률 20%
+        critDmg = 50;       // 기본 치명타 데미지 50%
+
+        EnhancedDmg = 0;
+        ReducedDmg = 0;
+
+        exSkill = so.exSkillSO;
+        passiveSkill =  so.passiveSkillSO;
+        abilityT1 = so.abilityT1;
+        abilityT2 = so.abilityT2;
+        abilityT3 = so.abilityT3;
+        basicClass = so.basicClass;
+        superiorClass = so.superiorClass;
+        weapon = so.weapon;
+        armor = so.armor;
     }
 
     private void CalculateStat()
     {
-        hp = SO.hp + SO.hpPerLv * Growth.level;
-        atk = SO.atk + SO.atkPerLv * Growth.level;
-        def = SO.def + SO.defPerLv * Growth.level;
+        hp = SO.hp + SO.hpPerLv * Growth.level + weapon.hp + armor.hp;
+        atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
+        def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
     }
 
 }

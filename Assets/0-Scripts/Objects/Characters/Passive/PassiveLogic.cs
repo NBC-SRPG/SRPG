@@ -69,6 +69,11 @@ public class PassiveLogic
 
     }
 
+    public virtual void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
+    {
+
+    }
+
     public virtual void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
 
@@ -101,6 +106,13 @@ public class PassiveLogic
     public virtual void AfterTakeDamage(int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
+    {
+
+    }
+
+    public virtual void AfterTakeHeal(int heal, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
     {
 
     }

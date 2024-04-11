@@ -12,6 +12,8 @@ public class GamePlayer
     public int prioty;
     public bool isReady;
 
+    public int manaCost;
+
     public Character[] party = new Character[5];
 
 }
