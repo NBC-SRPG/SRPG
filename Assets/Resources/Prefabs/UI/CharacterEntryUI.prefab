@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6979627398781413840}
   - component: {fileID: 9138688438461884866}
   - component: {fileID: 4851725385706559131}
-  - component: {fileID: 4271784914645245904}
+  - component: {fileID: 2908645900369508647}
   m_Layer: 5
   m_Name: CharacterEntryUI
   m_TagString: Untagged
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 10, y: 10}
   m_UseGraphicAlpha: 1
---- !u!114 &4271784914645245904
+--- !u!114 &2908645900369508647
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,9 +107,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5810740229035277229}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bd4e1d5274b3da4c8a802e1f4a10af1, type: 3}
+  m_Script: {fileID: 11500000, guid: 3fe9d2a694a4648428a5576ff1dc0674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterId: 0
 --- !u!1 &6085340986744148908
 GameObject:
   m_ObjectHideFlags: 0

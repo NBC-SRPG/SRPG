@@ -104,7 +104,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickInventoryButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<InventoryUI>();
+        Managers.UI.ShowUI<InventoryUI>();
     }
     private void OnClickGachaButton()
     {

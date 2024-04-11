@@ -23,21 +23,21 @@ public class ExSkillInfoUI : UIBase
     public void Init(int characterId)
     {
         this.characterId = characterId;
-        string exSkillDescription = Managers.AccountData.characterData[characterId].exSkill.skillData.description;
+        string exSkillDescription = Managers.AccountData.characterData[characterId].exSkill.description;
 
         //Managers.AccountData.characterData[characterId].characterGrowth.OnExSkillLevelChanged += UpdateDescription;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        GetText((int)Texts.ExSkillNameText).text = $"Ex 스킬 / {Managers.AccountData.characterData[characterId].exSkill.skillData.skillName}";
+        GetText((int)Texts.ExSkillNameText).text = $"Ex 스킬 / {Managers.AccountData.characterData[characterId].exSkill.skillName}";
         GetText((int)Texts.ExSkillLevelText).text = $"Lv. {Managers.AccountData.characterData[characterId].Growth.exSkillLevel}";
-        GetText((int)Texts.ExSkilCostText).text = $"코스트: {Managers.AccountData.characterData[characterId].exSkill.skillData.cost}";
+        GetText((int)Texts.ExSkilCostText).text = $"코스트: {Managers.AccountData.characterData[characterId].exSkill.cost}";
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
 
-        UpdateDescription(Managers.AccountData.characterData[characterId].exSkill.skillData.description);
+        UpdateDescription(Managers.AccountData.characterData[characterId].exSkill.description);
     }
     private void UpdateDescription(string newDescription)
     {

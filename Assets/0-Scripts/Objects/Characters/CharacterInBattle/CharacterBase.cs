@@ -1,11 +1,7 @@
-using GooglePlayGames.BasicApi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class CharacterBase : MonoBehaviour
 {
@@ -83,10 +79,10 @@ public class CharacterBase : MonoBehaviour
         //character.CharacterInit();
 
         characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(this);
+        characterAnim.Init(health);
 
         health = GetComponent<HealthSystem>();
-        health.SetHealth(character.hp);
+        //health.SetHealth(character.hp);
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
 
