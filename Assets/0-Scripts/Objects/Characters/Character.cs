@@ -7,7 +7,8 @@ public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
-    
+    public EnemySO enemySO;     // enemy로 사용할 경우에만 사용
+
 
     [Header("VisibleStatus")]
     public int hp;
@@ -47,6 +48,7 @@ public class Character
     {
         this.SO = SO;
         this.Growth = Growth;
+        enemySO = null;
 
         mov = SO.mov;
 
@@ -121,6 +123,37 @@ public class Character
             });
         });
 
+    }
+
+    public Character(EnemySO so)
+    {
+        SO = null;
+        Growth = null;
+        enemySO = so;
+
+        hp = so.hp;
+        atk = so.atk;
+        def = so.def;
+        mov = so.mov;
+
+        atkIncrease = 0;
+        defIncrease = 0;
+
+        critRate = 20;      // 기본 치명타 확률 20%
+        critDmg = 50;       // 기본 치명타 데미지 50%
+
+        EnhancedDmg = 0;
+        ReducedDmg = 0;
+
+        exSkill = so.exSkillSO;
+        passiveSkill =  so.passiveSkillSO;
+        abilityT1 = so.abilityT1;
+        abilityT2 = so.abilityT2;
+        abilityT3 = so.abilityT3;
+        basicClass = so.basicClass;
+        superiorClass = so.superiorClass;
+        weapon = so.weapon;
+        armor = so.armor;
     }
 
     private void CalculateStat()
