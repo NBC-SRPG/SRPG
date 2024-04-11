@@ -30,7 +30,16 @@ public static class Utility
 
     public static PassiveLogic GetAbilityBySO<T>(T so) where T : PassiveSO
     {
-        Type passiveType = Type.GetType(so.reflection);
+        Type passiveType;
+
+        if(so.reflection == null)
+        {
+            passiveType = Type.GetType(so.reflection);
+        }
+        else
+        {
+            passiveType = null;
+        }
 
         if (passiveType == null)
         {
