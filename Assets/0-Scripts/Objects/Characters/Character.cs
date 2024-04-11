@@ -29,9 +29,8 @@ public class Character
 
     [Header("Skill")]
     // TODO: refactor with chai227chai
-    public ExSkillBase exSkill;
-    public PassiveLogic passiveSkill;
-    public PassiveSkillSO passive;
+    public ExSkillSO exSkill;
+    public PassiveSkillSO passiveSkill;
 
     public AbilitySO abilityT1;
     public AbilitySO abilityT2;
@@ -49,7 +48,6 @@ public class Character
         this.SO = SO;
         this.Growth = Growth;
 
-        CalculateStat();
         mov = SO.mov;
 
         atkIncrease = 0;
@@ -64,14 +62,13 @@ public class Character
         // EX스킬 초기화
         Utility.Id2SO<ExSkillSO>(SO.id, (result) =>
         {
-            exSkill = new ExSkillBase((ExSkillSO)result);
+            exSkill = (ExSkillSO)result;
         });
 
-        // TODO: passiveSkill 초기화
+        // passiveSkill 초기화
         Utility.Id2SO<PassiveSkillSO>(SO.id, (result) =>
         {
-            passive = (PassiveSkillSO)result;
-            passiveSkill = Utility.GetAbilityBySO(passive);
+            passiveSkill = (PassiveSkillSO)result;
         });
 
         // 특성 초기화
@@ -116,19 +113,21 @@ public class Character
         Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
         {
             weapon = (EquipSO)result;
+
+            Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
+            {
+                armor = (EquipSO)result;
+                CalculateStat();
+            });
         });
 
-        Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
-        {
-            armor = (EquipSO)result;
-        });
     }
 
     private void CalculateStat()
     {
-        hp = SO.hp + SO.hpPerLv * Growth.level;
-        atk = SO.atk + SO.atkPerLv * Growth.level;
-        def = SO.def + SO.defPerLv * Growth.level;
+        hp = SO.hp + SO.hpPerLv * Growth.level + weapon.hp + armor.hp;
+        atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
+        def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
     }
 
 }
