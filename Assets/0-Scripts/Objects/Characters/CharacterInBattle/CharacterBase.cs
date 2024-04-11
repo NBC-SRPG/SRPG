@@ -81,14 +81,6 @@ public class CharacterBase : MonoBehaviour
 
         //character.CharacterInit();
 
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(this);
-
-        health = GetComponent<HealthSystem>();
-        health.SetHealth(character.hp);
-        health.Die += CharacterDie;
-        health.DieAnimation += DieAnimation;
-
         //캐릭터 클래스로 부터 스킬을 생성해서 받아옴
         curCharacterSkill = character.exSkill;
 
@@ -112,6 +104,14 @@ public class CharacterBase : MonoBehaviour
 
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
+
+        health = GetComponent<HealthSystem>();
+        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
+        health.Die += CharacterDie;
+        health.DieAnimation += DieAnimation;
+
+        characterAnim = GetComponentInChildren<CharAnimBase>();
+        characterAnim.Init(health);
     }
 
     //스킬 및 패시브 시전자 설정
@@ -497,16 +497,14 @@ public class CharacterBase : MonoBehaviour
             curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, characterAttribute);
         }
 
-        damage.damage = -damage.damage;
-
-        health.ChangeHealth(damage);
+        health.TakeDamage(damage);
 
         AfterTakeDamage(damage.damage, enemy, damageType, characterAttribute);
     }
 
     public void TakeDamageByInt(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 데미지(주로 버프효과에 의해)
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 데미지(치명타가 발생하지 않는 것들)
     {
         if (damageType != BattleKeyWords.AttackDamageType.Extra)
         {
@@ -514,9 +512,7 @@ public class CharacterBase : MonoBehaviour
             curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, characterAttribute);
         }
 
-        damage = -damage;
-
-        health.ChangeHealthByInt(damage);
+        health.TakeDamageByInt(damage);
 
         AfterTakeDamage(damage, enemy, damageType, characterAttribute);
     }
@@ -528,17 +524,17 @@ public class CharacterBase : MonoBehaviour
         curCharacterPassive?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
         curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, characterAttribute);
 
-        health.ChangeHealth(heal);
+        health.HealHealth(heal);
     }
 
     public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 힐(주로 버프효과에 의해)
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// int만 받아 힐(치명타가 발생하지 않는 것들)
     {
         curCharacterPassive?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, characterAttribute);
         
-        health.ChangeHealthByInt(heal);
+        health.HealHealthByInt(heal);
     }
 
     public void AfterTakeDamage(int damage, CharacterBase skillUser = null,
@@ -596,7 +592,7 @@ public class CharacterBase : MonoBehaviour
 
     public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
-        curCharacterPassive.OnUseSkill(target);
+        curCharacterPassive?.OnUseSkill(target);
         curCharacterSkill.skillAbility?.OnUseSkill(target);
     }
 

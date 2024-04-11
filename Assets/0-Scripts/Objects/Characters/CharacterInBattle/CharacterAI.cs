@@ -62,6 +62,15 @@ public class CharacterAI : CharacterBase
     {
         AnimationController.instance.onAnimationEnd += EndActing;
 
+        if (isDead)
+        {
+            Wait?.Invoke();
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
+
+            return;
+        }
+
         switch (state)
         {
             case State.Waiting:

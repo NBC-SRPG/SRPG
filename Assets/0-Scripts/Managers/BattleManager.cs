@@ -138,7 +138,7 @@ public class BattleManager
         return damagest;
     }
 
-    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase victim, int figure, Constants.ElementType damageType, BattleKeyWords.AttackDamageType attackType)
+    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase victim, int figure, Constants.ElementType damageType = Constants.ElementType.None, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.None)
     {
         BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
 
@@ -157,7 +157,7 @@ public class BattleManager
         return damagest;
     }
 
-    private float ExtraDmgbyAttribute(Constants.ElementType attackerAttribute, Constants.ElementType victimAttribute)
+    public float ExtraDmgbyAttribute(Constants.ElementType attackerAttribute, Constants.ElementType victimAttribute)
     {
         switch (attackerAttribute)
         {
@@ -503,8 +503,8 @@ public class BattleManager
             characters.OnStartPlayerTurn();
         }
 
-        TurnStart?.Invoke();
         Debug.Log("nowPlayer" + nowPlayer.playerId);
+        TurnStart?.Invoke();
     }
 
     private void StartRound()//라운드 시작
