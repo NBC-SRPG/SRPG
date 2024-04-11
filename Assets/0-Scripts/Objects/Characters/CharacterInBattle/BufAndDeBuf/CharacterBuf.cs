@@ -163,16 +163,32 @@ public class CharacterBuf
 
     }
 
-    public virtual void OnUseSkill()
+    public virtual void AfterTakeHeal(int heal, CharacterBase skillUser = null,
+        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
     {
 
     }
 
-    public virtual void OnSkillSuccess()
+    public virtual void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
 
     }
 
+    public virtual void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
+    {
+
+    }
+
+    public virtual void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
+    {
+
+    }
+
+    public virtual void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
+    {
+
+    }
 
     public virtual void OnDie()
     {

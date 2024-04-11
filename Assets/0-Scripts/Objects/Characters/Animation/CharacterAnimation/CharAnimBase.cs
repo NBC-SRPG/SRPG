@@ -58,6 +58,13 @@ public class CharAnimBase : MonoBehaviour
         damages = new Queue<BattleKeyWords.Damage>();
 
         healthSystem = characterHealth;
+
+        LoadParticles();
+    }
+
+    protected virtual void LoadParticles()
+    {
+
     }
 
     public void DeActivate()

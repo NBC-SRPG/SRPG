@@ -26,6 +26,11 @@ public abstract class ExSkillLogic
 
     }
 
+    public virtual void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
+    {
+
+    }
+
     public virtual void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
 

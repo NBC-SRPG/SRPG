@@ -46,8 +46,6 @@ public class CharacterController : MonoBehaviour
 
     private BattleUI Ui;
 
-    public int manaCost;
-
     private void Awake()
     {
         rangeFinder = new RangeFinder();
@@ -134,7 +132,7 @@ public class CharacterController : MonoBehaviour
             canClick = true;
             nowPlayerTurn = true;
 
-            manaCost += 2;
+            player.manaCost += 2;
 
             //-----------------------------------------
 
@@ -183,7 +181,7 @@ public class CharacterController : MonoBehaviour
 
         ChangePhase(PlayerPhase.Idle);
 
-        manaCost = 4;
+        player.manaCost = 4;
 
         player.isReady = true;
         Managers.BattleManager.GetReady();
@@ -384,8 +382,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && manaCost >= curSelectedCharacter.curCharacterSkill?.skillData.cost);
-        Ui.SetNoManaText(manaCost < curSelectedCharacter.curCharacterSkill?.skillData.cost);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost >= curSelectedCharacter?.skillCost);
+        Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
     }
 
     private void OnClickMoveAndAttack()
@@ -636,7 +634,8 @@ public class CharacterController : MonoBehaviour
         {
             canClick = false;
 
-            manaCost -= curSelectedCharacter.curCharacterSkill.skillData.cost;
+            player.manaCost -= curSelectedCharacter.skillCost;
+            curSelectedCharacter.historyCurrentRound.useCostCount += curSelectedCharacter.skillCost;
 
             AnimationController.instance.onAnimationEnd += EndSkill;
 

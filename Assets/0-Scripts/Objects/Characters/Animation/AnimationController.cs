@@ -53,13 +53,14 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //캐릭터 위치 조정
 
-    private void SetCharacterLayer(CharacterBase character, int layerNum)
+    private void SetCharacterLayer(Transform character, int layerNum)
     {
         character.gameObject.layer = layerNum;
 
         foreach(Transform child in character.GetComponentInChildren<Transform>())
         {
-            child.gameObject.layer = layerNum;
+            //child.gameObject.layer = layerNum;
+            SetCharacterLayer(child, layerNum);
         }
     }
 
@@ -80,7 +81,7 @@ public class AnimationController : MonoBehaviour
         attacker.transform.position = attackerPosition.transform.position;
         attacker.transform.localScale = new Vector3(4, 4, 0);
 
-        SetCharacterLayer(attacker, 31);
+        SetCharacterLayer(attacker.transform, 31);
 
         attacker.characterAnim.Activate();
         attacker.characterAnim.FlipCharacterDirection(Vector2.right);
@@ -101,7 +102,7 @@ public class AnimationController : MonoBehaviour
             this.attackTargets[i].transform.position = new Vector3(victimPosition.transform.position.x + (i * 5), victimPosition.transform.position.y, victimPosition.transform.position.z);
             this.attackTargets[i].transform.localScale = new Vector3(4, 4, 0);
 
-            SetCharacterLayer(this.attackTargets[i], 31);
+            SetCharacterLayer(this.attackTargets[i].transform, 31);
 
             this.attackTargets[i].characterAnim.Activate();
             this.attackTargets[i].characterAnim.FlipCharacterDirection(Vector2.left);
@@ -137,7 +138,7 @@ public class AnimationController : MonoBehaviour
         attacker.transform.position = originPos[attacker];
         attacker.transform.localScale = new Vector3(1, 1, 0);
 
-        SetCharacterLayer(attacker, 0);
+        SetCharacterLayer(attacker.transform, 0);
 
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
@@ -155,7 +156,7 @@ public class AnimationController : MonoBehaviour
             attackTargets[i].transform.position = originPos[attackTargets[i]];
             attackTargets[i].transform.localScale = new Vector3(1, 1, 0);
 
-            SetCharacterLayer(attackTargets[i], 0);
+            SetCharacterLayer(attackTargets[i].transform, 0);
 
             attackTargets[i].characterAnim.EndAnimation(attackTargets[i].isWalking);
             attackTargets[i].characterAnim.FlipCharacter(attacker.transform.position, false);
