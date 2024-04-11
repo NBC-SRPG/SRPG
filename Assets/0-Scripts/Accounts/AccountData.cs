@@ -1,4 +1,5 @@
 using Firebase.Database;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class AccountData
     }
     public void InitCharacterData(DataSnapshot snapshot)
     {
-        /*
+
         foreach (var character in snapshot.Children)
         {
             characterData = new();
@@ -49,7 +50,7 @@ public class AccountData
                 Debug.Log(growth.id);
             });
         }
-        */
+
     }
     public void InitPlayerData(DataSnapshot snapshot)
     {

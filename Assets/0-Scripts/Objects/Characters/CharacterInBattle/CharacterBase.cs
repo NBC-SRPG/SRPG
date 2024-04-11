@@ -83,10 +83,10 @@ public class CharacterBase : MonoBehaviour
         //character.CharacterInit();
 
         characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(this);
+        //characterAnim.Init(this);
 
         health = GetComponent<HealthSystem>();
-        health.SetHealth(character.hp);
+        //health.SetHealth(character.hp);
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
 
