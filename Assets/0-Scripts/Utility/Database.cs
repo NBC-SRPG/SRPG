@@ -41,6 +41,20 @@ public class Database
         // 데이터베이스의 RootReference를 가리킴
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         userDB = reference.Child("users").Child(uid);
+
+        // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
+        userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+        userDB.Child("mailBox").ValueChanged += MailBoxValueChange;
+    }
+
+    private void FriendDataValueChange(object sender, ValueChangedEventArgs args)
+    {
+        FriendDataUpdate();
+    }
+
+    private void MailBoxValueChange(object sender, ValueChangedEventArgs args)
+    {
+
     }
 
     public IEnumerator DataLoad()
@@ -58,6 +72,11 @@ public class Database
         yield return Read(userDB.Child("playerData"), data =>
         {
             Managers.AccountData.InitPlayerData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("inventory"), data =>
+        {
+            Managers.AccountData.InitInventoryData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
         yield return Read(userDB.Child("friendData"), data =>
@@ -80,15 +99,18 @@ public class Database
             Managers.AccountData.InitGachaPoint(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("mailBox"), data =>
-        {
-            Managers.AccountData.InitMailBox(data);
-            UpdateLoadingProgress(1.0f / dataCount);
-        });
         yield return Read(userDB.Child("missionData"), data =>
         {
             Managers.AccountData.InitMissionData(data);
             UpdateLoadingProgress(1.0f / dataCount);
+        });
+    }
+
+    private IEnumerator FriendDataUpdate()
+    {
+        yield return Read(userDB.Child("friendData"), data =>
+        {
+            Managers.AccountData.InitFriendData(data);
         });
     }
 
@@ -97,7 +119,6 @@ public class Database
         yield return Read(userDB.Child("mailBox"), data =>
         {
             Managers.AccountData.InitMailBox(data);
-            UpdateLoadingProgress(1.0f / dataCount);
         });
     }
     #region CRUD
@@ -172,6 +193,16 @@ public class Database
             // Callback 함수 실행
             action(snapshot);
         }
+    }
+
+    /// <summary>
+    /// 
+    /// <param uId> 삭제하려는 유저의 uId </param>
+    /// <param friendTab> 삭제하려는 친구탭 </param>
+    /// </summary>
+    public void FriendDataDelete(string uId, int friendTab)
+    {
+
     }
 
     #endregion

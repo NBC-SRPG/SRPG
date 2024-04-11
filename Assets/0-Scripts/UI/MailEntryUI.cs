@@ -94,6 +94,9 @@ public class MailEntryUI : UIBase
 
     private void DeleteMailEntry()
     {
+        // TODO
+        // 메일박스에서 안지워도 될 것 같음
+        // 어차피 메일함 열 때마다 새로 불러오는중
         Managers.AccountData.mailBox.Remove(mailSO);
         Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
 

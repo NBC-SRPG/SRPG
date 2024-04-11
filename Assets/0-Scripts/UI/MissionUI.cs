@@ -124,51 +124,6 @@ public class MissionUI : UIBase
                 break;
         }
     }
-    /*
-    private void OnMissionCompletedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-
-    private void OnMissionReceivedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-    */
     private void OnClickTestGetItemButton()
     {
         TestGameManager.Instance.GetItem(80001000);

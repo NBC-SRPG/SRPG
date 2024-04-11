@@ -8,9 +8,8 @@ public class AccountData
     public Dictionary<string, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
- 
-    //public Dictionary<int, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
-    public Dictionary<int, string[]> friendData { get; set; }
+    public Dictionary<int, int> inventory { get; set; }
+    public Dictionary<int, List<string>> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
     public int gachaPoint { get; set; }
@@ -86,6 +85,15 @@ public class AccountData
             // 저장된 값이 없을 때 기본 세팅
         }
     }
+    public void InitInventoryData(DataSnapshot snapshot)
+    {
+        inventory = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            inventory.Add(Convert.ToInt32(childSnapshot.Key), Convert.ToInt32(childSnapshot.Value));
+        }
+    }
     public void InitFriendData(DataSnapshot snapshot)
     {
         friendData = new();
@@ -94,15 +102,15 @@ public class AccountData
         DataSnapshot applyingSnapshot = snapshot.Child("Applying");
         DataSnapshot waitingSnapshot = snapshot.Child("Waiting");
 
-        string[] friendUids = ExtractUidsFromSnapshot(friendSnapshot);
-        string[] applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
-        string[] waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
+        List<string> friendUids = ExtractUidsFromSnapshot(friendSnapshot);
+        List<string> applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
+        List<string> waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
 
         friendData.Add(Constants.FriendTabs, friendUids);
         friendData.Add(Constants.ApplyingTabs, applyingUids);
         friendData.Add(Constants.WaitingTabs, waitingUids);
     }
-    private string[] ExtractUidsFromSnapshot(DataSnapshot snapshot)
+    private List<string> ExtractUidsFromSnapshot(DataSnapshot snapshot)
     {
         List<string> uids = new();
 
@@ -112,7 +120,7 @@ public class AccountData
             uids.Add(uid);
         }
 
-        return uids.ToArray();
+        return uids;
     }
     public void InitFormationData(DataSnapshot snapshot)
     {
@@ -155,6 +163,8 @@ public class AccountData
         int data = snapshot.Exists ? Convert.ToInt32(snapshot.Value) : 0;
         gachaPoint = data;
     }
+    // TODO
+    // 메일을 받았을 때 이벤트를 걸어서 업데이트 하는걸로 변경
     public void InitMailBox(DataSnapshot snapshot)
     {
         mailBox = new();

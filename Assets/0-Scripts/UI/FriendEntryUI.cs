@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class FriendEntryUI : UIBase
 {
+    private string uId;
     private enum Texts
     {
         NameText,
@@ -29,18 +29,18 @@ public class FriendEntryUI : UIBase
 
     }
 
-    public void Init(int FriendTab)
+    public void Init(int FriendTab, string uId)
     {
-        Managers.UI.SetCanvas(gameObject);
+        this.uId = uId;
 
         BindText(typeof(Texts));
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
-        BindButton(typeof(GameObjects));
+        BindObject(typeof(GameObjects));
 
         switch (FriendTab)
         {
-            case Constants.FriendTabs:
+            case FriendTabs:
                 GetButton((int)Buttons.SupportCharacterButton).onClick.AddListener(OnClickSupportCharacterButton);
                 GetButton((int)Buttons.DeleteButton).onClick.AddListener(OnClickDeleteButton);
 
@@ -49,7 +49,7 @@ public class FriendEntryUI : UIBase
                 GetButton((int)Buttons.RefuseButton).gameObject.SetActive(false);
                 break;
 
-            case Constants.ApplyingTabs:
+            case ApplyingTabs:
                 GetButton((int)Buttons.CancelButton).onClick.AddListener(OnClickCancelButton);
 
                 GetButton((int)Buttons.SupportCharacterButton).gameObject.SetActive(false);
@@ -58,7 +58,7 @@ public class FriendEntryUI : UIBase
                 GetButton((int)Buttons.RefuseButton).gameObject.SetActive(false);
                 break;
 
-            case Constants.WaitingTabs:
+            case WaitingTabs:
                 GetButton((int)Buttons.ApprovalButton).onClick.AddListener(OnClickApprovalButton);
                 GetButton((int)Buttons.RefuseButton).onClick.AddListener(OnClickRefuseButton);
 
@@ -79,34 +79,50 @@ public class FriendEntryUI : UIBase
     {
         Debug.Log("OnClickDeleteButton");
 
-        // TODO
         // 친구 목록에서 삭제
+        Managers.AccountData.friendData[FriendTabs].Remove(uId);
+
+        // TODO
         // 상대방 친구 목록에서 삭제
+        // 엔트리 파괴
+        // UI 업데이트
     }
     private void OnClickCancelButton()
     {
         Debug.Log("OnClickCancelButton");
 
-        // TODO
         // 친구 신청중에서 삭제
+        Managers.AccountData.friendData[WaitingTabs].Remove(uId);
+
+        // TODO
         // 상대방 승인 대기중에서 삭제
+        // 엔트리 파괴
+        // UI 업데이트
     }
     private void OnClickApprovalButton()
     {
         Debug.Log("OnClickApprovalButton");
 
-        // TODO
         // 승인 대기에서 삭제
-        //Managers.AccountData.friendData[Constants.WaitingTabs]
+        Managers.AccountData.friendData[WaitingTabs].Remove(uId);
         // 친구 목록에 추가
+        Managers.AccountData.friendData[FriendTabs].Add(uId);
+
+        // TODO
         // 상대방 친구 목록에 추가
+        // 엔트리 파괴
+        // UI 업데이트
     }
     private void OnClickRefuseButton()
     {
         Debug.Log("OnClickRefuseButton");
 
-        // TODO
         // 승인 대기에서 삭제
+        Managers.AccountData.friendData[WaitingTabs].Remove(uId);
+
+        // TODO
         // 상대방 친구 신청에서 삭제
+        // 엔트리 파괴
+        // UI 업데이트
     }
 }
