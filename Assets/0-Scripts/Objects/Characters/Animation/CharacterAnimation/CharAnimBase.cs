@@ -54,6 +54,7 @@ public class CharAnimBase : MonoBehaviour
 
         rb = GetComponentInParent<Rigidbody2D>();
         particles = GetComponent<Particles>();
+        particles.Init();
 
         damages = new Queue<BattleKeyWords.Damage>();
 

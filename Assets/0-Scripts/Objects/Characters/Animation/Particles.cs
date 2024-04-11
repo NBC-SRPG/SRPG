@@ -6,7 +6,12 @@ public class Particles : MonoBehaviour
 {
     [SerializeField] private ParticleSystem hitParticle;
 
-    public Dictionary<string, ParticleSystem> particleMap = new Dictionary<string, ParticleSystem>();
+    public Dictionary<string, ParticleSystem> particleMap;
+
+    public void Init()
+    {
+        particleMap = new Dictionary<string, ParticleSystem>();
+    }
 
     public void PlayHitParticle()
     {

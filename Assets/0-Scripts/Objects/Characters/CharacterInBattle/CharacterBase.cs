@@ -101,6 +101,7 @@ public class CharacterBase : MonoBehaviour
 
         // 캐릭터 클래스로 부터 Ex스킬을 생성해서 받아옴
         curCharacterSkill = new ExSkillBase(character.exSkill);
+        curCharacterPassive = new List<PassiveLogic>();
 
         PassiveLoad();
         SetSkillOwner();
@@ -139,12 +140,19 @@ public class CharacterBase : MonoBehaviour
     {
         PassiveSO[] passiveList = {character.passiveSkill, character.abilityT1, character.abilityT2, character.abilityT3,
                                 character.basicClass, character.superiorClass, character.weapon, character.armor};
+
+        int index = 0;
         foreach (PassiveSO so in passiveList)
         {
+            if (so == null)
+            {
+                continue;
+            }
+
             PassiveLogic passive = Utility.GetAbilityBySO(so);
             if (passive != null)
             {
-                curCharacterPassive.Add(passive);
+                curCharacterPassive?.Add(passive);
             }
         }
     }
@@ -161,7 +169,7 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
-                passive.init(this);
+                passive?.init(this);
             }
         }
 
@@ -211,9 +219,9 @@ public class CharacterBase : MonoBehaviour
     private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
     {
         foreach(PassiveLogic passive in curCharacterPassive)
-            {
-                passive.OnUpdate();
-            }
+        {
+                passive?.OnUpdate();
+        }
         curCharacterSkill.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
     }
@@ -318,9 +326,9 @@ public class CharacterBase : MonoBehaviour
         historyCurrentRound.ResetHistory();
 
         foreach(PassiveLogic passive in curCharacterPassive)
-            {
-                passive.OnRoundStart();
-            }
+        {
+                passive?.OnRoundStart();
+        }
         curCharacterBufList?.OnRoundStart();
 
         tempBonusStat.ClearAllStat();
@@ -342,9 +350,9 @@ public class CharacterBase : MonoBehaviour
         leftWalkRange = Mov;
 
         foreach(PassiveLogic passive in curCharacterPassive)
-            {
-                passive.OnTurnStart();
-            }
+        {
+                passive?.OnTurnStart();
+        }
         curCharacterBufList?.OnTurnStart();
     }
 
@@ -352,7 +360,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnPassAlly(allyCharacter);
+            passive?.OnPassAlly(allyCharacter);
         }
         curCharacterBufList?.OnPassAlly(allyCharacter);
     }
@@ -361,7 +369,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnAllyPassedMe(allyCharacter);
+            passive?.OnAllyPassedMe(allyCharacter);
         }
         curCharacterBufList?.OnAllyPassedMe(allyCharacter);
     }
@@ -370,7 +378,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnPassEnemy(enemyCharacter);
+            passive?.OnPassEnemy(enemyCharacter);
         }
         curCharacterBufList?.OnPassEnemy(enemyCharacter);
     }
@@ -379,7 +387,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnEnemyPassesMe(enemyCharacter);
+            passive?.OnEnemyPassesMe(enemyCharacter);
         }
         curCharacterBufList?.OnEnemyPassesMe(enemyCharacter);
     }
@@ -391,7 +399,7 @@ public class CharacterBase : MonoBehaviour
         GetAttackTarget();
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnStartMoving();
+            passive?.OnStartMoving();
         }
     }
 
@@ -404,7 +412,7 @@ public class CharacterBase : MonoBehaviour
         {
             foreach (PassiveLogic passive in curCharacterPassive)
             {
-                passive.OnEndMoving();
+                passive?.OnEndMoving();
             }
         }
 
@@ -428,7 +436,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnEndActing();
+            passive?.OnEndActing();
         }
         curCharacterBufList?.OnEndActing();
 
@@ -449,7 +457,7 @@ public class CharacterBase : MonoBehaviour
 
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnTurnEnd();
+            passive?.OnTurnEnd();
         }
         curCharacterBufList?.OnTurnEnd();
     }
@@ -458,7 +466,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnRoundEnd();
+            passive?.OnRoundEnd();
         }
         curCharacterBufList?.OnRoundEnd();
     }
@@ -509,7 +517,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.AfterTakeAttacked(enemy);
+            passive?.AfterTakeAttacked(enemy);
         }
     }
 
@@ -529,7 +537,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnStartAttack(enemy);
+            passive?.OnStartAttack(enemy);
         }
         curCharacterBufList?.OnStartAttack(enemy);
 
@@ -540,7 +548,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnAttackSuccess(enemy, damage);
+            passive?.OnAttackSuccess(enemy, damage);
         }
         curCharacterBufList?.OnAttackSuccess(enemy, damage);
 
@@ -555,7 +563,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnEndAttack(enemy);
+            passive?.OnEndAttack(enemy);
         }
         curCharacterBufList?.OnEndAttack(enemy);
         
@@ -579,7 +587,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnTakeAttack(enemy);
+            passive?.OnTakeAttack(enemy);
         }
         curCharacterBufList?.OnTakeAttack(enemy);
 
@@ -608,7 +616,7 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
-                passive.OnTakeDamage(ref damage.damage, enemy, damageType, elementType);
+                passive?.OnTakeDamage(ref damage.damage, enemy, damageType, elementType);
             }
             curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, elementType);
         }
@@ -626,7 +634,7 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
-                passive.OnTakeDamage(ref damage, enemy, damageType, elementType);
+                passive?.OnTakeDamage(ref damage, enemy, damageType, elementType);
             }
             curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, elementType);
         }
@@ -642,7 +650,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnTakeHeal(ref heal.damage, skillUser, damageType, elementType);
+            passive?.OnTakeHeal(ref heal.damage, skillUser, damageType, elementType);
         }
         curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, elementType);
 
@@ -657,7 +665,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnTakeHeal(ref heal, skillUser, damageType, elementType);
+            passive?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
         }
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
         
@@ -672,7 +680,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.AfterTakeDamage(damage, attacker, damageType, elementType);
+            passive?.AfterTakeDamage(damage, attacker, damageType, elementType);
         }
         curCharacterBufList?.AfterTakeDamage(damage, attacker, damageType, elementType);
 
@@ -753,7 +761,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.skillAbility?.OnUseSkill(target);
         foreach (PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnUseSkill(target);
+            passive?.OnUseSkill(target);
         }
     }
 
@@ -764,12 +772,12 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
-                passive.OnAttackSuccess(target, damage);
+                passive?.OnAttackSuccess(target, damage);
             }
         }
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnSkillAttackSuccess(target, damage);
+            passive?.OnSkillAttackSuccess(target, damage);
         }
         curCharacterSkill.skillAbility?.OnSkillAttackSuccess(target, damage);
 
@@ -786,7 +794,7 @@ public class CharacterBase : MonoBehaviour
 
         foreach (PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnSkillHealSuccess(target, heal);
+            passive?.OnSkillHealSuccess(target, heal);
         }
         curCharacterSkill.skillAbility?.OnSkillHealSuccess(target, heal);
 
@@ -806,7 +814,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterSkill.skillAbility?.OnEndSkill(target);
         foreach (PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnEndSkill(target);
+            passive?.OnEndSkill(target);
         }
 
         OnEndActing();
@@ -830,7 +838,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnKillEnemy(target, elementType);
+            passive?.OnKillEnemy(target, elementType);
         }
     }
 
@@ -851,11 +859,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnDieInBattle(killer);
-        }
-        foreach(PassiveLogic passive in curCharacterPassive)
-        {
-            passive.OnDie();
+            passive?.OnDieInBattle(killer);
         }
 
         OnDie();
@@ -865,7 +869,7 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.OnDie();
+            passive?.OnDie();
         }
         curCharacterBufList?.OnDie();
 
