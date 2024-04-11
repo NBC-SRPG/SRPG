@@ -7,6 +7,7 @@ using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BattleKeyWords;
+using static Constants;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class CharacterBase : MonoBehaviour
@@ -94,7 +95,7 @@ public class CharacterBase : MonoBehaviour
         characterAnim.Init(health);
 
         health = GetComponent<HealthSystem>();
-        health.SetHealth(character.hp);
+        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
 
@@ -647,7 +648,7 @@ public class CharacterBase : MonoBehaviour
 
         health.HealHealth(heal);
 
-        AfterTakeHeal(heal.damage, skillUser, damageType, characterAttribute);
+        AfterTakeHeal(heal.damage, skillUser, damageType, elementType);
     }
 
     public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
@@ -662,7 +663,7 @@ public class CharacterBase : MonoBehaviour
         
         health.HealHealthByInt(heal);
 
-        AfterTakeHeal(heal, skillUser, damageType, characterAttribute);
+        AfterTakeHeal(heal, skillUser, damageType, elementType);
     }
 
     public void AfterTakeDamage(int damage, CharacterBase attacker = null,
@@ -671,9 +672,9 @@ public class CharacterBase : MonoBehaviour
     {
         foreach(PassiveLogic passive in curCharacterPassive)
         {
-            passive.AfterTakeDamage(damage, skillUser, damageType, elementType);
+            passive.AfterTakeDamage(damage, attacker, damageType, elementType);
         }
-        curCharacterBufList?.AfterTakeDamage(damage, skillUser, damageType, elementType);
+        curCharacterBufList?.AfterTakeDamage(damage, attacker, damageType, elementType);
 
         historyCurrentRound.takeDamageFigure += damage;
         historyCurrentRound.takeDamageCount++;
@@ -686,10 +687,13 @@ public class CharacterBase : MonoBehaviour
 
     public void AfterTakeHeal(int heal, CharacterBase skillUser = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
+        Constants.ElementType elementType = Constants.ElementType.None)// 힐 받은 이후에
     {
-        curCharacterPassive?.AfterTakeHeal(heal, skillUser, damageType, characterAttribute);
-        curCharacterBufList?.AfterTakeHeal(heal, skillUser, damageType, characterAttribute);
+        foreach (PassiveLogic passive in curCharacterPassive)
+        {
+            passive?.AfterTakeHeal(heal, skillUser, damageType, elementType);
+        }
+        curCharacterBufList?.AfterTakeHeal(heal, skillUser, damageType, elementType);
 
         historyCurrentRound.takeHealFigure += heal;
         historyCurrentRound.takeHealCount++;
@@ -779,7 +783,11 @@ public class CharacterBase : MonoBehaviour
     public void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
     {
         curCharacterBufList?.OnSkillHealSuccess(target, heal);
-        curCharacterPassive?.OnSkillHealSuccess(target, heal);
+
+        foreach (PassiveLogic passive in curCharacterPassive)
+        {
+            passive.OnSkillHealSuccess(target, heal);
+        }
         curCharacterSkill.skillAbility?.OnSkillHealSuccess(target, heal);
 
         historyCurrentRound.healFigure += heal.damage;
