@@ -377,7 +377,7 @@ public class BattleManager
 
             victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);
 
-            skillUser.OnSkillAttackSuccess(victim, figure);
+            skillUser.OnSkillHealSuccess(victim, figure);
         }
 
         foreach (var t in target)
@@ -452,14 +452,14 @@ public class BattleManager
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage = CheckSkillHealDamage(skillUser, figure);
+            BattleKeyWords.Damage heal = CheckSkillHealDamage(skillUser, figure);
             //------
 
-            victim.OnTakeHeal(ref damage, skillUser, attackType);
+            victim.OnTakeHeal(ref heal, skillUser, attackType);
 
             if (attackType == BattleKeyWords.AttackDamageType.Skill)
             {
-                skillUser.OnSkillAttackSuccess(victim, damage);
+                skillUser.OnSkillHealSuccess(victim, heal);
             }
         }
 

@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class CharAnim_Test : CharAnimBase
 {
+    protected override void LoadParticles()
+    {
+        base.LoadParticles();
+
+        particles.AddParticles(Managers.Resource.Load<ParticleSystem>("Particle/Slash1"));
+    }
+
     public void AttackingTiming()
     {
+        particles.PlayParticle("Slash1");
+
         AttackEnemy();
         KnockBackEnemy(10);
 
