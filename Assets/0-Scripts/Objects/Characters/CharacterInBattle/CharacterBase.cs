@@ -112,6 +112,14 @@ public class CharacterBase : MonoBehaviour
 
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
+
+        health = GetComponent<HealthSystem>();
+        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
+        health.Die += CharacterDie;
+        health.DieAnimation += DieAnimation;
+
+        characterAnim = GetComponentInChildren<CharAnimBase>();
+        characterAnim.Init(health);
     }
 
     // 캐릭터가 가질 수 있는 모든 패시브 효과 추가
@@ -569,9 +577,7 @@ public class CharacterBase : MonoBehaviour
             curCharacterBufList?.OnTakeDamage(ref damage.damage, enemy, damageType, elementType);
         }
 
-        damage.damage = -damage.damage;
-
-        health.ChangeHealth(damage);
+        health.TakeDamage(damage);
 
         AfterTakeDamage(damage.damage, enemy, damageType, elementType);
     }
@@ -589,9 +595,7 @@ public class CharacterBase : MonoBehaviour
             curCharacterBufList?.OnTakeDamage(ref damage, enemy, damageType, elementType);
         }
 
-        damage = -damage;
-
-        health.ChangeHealthByInt(damage);
+        health.TakeDamageByInt(damage);
 
         AfterTakeDamage(damage, enemy, damageType, elementType);
     }
@@ -606,7 +610,7 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterBufList?.OnTakeHeal(ref heal.damage, skillUser, damageType, elementType);
 
-        health.ChangeHealth(heal);
+        health.HealHealth(heal);
     }
 
     public void TakeHealByInt(ref int heal, CharacterBase skillUser = null,
@@ -619,7 +623,7 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
         
-        health.ChangeHealthByInt(heal);
+        health.HealHealthByInt(heal);
     }
 
     public void AfterTakeDamage(int damage, CharacterBase skillUser = null,
