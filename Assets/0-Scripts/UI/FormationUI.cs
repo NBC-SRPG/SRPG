@@ -179,6 +179,15 @@ public class FormationUI : UIBase
                 rt.pivot = new Vector2(0f, 0f);
                 rt.anchoredPosition = new Vector2(starIndex * starWidth, 0);
             }
+
+            //파티에 이미 캐릭터가 있는지 확인
+            int exist = Array.IndexOf(Managers.GameManager.player.party, Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
+
+            if(exist > -1)//있다면 해당 자리를 null로
+            {
+                Managers.GameManager.player.party[exist] = null;
+            }
+            Managers.GameManager.player.party[index] = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
         }
         // 없다면(0이라면) 빈칸으로 밀어버리기
         else
@@ -193,6 +202,8 @@ public class FormationUI : UIBase
                 GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
                 Destroy(child);
             }
+
+            Managers.GameManager.player.party[index] = null;
         }
     }
 
