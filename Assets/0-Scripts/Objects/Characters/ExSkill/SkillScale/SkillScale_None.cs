@@ -11,7 +11,7 @@ public class SkillScale_None : SkillScaleBase
     public override List<OverlayTile> GetSkillScale(Vector2Int location, int scale)
     {
         skillScale = new List<OverlayTile>();
-        skillScale.Add(Managers.MapManager.map[location]);
+        skillScale.Add(MapManager.instance.map[location]);
 
         return base.GetSkillScale(location, scale);
     }

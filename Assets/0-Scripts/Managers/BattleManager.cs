@@ -6,36 +6,56 @@ using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 using UnityEngine.TextCore.Text;
 using static UnityEngine.RuleTile.TilingRuleOutput;
+using GooglePlayGames.BasicApi;
 
-public class BattleManager
+public class BattleManager : MonoBehaviour
 {
+    public static BattleManager Instance;
 
-    public List<GamePlayer> players = new List<GamePlayer>();
-    public List<CharacterBase> charactersInBattle = new List<CharacterBase>();
-    public Dictionary<string, List<CharacterBase>> charactersAsTeam = new Dictionary<string, List<CharacterBase>>(); 
+    public List<GamePlayer> players;
+    public List<CharacterBase> charactersInBattle;
+    public Dictionary<string, List<CharacterBase>> charactersAsTeam;
 
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
     public int nowRound; 
 
     public event Action TurnStart;
+    public event Action<string> Win;
+    public event Action<string> Lose;
 
     public bool isShowAnimation;
+    public bool gameEnd;
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     private BattleUI Ui;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        Init();
+    }
 
     //-----------------------------------------------------------------------------------------------------------------------
     //초기화 함수들
 
     public void Init()
     {
-        players.Clear();
-        charactersInBattle.Clear();
-        charactersAsTeam.Clear();
+        players = new List<GamePlayer>();
+        charactersInBattle = new List<CharacterBase>();
+        charactersAsTeam = new Dictionary<string, List<CharacterBase>>();
 
         isShowAnimation = false;
 
+        Managers.UI.ShowUI<BattleUI>();
         Ui = Managers.UI.FindUI<BattleUI>();
     }
 
@@ -63,6 +83,8 @@ public class BattleManager
     {
         nowPlayerNum = 0;
         nowRound = 0;
+
+        gameEnd = false;
 
         StartRound();
     }
@@ -532,40 +554,64 @@ public class BattleManager
 
         nowPlayerNum = 0;
 
+        CheckWin();
+
         StartRound();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
-    public void CheckRemainCharacter()
+    public void CheckWin(CharacterBase dieChracter = null)
     {
-        int numbers;
+        PVEWin(dieChracter);
+    }
 
-        foreach(GamePlayer player in players)
+    public void PVEWin(CharacterBase dieChracter)
+    {
+        int numbers = 0;
+
+        foreach (CharacterBase chracter in charactersAsTeam[Managers.GameManager.player.playerId])
         {
-            numbers = 0;
-
-            foreach(CharacterBase chracter in charactersAsTeam[player.playerId])
+            if (chracter.isDead)
             {
-                if (chracter.isDead)
-                {
-                    numbers++;
-                }
+                numbers++;
+            }
 
-                if(numbers == charactersAsTeam[player.playerId].Count)
-                {
-                    if (player.playerId == Managers.GameManager.player.playerId)
-                    {
-                        Debug.Log("lose");
-                    }
-                    else
-                    {
-                        Debug.Log("win");
-                    }
-                }
+            if (numbers == charactersAsTeam[Managers.GameManager.player.playerId].Count)
+            {
+                EndGame("enemy");
             }
         }
+
+
+        //----- 스테이지 목표에 따라 추가
+        //switch(stageinfo)
+        //{
+
+        //}
+        //-----
+
+        numbers = 0;
+        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        {
+            if (chracter.isDead)
+            {
+                numbers++;
+            }
+
+            if (numbers == charactersAsTeam["enemy"].Count)
+            {
+                EndGame(Managers.GameManager.player.playerId);
+            }
+        }
+
+    }
+
+    private void EndGame(string player)
+    {
+        Win?.Invoke(Managers.GameManager.player.playerId);
+        gameEnd = true;
     }
 
 }

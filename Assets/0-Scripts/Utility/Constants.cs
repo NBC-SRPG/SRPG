@@ -198,6 +198,14 @@ public class Constants
         Receive // 보상 수령
     }
 
+    public enum StageClear
+    {
+        ClearAll,// 섬멸
+        Assasinate, // 특정 적 처치
+        Run, // 특정 위치로 이동
+        Defence // 방어
+    }
+
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
 
