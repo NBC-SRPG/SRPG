@@ -86,16 +86,7 @@ public class CharacterBase : MonoBehaviour
         characterObject = Managers.Resource.Instantiate("character", transform);
         characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
         characterObject.AddComponent(Type.GetType("CharAnim_" + character.SO.animatorName));
-
-        //character.CharacterInit();
-
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(health);
-
-        health = GetComponent<HealthSystem>();
-        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
-        health.Die += CharacterDie;
-        health.DieAnimation += DieAnimation;
+        Debug.Log(character.SO.id + " CharAnim_" + character.SO.animatorName);
 
         // 캐릭터 클래스로 부터 Ex스킬을 생성해서 받아옴
         curCharacterSkill = new ExSkillBase(character.exSkill);
@@ -122,13 +113,14 @@ public class CharacterBase : MonoBehaviour
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
 
-        health = GetComponent<HealthSystem>();
-        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
+        health = GetComponentInChildren<HealthSystem>();
+        characterAnim = GetComponentInChildren<CharAnimBase>();
+
+        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList, characterAnim);
+        characterAnim.Init(health);
+
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
-
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(health);
 
         historyCurrentRound = new CharacterHistory();
     }

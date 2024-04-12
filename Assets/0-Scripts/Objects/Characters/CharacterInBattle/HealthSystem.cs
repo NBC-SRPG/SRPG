@@ -27,12 +27,7 @@ public class HealthSystem : MonoBehaviour
     public event Action Die;
     public event Action DieAnimation;
 
-    private void Start()
-    {
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-    }
-
-    public void InitHealth(int health, TempBonusStat stat, CharacterBufList buflist)
+    public void InitHealth(int health, TempBonusStat stat, CharacterBufList buflist, CharAnimBase charAnim)
     {
         shieldList = new List<ShieldStat>();
 
@@ -41,6 +36,7 @@ public class HealthSystem : MonoBehaviour
 
         tempBonus = stat;
         characterBufList = buflist;
+        characterAnim = charAnim;
 
         healthBar.fillAmount = HealthRatio;
         UpdateText();

@@ -32,7 +32,7 @@ public static class Utility
     {
         Type passiveType;
 
-        if(so.reflection == null)
+        if(so.reflection != null)
         {
             passiveType = Type.GetType(so.reflection);
         }
