@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class BattleKeyWords
 {
+    public enum State
+    {
+        Waiting,// 대기
+        Watching,// 경계
+        Finding,// 색적
+        Chasing// 추격
+    }
+
     public struct Damage// 치명타 피해 판정을 체크하기 위한 데미지 구조체
     {
         public int damage;

@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
+using static BattleKeyWords;
 
 [CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "Enemy_")]
 public class EnemySO : ScriptableObject
 {
+    public State startState = State.Finding;
+
     public AttackMethod attackMethod;     //공격 타입
     public ElementType elementType;      //캐릭터 속성
     

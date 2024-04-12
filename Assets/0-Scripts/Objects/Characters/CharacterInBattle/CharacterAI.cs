@@ -3,18 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static BattleKeyWords;
 
 public class CharacterAI : CharacterBase
 {
-    protected enum State
-    {
-        Waiting,// 대기
-        Watching,// 경계
-        Finding,// 색적
-        Chasing// 추격
-    }
-
-
     [SerializeField]protected State state;
 
     protected CharacterBase attractTarget;
@@ -38,9 +30,9 @@ public class CharacterAI : CharacterBase
     {
         base.InitCharacter(charac, id);
 
-        state = State.Finding;
-
         enemyData = character.enemySO;// 적 데이터를 따로 받아옴
+
+        state = enemyData.startState;
 
         //if (enemyData.isElite)
         //{
