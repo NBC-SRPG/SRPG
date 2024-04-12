@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &464268975
+--- !u!1001 &101834776
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -178,30 +178,6 @@ PrefabInstance:
     - target: {fileID: 4048063396725730902, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5246873197407356742, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5246873197407356742, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5635537242526512925, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5635537242526512925, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7804418579335844265, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7804418579335844265, guid: 85d5bad4aa9b49d468c371ec3ed848b7, type: 3}
-      propertyPath: m_ChunkCullingBounds.y
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -269,7 +245,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 13
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
