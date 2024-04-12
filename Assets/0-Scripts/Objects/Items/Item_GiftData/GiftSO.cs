@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ItemData/GiftData", fileName = "Gift_")]
 public class GiftSO : ItemData
 {
-    public int affectionValue; //Áõ°¡½ÃÅ°´Â È£°¨µµ ¼öÄ¡
-    public int[] favoriteCharacterId; //ÀÌ ¼±¹°À» ÁÁ¾ÆÇÏ´Â Ä³¸¯ÅÍµéÀÇ ID
+    public int affectionValue; //ì¦ê°€ì‹œí‚¤ëŠ” í˜¸ê°ë„ ìˆ˜ì¹˜
+    public int[] favoriteCharacterId; //ì´ ì„ ë¬¼ì„ ì¢‹ì•„í•˜ëŠ” ìºë¦­í„°ë“¤ì˜ ID
     public GiftSO()
     {
         itemType = Constants.ItemType.Gift;
     }
 }
-
-

@@ -124,51 +124,6 @@ public class MissionUI : UIBase
                 break;
         }
     }
-    /*
-    private void OnMissionCompletedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-
-    private void OnMissionReceivedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-    */
     private void OnClickTestGetItemButton()
     {
         TestGameManager.Instance.GetItem(80001000);
@@ -541,13 +496,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -572,13 +527,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -603,13 +558,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -634,13 +589,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -665,13 +620,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }

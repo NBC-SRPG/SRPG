@@ -16,13 +16,6 @@ public class MissionData : ScriptableObject
     public int ap; // 미션 보상 ap
     public int gold; // 미션 보상 골드
     public int diamond; // 미션 보상 다이아
-    public List<Reward> rewards = new(); // 미션 보상 아이템
+    public Dictionary<int, int> rewards = new(); // 미션 보상 아이템
     public List<int> nextMissions = new(); // 클리어 시 다음 해금 미션 id
-}
-
-[System.Serializable]
-public class Reward
-{
-    public int rewardId;
-    public int rewardCount;
 }

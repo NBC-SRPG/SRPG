@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Constants;
 
 public class FriendUI : UIBase
@@ -36,7 +37,10 @@ public class FriendUI : UIBase
         FriendListTab,
         FriendRequestTab,
         AwaitingApprovalTab,
-        SearchFriendTab
+        SearchFriendTab,
+        FriendListContent,
+        FriendRequestContent,
+        AwaitingApprovalContent
     }
 
     private void Start()
@@ -80,6 +84,10 @@ public class FriendUI : UIBase
 
         // TODO
         // 모든 버튼 이미지 초기화
+        GetButton((int)Buttons.FriendListButton).GetComponent<Image>().color = Color.white;
+        GetButton((int)Buttons.FriendRequestButton).GetComponent<Image>().color = Color.white;
+        GetButton((int)Buttons.AwaitingApprovalButton).GetComponent<Image>().color = Color.white;
+        GetButton((int)Buttons.SearchFriendButton).GetComponent<Image>().color = Color.white;
 
         switch (playTab)
         {
@@ -89,21 +97,64 @@ public class FriendUI : UIBase
                 // 해당 탭 활성화
                 GetObject((int)GameObjects.FriendListTab).SetActive(true);
                 // 해당 버튼 이미지 변경 (클릭한 버튼임을 보여주기)
+                GetButton((int)Buttons.FriendListButton).GetComponent<Image>().color = Color.green;
+
+                foreach (Transform child in GetObject((int)GameObjects.FriendListContent).transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (var frienduId in Managers.AccountData.friendData[FriendTabs])
+                {
+                    GameObject go = Managers.Resource.Instantiate(
+                        Managers.Resource.Load<GameObject>("Prefabs/UI/FriendEntryUI"),
+                        GetObject((int)GameObjects.FriendListContent).transform);
+
+                    go.GetComponent<FriendEntryUI>().Init(FriendTabs, frienduId);
+                }
                 break;
 
             case PlayTab.FriendRequest:
-
                 GetObject((int)GameObjects.FriendRequestTab).SetActive(true);
+                GetButton((int)Buttons.FriendRequestButton).GetComponent<Image>().color = Color.green;
+
+                foreach (Transform child in GetObject((int)GameObjects.FriendRequestContent).transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (var frienduId in Managers.AccountData.friendData[ApplyingTabs])
+                {
+                    GameObject go = Managers.Resource.Instantiate(
+                        Managers.Resource.Load<GameObject>("Prefabs/UI/FriendEntryUI"),
+                        GetObject((int)GameObjects.FriendRequestContent).transform);
+
+                    go.GetComponent<FriendEntryUI>().Init(ApplyingTabs, frienduId);
+                }
                 break;
 
             case PlayTab.AwaitingApproval:
+                GetObject((int)GameObjects.AwaitingApprovalTab).SetActive(true);
+                GetButton((int)Buttons.AwaitingApprovalButton).GetComponent<Image>().color = Color.green;
 
-                GetObject((int)GameObjects.SearchFriendTab).SetActive(true);
+                foreach (Transform child in GetObject((int)GameObjects.AwaitingApprovalContent).transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
+                foreach (var frienduId in Managers.AccountData.friendData[WaitingTabs])
+                {
+                    GameObject go = Managers.Resource.Instantiate(
+                        Managers.Resource.Load<GameObject>("Prefabs/UI/FriendEntryUI"),
+                        GetObject((int)GameObjects.AwaitingApprovalContent).transform);
+
+                    go.GetComponent<FriendEntryUI>().Init(WaitingTabs, frienduId);
+                }
                 break;
 
             case PlayTab.SearchFriend:
-
                 GetObject((int)GameObjects.SearchFriendTab).SetActive(true);
+                GetButton((int)Buttons.SearchFriendButton).GetComponent<Image>().color = Color.green;
                 break;
         }
     }

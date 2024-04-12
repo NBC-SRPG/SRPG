@@ -1,13 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
-using Firebase.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Database
 {
@@ -15,10 +13,16 @@ public class Database
     private DatabaseReference reference = null;
     public DatabaseReference userDB = null;
     private string uid;
-
+    private const int dataCount = 9;
     public delegate void Func(DataSnapshot snapshot);
 
+    public static event Action<float> OnLoadingProgressChanged;
 
+    public static void UpdateLoadingProgress(float progress)
+    {
+        //Debug.Log($"UpdateLoadingProgress: {progress}");
+        OnLoadingProgressChanged?.Invoke(progress);
+    }
 
     // test를 위해 MonoBehaviour 사용
     // 추후 연결시 Init()으로 변경
@@ -33,13 +37,90 @@ public class Database
         
         // 데이터베이스의 경로설정
         FirebaseApp app = FirebaseDatabase.DefaultInstance.App;
-        app.Options.DatabaseUrl = new System.Uri("https://nbc-srpg-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        app.Options.DatabaseUrl = new Uri("https://nbc-srpg-default-rtdb.asia-southeast1.firebasedatabase.app/");
         // 데이터베이스의 RootReference를 가리킴
         reference = FirebaseDatabase.DefaultInstance.RootReference;
         userDB = reference.Child("users").Child(uid);
 
+        // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
+        userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+        userDB.Child("mailBox").ValueChanged += MailBoxValueChange;
     }
 
+    private void FriendDataValueChange(object sender, ValueChangedEventArgs args)
+    {
+        FriendDataUpdate();
+    }
+
+    private void MailBoxValueChange(object sender, ValueChangedEventArgs args)
+    {
+
+    }
+
+    public IEnumerator DataLoad()
+    {
+        yield return Read(userDB.Child("stageClearData"), data =>
+        {
+            Managers.AccountData.InitStageClearData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("characterData"), data =>
+        {
+            Managers.AccountData.InitCharacterData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("playerData"), data =>
+        {
+            Managers.AccountData.InitPlayerData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("inventory"), data =>
+        {
+            Managers.AccountData.InitInventoryData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("friendData"), data =>
+        {
+            Managers.AccountData.InitFriendData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("formationData"), data =>
+        {
+            Managers.AccountData.InitFormationData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("versionData"), data =>
+        {
+            Managers.AccountData.InitVersionData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("gachaPoint"), data =>
+        {
+            Managers.AccountData.InitGachaPoint(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+        yield return Read(userDB.Child("missionData"), data =>
+        {
+            Managers.AccountData.InitMissionData(data);
+            UpdateLoadingProgress(1.0f / dataCount);
+        });
+    }
+
+    private IEnumerator FriendDataUpdate()
+    {
+        yield return Read(userDB.Child("friendData"), data =>
+        {
+            Managers.AccountData.InitFriendData(data);
+        });
+    }
+
+    public IEnumerator MailLoad()
+    {
+        yield return Read(userDB.Child("mailBox"), data =>
+        {
+            Managers.AccountData.InitMailBox(data);
+        });
+    }
     #region CRUD
 
     /// <summary>
@@ -90,29 +171,38 @@ public class Database
     /// </summary>
     /// <param name="path"> 경로 </param>
     /// <param name="action"> callback 함수 </param>
-    public void Read(DatabaseReference path, Func action)
+    public IEnumerator Read(DatabaseReference path, Func action)
     {
         // 스냅샷 생성
         DataSnapshot snapshot = null;
-        path.GetValueAsync().ContinueWithOnMainThread(task => 
+        //path.GetValueAsync().ContinueWithOnMainThread(task => 
+        var task = path.GetValueAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+        // 데이터 읽기 실패
+        if  (task.IsFaulted)
         {
-            // 데이터 읽기 실패
-            if  (task.IsFaulted)
-            {
-                Debug.LogError("GetValueAsync encountered an error: " + task.Exception);
-                return;
-            }
-            // 데이터 읽기 성공
-            else if (task.IsCompleted)
-            {
-                // 스냅샷에 데이터 저장
-                snapshot = task.Result;
-                Debug.Log($"데이터 레코드 갯수 : {snapshot.ChildrenCount}");
+            Debug.LogError("GetValueAsync encountered an error: " + task.Exception);
+            //return;
+        }
+        // 데이터 읽기 성공
+        else if (task.IsCompleted)
+        {
+            // 스냅샷에 데이터 저장
+            snapshot = task.Result;
+            Debug.Log($"{path} 데이터 레코드 갯수 : {snapshot.ChildrenCount}");
+            // Callback 함수 실행
+            action(snapshot);
+        }
+    }
 
-                // Callback 함수 실행
-                action(snapshot);
-            }
-        });
+    /// <summary>
+    /// 
+    /// <param uId> 삭제하려는 유저의 uId </param>
+    /// <param friendTab> 삭제하려는 친구탭 </param>
+    /// </summary>
+    public void FriendDataDelete(string uId, int friendTab)
+    {
+
     }
 
     #endregion
@@ -149,6 +239,4 @@ public class Database
     }
 
     #endregion
-
-
 }

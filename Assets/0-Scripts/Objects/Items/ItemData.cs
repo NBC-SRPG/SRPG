@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -7,14 +5,13 @@ using static Constants;
 public class ItemData : ScriptableObject
 {
     [Header("Item_description")]
-    public string itemName;//¾ÆÀÌÅÛ ÀÌ¸§
-    public string itemDescription;//¾ÆÀÌÅÛ ¼³¸í
+    public string itemName;//ì•„ì´í…œ ì´ë¦„
+    public string itemDescription;//ì•„ì´í…œ ì„¤ëª…
 
     [Header("Develope")]
-    public int item_Id;//¾ÆÀÌÅÛ ½Äº°ÀÚ
-    public ItemType itemType; //¾ÆÀÌÅÛ ºĞ·ù
-    public ItemRank itemRank; //¾ÆÀÌÅÛ µî±Ş
-    public int maxReservesNumbers; //¾ÆÀÌÅÛ º¸À¯ °¹¼ö ÃÖ´ëÄ¡
-    //public int reservesNumbers; //¾ÆÀÌÅÛÀ» ÇöÀç º¸À¯ÇÏ°í ÀÖ´Â °¹¼ö
+    public int item_Id;//ì•„ì´í…œ ì‹ë³„ì
+    public ItemType itemType; //ì•„ì´í…œ ë¶„ë¥˜
+    public ItemRank itemRank; //ì•„ì´í…œ ë“±ê¸‰
+    public int maxReservesNumbers; //ì•„ì´í…œ ë³´ìœ  ê°¯ìˆ˜ ìµœëŒ€ì¹˜
+    //public int reservesNumbers; //ì•„ì´í…œì„ í˜„ì¬ ë³´ìœ í•˜ê³  ìˆëŠ” ê°¯ìˆ˜
 }
-

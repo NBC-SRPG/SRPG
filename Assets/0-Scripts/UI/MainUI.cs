@@ -1,9 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
-
 public class MainUI : UIBase
 {
     private enum Texts
@@ -28,7 +24,7 @@ public class MainUI : UIBase
 
     private enum Images
     {
-
+        IllustrationImage
     }
 
     private enum GameObjects
@@ -39,13 +35,6 @@ public class MainUI : UIBase
     private void Start()
     {
         Init();
-    }
-
-    private void Update()
-    {
-        // TODO
-        // AP가 MAX가 아니라면 타이머 작동
-        // AP, Gold, Diamond를 각 UI마다 둘 것인지? or AP, Gold, Diamond만 있는 UI 생성 후 가장 위에 두기
     }
 
     public void Init()
@@ -70,6 +59,10 @@ public class MainUI : UIBase
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
 
+        // TODO
+        // 선택한 캐릭터의 일러스트 표시
+        // GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>(Managers.AccountData.playerData.lobbyCharacter.ToString());
+
         RefreshUI();
 
         // BGM 재생 (SoundManager)
@@ -86,7 +79,6 @@ public class MainUI : UIBase
     {
 
     }
-
 
     private void OnClickCharacterButton()
     {
@@ -112,7 +104,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickInventoryButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<InventoryUI>();
+        Managers.UI.ShowUI<InventoryUI>();
     }
     private void OnClickGachaButton()
     {
@@ -147,8 +139,18 @@ public class MainUI : UIBase
         Debug.Log("OnClickMailButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
+
+        // 메일은 게임 진행 중에 새로 올 수도 있음
+        // 메일을 열 때마다 데이터 받아오기
+        StartCoroutine(ShowMailUI());
+        //Managers.UI.ShowUI<MailUI>();
+    }
+    private IEnumerator ShowMailUI()
+    {
+        yield return Managers.DB.MailLoad();
         Managers.UI.ShowUI<MailUI>();
     }
+
     private void OnClickNoticeButton()
     {
         Debug.Log("OnClickNoticeButton");

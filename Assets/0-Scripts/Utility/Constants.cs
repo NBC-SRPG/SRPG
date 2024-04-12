@@ -69,7 +69,7 @@ public class Constants
 
     public enum PlayerCons
     {
-        DefaltLevel = 100,
+        DefaltLevel = 1,
         DefaltMaxExp = 100,
         MaxLevel = 90,
         DefaltMaxAp = 160
@@ -146,7 +146,7 @@ public class Constants
     //아이템 분류 선별 기준 = '인벤토리에 표시되고 정보를 볼 수 있어야 하는지? 여부가 성립하면 아이템'
     public enum ItemType
     {
-        Ticket, //캐릭터 뽑기 티켓류 
+        Ticket, //캐릭터 뽑기 티켓류
         Piece, //캐릭터 조각류
         Token, //토큰류 = 이벤트 상점 교환 재화
         Consumable, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
@@ -206,4 +206,8 @@ public class Constants
     public const int TestExpImage = 60001001;
     public const int TestGoldImage = 60001002;
     public const int TestDiamondImage = 60001003;
+
+    public const int FriendTabs = 0;
+    public const int ApplyingTabs = 1;
+    public const int WaitingTabs = 2;
 }

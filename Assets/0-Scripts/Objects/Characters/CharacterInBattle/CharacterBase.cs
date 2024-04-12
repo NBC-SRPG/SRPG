@@ -1,6 +1,4 @@
-using GooglePlayGames.BasicApi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -20,7 +18,7 @@ public class CharacterBase : MonoBehaviour
 
     public ExSkillBase curCharacterSkill;
     public List<PassiveLogic> curCharacterPassive;
-    
+
 
     public CharacterBufList curCharacterBufList;
     public TempBonusStat tempBonusStat;
@@ -187,7 +185,7 @@ public class CharacterBase : MonoBehaviour
         get
         {
             return (int)((float)character.atk * (float)(100f + (curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk)) / 100f);
-        } 
+        }
     }
 
     public int Defend
@@ -406,7 +404,7 @@ public class CharacterBase : MonoBehaviour
     public void OnEndMoving()// 이동 끝난 직후
     {
         Managers.MapManager.CompleteMove();
-        
+
 
         if (!isDead)
         {
@@ -566,7 +564,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnEndAttack(enemy);
         }
         curCharacterBufList?.OnEndAttack(enemy);
-        
+
         historyCurrentRound.attackCount++;
 
         EndAttacking();
@@ -668,7 +666,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
         }
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
-        
+
         health.HealHealthByInt(heal);
 
         AfterTakeHeal(heal, skillUser, damageType, elementType);
@@ -754,7 +752,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시
     {
 
         curCharacterBufList?.OnUseSkill(target);

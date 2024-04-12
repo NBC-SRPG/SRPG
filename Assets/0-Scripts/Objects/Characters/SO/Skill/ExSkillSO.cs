@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="Skill_")]
@@ -24,7 +23,7 @@ public class ExSkillSO : ScriptableObject
     public int skillRange;//스킬 사정거리(근거리 공격, 캐릭터 기준 공격이면 1)
     public Constants.SkillScaleType scaleType;//스킬 범위 종류(단일 대상 공격, 자신 대상 기술이면 None)
     [Range(0, 10)] public int skillScale;//스킬 범위 칸 수(단일 대상 공격이면 0)
-    
+
     [Header("Skill_abillity")]
     public int abilityID;//특수 능력
 }
