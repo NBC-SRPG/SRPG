@@ -9,7 +9,6 @@ public class Character
     public CharacterGrowth Growth;
     public EnemySO enemySO;     // enemy로 사용할 경우에만 사용
 
-
     [Header("VisibleStatus")]
     public int hp;
     public int atk;
@@ -127,9 +126,12 @@ public class Character
 
     public Character(EnemySO so)
     {
-        SO = null;
         Growth = null;
         enemySO = so;
+
+        SO = new CharacterSO();
+        SO.id = enemySO.id;
+        SO.animatorName = enemySO.animatorName;
 
         hp = so.hp;
         atk = so.atk;

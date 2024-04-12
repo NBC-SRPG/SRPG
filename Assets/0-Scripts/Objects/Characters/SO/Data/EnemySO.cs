@@ -4,7 +4,7 @@ using UnityEngine;
 using static Constants;
 
 [CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "Enemy_")]
-public class EnemySO
+public class EnemySO : ScriptableObject
 {
     public AttackMethod attackMethod;     //공격 타입
     public ElementType elementType;      //캐릭터 속성

@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     private int index;
 
     public List<Character> characters = new List<Character>();
-    public List<TempGrowth> tempList = new List<TempGrowth>();
+    public List<EnemySO> enemyList = new List<EnemySO>();
 
     private void Awake()
     {
@@ -26,8 +26,6 @@ public class EnemyController : MonoBehaviour
         player.playerId = "enemy";
         player.playerNumber = 1;
 
-        characters = Managers.GameManager.enemy.party.ToList();
-
         if (!Managers.BattleManager.players.Contains(player))
         {
             Managers.BattleManager.players.Add(player);
@@ -36,7 +34,21 @@ public class EnemyController : MonoBehaviour
 
         Managers.BattleManager.TurnStart += GetPlayerTurn;
 
-        player.party = Managers.GameManager.enemy.party;
+        if (enemyList.Count == 0)
+        {
+            characters = Managers.GameManager.enemy.party.ToList();
+            player.party = Managers.GameManager.enemy.party;
+        }
+        else
+        {
+            foreach(EnemySO enemy in enemyList)
+            {
+                Character enemyCharacter = new Character(enemy);
+                characters.Add(enemyCharacter);
+            }
+
+            player.party = characters.ToArray();
+        }
 
         foreach (Character charac in player.party)
         {

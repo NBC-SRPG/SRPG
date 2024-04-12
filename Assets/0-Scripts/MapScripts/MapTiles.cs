@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class MapTiles : MonoBehaviour
 {
     public List<CharacterBase> characters;
 
     [HideInInspector] public Tilemap gridTile;
-    [HideInInspector] public List<Tilemap> startPosition;
+    [HideInInspector] public List<Transform> startPosition;
 
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
@@ -71,23 +72,20 @@ public class MapTiles : MonoBehaviour
     private void InitiateStartTile()// 캐릭터 시작 위치 설정
     {
         int i = 0;
-        foreach (Tilemap st in startPosition)
+        foreach (Transform st in startPosition)
         {
-            Tilemap tiles = st;
-            List<Vector2Int> positions = new List<Vector2Int>();
+            Managers.MapManager.startTiles.Add(i, new List<Vector2Int>());
 
-            foreach (Vector3Int pos in tiles.cellBounds.allPositionsWithin)
+            foreach (Transform child in st.transform)
             {
-                Vector3Int tileLocation = new Vector3Int(pos.x, pos.y, pos.z);
+                Vector2Int position = (Vector2Int)gridTile.WorldToCell(child.position);
 
-                if (tiles.HasTile(tileLocation))
+                if (Managers.MapManager.map.ContainsKey(position))
                 {
-                    positions.Add(new Vector2Int(pos.x, pos.y));
+                    Managers.MapManager.startTiles[i].Add(position);
                 }
-
             }
 
-            Managers.MapManager.startTiles.Add(i, positions);
             i++;
         }
     }

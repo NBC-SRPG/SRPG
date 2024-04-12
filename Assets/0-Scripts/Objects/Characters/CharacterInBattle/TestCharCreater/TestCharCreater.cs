@@ -18,7 +18,6 @@ public class TempGrowth
     }
 }
 
-
 public class TestCharCreater : MonoBehaviour
 {
     public List<TempGrowth> temp;
