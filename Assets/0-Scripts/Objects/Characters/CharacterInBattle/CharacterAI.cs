@@ -29,7 +29,7 @@ public class CharacterAI : CharacterBase
 
     protected bool hasSkill = false;
 
-    //protected EnemySO enemyData;
+    protected EnemySO enemyData;
 
     //-----------------------------------------------------------------------------------------------------------------------
     //override 함수
@@ -40,7 +40,7 @@ public class CharacterAI : CharacterBase
 
         state = State.Finding;
 
-        //enemyData = (EnemySO)character.characterData;// 적 데이터를 따로 받아옴
+        enemyData = character.enemySO;// 적 데이터를 따로 받아옴
 
         //if (enemyData.isElite)
         //{

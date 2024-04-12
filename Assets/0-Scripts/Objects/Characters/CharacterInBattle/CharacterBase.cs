@@ -86,7 +86,6 @@ public class CharacterBase : MonoBehaviour
         characterObject = Managers.Resource.Instantiate("character", transform);
         characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
         characterObject.AddComponent(Type.GetType("CharAnim_" + character.SO.animatorName));
-        Debug.Log(character.SO.id + " CharAnim_" + character.SO.animatorName);
 
         // 캐릭터 클래스로 부터 Ex스킬을 생성해서 받아옴
         curCharacterSkill = new ExSkillBase(character.exSkill);
