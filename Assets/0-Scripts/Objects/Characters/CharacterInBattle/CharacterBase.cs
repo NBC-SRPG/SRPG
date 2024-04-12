@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static BattleKeyWords;
-using static Constants;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class CharacterBase : MonoBehaviour
 {

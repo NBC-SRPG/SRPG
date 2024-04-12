@@ -10,6 +10,14 @@ public class UIBase : MonoBehaviour
     // UI 캐싱용 딕셔너리
     private Dictionary<Type, UnityEngine.Object[]> objectsDic = new Dictionary<Type, UnityEngine.Object[]>();
 
+    private void Awake()
+    {
+        foreach (var obj in objectsDic.Values)
+        {
+            Debug.Log(obj.ToString());
+        }
+    }
+
     // 바인딩 할 오브젝트의 이름을 Enum타입으로 받아와 딕셔너리에 저장
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
