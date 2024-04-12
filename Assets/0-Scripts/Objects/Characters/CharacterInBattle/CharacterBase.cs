@@ -597,7 +597,7 @@ public class CharacterBase : MonoBehaviour
     //---------------------------------------------------------------------------
     // 데미지 관련
 
-    public void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
+    public virtual void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType elementType = Constants.ElementType.None)// 공격 받았을 때
     {

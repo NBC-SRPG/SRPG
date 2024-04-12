@@ -281,6 +281,18 @@ public class CharacterAI : CharacterBase
         }
     }
 
+    public override void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.ElementType elementType = Constants.ElementType.None)
+    {
+        base.OnTakeDamage(ref damage, enemy, damageType, elementType);
+
+        if(enemy != null && state == State.Waiting)
+        {
+            attractTarget = enemy;
+            ChangeState(State.Chasing);
+        }
+
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //상태 관련 함수들
 
