@@ -106,7 +106,7 @@ public class CharacterInfoUI : UIBase
         BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerUpPassiveSkill, UIEvent.PointerUp);
 
         // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
+        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.AbilityInfoUI).SetActive(false);
         GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
@@ -120,7 +120,7 @@ public class CharacterInfoUI : UIBase
         //GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.armor.equip_Id}");
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
+        //GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
         GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
         GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
         GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
