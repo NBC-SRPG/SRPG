@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -40,6 +41,9 @@ public class BattleUI : UIBase
         RangeObject,
         BufList,
         TargetBufList,
+        GameResult,
+        Win,
+        Lose,
 
     }
 
@@ -53,6 +57,7 @@ public class BattleUI : UIBase
         AttackButton,
         SkillConFirmButton,
         ClassInfo,
+        NextButton,
 
     }
     private enum Images
@@ -63,7 +68,9 @@ public class BattleUI : UIBase
         ShieldBar,
         TargetImage,
         TargetHealthBar,
-        TargetShieldBar
+        TargetShieldBar,
+        ResultBackGround
+
     }
 
     //charactercontroller가 보내주는 캐릭터를 받아옴
@@ -115,6 +122,7 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.MoveButton).onClick.AddListener(OnClickMove);
         GetButton((int)Buttons.AttackButton).onClick.AddListener(OnClickAttack);
         GetButton((int)Buttons.SkillConFirmButton).onClick.AddListener(OnClickSkillConfirm);
+        GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
 
         //조이스틱 가져오기
         joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
@@ -140,6 +148,7 @@ public class BattleUI : UIBase
             targetBufList.Add(obj);
             obj.SetActive(false);
         }
+
     }
 
     private void OnClickCancel()
@@ -183,6 +192,20 @@ public class BattleUI : UIBase
     private void RefreshUI()//ui 초기화
     {
         ResetUI();
+
+        CloseResult();
+    }
+
+    private void CloseResult()
+    {
+        GetObject((int)GameObjects.Win).SetActive(false);
+        GetObject((int)GameObjects.Lose).SetActive(false);
+
+        GetButton((int)Buttons.NextButton).gameObject.SetActive(false);
+
+        GetImage((int)Images.ResultBackGround).GetComponent<CanvasRenderer>().SetAlpha(0f);
+
+        GetObject((int)GameObjects.GameResult).SetActive(false);
     }
 
     public void CloseTexts()
@@ -353,6 +376,53 @@ public class BattleUI : UIBase
             }
             targetBufList[i].GetComponent<BufIcon>().SetBufIcon(curTargetCharacter.curCharacterBufList.bufList[i]);
         }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //GameResult
+
+    public void ShowWin()
+    {
+        StartCoroutine(Result(true));
+    }
+
+    public void ShowLose()
+    {
+        StartCoroutine(Result(false));
+    }
+
+    private IEnumerator Result(bool win)
+    {
+        yield return new WaitWhile(() => AnimationController.instance.CheckAnimation() || AnimationController.instance.IsWalkingAnimation());
+
+        yield return new WaitForSeconds(0.5f);
+
+        GetObject((int)GameObjects.GameResult).SetActive(true);
+
+        float time = 0f;
+        while(time <= 0.25f)
+        {
+            GetImage((int)Images.ResultBackGround).GetComponent<CanvasRenderer>().SetAlpha(Mathf.Lerp(0f, 1f, time / 0.25f));
+            time += Time.deltaTime;
+
+            yield return null;
+        }
+
+        if (win)
+        {
+            GetObject((int)GameObjects.Win).SetActive(true);
+        }
+        else
+        {
+            GetObject((int)GameObjects.Lose).SetActive(true);
+        }
+        GetButton((int)Buttons.NextButton).gameObject.SetActive(true);
+
+    }
+
+    private void OnClickNextButton()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

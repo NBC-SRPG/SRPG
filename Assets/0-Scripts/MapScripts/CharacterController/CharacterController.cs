@@ -875,11 +875,11 @@ public class CharacterController : MonoBehaviour
     {
         if(player.playerId == playerId)
         {
-            Debug.Log("win");
+            Ui.ShowWin();
         }
         else
         {
-            Debug.Log("lose");
+            Ui.ShowLose();
         }
     }
 
