@@ -591,7 +591,6 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam[Managers.GameManager.player.playerId].Count)
             {
-                Debug.Log("Lose");
                 EndGame("enemy");
             }
         }
@@ -616,9 +615,7 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam["enemy"].Count)
             {
-                Debug.Log("Win");
                 EndGame(Managers.GameManager.player.playerId);
-
             }
         }
         //-----
