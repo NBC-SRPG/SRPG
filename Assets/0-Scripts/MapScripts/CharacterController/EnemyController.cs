@@ -100,6 +100,11 @@ public class EnemyController : MonoBehaviour
 
     private void StartAIActing()// Ai 작동
     {
+        if (BattleManager.Instance.gameEnd)
+        {
+            return;
+        }
+
         //Debug.Log("now Acting " + index);
 
         if (index >= characterList.Count)// 모든 AI가 대기 상태일 때

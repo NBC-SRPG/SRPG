@@ -569,6 +569,17 @@ public class BattleManager : MonoBehaviour
 
     public void PVEWin(CharacterBase dieChracter)
     {
+        if (gameEnd)
+        {
+            return;
+        }
+
+        //----- 스테이지 목표에 따라 추가
+        //switch(stageinfo)
+        //{
+
+        //}
+
         int numbers = 0;
 
         foreach (CharacterBase chracter in charactersAsTeam[Managers.GameManager.player.playerId])
@@ -580,9 +591,13 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam[Managers.GameManager.player.playerId].Count)
             {
+                Debug.Log("Lose");
                 EndGame("enemy");
             }
         }
+        //-----
+
+
 
 
         //----- 스테이지 목표에 따라 추가
@@ -590,7 +605,6 @@ public class BattleManager : MonoBehaviour
         //{
 
         //}
-        //-----
 
         numbers = 0;
         foreach (CharacterBase chracter in charactersAsTeam["enemy"])
@@ -602,15 +616,18 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam["enemy"].Count)
             {
+                Debug.Log("Win");
                 EndGame(Managers.GameManager.player.playerId);
+
             }
         }
+        //-----
 
     }
 
     private void EndGame(string player)
     {
-        Win?.Invoke(Managers.GameManager.player.playerId);
+        Win?.Invoke(player);
         gameEnd = true;
     }
 
