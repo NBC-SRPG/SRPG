@@ -122,6 +122,9 @@ public class Character
             });
         });
 
+        // TODO
+        // MonoBehaviour를 상속받지 않아 해당 이벤트를 언제 해제 할지??
+        Growth.OnLevelUp += CalculateStat;
     }
 
     public Character(EnemySO so)
@@ -164,5 +167,4 @@ public class Character
         atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
         def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
     }
-
 }

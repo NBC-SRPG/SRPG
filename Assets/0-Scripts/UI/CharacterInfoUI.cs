@@ -36,7 +36,7 @@ public class CharacterInfoUI : UIBase
         AbilityButton,
         ClassButton,
         BackButton,
-        ExSkillLevelUpButton,
+        //ExSkillLevelUpButton,
         WeaponButton,
         ArmorButton,
         EquipmentUpgradeUICloseButton,
@@ -76,11 +76,16 @@ public class CharacterInfoUI : UIBase
         SkillTab,
         AbilityTab,
         ClassTab,
-        ExSkillInfoUI,
+        //ExSkillInfoUI,
         PassiveSkillInfoUI,
         AbilityInfoUI,
         EquipmentUpgradeUI,
         Star
+    }
+
+    private void OnDestroy()
+    {
+        character.Growth.OnLevelUp -= UpdateStat;
     }
 
     public void SetCharacter(Character character)
@@ -135,7 +140,17 @@ public class CharacterInfoUI : UIBase
         InitClassTab();
         InitCharacterInfo();
 
-        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(() => { character.Growth.curExp += character.Growth.maxExp; UpdateStat(); });
+        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(OnClickLevelUpButton);
+
+        character.Growth.OnLevelUp += UpdateStat;
+    }
+
+    private void OnClickLevelUpButton()
+    {
+        Debug.Log("OnClickLevelUpButton");
+
+        LevelUpUI ui = Managers.UI.ShowUI<LevelUpUI>();
+        ui.Init(character);
     }
 
     
@@ -339,14 +354,14 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnPointerUpExSkill");
 
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
+        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
     }
 
     private void OnPointerDownExSkill()
     {
         Debug.Log("OnPointerDownExSkill");
 
-        GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
+        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
     }
 
     private void OnClickEquipmentUpgradeUICloseButton()
