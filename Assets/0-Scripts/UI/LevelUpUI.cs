@@ -1,0 +1,454 @@
+using System.Collections;
+using System.Text.RegularExpressions;
+using UnityEngine;
+using UnityEngine.UI;
+using static Constants;
+
+public class LevelUpUI : UIBase
+{
+    private Character character;
+    // TODO
+    // 레벨업 아이템 Id 다른 곳에서도 사용한다면 Constants로 옮기기
+    private const int LevelUpItem1Id = 1;
+    private const int LevelUpItem2Id = 2;
+    private const int LevelUpItem3Id = 3;
+    private const int LevelUpItem4Id = 4;
+
+    private int LevelUpItem1ExpValue;
+    private int LevelUpItem2ExpValue;
+    private int LevelUpItem3ExpValue;
+    private int LevelUpItem4ExpValue;
+    private int totalExp;
+
+    // pressInterval 시간만큼 누르고 있을 시 레벨업 아이템 최대 개수
+    private float pressInterval = 1f;
+    private float pressTimer = 0f;
+    private bool isPressed;
+    private bool canUseLevelUpItem;
+
+    private enum Texts
+    {
+        LevelUpItemQuantity_1,
+        LevelUpItemQuantity_2,
+        LevelUpItemQuantity_3,
+        LevelUpItemQuantity_4,
+        LevelUpItemSelectNumber1,
+        LevelUpItemSelectNumber2,
+        LevelUpItemSelectNumber3,
+        LevelUpItemSelectNumber4,
+        LevelBefore,
+        HpBefore,
+        AtkBefore,
+        DefBefore,
+        LevelAfter,
+        HpAfter,
+        AtkAfter,
+        DefAfter,
+        LevelUpGoldText
+    }
+
+    private enum Images
+    {
+        LevelUpBarChangeImage,
+        LevelUpBarFrontImage
+    }
+
+    private enum Buttons
+    {
+        LevelUpUICloseButton,
+        LevelUpItemButton_1,
+        LevelUpItemButton_2,
+        LevelUpItemButton_3,
+        LevelUpItemButton_4,
+        LevelUpButton
+    }
+
+    private enum GameObjects
+    {
+
+    }
+
+    public void Init(Character character)
+    {
+        this.character = character;
+
+        LoadAllItemsExpValue();
+
+        BindText(typeof(Texts));
+        BindImage(typeof(Images));
+        BindButton(typeof(Buttons));
+        BindObject(typeof(GameObjects));
+
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_1).gameObject, OnPointerUpLevelUpItemButton, UIEvent.PointerUp);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_2).gameObject, OnPointerUpLevelUpItemButton, UIEvent.PointerUp);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_3).gameObject, OnPointerUpLevelUpItemButton, UIEvent.PointerUp);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_4).gameObject, OnPointerUpLevelUpItemButton, UIEvent.PointerUp);
+
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_1).gameObject, () => OnPressedLevelUpItemButton(1), UIEvent.Pressed);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_2).gameObject, () => OnPressedLevelUpItemButton(2), UIEvent.Pressed);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_3).gameObject, () => OnPressedLevelUpItemButton(3), UIEvent.Pressed);
+        BindEvent(GetButton((int)Buttons.LevelUpItemButton_4).gameObject, () => OnPressedLevelUpItemButton(4), UIEvent.Pressed);
+
+        GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.inventory[LevelUpItem1Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.inventory[LevelUpItem3Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.inventory[LevelUpItem4Id]}";
+
+        GetText((int)Texts.LevelUpGoldText).text = "0 G";
+
+        GetText((int)Texts.LevelBefore).text = $"Lv.{character.Growth.level}";
+        GetText((int)Texts.HpBefore).text = $"{character.hp}";
+        GetText((int)Texts.AtkBefore).text = $"{character.atk}";
+        GetText((int)Texts.DefBefore).text = $"{character.def}";
+
+        GetText((int)Texts.LevelAfter).gameObject.SetActive(false);
+        GetText((int)Texts.HpAfter).gameObject.SetActive(false);
+        GetText((int)Texts.AtkAfter).gameObject.SetActive(false);
+        GetText((int)Texts.DefAfter).gameObject.SetActive(false);
+
+        GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
+        GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
+        GetButton((int)Buttons.LevelUpItemButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2));
+        GetButton((int)Buttons.LevelUpItemButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3));
+        GetButton((int)Buttons.LevelUpItemButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4));
+
+        GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
+        LevelUpCalc();
+        LevelUpButtonActiveFalse();
+    }
+
+    private void OnClickLevelUpUICloseButton()
+    {
+        Managers.UI.CloseUI(this);
+    }
+
+    private void OnClickLevelUpItemButton(int itemNum)
+    {
+        if (character.Growth.level >= character.Growth.GetMaxLevel())
+        {
+            return;
+        }
+
+        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
+        {
+            return;
+        }
+
+        if (canUseLevelUpItem == false)
+        {
+            return;
+        }
+
+        int curNum;
+        switch (itemNum)
+        {
+            case 1:
+                curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
+                if (curNum >= Managers.AccountData.inventory[LevelUpItem1Id])
+                {
+                    break;
+                }
+                curNum++;
+                GetText((int)Texts.LevelUpItemSelectNumber1).text = curNum.ToString();
+                break;
+            case 2:
+                curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
+                if (curNum >= Managers.AccountData.inventory[LevelUpItem2Id])
+                {
+                    break;
+                }
+                curNum++;
+                GetText((int)Texts.LevelUpItemSelectNumber2).text = curNum.ToString();
+                break;
+            case 3:
+                curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
+                if (curNum >= Managers.AccountData.inventory[LevelUpItem3Id])
+                {
+                    break;
+                }
+                curNum++;
+                GetText((int)Texts.LevelUpItemSelectNumber3).text = curNum.ToString();
+                break;
+            case 4:
+                curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
+                if (curNum >= Managers.AccountData.inventory[LevelUpItem4Id])
+                {
+                    break;
+                }
+                curNum++;
+                GetText((int)Texts.LevelUpItemSelectNumber4).text = curNum.ToString();
+                break;
+        }
+        LevelUpCalc();
+    }
+    
+    private void OnPointerUpLevelUpItemButton()
+    {
+        pressTimer = 0;
+        isPressed = false;
+    }
+
+    private void OnPressedLevelUpItemButton(int itemNum)
+    {
+        if (character.Growth.level >= character.Growth.GetMaxLevel())
+        {
+            return;
+        }
+
+        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
+        {
+            return;
+        }
+
+        pressTimer += Time.deltaTime;
+
+        if (pressTimer >= pressInterval && isPressed == false)
+        {
+            pressTimer = 0f;
+            isPressed = true;
+
+            switch (itemNum)
+            {
+                case 1:
+                    StartCoroutine(LevelUpItem(1));
+                    break;
+                case 2:
+                    StartCoroutine(LevelUpItem(2));
+                    break;
+                case 3:
+                    StartCoroutine(LevelUpItem(3));
+                    break;
+                case 4:
+                    StartCoroutine(LevelUpItem(4));
+                    break;
+            }
+        }
+    }
+
+    private IEnumerator LevelUpItem(int itemNum)
+    {
+        while (true)
+        {
+            if (canUseLevelUpItem == false)
+            {
+                yield break;
+            }
+
+            switch (itemNum)
+            {
+                case 1:
+                    if (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text) >= Managers.AccountData.inventory[LevelUpItem1Id])
+                    {
+                        yield break;
+                    }
+
+                    GetText((int)Texts.LevelUpItemSelectNumber1).text = (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text) + 1).ToString();
+                    break;
+                case 2:
+                    if (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text) >= Managers.AccountData.inventory[LevelUpItem2Id])
+                    {
+                        yield break;
+                    }
+
+                    GetText((int)Texts.LevelUpItemSelectNumber2).text = (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text) + 1).ToString();
+                    break;
+                case 3:
+                    if (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text) >= Managers.AccountData.inventory[LevelUpItem3Id])
+                    {
+                        yield break;
+                    }
+
+                    GetText((int)Texts.LevelUpItemSelectNumber3).text = (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text) + 1).ToString();
+                    break;
+                case 4:
+                    if (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text) >= Managers.AccountData.inventory[LevelUpItem4Id])
+                    {
+                        yield break;
+                    }
+
+                    GetText((int)Texts.LevelUpItemSelectNumber4).text = (int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text) + 1).ToString();
+                    break;
+            }
+
+            LevelUpCalc();
+            yield return new WaitForSeconds(0.02f);
+        }
+    }
+
+    private void LevelUpCalc()
+    {
+        totalExp = LevelUpItem1ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text) +
+            LevelUpItem2ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text) +
+            LevelUpItem3ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text) +
+            LevelUpItem4ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
+
+        // TODO
+        // 필요 골드 = 경험치량 * 5
+        // 매직넘버 5 피하고 싶음..
+        GetText((int)Texts.LevelUpGoldText).text = $"{totalExp * 5} G";
+
+        int[] result = character.Growth.CalcExp(totalExp);
+
+        // 현재 레벨과 경험치를 먹인 레벨이 같을 때
+        if (character.Growth.level == result[0])
+        {
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+        }
+        // 레벨업을 했을 때
+        else
+        {
+            GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(false);
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+            GetText((int)Texts.LevelAfter).gameObject.SetActive(true);
+            GetText((int)Texts.HpAfter).gameObject.SetActive(true);
+            GetText((int)Texts.AtkAfter).gameObject.SetActive(true);
+            GetText((int)Texts.DefAfter).gameObject.SetActive(true);
+        }
+
+        GetText((int)Texts.HpAfter).text = $"{character.hp + (result[0] - character.Growth.level) * character.SO.hpPerLv}";
+        GetText((int)Texts.AtkAfter).text = $"{character.atk + (result[0] - character.Growth.level) * character.SO.atkPerLv}";
+        GetText((int)Texts.DefAfter).text = $"{character.def + (result[0] - character.Growth.level) * character.SO.defPerLv}";
+    
+        if (character.Growth.level >= character.Growth.GetMaxLevel())
+        {
+            LevelUpButtonActiveFalse();
+        }
+
+        if (result[0] >= character.Growth.GetMaxLevel())
+        {
+            result[0] = character.Growth.GetMaxLevel();
+            result[1] = 0;
+            canUseLevelUpItem = false;
+        }
+        else
+        {
+            canUseLevelUpItem = true;
+        }
+
+        string goldText = GetText((int)Texts.LevelUpGoldText).text;
+        string digits = Regex.Match(goldText, @"\d+").Value;
+
+        int goldRequired = int.Parse(digits);
+
+        if (goldRequired > Managers.AccountData.playerData.Gold)
+        {
+            LevelUpButtonActiveFalse();
+        }
+        else
+        {
+            LevelUpButtonActiveTrue();
+        }
+
+        if (totalExp > 0)
+        {
+            LevelUpButtonActiveTrue();
+        }
+        else
+        {
+            LevelUpButtonActiveFalse();
+        }
+
+        GetText((int)Texts.LevelAfter).text = $"Lv.{result[0]}";
+    }
+
+    private void LevelUpButtonActiveFalse()
+    {
+        GetButton((int)Buttons.LevelUpButton).onClick.RemoveAllListeners();
+        GetButton((int)Buttons.LevelUpButton).enabled = false;
+        Color newColor = GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color;
+        newColor.a = 0.5f;
+        GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color = newColor;
+    }
+
+    private void LevelUpButtonActiveTrue()
+    {
+        GetButton((int)Buttons.LevelUpButton).onClick.RemoveAllListeners();
+        GetButton((int)Buttons.LevelUpButton).onClick.AddListener(OnClickLevelUpButton);
+        GetButton((int)Buttons.LevelUpButton).enabled = true;
+        Color newColor = GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color;
+        newColor.a = 1f;
+        GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color = newColor;
+    }
+
+    private void OnClickLevelUpButton()
+    {
+        string goldText = GetText((int)Texts.LevelUpGoldText).text;
+        string digits = Regex.Match(goldText, @"\d+").Value;
+
+        int gold = int.Parse(digits);
+
+        if (Managers.AccountData.playerData.ReduceGold(gold) == false)
+        {
+            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
+            ui.SetText("골드가 부족합니다.");
+
+            return;
+        }
+
+        Managers.AccountData.inventory[LevelUpItem1Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
+        Managers.AccountData.inventory[LevelUpItem2Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
+        Managers.AccountData.inventory[LevelUpItem3Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
+        Managers.AccountData.inventory[LevelUpItem4Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
+
+        GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.inventory[LevelUpItem1Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.inventory[LevelUpItem3Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.inventory[LevelUpItem4Id]}";
+
+        Managers.AccountData.characterData[character.SO.id].Growth.LevelUp(totalExp);
+
+        GetText((int)Texts.LevelUpGoldText).text = "0 G";
+
+        GetText((int)Texts.LevelUpItemSelectNumber1).text = "0";
+        GetText((int)Texts.LevelUpItemSelectNumber2).text = "0";
+        GetText((int)Texts.LevelUpItemSelectNumber3).text = "0";
+        GetText((int)Texts.LevelUpItemSelectNumber4).text = "0";
+
+        GetText((int)Texts.LevelBefore).text = $"Lv.{character.Growth.level}";
+        GetText((int)Texts.HpBefore).text = $"{character.hp}";
+        GetText((int)Texts.AtkBefore).text = $"{character.atk}";
+        GetText((int)Texts.DefBefore).text = $"{character.def}";
+
+        GetText((int)Texts.LevelAfter).gameObject.SetActive(false);
+        GetText((int)Texts.HpAfter).gameObject.SetActive(false);
+        GetText((int)Texts.AtkAfter).gameObject.SetActive(false);
+        GetText((int)Texts.DefAfter).gameObject.SetActive(false);
+
+        GetImage((int)Images.LevelUpBarFrontImage).fillAmount = GetImage((int)Images.LevelUpBarChangeImage).fillAmount;
+        GetImage((int)Images.LevelUpBarChangeImage).fillAmount = 0;
+
+        LevelUpCalc();
+    }
+
+    private void LoadAllItemsExpValue()
+    {
+        Utility.Id2SO<ItemData>(LevelUpItem1Id, (result) =>
+        {
+            if (result != null)
+            {
+                LevelUpItem1ExpValue = (result as ExpUp_characterSO).expValue;
+            }
+        });
+        Utility.Id2SO<ItemData>(LevelUpItem2Id, (result) =>
+        {
+            if (result != null)
+            {
+                LevelUpItem2ExpValue = (result as ExpUp_characterSO).expValue;
+            }
+        });
+        Utility.Id2SO<ItemData>(LevelUpItem3Id, (result) =>
+        {
+            if (result != null)
+            {
+                LevelUpItem3ExpValue = (result as ExpUp_characterSO).expValue;
+            }
+        });
+        Utility.Id2SO<ItemData>(LevelUpItem4Id, (result) =>
+        {
+            if (result != null)
+            {
+                LevelUpItem4ExpValue = (result as ExpUp_characterSO).expValue;
+            }
+        });
+    }
+}

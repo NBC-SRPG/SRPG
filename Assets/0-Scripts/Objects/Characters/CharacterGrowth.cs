@@ -1,3 +1,5 @@
+using System;
+using UnityEngine;
 using static Constants;
 
 public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭터 객체의 개인적인 고유 데이터만을 저장하는 클래스.
@@ -18,6 +20,8 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     
     public int weapon;
     public int armor;
+
+    public event Action OnLevelUp;
 
 
     public CharacterGrowth() {}
@@ -106,6 +110,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         int[] result = CalcExp(exp);
         level = result[0];
         curExp = result[1];
+        OnLevelUp?.Invoke();
     }
 
     // exp만큼의 경험치를 획득했을 때의 level과 curExp를 배열로 반환
