@@ -27,11 +27,11 @@ public class SkillScale_Line : SkillScaleBase
         for(int i = 0; i <= scale; i++)
         {
             TileToCheck = new Vector2Int((int)character.curStandingTile.grid2DLocation.x + ((int)direction.x * i), (int)character.curStandingTile.grid2DLocation.y + ((int)direction.y * i));
-            if (Managers.MapManager.map.ContainsKey(TileToCheck))
+            if (MapManager.instance.map.ContainsKey(TileToCheck))
             {
-                if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
+                if (MapManager.instance.map[TileToCheck].canClick && !skillScale.Contains(MapManager.instance.map[TileToCheck]))
                 {
-                    skillScale.Add(Managers.MapManager.map[TileToCheck]);
+                    skillScale.Add(MapManager.instance.map[TileToCheck]);
                 }
             }
         }

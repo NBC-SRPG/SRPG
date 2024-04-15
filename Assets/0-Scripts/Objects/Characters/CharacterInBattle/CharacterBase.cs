@@ -73,8 +73,8 @@ public class CharacterBase : MonoBehaviour
 
         transform.position = curStandingTile.transform.position;
 
-        Managers.BattleManager.charactersInBattle.Add(this);
-        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
+        BattleManager.Instance.charactersInBattle.Add(this);
+        BattleManager.Instance.charactersAsTeam[playerId].Add(this);
     }
 
     public virtual void InitCharacter(Character charac, string id)
@@ -82,7 +82,7 @@ public class CharacterBase : MonoBehaviour
         character = charac;
         playerId = id;
 
-        Managers.MapManager.OnCompleteMove += CheckCurTile;
+        MapManager.instance.OnCompleteMove += CheckCurTile;
         characterObject = Managers.Resource.Instantiate("character", transform);
         characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
         characterObject.AddComponent(Type.GetType("CharAnim_" + character.SO.animatorName));
@@ -248,7 +248,7 @@ public class CharacterBase : MonoBehaviour
             if (movePath[i].curStandingCharater != null)
             {
                 target = movePath[i].curStandingCharater;
-                Managers.BattleManager.OnPassCharacter(this, target);
+                BattleManager.Instance.OnPassCharacter(this, target);
             }
 
             historyCurrentRound.moveFigure++;
@@ -394,7 +394,7 @@ public class CharacterBase : MonoBehaviour
 
     public void OnEndMoving()// 이동 끝난 직후
     {
-        Managers.MapManager.CompleteMove();
+        MapManager.instance.CompleteMove();
 
 
         if (!isDead)
@@ -419,6 +419,8 @@ public class CharacterBase : MonoBehaviour
         OnEndActing();
 
         OnEndWalk?.Invoke();
+
+        BattleManager.Instance.CheckWin();
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
@@ -475,7 +477,7 @@ public class CharacterBase : MonoBehaviour
 
     private void CheckActivated()
     {
-        if (!canActing && Managers.BattleManager.nowPlayer.playerId == playerId)
+        if (!canActing && BattleManager.Instance.nowPlayer.playerId == playerId)
         {
             characterAnim.DeActivate();
         }
@@ -499,7 +501,7 @@ public class CharacterBase : MonoBehaviour
     public void SetAttackTarget(CharacterBase enemy)// 공격 시작
     {
         target = enemy;
-        Managers.BattleManager.Attack(this, target);
+        BattleManager.Instance.Attack(this, target);
     }
 
     public void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
@@ -513,13 +515,13 @@ public class CharacterBase : MonoBehaviour
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
     {
         target = enemy;
-        Managers.BattleManager.DoAttack(this, target);
+        BattleManager.Instance.DoAttack(this, target);
     }
 
     public void CounterAttack(CharacterBase enemy)// 반격
     {
         target = enemy;
-        Managers.BattleManager.CounterAttack(this, target);
+        BattleManager.Instance.CounterAttack(this, target);
     }
 
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
@@ -703,7 +705,7 @@ public class CharacterBase : MonoBehaviour
     {
         GetSkillTarget();
 
-        Managers.BattleManager.UseSkill(this, targets);
+        BattleManager.Instance.UseSkill(this, targets);
 
         historyCurrentRound.useSkillCount++;
     }
@@ -864,7 +866,7 @@ public class CharacterBase : MonoBehaviour
 
         Debug.Log("die");
 
-        Managers.BattleManager.CheckRemainCharacter();
+        BattleManager.Instance.CheckWin(this);
     }
 
     private void OnDisable()

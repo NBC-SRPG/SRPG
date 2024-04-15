@@ -70,6 +70,8 @@ public class AnimationController : MonoBehaviour
 
         CameraController.instance.SetCharacterCameraMove(2);
 
+        Managers.UI.FindUI<BattleUI>().ResetUI();
+
         backGround.gameObject.SetActive(true);
         battleCanvas.gameObject.SetActive(true);
 

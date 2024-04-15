@@ -26,13 +26,13 @@ public class EnemyController : MonoBehaviour
         player.playerId = "enemy";
         player.playerNumber = 1;
 
-        if (!Managers.BattleManager.players.Contains(player))
+        if (!BattleManager.Instance.players.Contains(player))
         {
-            Managers.BattleManager.players.Add(player);
+            BattleManager.Instance.players.Add(player);
         }
-        Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
+        BattleManager.Instance.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
-        Managers.BattleManager.TurnStart += GetPlayerTurn;
+        BattleManager.Instance.TurnStart += GetPlayerTurn;
 
         if (enemyList.Count == 0)
         {
@@ -71,11 +71,11 @@ public class EnemyController : MonoBehaviour
         int i = 0;
         foreach (CharacterBase character in characterList)
         {
-            if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
+            if (i < MapManager.instance.startTiles[player.playerNumber].Count)
             {
                 character.transform.SetParent(transform);
 
-                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]], transform);
+                character.SpawnCharacter(MapManager.instance.map[MapManager.instance.startTiles[player.playerNumber][i]], transform);
                 i++;
             }
             else
@@ -90,7 +90,7 @@ public class EnemyController : MonoBehaviour
 
     private void GetPlayerTurn()
     {
-        if (Managers.BattleManager.nowPlayer.playerId == player.playerId)
+        if (BattleManager.Instance.nowPlayer.playerId == player.playerId)
         {
             index = 0;
 
@@ -100,6 +100,11 @@ public class EnemyController : MonoBehaviour
 
     private void StartAIActing()// Ai 작동
     {
+        if (BattleManager.Instance.gameEnd)
+        {
+            return;
+        }
+
         //Debug.Log("now Acting " + index);
 
         if (index >= characterList.Count)// 모든 AI가 대기 상태일 때
@@ -148,6 +153,6 @@ public class EnemyController : MonoBehaviour
 
     private void TurnEnd()
     {
-        Managers.BattleManager.PlayerTurnEnd();
+        BattleManager.Instance.PlayerTurnEnd();
     }
 }

@@ -55,6 +55,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
+  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
 --- !u!1 &1214945526582135412
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +162,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5414486514157042662}
-  - component: {fileID: 4019808922263570276}
   m_Layer: 0
   m_Name: Map_Test
   m_TagString: Untagged
@@ -181,6 +181,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3537818103676487145}
+  - {fileID: 5306863593843616386}
   - {fileID: 6572565812750584330}
   - {fileID: 5925025012952947298}
   - {fileID: 620837991324130803}
@@ -188,22 +190,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4019808922263570276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752962521781309133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38170418cfb53a7499524827c9bce120, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridTile: {fileID: 2423592495778625938}
-  spawnPosition:
-  - {fileID: 5925025012952947298}
-  - {fileID: 620837991324130803}
 --- !u!1 &3527301242064525951
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,6 +384,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13cc42d9e481c84b8ad39afe08bc8a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4359059159815316535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3537818103676487145}
+  m_Layer: 0
+  m_Name: OverlayTilesContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3537818103676487145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4359059159815316535}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5414486514157042662}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4811372156565638546
 GameObject:
   m_ObjectHideFlags: 0
@@ -2841,3 +2858,62 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &8848730748712933129
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5306863593843616386}
+  - component: {fileID: 4959159389306673852}
+  m_Layer: 0
+  m_Name: MapManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5306863593843616386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8848730748712933129}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5414486514157042662}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4959159389306673852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8848730748712933129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9cd11b15257e14ab62a3a5f198754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction:
+  - {x: 1, y: 0}
+  - {x: -1, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: -1}
+  - {x: 1, y: 1}
+  - {x: 1, y: -1}
+  - {x: -1, y: 1}
+  - {x: -1, y: -1}
+  gridTile: {fileID: 2423592495778625938}
+  startPosition:
+  - {fileID: 5925025012952947298}
+  - {fileID: 620837991324130803}
+  overlayPrefabs: {fileID: 193207289917511966, guid: d59f97e5d402bb143b59d9f551bbcfb8, type: 3}
+  overlayContainer: {fileID: 4359059159815316535}
