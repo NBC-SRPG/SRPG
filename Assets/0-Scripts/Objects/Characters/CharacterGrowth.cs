@@ -110,6 +110,8 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         int[] result = CalcExp(exp);
         level = result[0];
         curExp = result[1];
+        maxExp = GetMaxExp(result[0]);
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), this);
         OnLevelUp?.Invoke();
     }
 
@@ -134,7 +136,12 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
                 exp -= expRequired;
             }
         }
-        // TODO : 경험치 획득시 결과가 최대레벨을 넘어갈 경우 예외처리 필요
+        
+        if(result[0] >= GetMaxLevel())
+        {
+            result[0] = GetMaxLevel();
+            result[1] = 0;
+        }
 
         return result;
     }
