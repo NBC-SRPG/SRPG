@@ -45,6 +45,7 @@ public class AnimationController : MonoBehaviour
     private bool isSetting;
 
     public event Action onAnimationEnd;
+    public event Action OnCharacterReleased;
 
     private Action prevAnimation;
 
@@ -169,6 +170,8 @@ public class AnimationController : MonoBehaviour
         {
             animationAtRelease.Dequeue()?.Invoke();
         }
+
+        OnCharacterReleased?.Invoke();
     }
 
     public void EndAimation()

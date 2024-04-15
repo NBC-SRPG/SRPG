@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class CameraController : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class CameraController : MonoBehaviour
 
     [Header("BattleCamera")]
     [SerializeField] private CinemachineVirtualCamera BattleCameara;
-    public CinemachineTargetGroup BattleTargetGroup;
+    public CinemachineTargetGroup battleTargetGroup;
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
@@ -80,7 +81,7 @@ public class CameraController : MonoBehaviour
 
         if (!AnimationController.instance.CheckAnimation())
         {
-            BattleTargetGroup.transform.position = Vector3.zero;
+            battleTargetGroup.transform.position = Vector3.zero;
         }
     }
 
@@ -211,5 +212,26 @@ public class CameraController : MonoBehaviour
         followingCharacterGroupCamera.Follow = null;
 
         PrimeCamera = mainCamera.transform;
+    }
+
+    public void AddBattleTargetGroup(Transform transform, float scale)
+    {
+        battleTargetGroup.AddMember(transform, 1, scale);
+    }
+
+    public void RemoveTargetGroup(Transform transform)
+    {
+        if (Array.Exists(battleTargetGroup.m_Targets, x => x.target == transform))
+        {
+            battleTargetGroup.RemoveMember(transform);
+        }
+    }
+
+    public void ResetBattleGroup()
+    {
+        for (int i = 0; i < battleTargetGroup.m_Targets.Length; i++)
+        {
+            battleTargetGroup.RemoveMember(battleTargetGroup.m_Targets[i].target);
+        }
     }
 }

@@ -60,6 +60,8 @@ public class CharAnimBase : MonoBehaviour
 
         healthSystem = characterHealth;
 
+        AnimationController.instance.OnCharacterReleased += OnCharacterReleased;
+
         LoadParticles();
     }
 
@@ -301,5 +303,10 @@ public class CharAnimBase : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    protected virtual void OnCharacterReleased()
+    {
+        CameraController.instance.ResetBattleGroup();
     }
 }
