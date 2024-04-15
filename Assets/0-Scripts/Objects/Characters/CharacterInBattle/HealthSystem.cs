@@ -213,15 +213,18 @@ public class HealthSystem : MonoBehaviour
 
     private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
     {
+        float time = 0f;
+
         if (!heal)
         {
             backHealBar.color = Color.yellow;
             backHealBar.fillAmount = healthBar.fillAmount;
             healthBar.fillAmount = HealthRatio;
 
-            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
+            while (time <= 0.25)
             {
-                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, Time.deltaTime * 2f);
+                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
 
                 yield return null;
             }
@@ -233,9 +236,10 @@ public class HealthSystem : MonoBehaviour
             backHealBar.color = Color.green;
             backHealBar.fillAmount = HealthRatio;
 
-            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
+            while (time <= 0.25)
             {
-                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, Time.deltaTime * 2f);
+                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
 
                 yield return null;
             }

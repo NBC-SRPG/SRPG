@@ -24,7 +24,6 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         player.playerId = "enemy";
-        player.playerNumber = 1;
 
         if (!BattleManager.Instance.players.Contains(player))
         {
@@ -68,22 +67,7 @@ public class EnemyController : MonoBehaviour
 
     public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
     {
-        int i = 0;
-        foreach (CharacterBase character in characterList)
-        {
-            if (i < MapManager.instance.startTiles[player.playerNumber].Count)
-            {
-                character.transform.SetParent(transform);
-
-                character.SpawnCharacter(MapManager.instance.map[MapManager.instance.startTiles[player.playerNumber][i]], transform);
-                i++;
-            }
-            else
-            {
-                character.gameObject.SetActive(false);
-                i++;
-            }
-        }
+        BattleManager.Instance.SpawnEnemy(characterList, player.playerStartPosition);
 
         player.isReady = true;
     }

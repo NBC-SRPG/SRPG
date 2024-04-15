@@ -25,6 +25,11 @@ public class CharacterBuf_Herald : CharacterBuf
 
         shield.Shield = (int)((float)character.health.MaxHealth * 0.1);
 
+        if(shield.Shield < 1)
+        {
+            shield.Shield = 1;
+        }
+
         character.health.AddShield(shield);
     }
 

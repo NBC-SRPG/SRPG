@@ -628,4 +628,51 @@ public class BattleManager : MonoBehaviour
         gameEnd = true;
     }
 
+
+    public void SpawnCharacters(List<CharacterBase> characterList, GamePlayer player)
+    {
+        int i = 0;
+
+        foreach (CharacterBase character in characterList)
+        {
+            if (i < MapManager.instance.playerStartTiles[player.playerStartPosition].startTile.Count)
+            {
+                character.transform.SetParent(transform);
+
+                character.SpawnCharacter(MapManager.instance.playerStartTiles[player.playerStartPosition].startTile[i], transform, MapManager.instance.playerStartTiles[player.playerStartPosition].startDirection);
+                i++;
+            }
+            else
+            {
+                character.gameObject.SetActive(false);
+                i++;
+            }
+        }
+    }
+
+    public void SpawnEnemy(List<CharacterAI> characterList, int spawnPosition)
+    {
+        if(MapManager.instance.enemyStartTiles == null || MapManager.instance.enemyStartTiles.Count <= 0)
+        {
+            return;
+        }
+
+        int i = 0;
+
+        foreach (CharacterAI character in characterList)
+        {
+            if (i < MapManager.instance.enemyStartTiles[spawnPosition].startTile.Count)
+            {
+                character.transform.SetParent(transform);
+
+                character.SpawnCharacter(MapManager.instance.enemyStartTiles[spawnPosition].startTile[i], transform, MapManager.instance.enemyStartTiles[spawnPosition].startDirection);
+                i++;
+            }
+            else
+            {
+                character.gameObject.SetActive(false);
+                i++;
+            }
+        }
+    }
 }

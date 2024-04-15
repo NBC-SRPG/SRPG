@@ -681,12 +681,13 @@ MonoBehaviour:
   charactersInBattle: []
   nowPlayer:
     playerId: 
-    playerNumber: 0
+    playerStartPosition: 0
     prioty: 0
     isReady: 0
     manaCost: 0
   nowRound: 0
   isShowAnimation: 0
+  gameEnd: 0
 --- !u!1 &602190366
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,6 +925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 751383548}
   - component: {fileID: 751383549}
+  - component: {fileID: 751383550}
   m_Layer: 0
   m_Name: forMainCamera
   m_TagString: Untagged
@@ -986,6 +988,21 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 703273400}
+--- !u!114 &751383550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751383547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BoundingShape2D: {fileID: 0}
+  m_Damping: 0.5
+  m_MaxWindowSize: -1
 --- !u!1 &780829653
 GameObject:
   m_ObjectHideFlags: 3
@@ -1107,7 +1124,7 @@ MonoBehaviour:
   targetTiles: {fileID: 2942906996224312592, guid: 70627d848b9a8254bb6ac057b9abe288, type: 3}
   player:
     playerId: 
-    playerNumber: 0
+    playerStartPosition: 0
     prioty: 10
     isReady: 0
     manaCost: 0

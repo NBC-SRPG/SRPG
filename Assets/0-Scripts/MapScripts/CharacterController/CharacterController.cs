@@ -163,23 +163,7 @@ public class CharacterController : MonoBehaviour
 
     public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
     {
-        int i = 0;
-
-        foreach (CharacterBase character in characterList)
-        {
-            if (i < MapManager.instance.startTiles[player.playerNumber].Count)
-            {
-                character.transform.SetParent(transform);
-
-                character.SpawnCharacter(MapManager.instance.map[MapManager.instance.startTiles[player.playerNumber][i]], transform);
-                i++;
-            }
-            else
-            {
-                character.gameObject.SetActive(false);
-                i++;
-            }
-        }
+        BattleManager.Instance.SpawnCharacters(characterList, player);
 
         ChangePhase(PlayerPhase.Idle);
 
@@ -365,6 +349,11 @@ public class CharacterController : MonoBehaviour
         if (hit)
         {
             OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
+
+            if(curTile == null)
+            {
+                Debug.Log("123456");
+            }
 
             if (curTile.curStandingCharater != null)
             {

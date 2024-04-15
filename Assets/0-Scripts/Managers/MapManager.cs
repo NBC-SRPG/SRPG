@@ -7,6 +7,25 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
+    private enum Direction
+    {
+        Right,
+        Left
+    }
+
+    [System.Serializable]
+    private struct StartPositions
+    {
+        public Transform positions;
+        public Direction direction;
+    }
+
+    public struct StartTiles
+    {
+        public List<OverlayTile> startTile;
+        public Vector2 startDirection;
+    }
+
     public static MapManager instance;
 
     [HideInInspector]
@@ -17,14 +36,18 @@ public class MapManager : MonoBehaviour
     };
 
     public Tilemap gridTile;
-    public List<Transform> startPosition;
+    [SerializeField] private List<StartPositions> playerStartPosition;
+    [SerializeField] private List<StartPositions> enemyStartPosition;
 
     [SerializeField] private GameObject overlayPrefabs;
     [SerializeField] private GameObject overlayContainer;
 
     public Dictionary<Vector2Int, OverlayTile> map;
-    public Dictionary<int, List<Vector2Int>> startTiles;
+    public Dictionary<int, StartTiles> playerStartTiles;
+    public Dictionary<int, StartTiles> enemyStartTiles;
     //public List<Vector2Int> startTile = new List<Vector2Int>();
+
+    public PolygonCollider2D cameraArea;
 
     public event Action OnCompleteMove;
     public event Action SetMapComplete;
@@ -51,7 +74,8 @@ public class MapManager : MonoBehaviour
     public void Init()// 모든 타일 초기화
     {
         map = new Dictionary<Vector2Int, OverlayTile>();
-        startTiles = new Dictionary<int, List<Vector2Int>>();
+        playerStartTiles = new Dictionary<int, StartTiles>();
+        enemyStartTiles = new Dictionary<int, StartTiles>();
 
         surroundingTiles = new List<OverlayTile>();
     }
@@ -159,19 +183,68 @@ public class MapManager : MonoBehaviour
     private void InitiateStartTile()// 캐릭터 시작 위치 설정
     {
         int i = 0;
-        foreach (Transform st in startPosition)
+        foreach (StartPositions st in playerStartPosition)
         {
-            MapManager.instance.startTiles.Add(i, new List<Vector2Int>());
-            Debug.Log("set st " + i);
+            if (st.direction == Direction.Left)
+            {
+                playerStartTiles.Add(i, new StartTiles
+                {
+                    startTile = new List<OverlayTile>(),
+                    startDirection = Vector2.left
+                });
+            }
+            else
+            {
+                playerStartTiles.Add(i, new StartTiles
+                {
+                    startTile = new List<OverlayTile>(),
+                    startDirection = Vector2.right
+                });
+            }
 
-            foreach (Transform child in st.transform)
+            foreach (Transform child in st.positions)
             {
                 Vector2Int position = (Vector2Int)gridTile.WorldToCell(child.position);
 
-                if (MapManager.instance.map.ContainsKey(position))
+                if (map.ContainsKey(position))
                 {
-                    MapManager.instance.startTiles[i].Add(position);
+                    playerStartTiles[i].startTile.Add(map[position]);
                 }
+
+            }
+
+            i++;
+        }
+
+        i = 0;
+        foreach (StartPositions st in enemyStartPosition)
+        {
+            if (st.direction == Direction.Left)
+            {
+                enemyStartTiles.Add(i, new StartTiles
+                {
+                    startTile = new List<OverlayTile>(),
+                    startDirection = Vector2.left
+                });
+            }
+            else
+            {
+                enemyStartTiles.Add(i, new StartTiles
+                {
+                    startTile = new List<OverlayTile>(),
+                    startDirection = Vector2.right
+                });
+            }
+
+            foreach (Transform child in st.positions)
+            {
+                Vector2Int position = (Vector2Int)gridTile.WorldToCell(child.position);
+
+                if (map.ContainsKey(position))
+                {
+                    enemyStartTiles[i].startTile.Add(map[position]);
+                }
+
             }
 
             i++;
