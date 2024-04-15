@@ -22,6 +22,8 @@ public class EquipSO : PassiveSO
     public int mov;
 
     [Header("InvisibleStatus")]
+
+    public string additionalOption;   // 추가효과를 UI에 나타내기 위한 설명
     public int atkIncrease;     // 공격력 %증가량 (곱연산)
     public int defIncrease;     // 방어력 %증가량 (곱연산)
 
