@@ -121,24 +121,26 @@ public class LevelUpUI : UIBase
     {
         Managers.UI.CloseUI(this);
     }
-
+    // 아이템 1회 클릭
     private void OnClickLevelUpItemButton(int itemNum)
     {
+        // 이미 맥스레벨
         if (character.Growth.level >= character.Growth.GetMaxLevel())
         {
             return;
         }
-
+        // 아이템 먹일 시 맥스레벨
         if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
         {
             return;
         }
-
+        // 아이템 사용 불가
         if (canUseLevelUpItem == false)
         {
             return;
         }
 
+        // 개수가 충분하다면 아이템 1개 사용 체크
         int curNum;
         switch (itemNum)
         {
@@ -179,22 +181,24 @@ public class LevelUpUI : UIBase
                 GetText((int)Texts.LevelUpItemSelectNumber4).text = curNum.ToString();
                 break;
         }
+        // 아이템 먹이고 난 뒤 스탯 계산하여 UI 업데이트
         LevelUpCalc();
     }
-    
+    // 꾹눌렀다가 땔 때 초기화
     private void OnPointerUpLevelUpItemButton()
     {
         pressTimer = 0;
         isPressed = false;
     }
-
+    // 아이템 꾹 누르기
     private void OnPressedLevelUpItemButton(int itemNum)
     {
+        // 이미 맥스레벨
         if (character.Growth.level >= character.Growth.GetMaxLevel())
         {
             return;
         }
-
+        // 아이템 먹일 때 맥스레벨
         if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
         {
             return;
@@ -224,7 +228,7 @@ public class LevelUpUI : UIBase
             }
         }
     }
-
+    // 0.02초마다 아이템 1개씩 추가
     private IEnumerator LevelUpItem(int itemNum)
     {
         while (true)
@@ -274,9 +278,10 @@ public class LevelUpUI : UIBase
             yield return new WaitForSeconds(0.02f);
         }
     }
-
+    // UI업데이트
     private void LevelUpCalc()
     {
+        // 총 경험치량
         totalExp = LevelUpItem1ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text) +
             LevelUpItem2ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text) +
             LevelUpItem3ExpValue * int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text) +
@@ -324,22 +329,14 @@ public class LevelUpUI : UIBase
         {
             canUseLevelUpItem = true;
         }
-
+        // 골드 업데이트
         string goldText = GetText((int)Texts.LevelUpGoldText).text;
         string digits = Regex.Match(goldText, @"\d+").Value;
 
         int goldRequired = int.Parse(digits);
 
-        if (goldRequired > Managers.AccountData.playerData.Gold)
-        {
-            LevelUpButtonActiveFalse();
-        }
-        else
-        {
-            LevelUpButtonActiveTrue();
-        }
-
-        if (totalExp > 0)
+        // 총 경험치량이 0보다 크고 필요 골드가 소지 골드 보다 적다면 활성화
+        if (totalExp > 0 && goldRequired <= Managers.AccountData.playerData.Gold)
         {
             LevelUpButtonActiveTrue();
         }
@@ -369,14 +366,17 @@ public class LevelUpUI : UIBase
         newColor.a = 1f;
         GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color = newColor;
     }
-
+    // 레벨업 적용
     private void OnClickLevelUpButton()
     {
         string goldText = GetText((int)Texts.LevelUpGoldText).text;
         string digits = Regex.Match(goldText, @"\d+").Value;
 
         int gold = int.Parse(digits);
-
+        
+        // 골드 부족 시 경고 UI
+        // 현재는 부족 시 버튼을 비활성화
+        // TODO: 비활성화 or 경고UI??
         if (Managers.AccountData.playerData.ReduceGold(gold) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();

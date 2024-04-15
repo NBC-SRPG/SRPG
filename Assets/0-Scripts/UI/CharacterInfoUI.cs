@@ -36,10 +36,8 @@ public class CharacterInfoUI : UIBase
         AbilityButton,
         ClassButton,
         BackButton,
-        //ExSkillLevelUpButton,
         WeaponButton,
         ArmorButton,
-        EquipmentUpgradeUICloseButton,
         Ability1Button,
         Ability2_1Button,
         Ability2_2Button,
@@ -76,10 +74,8 @@ public class CharacterInfoUI : UIBase
         SkillTab,
         AbilityTab,
         ClassTab,
-        //ExSkillInfoUI,
         PassiveSkillInfoUI,
         AbilityInfoUI,
-        EquipmentUpgradeUI,
         Star
     }
 
@@ -111,10 +107,8 @@ public class CharacterInfoUI : UIBase
         BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerUpPassiveSkill, UIEvent.PointerUp);
 
         // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
-        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
         GetObject((int)GameObjects.AbilityInfoUI).SetActive(false);
-        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
 
         // 스킬, 특성, 클래스 탭 보여주기
         GetButton((int)Buttons.SkillButton).onClick.AddListener(() => ShowTab(PlayTab.Skill));
@@ -125,12 +119,10 @@ public class CharacterInfoUI : UIBase
         //GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.armor.equip_Id}");
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        //GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
-        GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
         GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
         GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
-        //GetButton((int)Buttons.WeaponButton).onClick.AddListener(() => OnClickWeaponButton(character.SO.weapon));
-        //GetButton((int)Buttons.ArmorButton).onClick.AddListener(() => OnClickArmorButton(character.SO.armor));
+        GetButton((int)Buttons.WeaponButton).onClick.AddListener(OnClickWeaponButton);
+        GetButton((int)Buttons.ArmorButton).onClick.AddListener(OnClickArmorButton);
 
         ShowTab(PlayTab.Skill);
 
@@ -364,13 +356,6 @@ public class CharacterInfoUI : UIBase
         //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
     }
 
-    private void OnClickEquipmentUpgradeUICloseButton()
-    {
-        Debug.Log("OnClickEquipmentUpgradeUICloseButton");
-
-        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
-    }
-
     // TODO 고유 스킬 UI는 따로 할 것인지?
     private void OnPointerUpPassiveSkill()
     {
@@ -511,16 +496,22 @@ public class CharacterInfoUI : UIBase
         GetObject((int)GameObjects.AbilityInfoUI).SetActive(false);
     }
 
-    private void OnClickWeaponButton(EquipSO weapon)
+    private void OnClickWeaponButton()
     {
         Debug.Log("OnClickWeaponButton");
 
-        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+        EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
+        ui.Init(character, EquipType.Weapon);
+
+        //GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
     }
-    private void OnClickArmorButton(EquipSO armor)
+    private void OnClickArmorButton()
     {
         Debug.Log("OnClickArmorButton");
 
-        GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+        EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
+        ui.Init(character, EquipType.Armor);
+
+        //GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
     }
 }
