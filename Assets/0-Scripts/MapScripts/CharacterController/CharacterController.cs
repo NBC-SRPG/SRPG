@@ -63,13 +63,13 @@ public class CharacterController : MonoBehaviour
 
         player = Managers.GameManager.player;
 
-        if (!Managers.BattleManager.players.Contains(player))
+        if (!BattleManager.Instance.players.Contains(player))
         {
-            Managers.BattleManager.players.Add(player);
+            BattleManager.Instance.players.Add(player);
         }
-        Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
+        BattleManager.Instance.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
-        Managers.BattleManager.TurnStart += GetPlayerTurn;
+        BattleManager.Instance.TurnStart += GetPlayerTurn;
 
         foreach(Character charac in Managers.GameManager.player.party)
         {
@@ -85,6 +85,8 @@ public class CharacterController : MonoBehaviour
         }
 
         Ui = Managers.UI.FindUI<BattleUI>();
+
+        BattleManager.Instance.Win += EndGame;
     }
 
     private void Update()
@@ -127,7 +129,7 @@ public class CharacterController : MonoBehaviour
 
     private void GetPlayerTurn()
     {
-        if (Managers.BattleManager.nowPlayer.playerId == player.playerId)
+        if (BattleManager.Instance.nowPlayer.playerId == player.playerId)
         {
             canClick = true;
             nowPlayerTurn = true;
@@ -165,11 +167,11 @@ public class CharacterController : MonoBehaviour
 
         foreach (CharacterBase character in characterList)
         {
-            if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
+            if (i < MapManager.instance.startTiles[player.playerNumber].Count)
             {
                 character.transform.SetParent(transform);
 
-                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]], transform);
+                character.SpawnCharacter(MapManager.instance.map[MapManager.instance.startTiles[player.playerNumber][i]], transform);
                 i++;
             }
             else
@@ -184,7 +186,7 @@ public class CharacterController : MonoBehaviour
         player.manaCost = 4;
 
         player.isReady = true;
-        Managers.BattleManager.GetReady();
+        BattleManager.Instance.GetReady();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -201,7 +203,11 @@ public class CharacterController : MonoBehaviour
         skillTargets.Clear();
 
         Ui.ResetUI();
-        CameraController.instance.ResetCamera();
+
+        if (phase != PlayerPhase.Idle)
+        {
+            CameraController.instance.ResetCamera();
+        }
 
         switch (phase)
         {
@@ -861,7 +867,22 @@ public class CharacterController : MonoBehaviour
 
             canClick = false;
             nowPlayerTurn = false;
-            Managers.BattleManager.PlayerTurnEnd();
+            BattleManager.Instance.PlayerTurnEnd();
         }
     }
+
+    public void EndGame(string playerId)
+    {
+        Debug.Log(playerId);
+
+        if(player.playerId == playerId)
+        {
+            Ui.ShowWin();
+        }
+        else
+        {
+            Ui.ShowLose();
+        }
+    }
+
 }

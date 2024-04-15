@@ -345,7 +345,7 @@ public class CharacterAI : CharacterBase
         {
             if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
-                foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
+                foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
                     if (tile.curStandingCharater == null && !list.Contains(tile))
                     {
@@ -407,7 +407,7 @@ public class CharacterAI : CharacterBase
         int min = -1;
         CharacterBase nearestCharacter = null;
 
-        foreach(CharacterBase character in Managers.BattleManager.charactersInBattle)
+        foreach(CharacterBase character in BattleManager.Instance.charactersInBattle)
         {
             if (character.playerId == playerId || character.isDead || checkedCharacter.Contains(character))// 아군 캐릭터이거나 사망한 캐릭터 혹인 이미 탐색한 캐릭터 스킵
             {
@@ -513,7 +513,7 @@ public class CharacterAI : CharacterBase
 
             if (nearestCharacter == null)// 다른 적이 없다면
             {
-                foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))// 그 주위로 이동
+                foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))// 그 주위로 이동
                 {
                     if (tile.curStandingCharater == null && !list.Contains(tile))
                     {
@@ -550,7 +550,7 @@ public class CharacterAI : CharacterBase
         {
             if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
-                foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
+                foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
                     if (tile.curStandingCharater == null && !list.Contains(tile))
                     {
@@ -615,7 +615,7 @@ public class CharacterAI : CharacterBase
 
             if (Mov + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
-                foreach (OverlayTile tile in Managers.MapManager.GetSurroundingTiles(list.Last().grid2DLocation, true))
+                foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
                     if (tile.curStandingCharater == null && !list.Contains(tile))
                     {

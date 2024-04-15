@@ -17,12 +17,6 @@ public class Managers : MonoBehaviour
     private static Database database = new Database();
     public static Database DB { get {  Init(); return database; } }
 
-    private static MapManager s_mapManager = new MapManager();
-    public static MapManager MapManager { get { Init(); return s_mapManager; } }
-
-    private static BattleManager s_battleManager = new BattleManager();
-    public static BattleManager BattleManager { get { Init(); return s_battleManager; } }
-
     private static AccountData s_accountData = new AccountData();
     public static AccountData AccountData { get { Init(); return s_accountData; } }
 
@@ -72,8 +66,6 @@ public class Managers : MonoBehaviour
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();
-            s_mapManager.Init();
-            s_battleManager.Init();
             s_gachamanager.Init();
             missionManager.Init();
             s_gameManager.Init();

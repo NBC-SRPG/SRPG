@@ -8,8 +8,6 @@ using UnityEngine.UIElements;
 
 public class MapTiles : MonoBehaviour
 {
-    public List<CharacterBase> characters;
-
     [HideInInspector] public Tilemap gridTile;
     [HideInInspector] public List<Transform> startPosition;
 
@@ -20,13 +18,8 @@ public class MapTiles : MonoBehaviour
 
     private void Awake()
     {
-        Managers.UI.ShowUI<BattleUI>();
+        
 
-        Managers.MapManager.Init();
-        Managers.BattleManager.Init();
-
-        InitiateMapTile();
-        InitiateStartTile();
     }
 
     private void Start()
@@ -43,7 +36,7 @@ public class MapTiles : MonoBehaviour
 
             if (gridTile.HasTile(tileLocation))
             {
-                if (!Managers.MapManager.map.ContainsKey(tileKey))
+                if (!MapManager.instance.map.ContainsKey(tileKey))
                 {
                     GameObject overlayTile = Instantiate(overlayPrefabs, overlayContainer.transform);
                     Vector3 cellWorldPosition = gridTile.GetCellCenterWorld(tileLocation);
@@ -53,7 +46,7 @@ public class MapTiles : MonoBehaviour
                     OverlayTile tile = overlayTile.GetComponent<OverlayTile>();
                     tile.gridLocation = tileLocation;
 
-                    Managers.MapManager.map.Add(tileKey, tile);
+                    MapManager.instance.map.Add(tileKey, tile);
 
                     if (pos.z >= 1)
                     {
@@ -74,37 +67,20 @@ public class MapTiles : MonoBehaviour
         int i = 0;
         foreach (Transform st in startPosition)
         {
-            Managers.MapManager.startTiles.Add(i, new List<Vector2Int>());
+            MapManager.instance.startTiles.Add(i, new List<Vector2Int>());
+            Debug.Log("set st " + i);
 
             foreach (Transform child in st.transform)
             {
                 Vector2Int position = (Vector2Int)gridTile.WorldToCell(child.position);
 
-                if (Managers.MapManager.map.ContainsKey(position))
+                if (MapManager.instance.map.ContainsKey(position))
                 {
-                    Managers.MapManager.startTiles[i].Add(position);
+                    MapManager.instance.startTiles[i].Add(position);
                 }
             }
 
             i++;
         }
     }
-
-    //public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성(BattleManager로 옮겨질 가능성 높음)
-    //{
-    //    int i = 0;
-    //    foreach (CharacterBase charac in characters)
-    //    {
-    //        if (i < Managers.MapManager.startTile.Count)
-    //        {
-    //            CharacterBase character = Instantiate(charac);
-
-    //            character.curStandingTile = Managers.MapManager.map[Managers.MapManager.startTile[i]];
-    //            character.curStandingTile.curStandingCharater = character;
-
-    //            character.transform.position = character.curStandingTile.transform.position;
-    //            i++;
-    //        }
-    //    }
-    //}
 }
