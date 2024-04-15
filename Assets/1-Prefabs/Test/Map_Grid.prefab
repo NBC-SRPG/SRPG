@@ -163,7 +163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5414486514157042662}
   m_Layer: 0
-  m_Name: Map_Test
+  m_Name: Map_Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2849,7 +2849,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0.5, y: 0.5, z: 0}
   m_MaxChunkCount: 16
@@ -2912,8 +2912,11 @@ MonoBehaviour:
   - {x: -1, y: 1}
   - {x: -1, y: -1}
   gridTile: {fileID: 2423592495778625938}
-  startPosition:
-  - {fileID: 5925025012952947298}
-  - {fileID: 620837991324130803}
+  playerStartPosition:
+  - positions: {fileID: 5925025012952947298}
+    direction: 0
+  enemyStartPosition:
+  - positions: {fileID: 620837991324130803}
+    direction: 1
   overlayPrefabs: {fileID: 193207289917511966, guid: d59f97e5d402bb143b59d9f551bbcfb8, type: 3}
   overlayContainer: {fileID: 4359059159815316535}
