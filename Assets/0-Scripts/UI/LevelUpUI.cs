@@ -6,7 +6,7 @@ using static Constants;
 
 public class LevelUpUI : UIBase
 {
-    Character character;
+    private Character character;
     // TODO
     // 레벨업 아이템 Id 다른 곳에서도 사용한다면 Constants로 옮기기
     private const int LevelUpItem1Id = 1;
@@ -18,7 +18,6 @@ public class LevelUpUI : UIBase
     private int LevelUpItem2ExpValue;
     private int LevelUpItem3ExpValue;
     private int LevelUpItem4ExpValue;
-
     private int totalExp;
 
     // pressInterval 시간만큼 누르고 있을 시 레벨업 아이템 최대 개수
@@ -417,6 +416,8 @@ public class LevelUpUI : UIBase
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = GetImage((int)Images.LevelUpBarChangeImage).fillAmount;
         GetImage((int)Images.LevelUpBarChangeImage).fillAmount = 0;
+
+        LevelUpCalc();
     }
 
     private void LoadAllItemsExpValue()
