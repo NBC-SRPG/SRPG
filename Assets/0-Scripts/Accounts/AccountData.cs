@@ -2,6 +2,7 @@ using Firebase.Database;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class AccountData
@@ -27,6 +28,8 @@ public class AccountData
     private bool hasOngoingMissions = false;
     private bool hasCompleteMissions = false;
 
+
+    #region Init
     public void InitStageClearData(DataSnapshot snapshot)
     {
         Dictionary<string, int> data = snapshot.Exists ? JsonUtility.FromJson<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
@@ -75,9 +78,9 @@ public class AccountData
                 Convert.ToInt32(snapshot.Child("exp").Value),
                 Convert.ToInt32(snapshot.Child("maxExp").Value),
                 snapshot.Child("birthday").Value as string,
-                snapshot.Child("favoriteCharacter").Value as int[],
-                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value),
-                Convert.ToInt32(snapshot.Child("characterIcon").Value)
+                //snapshot.Child("favoriteCharacter").Value as int[],
+                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value)
+                //Convert.ToInt32(snapshot.Child("characterIcon").Value)
             );
         }
         else
@@ -307,4 +310,47 @@ public class AccountData
             }
         }
     }
+    #endregion
+
+    public void UpdateStageClearData(string stageName, int achievement)
+    {
+        if(stageClearData.TryAdd(stageName, achievement) == false)
+        {
+            stageClearData[stageName] = achievement;
+        }
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
+    }
+
+    public void AcquireCharacter(int id)
+    {
+        if(!characterData.ContainsKey(id))
+        {
+            Utility.Id2SO<CharacterSO>(id, (result) =>
+            {
+                CharacterGrowth characterGrowth = new CharacterGrowth((CharacterSO)result);
+                characterData.Add(id, new Character((CharacterSO)result, characterGrowth));
+                Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
+            });
+        }
+        else
+        {
+            // 캐릭터 조각 추가
+        }
+    }
+
+    public void AcquireItems(int id, int count)
+    {
+        if(inventory.TryAdd(id, count) == false)
+        {
+            inventory[id] += count;
+        }
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
+    }
+
+    public void ConsumeItems(int id, int count)
+    {
+        inventory[id] -= count;
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
+    }
+
 }
