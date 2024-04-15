@@ -64,7 +64,7 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
-    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent)
+    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent, Vector2 direction)
     {
         transform.SetParent(parent);
 
@@ -75,6 +75,8 @@ public class CharacterBase : MonoBehaviour
 
         BattleManager.Instance.charactersInBattle.Add(this);
         BattleManager.Instance.charactersAsTeam[playerId].Add(this);
+
+        characterAnim.FlipCharacterDirection(direction);
     }
 
     public virtual void InitCharacter(Character charac, string id)
@@ -130,7 +132,6 @@ public class CharacterBase : MonoBehaviour
         PassiveSO[] passiveList = {character.passiveSkill, character.abilityT1, character.abilityT2, character.abilityT3,
                                 character.basicClass, character.superiorClass, character.weapon, character.armor};
 
-        int index = 0;
         foreach (PassiveSO so in passiveList)
         {
             if (so == null)
@@ -161,8 +162,6 @@ public class CharacterBase : MonoBehaviour
                 passive?.init(this);
             }
         }
-
-
 
         curCharacterBufList = new CharacterBufList(this);
         tempBonusStat = new TempBonusStat();
@@ -230,6 +229,12 @@ public class CharacterBase : MonoBehaviour
         curStandingTile.curStandingCharater = null;
         curStandingTile = newTile;
         curStandingTile.curStandingCharater = this;
+    }
+
+    public void MoveTileAndPosition(OverlayTile newTile)// 타일 이동하면서 캐릭터 위치도 이동
+    {
+        MoveTile(newTile);
+        transform.position = newTile.transform.position;
     }
 
     public void MoveCharacter()//캐릭터 이동

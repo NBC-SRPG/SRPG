@@ -687,6 +687,7 @@ MonoBehaviour:
     manaCost: 0
   nowRound: 0
   isShowAnimation: 0
+  gameEnd: 0
 --- !u!1 &602190366
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,6 +2064,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1204701915}
     m_Modifications:
+    - target: {fileID: 1183239030454850381, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 1183239030454850381, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.99
+      objectReference: {fileID: 0}
     - target: {fileID: 1752962521781309133, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Name
       value: Map_Test
