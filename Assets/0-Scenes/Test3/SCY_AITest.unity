@@ -681,7 +681,7 @@ MonoBehaviour:
   charactersInBattle: []
   nowPlayer:
     playerId: 
-    playerNumber: 0
+    playerStartPosition: 0
     prioty: 0
     isReady: 0
     manaCost: 0
@@ -925,6 +925,7 @@ GameObject:
   m_Component:
   - component: {fileID: 751383548}
   - component: {fileID: 751383549}
+  - component: {fileID: 751383550}
   m_Layer: 0
   m_Name: forMainCamera
   m_TagString: Untagged
@@ -987,6 +988,21 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 703273400}
+--- !u!114 &751383550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751383547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BoundingShape2D: {fileID: 0}
+  m_Damping: 0.5
+  m_MaxWindowSize: -1
 --- !u!1 &780829653
 GameObject:
   m_ObjectHideFlags: 3
@@ -1108,7 +1124,7 @@ MonoBehaviour:
   targetTiles: {fileID: 2942906996224312592, guid: 70627d848b9a8254bb6ac057b9abe288, type: 3}
   player:
     playerId: 
-    playerNumber: 0
+    playerStartPosition: 0
     prioty: 10
     isReady: 0
     manaCost: 0
@@ -2064,14 +2080,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1204701915}
     m_Modifications:
-    - target: {fileID: 1183239030454850381, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -14.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 1183239030454850381, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.99
-      objectReference: {fileID: 0}
     - target: {fileID: 1752962521781309133, guid: d2bc6e142fe124f4c97d88fd0d326251, type: 3}
       propertyPath: m_Name
       value: Map_Test

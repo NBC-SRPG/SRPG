@@ -652,7 +652,7 @@ public class BattleManager : MonoBehaviour
 
     public void SpawnEnemy(List<CharacterAI> characterList, int spawnPosition)
     {
-        if(MapManager.instance.enemyStartTiles.Count <= 0)
+        if(MapManager.instance.enemyStartTiles == null || MapManager.instance.enemyStartTiles.Count <= 0)
         {
             return;
         }

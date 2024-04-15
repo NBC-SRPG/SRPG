@@ -24,7 +24,6 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         player.playerId = "enemy";
-        player.playerStartPosition = 1;
 
         if (!BattleManager.Instance.players.Contains(player))
         {

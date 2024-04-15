@@ -350,6 +350,11 @@ public class CharacterController : MonoBehaviour
         {
             OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
+            if(curTile == null)
+            {
+                Debug.Log("123456");
+            }
+
             if (curTile.curStandingCharater != null)
             {
                 if (curTile.curStandingCharater.playerId == player.playerId && curTile.curStandingCharater != curSelectedCharacter)// 해당 캐릭터가 내 캐릭터일 때

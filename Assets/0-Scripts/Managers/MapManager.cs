@@ -47,6 +47,8 @@ public class MapManager : MonoBehaviour
     public Dictionary<int, StartTiles> enemyStartTiles;
     //public List<Vector2Int> startTile = new List<Vector2Int>();
 
+    public PolygonCollider2D cameraArea;
+
     public event Action OnCompleteMove;
     public event Action SetMapComplete;
 
@@ -73,6 +75,7 @@ public class MapManager : MonoBehaviour
     {
         map = new Dictionary<Vector2Int, OverlayTile>();
         playerStartTiles = new Dictionary<int, StartTiles>();
+        enemyStartTiles = new Dictionary<int, StartTiles>();
 
         surroundingTiles = new List<OverlayTile>();
     }
