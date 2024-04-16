@@ -363,6 +363,7 @@ MonoBehaviour:
     playerNumber: 1
     prioty: 2
     isReady: 0
+    manaCost: 0
   tempList:
   - tempCharacter: {fileID: 11400000, guid: a5b17d77dfce6d14e997f6ce6e04d986, type: 2}
   - tempCharacter: {fileID: 11400000, guid: a5b17d77dfce6d14e997f6ce6e04d986, type: 2}
@@ -1110,11 +1111,11 @@ MonoBehaviour:
     playerNumber: 0
     prioty: 10
     isReady: 0
+    manaCost: 0
   movePath: []
   nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}
   curTargetCharacter: {fileID: 0}
-  manaCost: 0
 --- !u!4 &1071128365
 Transform:
   m_ObjectHideFlags: 0
@@ -1478,7 +1479,7 @@ MonoBehaviour:
   followingCharacterGroupCamera: {fileID: 1204646153}
   followingTargetGroup: {fileID: 1739334759}
   BattleCameara: {fileID: 377462590}
-  BattleTargetGroup: {fileID: 465384796}
+  battleTargetGroup: {fileID: 0}
   canMove: 0
   moveSpeed: 0
 --- !u!4 &1406777949
