@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
+    private CinemachineBasicMultiChannelPerlin noise;
 
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
@@ -52,6 +53,8 @@ public class CameraController : MonoBehaviour
 
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+
+        noise = battaleCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
