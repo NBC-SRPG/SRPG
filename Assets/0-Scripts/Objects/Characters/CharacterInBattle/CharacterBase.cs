@@ -171,11 +171,13 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 스탯 관련 함수
 
+    // 데미지 계산식 : Dmg = (Attack(ex스킬일 경우 x계수/100) - 0.25*enemy.Defend*PenetrateDef) * EnhanceDMG * enemy.ReduceDMG * (치명타시)CritDMG * 속성상성
+
     public float AtkIncrease
     {
         get
         {
-            float increase = 1 * ((float)(100f + character.atkIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraAtk * tempBonusStat.GetTempStat().ExtraAtk;
+            float increase = character.atkIncrease * curCharacterBufList.GetAdditionalStat().ExtraAtk * tempBonusStat.GetTempStat().ExtraAtk;
             if(increase < 0)
             {
                 increase = 1f;
@@ -185,6 +187,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    /*
     public float AtkDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
     {
         get
@@ -202,12 +205,13 @@ public class CharacterBase : MonoBehaviour
             return (100f - decrease) / 100f;
         }
     }
+    */
 
     public int Attack
     {
         get
         {
-            return (int)(((float)character.atk * AtkIncrease) * AtkDecrease);
+            return (int)((float)character.atk * AtkIncrease);
         }
     }
 
@@ -215,7 +219,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            float increase = 1 * ((float)(100 + character.defIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraDefend * tempBonusStat.GetTempStat().ExtraDefend;
+            float increase = character.defIncrease * curCharacterBufList.GetAdditionalStat().ExtraDefend * tempBonusStat.GetTempStat().ExtraDefend;
             if (increase < 0)
             {
                 increase = 1f;
@@ -225,6 +229,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    /*
     public float DefDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
     {
         get
@@ -242,12 +247,13 @@ public class CharacterBase : MonoBehaviour
             return (100f - decrease) / 100f;
         }
     }
+    */
 
     public int Defend
     {
         get
         {
-            return (int)(((float)character.def * DefIncrease) * DefDecrease);
+            return (int)((float)character.def * DefIncrease);
         }
     }
 
@@ -255,7 +261,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            int mov = character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov - curCharacterBufList.GetDecreaseStat().ExtraMov - tempBonusStat.GetTempDecrease().ExtraMov;
+            int mov = character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov;
             if(mov < 0)
             {
                 mov = 0;
@@ -269,7 +275,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            int extraCritRate = character.critRate + curCharacterBufList.GetAdditionalStat().EXCritRate + tempBonusStat.GetTempStat().EXCritRate - curCharacterBufList.GetDecreaseStat().EXCritRate - tempBonusStat.GetTempDecrease().EXCritRate;
+            int extraCritRate = character.critRate + curCharacterBufList.GetAdditionalStat().EXCritRate + tempBonusStat.GetTempStat().EXCritRate;
             if(extraCritRate < 0)
             {
                 extraCritRate = 0;
@@ -279,17 +285,17 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public int CritDMG
+    public float CritDMG
     {
         get
         {
-            int extraCritDMG = character.critDmg + curCharacterBufList.GetAdditionalStat().EXCritDMG + tempBonusStat.GetTempStat().EXCritDMG - curCharacterBufList.GetDecreaseStat().EXCritDMG - tempBonusStat.GetTempDecrease().EXCritDMG; ;
+            int extraCritDMG = character.critDmg + curCharacterBufList.GetAdditionalStat().EXCritDMG + tempBonusStat.GetTempStat().EXCritDMG;
             if(extraCritDMG < 0)
             {
                 extraCritDMG = 0;
             }
 
-            return extraCritDMG;
+            return (100f+extraCritDMG)/100f;
         }
     }
 
@@ -297,10 +303,10 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            float penetrate = 1 * curCharacterBufList.GetAdditionalStat().PenetrateDef + tempBonusStat.GetTempStat().PenetrateDef;
-            if(penetrate > 100f)
+            float penetrate = 1 * curCharacterBufList.GetAdditionalStat().PenetrateDef * tempBonusStat.GetTempStat().PenetrateDef;
+            if(penetrate > 1f)
             {
-                penetrate = 100f;
+                penetrate = 1f;
             }
             else if( penetrate < 0f)
             {
@@ -315,9 +321,13 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            float enhance = character.EnhancedDmg + curCharacterBufList.GetAdditionalStat().EnhancedDmg + tempBonusStat.GetTempStat().EnhancedDmg;
+            float enhance = character.EnhancedDmg * curCharacterBufList.GetAdditionalStat().EnhancedDmg * tempBonusStat.GetTempStat().EnhancedDmg;
+            if (enhance < 0)
+            {
+                enhance = 1f;
+            }
 
-            return (100 + enhance) / 100;
+            return enhance;
         }
     }
 
@@ -325,7 +335,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            float reduce = 1 * ((float)(100 + character.ReducedDmg) / 100f) * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
+            float reduce = 1 * character.ReducedDmg * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
             if(reduce < 0)
             {
                 reduce = 1f;
@@ -334,6 +344,7 @@ public class CharacterBase : MonoBehaviour
             return reduce;
         }
     }
+
 
     //-----------------------------------------------------------------------------------------------------------------------
     // Update
