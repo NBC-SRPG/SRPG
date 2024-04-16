@@ -20,6 +20,7 @@ public class TempBonusStat
             ExtraAtk = 1f,
             ExtraDefend = 1f,
             PenetrateDef = 1f,
+            EnhancedDmg = 1f,
             ReducedDmg = 1f,
         };// 곱연산인 변수들은 초기값 1로
 
@@ -31,6 +32,7 @@ public class TempBonusStat
         return stat;
     }
 
+    /*
     public BonusStat GetTempDecrease()
     {
         BonusStat stat = new BonusStat();
@@ -42,7 +44,7 @@ public class TempBonusStat
 
         return stat;
     }
-
+    */
     public BonusStat FindBonusStat(BonusStat stat)
     {
         foreach(BonusStat bonusStat in statList)

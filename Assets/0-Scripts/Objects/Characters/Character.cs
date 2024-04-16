@@ -17,14 +17,14 @@ public class Character
 
 
     [Header("InvisibleStatus")]
-    public int atkIncrease;     // 공격력 %증가량 (곱연산)
-    public int defIncrease;     // 방어력 %증가량 (곱연산)
+    public float atkIncrease;     // 공격력 %증가량 (곱연산)
+    public float defIncrease;     // 방어력 %증가량 (곱연산)
 
     public int critRate;       // 치명타 확률 (합연산)
     public int critDmg;         // 치명타 데미지 (합연산)
 
-    public int EnhancedDmg;     // 데미지 증가 (합연산)
-    public int ReducedDmg;     // 받는 데미지 감소 (곱연산)
+    public float EnhancedDmg;     // 데미지 증가 (합연산)
+    public float ReducedDmg;     // 받는 데미지 감소 (곱연산)
 
 
     [Header("Skill")]
@@ -51,14 +51,14 @@ public class Character
 
         mov = SO.mov;
 
-        atkIncrease = 0;
-        defIncrease = 0;
+        atkIncrease = 1f;
+        defIncrease = 1f;
 
         critRate = 20;      // 기본 치명타 확률 20%
         critDmg = 50;       // 기본 치명타 데미지 50%
 
-        EnhancedDmg = 0;
-        ReducedDmg = 0;
+        EnhancedDmg = 1f;
+        ReducedDmg = 1f;
 
         // EX스킬 초기화
         Utility.Id2SO<ExSkillSO>(SO.id, (result) =>
