@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -73,13 +74,34 @@ public class InventoryUI : UIBase
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
+        StartCoroutine(LoadAllItems());
+    }
+
+    private IEnumerator LoadAllItems()
+    {
+        List<ItemData> loadedItems = new();
+        int itemsCount = Managers.AccountData.inventory.Count;
+        int loadedCount = 0;
+
         foreach (var item in Managers.AccountData.inventory)
         {
             Utility.Id2SO<ItemSO>(item.Key, (result) =>
             {
-                ItemEntryUI ui = Managers.UI.ShowUI<ItemEntryUI>();
-                ui.Init(result as ItemSO);
+                if (result != null)
+                {
+                    loadedItems.Add(result as ItemData);
+                }
+                loadedCount++;
             });
+        }
+
+        yield return new WaitUntil(() => loadedCount == itemsCount);
+
+        foreach (var itemData in loadedItems)
+        {
+            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/ItemEntryUI");
+            var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
+            instance.GetComponent<ItemEntryUI>().Init(itemData);
         }
     }
 

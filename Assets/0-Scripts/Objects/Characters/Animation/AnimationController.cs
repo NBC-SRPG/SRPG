@@ -59,7 +59,6 @@ public class AnimationController : MonoBehaviour
 
         foreach(Transform child in character.GetComponentInChildren<Transform>())
         {
-            //child.gameObject.layer = layerNum;
             SetCharacterLayer(child, layerNum);
         }
     }
@@ -88,7 +87,7 @@ public class AnimationController : MonoBehaviour
         attacker.characterAnim.Activate();
         attacker.characterAnim.FlipCharacterDirection(Vector2.right);
 
-        attacker.health.healthBarCanvas.SetActive(false);
+        SetCharacterLayer(attacker.health.healthBarCanvas.transform, 30);
 
         group.AddMember(attacker.transform, 1, 2);
 
@@ -109,7 +108,7 @@ public class AnimationController : MonoBehaviour
             this.attackTargets[i].characterAnim.Activate();
             this.attackTargets[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
-            this.attackTargets[i].health.healthBarCanvas.SetActive(false);
+            SetCharacterLayer(this.attackTargets[i].health.healthBarCanvas.transform, 30);
 
             group.AddMember(this.attackTargets[i].transform, 1, 2);
         }
@@ -144,9 +143,6 @@ public class AnimationController : MonoBehaviour
 
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
-        //attacker.characterAnim.SetDamage(0);
-
-        attacker.health.healthBarCanvas.SetActive(true);
 
         if(attackTargets.Count == 0)
         {
@@ -162,9 +158,6 @@ public class AnimationController : MonoBehaviour
 
             attackTargets[i].characterAnim.EndAnimation(attackTargets[i].isWalking);
             attackTargets[i].characterAnim.FlipCharacter(attacker.transform.position, false);
-            //victims[i].characterAnim.SetDamage(0);
-
-            attackTargets[i].health.healthBarCanvas.SetActive(true);
         }
 
         attacker.characterAnim.FlipCharacter(attackTargets[0].transform.position, false);

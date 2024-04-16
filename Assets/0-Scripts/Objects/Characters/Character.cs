@@ -129,7 +129,7 @@ public class Character
 
     public Character(EnemySO so)
     {
-        Growth = null;
+        Growth = new CharacterGrowth { level = so.level };
         enemySO = so;
 
         SO = new CharacterSO();
@@ -166,5 +166,14 @@ public class Character
         hp = SO.hp + SO.hpPerLv * Growth.level + weapon.hp + armor.hp;
         atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
         def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
+    }
+
+    public (int hp, int atk, int def) PreviewEnhancedStats(EquipSO newWeapon, EquipSO newArmor)
+    {
+        int previewHp = SO.hp + SO.hpPerLv * Growth.level + newWeapon.hp + newArmor.hp;
+        int previewAtk = SO.atk + SO.atkPerLv * Growth.level + newWeapon.atk + newArmor.atk;
+        int previewDef = SO.def + SO.defPerLv * Growth.level + newWeapon.def + newArmor.def;
+
+        return (previewHp, previewAtk, previewDef);
     }
 }

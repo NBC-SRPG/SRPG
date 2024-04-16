@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Constants;
-
-
 
 [CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
 public class EquipSO : PassiveSO
@@ -36,7 +33,6 @@ public class EquipSO : PassiveSO
 
     [Header("Upgrade")]
     public int upgradeLevel;
-    public Dictionary<int, int> upgradeMaterials;
+    public Dictionary<int, int> upgradeMaterials = new();
     public int gold;
-
 }

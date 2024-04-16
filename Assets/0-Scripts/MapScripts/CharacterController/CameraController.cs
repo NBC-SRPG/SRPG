@@ -25,7 +25,6 @@ public class CameraController : MonoBehaviour
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
-    private CinemachineConfiner2D mainConfiner2D;
 
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
@@ -53,8 +52,10 @@ public class CameraController : MonoBehaviour
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
-        mainConfiner2D = mainCamera.GetComponent<CinemachineConfiner2D>();
-        mainConfiner2D.m_BoundingShape2D = MapManager.instance.cameraArea;
+        mainCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+        followingCharacterCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+        followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+        followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;

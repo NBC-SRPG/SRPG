@@ -86,7 +86,6 @@ public class CharacterBufList
                 }
 
                 bufList.Add(buf);
-                buf.OnAddBuf();
             }
         }
 
@@ -109,6 +108,8 @@ public class CharacterBufList
             {
                 buf.stack += stack;
             }
+
+            buf.OnAddBuf();
         }
     }
 
@@ -323,13 +324,19 @@ public class CharacterBufList
 
     public BonusStat GetAdditionalStat()// 추가 스탯 적용
     {
-        BonusStat stat = new BonusStat();
+        BonusStat stat = new BonusStat
+        {
+            ExtraAtk = 1f,
+            ExtraDefend = 1f,
+            PenetrateDef = 1f,
+            ReducedDmg = 1f,
+        };// 곱연산인 변수들은 초기값 1로
 
-        foreach(CharacterBuf buf in bufList)
+        foreach (CharacterBuf buf in bufList)
         {
             if (!buf.IsDestroyed && buf.GetAdditionalStat() != null)
             {
-                stat.AddStat(buf.GetAdditionalStat());
+                stat.AddBonusStat(buf.GetAdditionalStat());
             }
         }
 
@@ -342,9 +349,9 @@ public class CharacterBufList
 
         foreach (CharacterBuf buf in bufList)
         {
-            if (!buf.IsDestroyed && buf.GetAdditionalStat() != null)
+            if (!buf.IsDestroyed && buf.GetDecreaseStat() != null)
             {
-                stat.AddStat(buf.GetAdditionalStat());
+                stat.AddDecreaseStat(buf.GetDecreaseStat());
             }
         }
 
