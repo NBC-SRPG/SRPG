@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemInfoUI : UIBase
 {
-    private ItemData item;
+    private ItemSO item;
 
     private enum Texts
     {
@@ -24,7 +24,7 @@ public class ItemInfoUI : UIBase
         UseButton
     }
 
-    public void Init(ItemData item)
+    public void Init(ItemSO item)
     {
         this.item = item;
 

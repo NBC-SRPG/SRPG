@@ -4,7 +4,7 @@ using UnityEngine;
 using static Constants;
 
 [CreateAssetMenu(menuName = "ItemData/equip/RankUp_equipData", fileName = "RankUp_equip_")]
-public class RankUp_equipSO : ItemData
+public class RankUp_equipSO : ItemSO
 {
     public RankUp_equipSO()
     {

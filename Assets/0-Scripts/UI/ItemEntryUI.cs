@@ -1,6 +1,6 @@
 public class ItemEntryUI : UIBase
 {
-    private ItemData item;
+    private ItemSO item;
     private enum Texts
     {
         NumberText
@@ -16,7 +16,7 @@ public class ItemEntryUI : UIBase
         SelectButton
     }
 
-    public void Init(ItemData item)
+    public void Init(ItemSO item)
     {
         this.item = item;
 

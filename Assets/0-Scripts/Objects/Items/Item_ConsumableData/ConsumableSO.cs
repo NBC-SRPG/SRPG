@@ -4,12 +4,10 @@ using UnityEngine;
 using static Constants;
 
 [CreateAssetMenu(menuName = "ItemData/ConsumableData", fileName = "Consumable_")]
-public class ConsumableSO : ItemData
+public class ConsumableSO : ItemSO
 {
-    public Rewards openRewards; //º¸»ó Á¾·ù
-    public int openRewardCount; //º¸»ó °¹¼ö
-
-    //Todo: ¼Òºñ ¾ÆÀÌÅÛ »ç¿ë ½Ã ÇØ´ç ÀçÈ­°¡ ÇÃ·¹ÀÌ¾î¿¡°Ô Áö±ÞµÇµµ·Ï ±â´É ±¸Çö
+    public Rewards openRewards; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public int openRewardCount; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public ConsumableSO()
     {

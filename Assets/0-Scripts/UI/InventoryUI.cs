@@ -75,10 +75,10 @@ public class InventoryUI : UIBase
 
         foreach (var item in Managers.AccountData.inventory)
         {
-            Utility.Id2SO<ItemData>(item.Key, (result) =>
+            Utility.Id2SO<ItemSO>(item.Key, (result) =>
             {
                 ItemEntryUI ui = Managers.UI.ShowUI<ItemEntryUI>();
-                ui.Init(result as ItemData);
+                ui.Init(result as ItemSO);
             });
         }
     }

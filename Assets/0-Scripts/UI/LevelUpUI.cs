@@ -426,28 +426,28 @@ public class LevelUpUI : UIBase
 
     private void LoadAllItemsExpValue()
     {
-        Utility.Id2SO<ItemData>(LevelUpItem1Id, (result) =>
+        Utility.Id2SO<ItemSO>(LevelUpItem1Id, (result) =>
         {
             if (result != null)
             {
                 LevelUpItem1ExpValue = (result as ExpUp_characterSO).expValue;
             }
         });
-        Utility.Id2SO<ItemData>(LevelUpItem2Id, (result) =>
+        Utility.Id2SO<ItemSO>(LevelUpItem2Id, (result) =>
         {
             if (result != null)
             {
                 LevelUpItem2ExpValue = (result as ExpUp_characterSO).expValue;
             }
         });
-        Utility.Id2SO<ItemData>(LevelUpItem3Id, (result) =>
+        Utility.Id2SO<ItemSO>(LevelUpItem3Id, (result) =>
         {
             if (result != null)
             {
                 LevelUpItem3ExpValue = (result as ExpUp_characterSO).expValue;
             }
         });
-        Utility.Id2SO<ItemData>(LevelUpItem4Id, (result) =>
+        Utility.Id2SO<ItemSO>(LevelUpItem4Id, (result) =>
         {
             if (result != null)
             {

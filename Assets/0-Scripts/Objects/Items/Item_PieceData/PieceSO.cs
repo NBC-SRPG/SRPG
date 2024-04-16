@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ItemData/PieceData", fileName = "Piece_")]
-public class PieceSO : ItemData
+public class PieceSO : ItemSO
 {
-    public int characterId; //ÀÌ Á¶°¢ÀÇ ÁÖÀÎ Ä³¸¯ÅÍ ID
+    public int characterId; //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ID
     public PieceSO()
     {
         itemType = Constants.ItemType.Piece;

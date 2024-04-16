@@ -4,7 +4,7 @@ using UnityEngine;
 using static Constants;
 
 [CreateAssetMenu(menuName = "ItemData/TicketData", fileName = "Ticket_")]
-public class TicketSO : ItemData
+public class TicketSO : ItemSO
 {
     //public GachaType gachaType;
     public TicketSO()
