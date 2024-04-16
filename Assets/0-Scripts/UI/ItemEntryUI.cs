@@ -26,7 +26,7 @@ public class ItemEntryUI : UIBase
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
 
-        GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.item_Id].ToString();
+        GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.id].ToString();
         GetButton((int)Buttons.SelectButton).onClick.AddListener(OnClickSelectButton);
     }
 

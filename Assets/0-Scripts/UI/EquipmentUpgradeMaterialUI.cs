@@ -3,7 +3,7 @@ using UnityEngine;
 public class EquipmentUpgradeMaterialUI : UIBase
 {
     private bool isLoaded = false;
-    private ItemData item;
+    private ItemSO item;
     private enum Texts
     {
         EquipmentUpgradeMaterialName,
@@ -25,9 +25,9 @@ public class EquipmentUpgradeMaterialUI : UIBase
 
     private IEnumerator InitItem(int itemId, int itemCount)
     {
-        Utility.Id2SO<ItemData>(itemId, (result) =>
+        Utility.Id2SO<ItemSO>(itemId, (result) =>
         {
-            item = (ItemData)result;
+            item = (ItemSO)result;
             isLoaded = true;
         });
 

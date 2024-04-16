@@ -79,7 +79,7 @@ public class InventoryUI : UIBase
 
     private IEnumerator LoadAllItems()
     {
-        List<ItemData> loadedItems = new();
+        List<ItemSO> loadedItems = new();
         int itemsCount = Managers.AccountData.inventory.Count;
         int loadedCount = 0;
 
@@ -89,7 +89,7 @@ public class InventoryUI : UIBase
             {
                 if (result != null)
                 {
-                    loadedItems.Add(result as ItemData);
+                    loadedItems.Add(result as ItemSO);
                 }
                 loadedCount++;
             });
@@ -97,11 +97,11 @@ public class InventoryUI : UIBase
 
         yield return new WaitUntil(() => loadedCount == itemsCount);
 
-        foreach (var itemData in loadedItems)
+        foreach (var ItemSO in loadedItems)
         {
             GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/ItemEntryUI");
             var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
-            instance.GetComponent<ItemEntryUI>().Init(itemData);
+            instance.GetComponent<ItemEntryUI>().Init(ItemSO);
         }
     }
 

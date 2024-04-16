@@ -37,7 +37,7 @@ public class ItemInfoUI : UIBase
 
         GetText((int)Texts.NameText).text = item.itemName;
         GetText((int)Texts.DescriptionText).text = item.itemDescription;
-        GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.item_Id].ToString();
+        GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.id].ToString();
 
         // GetImage((int)Images.ItemImage).sprite = ;
     }
