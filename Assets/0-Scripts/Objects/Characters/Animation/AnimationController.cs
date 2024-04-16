@@ -32,8 +32,6 @@ public class AnimationController : MonoBehaviour
     [SerializeField] private GameObject backGround;
     [SerializeField] private GameObject battleCanvas;
 
-    [SerializeField] private CinemachineTargetGroup group;
-
     private CharacterBase attacker;
     private List<CharacterBase> attackTargets;
 
@@ -89,7 +87,7 @@ public class AnimationController : MonoBehaviour
 
         attacker.health.healthBarCanvas.SetActive(false);
 
-        group.AddMember(attacker.transform, 1, 2);
+        CameraController.instance.AddBattleTargetGroup(attacker.transform, 2);
 
         for (int i = 0; i < this.attackTargets.Count; i++)
         {
@@ -110,7 +108,7 @@ public class AnimationController : MonoBehaviour
 
             this.attackTargets[i].health.healthBarCanvas.SetActive(false);
 
-            group.AddMember(this.attackTargets[i].transform, 1, 2);
+            CameraController.instance.AddBattleTargetGroup(this.attackTargets[i].transform, 2);
         }
     }
 
@@ -123,15 +121,9 @@ public class AnimationController : MonoBehaviour
         backGround.gameObject.SetActive(false);
         battleCanvas.gameObject.SetActive(false);
 
-        if(group.m_Targets.Length > 0)
-        {
-            foreach(var target in group.m_Targets)
-            {
-                group.RemoveMember(target.target);
-            }
-        }
+        CameraController.instance.ResetBattleGroup();
 
-        if(attacker == null)
+        if (attacker == null)
         {
             return;
         }
@@ -523,7 +515,7 @@ public class AnimationController : MonoBehaviour
     {
         Action animation = null;
 
-        if (stitchedAnim.ContainsKey(prevAnimation))
+        if (prevAnimation != null && stitchedAnim.ContainsKey(prevAnimation))
         {
             if (isSetting)
             {
