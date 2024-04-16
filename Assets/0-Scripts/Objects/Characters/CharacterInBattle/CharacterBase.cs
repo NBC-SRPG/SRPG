@@ -173,7 +173,7 @@ public class CharacterBase : MonoBehaviour
             float increase = 1 * ((float)(100f + character.atkIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraAtk * tempBonusStat.GetTempStat().ExtraAtk;
             if(increase < 0)
             {
-                increase = 0;
+                increase = 1f;
             }
 
             return increase;
@@ -213,7 +213,7 @@ public class CharacterBase : MonoBehaviour
             float increase = 1 * ((float)(100 + character.defIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraDefend * tempBonusStat.GetTempStat().ExtraDefend;
             if (increase < 0)
             {
-                increase = 0;
+                increase = 1f;
             }
 
             return increase;
@@ -299,7 +299,7 @@ public class CharacterBase : MonoBehaviour
             }
             else if( penetrate < 0f)
             {
-                penetrate = 0f;
+                penetrate = 1f;
             }
 
             return penetrate;
@@ -320,7 +320,11 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            float reduce = 1 * ((float)(100 + character.ReducedDmg) / 100f) * curCharacterBufList.GetAdditionalStat().ReducedDmg *tempBonusStat.GetTempStat().ReducedDmg;
+            float reduce = 1 * ((float)(100 + character.ReducedDmg) / 100f) * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
+            if(reduce < 0)
+            {
+                reduce = 1f;
+            }
 
             return reduce;
         }
