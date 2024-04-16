@@ -26,6 +26,7 @@ public class CameraController : MonoBehaviour
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
+    private CinemachineBasicMultiChannelPerlin noise;
 
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
@@ -57,6 +58,8 @@ public class CameraController : MonoBehaviour
         followingCharacterCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
         followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
         followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+
+        noise = battaleCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
