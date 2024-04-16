@@ -1,0 +1,68 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CharAnim_103 : CharAnimBase
+{
+    protected override void LoadParticles()
+    {
+        base.LoadParticles();
+
+        particles.LoadParticles(Managers.Resource.Load<GameObject>("Particle/FlameWarriorFX"));
+    }
+
+    public void AtStartSkill()
+    {
+        CameraController.instance.ResetBattleGroup();
+        CameraController.instance.AddBattleTargetGroup(particles.cameraTransform["Skill1"], 2);
+    }
+
+    public void AtSlash()
+    {
+        CameraController.instance.AddBattleTargetGroup(transform.parent, 8);
+        foreach (CharacterBase targets in targetList)
+        {
+            CameraController.instance.AddBattleTargetGroup(targets.transform, 10);
+        }
+    }
+
+    public void AttackingTiming()
+    {
+        AttackEnemy(targetCharacter);
+        KnockBackEnemy(targetCharacter, 10);
+
+        targetCharacter.characterAnim.ShakeCharacter();
+    }
+
+    public void SkillTiming()
+    {
+        foreach(CharacterBase targets in targetList)
+        {
+            AttackEnemy(targets);
+            KnockBackEnemy(targets, 3);
+
+            targets.characterAnim.ShakeCharacter();
+        }
+    }
+
+    public void ShowAttackParticle()
+    {
+        particles.PlayParticle("Attack");
+    }
+
+    public void ShowSkillParticle()
+    {
+        particles.PlayParticle("Skill");
+    }
+
+    public void MoveToPosition()
+    {
+        Vector3 moveTarget = new Vector3(
+            (targetCharacter.transform.position.x - (Getdirection(targetCharacter.transform.position).x)),
+            targetCharacter.transform.position.y, targetCharacter.transform.position.z);
+
+        FlipCharacter(moveTarget, false);
+
+        StartCoroutine(MoveToTarget(moveTarget, 200f));
+    }
+}

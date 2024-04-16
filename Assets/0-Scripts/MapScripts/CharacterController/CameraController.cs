@@ -192,10 +192,7 @@ public class CameraController : MonoBehaviour
 
     public void ResetGroup()
     {
-        for(int i = 0; i < followingTargetGroup.m_Targets.Length; i++)
-        {
-            followingTargetGroup.RemoveMember(followingTargetGroup.m_Targets[i].target);
-        }
+        followingTargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
     }
 
     public void ResetCamera()// 카메라 초기화
@@ -217,6 +214,7 @@ public class CameraController : MonoBehaviour
     public void AddBattleTargetGroup(Transform transform, float scale)
     {
         battleTargetGroup.AddMember(transform, 1, scale);
+        Debug.Log(transform.name);
     }
 
     public void RemoveTargetGroup(Transform transform)
@@ -229,9 +227,6 @@ public class CameraController : MonoBehaviour
 
     public void ResetBattleGroup()
     {
-        for (int i = 0; i < battleTargetGroup.m_Targets.Length; i++)
-        {
-            battleTargetGroup.RemoveMember(battleTargetGroup.m_Targets[i].target);
-        }
+        battleTargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
     }
 }

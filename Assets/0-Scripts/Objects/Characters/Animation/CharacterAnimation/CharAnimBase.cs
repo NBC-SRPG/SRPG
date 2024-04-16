@@ -119,6 +119,10 @@ public class CharAnimBase : MonoBehaviour
     public void PlayExtraAnimation(List<CharacterBase> victims, string anim)
     {
         this.targetList = victims;
+        if(victims.Count == 1)
+        {
+            targetCharacter = victims[0];
+        }
         Animator.SetTrigger(anim);
     }
 
@@ -127,13 +131,13 @@ public class CharAnimBase : MonoBehaviour
         Managers.UI.FindUI<BattleUI>().ShowBlockText(targetCharacter.transform);
     }
 
-    public virtual void AttackEnemy()
+    public virtual void AttackEnemy(CharacterBase targetCharacter)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
         targetCharacter.characterAnim.ShowHitParticle();
     }
 
-    public virtual void KnockBackEnemy(int scale)
+    public virtual void KnockBackEnemy(CharacterBase targetCharacter ,int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
         targetCharacter.characterAnim.GetKnockBack(transform.parent.position, scale);
@@ -308,5 +312,18 @@ public class CharAnimBase : MonoBehaviour
     protected virtual void OnCharacterReleased()
     {
         CameraController.instance.ResetBattleGroup();
+    }
+
+    public void Damage()
+    {
+        targetCharacter.characterAnim.ShowDamage();
+    }
+
+    public void DamageAll()
+    {
+        foreach (CharacterBase targets in targetList)
+        {
+            targets.characterAnim.ShowDamage();
+        }
     }
 }
