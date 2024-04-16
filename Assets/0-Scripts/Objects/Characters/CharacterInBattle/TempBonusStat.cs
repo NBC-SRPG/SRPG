@@ -5,19 +5,39 @@ using UnityEngine;
 public class TempBonusStat
 {
     private List<BonusStat> statList;
+    private List<BonusStat> decreaseList;
 
     public TempBonusStat()
     {
         statList = new List<BonusStat>();
+        decreaseList = new List<BonusStat>();
     }
 
     public BonusStat GetTempStat()
     {
+        BonusStat stat = new BonusStat
+        {
+            ExtraAtk = 1f,
+            ExtraDefend = 1f,
+            PenetrateDef = 1f,
+            ReducedDmg = 1f,
+        };// 곱연산인 변수들은 초기값 1로
+
+        foreach (BonusStat bonusStat in statList)
+        {
+            stat.AddBonusStat(bonusStat);
+        }
+
+        return stat;
+    }
+
+    public BonusStat GetTempDecrease()
+    {
         BonusStat stat = new BonusStat();
 
-        foreach(BonusStat bonusStat in statList)
+        foreach (BonusStat bonusStat in decreaseList)
         {
-            stat.AddStat(bonusStat);
+            stat.AddDecreaseStat(bonusStat);
         }
 
         return stat;
@@ -41,13 +61,28 @@ public class TempBonusStat
         statList.Add(bonusStat);
     }
 
+    public void AddDecreaseStat(BonusStat bonusStat)
+    {
+        decreaseList.Add(bonusStat);
+    }
+
     public void RemoveBonusStat(BonusStat bonusStat)
     {
         statList.Remove(bonusStat);
     }
 
+    public void RemoveDecreaseStat(BonusStat bonusStat)
+    {
+        decreaseList.Remove(bonusStat);
+    }
+
     public void ClearAllStat()
     {
         statList.Clear();
+    }
+
+    public void ClearDecreaseStat()
+    {
+        decreaseList.Clear();
     }
 }

@@ -75,7 +75,7 @@ public class HealthSystem : MonoBehaviour
             }
             else
             {
-                health = (float)shield + (float)CurHealth / (float)MaxHealth;
+                health = (float)(shield + CurHealth) / (float)MaxHealth;
             }
 
             return health;
@@ -91,9 +91,9 @@ public class HealthSystem : MonoBehaviour
 
         characterAnim.SetDamage(damage);
 
-        damage.damage = TakeShiledDamage(damage.damage);
+        int actualDamage = TakeShiledDamage(damage.damage);
 
-        ChangeHealth(damage);
+        ChangeHealth(actualDamage);
 
         if (CurHealth == 0)
         {
@@ -135,7 +135,7 @@ public class HealthSystem : MonoBehaviour
             return;
         }
 
-        ChangeHealth(n);
+        ChangeHealth(n.damage);
 
         characterAnim.SetDamage(n);
 
@@ -164,9 +164,9 @@ public class HealthSystem : MonoBehaviour
         HealHealth(damage);
     }
 
-    public void ChangeHealth(Damage n)//체력 변화
+    public void ChangeHealth(int n)//체력 변화
     {
-        CurHealth += n.damage;
+        CurHealth += n;
 
         if (CurHealth > MaxHealth)
         {
@@ -213,6 +213,8 @@ public class HealthSystem : MonoBehaviour
 
     private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
     {
+        shieldBar.fillAmount = ShieldRatio;
+
         float time = 0f;
 
         if (!heal)
@@ -244,10 +246,9 @@ public class HealthSystem : MonoBehaviour
                 yield return null;
             }
 
-            healthBar.fillAmount = backHealBar.fillAmount;
+            healthBar.fillAmount = HealthRatio;
         }
 
-        shieldBar.fillAmount = ShieldRatio;
     }
 
     public void UpdateText()
@@ -266,23 +267,24 @@ public class HealthSystem : MonoBehaviour
 
     public int TakeShiledDamage(int damage)
     {
+        int actualDamage = damage;
         while (shieldList.Count > 0)
         {
-            shieldList[0].Shield += damage;
+            shieldList[0].Shield += actualDamage;
 
             if (shieldList[0].Shield <= 0)
             {
-                damage = shieldList[0].Shield;
+                actualDamage = shieldList[0].Shield;
                 shieldList.RemoveAt(0);
             }
             else
             {
-                damage = 0;
+                actualDamage = 0;
                 break;
             }
         }
 
-        return damage;
+        return actualDamage;
     }
 
     public int GetShield()
@@ -336,4 +338,5 @@ public class HealthSystem : MonoBehaviour
             return;
         }
     }
+
 }

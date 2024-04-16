@@ -251,6 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 115323945}
   - component: {fileID: 115323944}
+  - component: {fileID: 115323946}
   m_Layer: 0
   m_Name: FollwingCharacterCamera
   m_TagString: Untagged
@@ -313,6 +314,21 @@ Transform:
   m_Father: {fileID: 1406777949}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &115323946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 115323943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BoundingShape2D: {fileID: 0}
+  m_Damping: 0.5
+  m_MaxWindowSize: 3
 --- !u!1 &334040346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +1018,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BoundingShape2D: {fileID: 0}
   m_Damping: 0.5
-  m_MaxWindowSize: -1
+  m_MaxWindowSize: 3
 --- !u!1 &780829653
 GameObject:
   m_ObjectHideFlags: 3
@@ -1176,8 +1192,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 552143727}
+  - {fileID: 1406777949}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1120187236
 GameObject:
@@ -1333,6 +1350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1204646154}
   - component: {fileID: 1204646153}
+  - component: {fileID: 1204646155}
   m_Layer: 0
   m_Name: FollowingCharacterGroupCamera
   m_TagString: Untagged
@@ -1395,6 +1413,21 @@ Transform:
   m_Father: {fileID: 1406777949}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1204646155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204646152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BoundingShape2D: {fileID: 0}
+  m_Damping: 0.5
+  m_MaxWindowSize: 3
 --- !u!1 &1204701913
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,7 +1550,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406777947}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1527,8 +1560,8 @@ Transform:
   - {fileID: 1763497506}
   - {fileID: 1204646154}
   - {fileID: 1739334758}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1090010215}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1544374946
 GameObject:
@@ -1955,6 +1988,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1763497506}
   - component: {fileID: 1763497507}
+  - component: {fileID: 1763497508}
   m_Layer: 0
   m_Name: FollowingTileCamera
   m_TagString: Untagged
@@ -2017,6 +2051,21 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1623047608}
+--- !u!114 &1763497508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763497505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BoundingShape2D: {fileID: 0}
+  m_Damping: 0.5
+  m_MaxWindowSize: 3
 --- !u!1 &2044001798
 GameObject:
   m_ObjectHideFlags: 0

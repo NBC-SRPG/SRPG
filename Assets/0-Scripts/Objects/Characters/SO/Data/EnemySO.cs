@@ -11,6 +11,8 @@ public class EnemySO : ScriptableObject
 
     public AttackMethod attackMethod;     //공격 타입
     public ElementType elementType;      //캐릭터 속성
+
+    public int level;
     
     [Header("Develope")]
     public int id;      //캐릭터 식별자
