@@ -39,6 +39,7 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool canMoveSkil;
 
     [HideInInspector] public bool hasAnimationBeforDIe = false;
+    private bool onDiePassive = false;
 
     [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
     public List<OverlayTile> movePath = new List<OverlayTile>();
@@ -165,11 +166,75 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 스탯 관련 함수
 
+    public float AtkIncrease
+    {
+        get
+        {
+            float increase = 1 * ((float)(100f + character.atkIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraAtk * tempBonusStat.GetTempStat().ExtraAtk;
+            if(increase < 0)
+            {
+                increase = 0;
+            }
+
+            return increase;
+        }
+    }
+
+    public float AtkDecrease
+    {
+        get
+        {
+            float decrease = curCharacterBufList.GetDecreaseStat().ExtraAtk + tempBonusStat.GetTempDecrease().ExtraAtk;
+            if(decrease > 100)
+            {
+                decrease = 100;
+            }
+            else if(decrease < 0)
+            {
+                decrease = 0;
+            }
+
+            return (100f - decrease) / 100f;
+        }
+    }
+
     public int Attack
     {
         get
         {
-            return (int)((float)character.atk * (float)(100f + (curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk)) / 100f);
+            return (int)(((float)character.atk * AtkIncrease) * AtkDecrease);
+        }
+    }
+
+    public float DefIncrease
+    {
+        get
+        {
+            float increase = 1 * ((float)(100 + character.defIncrease) / 100f) * curCharacterBufList.GetAdditionalStat().ExtraDefend * tempBonusStat.GetTempStat().ExtraDefend;
+            if (increase < 0)
+            {
+                increase = 0;
+            }
+
+            return increase;
+        }
+    }
+
+    public float DefDecrease
+    {
+        get
+        {
+            float decrease = curCharacterBufList.GetDecreaseStat().ExtraDefend + tempBonusStat.GetTempDecrease().ExtraDefend;
+            if (decrease > 100)
+            {
+                decrease = 100;
+            }
+            else if( decrease < 0)
+            {
+                decrease = 0;
+            }
+
+            return (100f - decrease) / 100f;
         }
     }
 
@@ -177,15 +242,7 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.def + curCharacterBufList.GetAdditionalStat().ExtraDefend + tempBonusStat.GetTempStat().ExtraDefend;
-        }
-    }
-
-    public int Health
-    {
-        get
-        {
-            return character.hp;
+            return (int)(((float)character.def * DefIncrease) * DefDecrease);
         }
     }
 
@@ -193,7 +250,79 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov;
+            int mov = character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov - curCharacterBufList.GetDecreaseStat().ExtraMov - tempBonusStat.GetTempDecrease().ExtraMov;
+            if(mov < 0)
+            {
+                mov = 0;
+            }
+
+            return mov;
+        }
+    }
+
+    public int CritRate
+    {
+        get
+        {
+            int extraCritRate = character.critRate + curCharacterBufList.GetAdditionalStat().EXCritRate + tempBonusStat.GetTempStat().EXCritRate - curCharacterBufList.GetDecreaseStat().EXCritRate - tempBonusStat.GetTempDecrease().EXCritRate;
+            if(extraCritRate < 0)
+            {
+                extraCritRate = 0;
+            }
+
+            return extraCritRate;
+        }
+    }
+
+    public int CritDMG
+    {
+        get
+        {
+            int extraCritDMG = character.critDmg + curCharacterBufList.GetAdditionalStat().EXCritDMG + tempBonusStat.GetTempStat().EXCritDMG - curCharacterBufList.GetDecreaseStat().EXCritDMG - tempBonusStat.GetTempDecrease().EXCritDMG; ;
+            if(extraCritDMG < 0)
+            {
+                extraCritDMG = 0;
+            }
+
+            return extraCritDMG;
+        }
+    }
+
+    public float PenetrateDef
+    {
+        get
+        {
+            float penetrate = 1 * curCharacterBufList.GetAdditionalStat().PenetrateDef + tempBonusStat.GetTempStat().PenetrateDef;
+            if(penetrate > 100f)
+            {
+                penetrate = 100f;
+            }
+            else if( penetrate < 0f)
+            {
+                penetrate = 0f;
+            }
+
+            return penetrate;
+        }
+    }
+
+    public float EnhanceDMG
+    {
+        get
+        {
+            float enhance = character.EnhancedDmg + curCharacterBufList.GetAdditionalStat().EnhancedDmg + tempBonusStat.GetTempStat().EnhancedDmg;
+
+            return (100 + enhance) / 100;
+        }
+    }
+
+    public float ReduceDMG
+    {
+        get
+        {
+            float reduce = 1 * ((float)(100 + character.ReducedDmg) / 100f) * curCharacterBufList.GetAdditionalStat().ReducedDmg *tempBonusStat.GetTempStat().ReducedDmg;
+
+            return reduce;
         }
     }
 
@@ -266,11 +395,6 @@ public class CharacterBase : MonoBehaviour
 
         OnEndMoving();
 
-        if (isDead)
-        {
-            OnDie();
-        }
-
         AnimationController.instance.StartAnimationQueue();
     }
 
@@ -321,6 +445,7 @@ public class CharacterBase : MonoBehaviour
         curCharacterBufList?.OnRoundStart();
 
         tempBonusStat.ClearAllStat();
+        tempBonusStat.ClearDecreaseStat();
     }
 
     public virtual void OnStartPlayerTurn()// 턴 시작 시
@@ -858,15 +983,20 @@ public class CharacterBase : MonoBehaviour
 
     public void OnDie()// 사망 시
     {
-        foreach(PassiveLogic passive in curCharacterPassive)
+        if (!onDiePassive)
         {
-            passive?.OnDie();
+            foreach (PassiveLogic passive in curCharacterPassive)
+            {
+                passive?.OnDie();
+            }
+            curCharacterBufList?.OnDie();
+
+            Debug.Log("die");
+
+            BattleManager.Instance.CheckWin(this);
+
+            onDiePassive = true;
         }
-        curCharacterBufList?.OnDie();
-
-        Debug.Log("die");
-
-        BattleManager.Instance.CheckWin(this);
     }
 
     private void OnDisable()

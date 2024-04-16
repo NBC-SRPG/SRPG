@@ -129,7 +129,7 @@ public class Character
 
     public Character(EnemySO so)
     {
-        Growth = null;
+        Growth = new CharacterGrowth { level = so.level };
         enemySO = so;
 
         SO = new CharacterSO();
