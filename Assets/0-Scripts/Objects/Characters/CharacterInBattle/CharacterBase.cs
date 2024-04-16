@@ -180,7 +180,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public float AtkDecrease
+    public float AtkDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
     {
         get
         {
@@ -220,7 +220,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public float DefDecrease
+    public float DefDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
     {
         get
         {
@@ -288,7 +288,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public float PenetrateDef
+    public float PenetrateDef//방어력 관통(곱연산)
     {
         get
         {
