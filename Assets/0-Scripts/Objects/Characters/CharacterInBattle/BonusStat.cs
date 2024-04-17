@@ -11,7 +11,7 @@ public class BonusStat
     public int EXCritRate {  get; set; }
     public int EXCritDMG {  get; set; }
     public float PenetrateDef { get; set; }// % 방어 관통
-    public float EnhancedDmg {  get; set; }
+    public float EnhancedDmg { get; set; }
     public float ReducedDmg { get; set; }
 
     public void AddBonusStat(BonusStat stat)

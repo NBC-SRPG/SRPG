@@ -344,6 +344,8 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
+        Ui.ActingSelect(curSelectedCharacter.canActing);
+
         RaycastHit2D hit = GetTouchOnce();
 
         if (hit)
@@ -355,10 +357,6 @@ public class CharacterController : MonoBehaviour
                 if (curTile.curStandingCharater.playerId == player.playerId && curTile.curStandingCharater != curSelectedCharacter)// 해당 캐릭터가 내 캐릭터일 때
                 {
                     SelectCurCharacter(curTile.curStandingCharater);
-                    if (curSelectedCharacter.canActing)// 해당 캐릭터가 아직 행동하지 않았을 때
-                    {
-                        ChangePhase(PlayerPhase.ActingSelect);
-                    }
                 }
                 
                 if(curTile.curStandingCharater.playerId != player.playerId)

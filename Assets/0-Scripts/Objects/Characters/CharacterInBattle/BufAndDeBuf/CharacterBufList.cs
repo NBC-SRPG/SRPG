@@ -344,23 +344,6 @@ public class CharacterBufList
         return stat;
     }
 
-    /*
-    public BonusStat GetDecreaseStat()// 감소 스탯 적용
-    {
-        BonusStat stat = new BonusStat();
-
-        foreach (CharacterBuf buf in bufList)
-        {
-            if (!buf.IsDestroyed && buf.GetDecreaseStat() != null)
-            {
-                stat.AddDecreaseStat(buf.GetDecreaseStat());
-            }
-        }
-
-        return stat;
-    }
-    */
-
     public void OnRoundStart()
     {
         foreach (CharacterBuf buf in bufList)
