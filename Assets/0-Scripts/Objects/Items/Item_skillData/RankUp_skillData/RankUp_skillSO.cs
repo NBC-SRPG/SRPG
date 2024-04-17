@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "ItemData/skill/RankUp_skillData", fileName = "RankUp_skill_")]
+[CreateAssetMenu(menuName = "ItemData/skill/RankUp_skillData", fileName = "ItemSO_")]
 public class RankUp_skillSO : ItemSO
 {
     public Faction belonging; //���� ����
