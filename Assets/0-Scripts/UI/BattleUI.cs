@@ -261,6 +261,12 @@ public class BattleUI : UIBase
         ShowSelectCharacterInfo();
     }
 
+    public void ActingSelect(bool canActing)
+    {
+        GetButton((int)Buttons.MoveAndAttackButton).gameObject.SetActive(canActing);
+        GetButton((int)Buttons.UseSkillButton).gameObject.SetActive(canActing);
+    }
+
     public void SetCanUseSkill(bool canSkill)
     {
         GetButton((int)Buttons.UseSkillButton).interactable = canSkill;
@@ -436,7 +442,10 @@ public class BattleUI : UIBase
             GetObject((int)GameObjects.RangeObject).SetActive(false);
         }
 
-        GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() + " / " + curSelectedCharacter.health.MaxHealth.ToString();
+        GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() +
+            ((curSelectedCharacter.health.GetShield() > 0) ?" + " + curSelectedCharacter.health.GetShield().ToString() : "") +
+        " / " + curSelectedCharacter.health.TotalHealth.ToString();
+
         GetImage((int)Images.HealthBar).fillAmount = curSelectedCharacter.health.HealthRatio;
         GetImage((int)Images.ShieldBar).fillAmount = curSelectedCharacter.health.ShieldRatio;
 
@@ -469,7 +478,8 @@ public class BattleUI : UIBase
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();
 
-        GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString();
+        GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString() +
+            ((curTargetCharacter.health.GetShield() > 0) ? " + " + curTargetCharacter.health.GetShield().ToString() : "");
         GetImage((int)Images.TargetHealthBar).fillAmount = curTargetCharacter.health.HealthRatio;
         GetImage((int)Images.TargetShieldBar).fillAmount = curTargetCharacter.health.ShieldRatio;
 

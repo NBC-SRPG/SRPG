@@ -5,12 +5,10 @@ using UnityEngine;
 public class TempBonusStat
 {
     private List<BonusStat> statList;
-    private List<BonusStat> decreaseList;
 
     public TempBonusStat()
     {
         statList = new List<BonusStat>();
-        decreaseList = new List<BonusStat>();
     }
 
     public BonusStat GetTempStat()
@@ -32,19 +30,6 @@ public class TempBonusStat
         return stat;
     }
 
-    /*
-    public BonusStat GetTempDecrease()
-    {
-        BonusStat stat = new BonusStat();
-
-        foreach (BonusStat bonusStat in decreaseList)
-        {
-            stat.AddDecreaseStat(bonusStat);
-        }
-
-        return stat;
-    }
-    */
     public BonusStat FindBonusStat(BonusStat stat)
     {
         foreach(BonusStat bonusStat in statList)
@@ -63,19 +48,10 @@ public class TempBonusStat
         statList.Add(bonusStat);
     }
 
-    public void AddDecreaseStat(BonusStat bonusStat)
-    {
-        decreaseList.Add(bonusStat);
-    }
-
+   
     public void RemoveBonusStat(BonusStat bonusStat)
     {
         statList.Remove(bonusStat);
-    }
-
-    public void RemoveDecreaseStat(BonusStat bonusStat)
-    {
-        decreaseList.Remove(bonusStat);
     }
 
     public void ClearAllStat()
@@ -83,8 +59,4 @@ public class TempBonusStat
         statList.Clear();
     }
 
-    public void ClearDecreaseStat()
-    {
-        decreaseList.Clear();
-    }
 }

@@ -23,6 +23,23 @@ public class HealthSystem : MonoBehaviour
 
     public int MaxHealth { get; set; }
     public int CurHealth { get; set; }
+    public float AddHealth
+    {
+        get
+        {
+            float addHealth = characterBufList.GetAdditionalStat().ExtraHealth + tempBonus.GetTempStat().ExtraHealth;
+            return (100 + addHealth) / 100;
+        }
+    }
+
+    public int TotalHealth
+    {
+        get
+        {
+            int health = (int)((float)MaxHealth * AddHealth);
+            return health;
+        }
+    }
 
     public event Action Die;
     public event Action DieAnimation;
@@ -49,13 +66,13 @@ public class HealthSystem : MonoBehaviour
             float health;
             int shield = GetShield();
 
-            if (CurHealth + shield > MaxHealth)
+            if (CurHealth + shield > TotalHealth)
             {
                 health = (float)(CurHealth) / (float)(CurHealth + shield);
             }
             else
             {
-                health = (float)CurHealth / (float)MaxHealth;
+                health = (float)CurHealth / (float)TotalHealth;
             }
 
             return health;
@@ -69,13 +86,13 @@ public class HealthSystem : MonoBehaviour
             float health;
             int shield = GetShield();
 
-            if (CurHealth + shield > MaxHealth)
+            if (CurHealth + shield > TotalHealth)
             {
                 health = (float)(shield + CurHealth) / (float)(CurHealth + shield);
             }
             else
             {
-                health = (float)(shield + CurHealth) / (float)MaxHealth;
+                health = (float)(shield + CurHealth) / (float)TotalHealth;
             }
 
             return health;

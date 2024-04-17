@@ -187,26 +187,6 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    /*
-    public float AtkDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
-    {
-        get
-        {
-            float decrease = curCharacterBufList.GetDecreaseStat().ExtraAtk + tempBonusStat.GetTempDecrease().ExtraAtk;
-            if(decrease > 100)
-            {
-                decrease = 100;
-            }
-            else if(decrease < 0)
-            {
-                decrease = 0;
-            }
-
-            return (100f - decrease) / 100f;
-        }
-    }
-    */
-
     public int Attack
     {
         get
@@ -228,26 +208,6 @@ public class CharacterBase : MonoBehaviour
             return increase;
         }
     }
-
-    /*
-    public float DefDecrease// 스탯 감소 디버프(합연산, 추가 버프 이후 계산)
-    {
-        get
-        {
-            float decrease = curCharacterBufList.GetDecreaseStat().ExtraDefend + tempBonusStat.GetTempDecrease().ExtraDefend;
-            if (decrease > 100)
-            {
-                decrease = 100;
-            }
-            else if( decrease < 0)
-            {
-                decrease = 0;
-            }
-
-            return (100f - decrease) / 100f;
-        }
-    }
-    */
 
     public int Defend
     {
@@ -465,7 +425,6 @@ public class CharacterBase : MonoBehaviour
         curCharacterBufList?.OnRoundStart();
 
         tempBonusStat.ClearAllStat();
-        tempBonusStat.ClearDecreaseStat();
     }
 
     public virtual void OnStartPlayerTurn()// 턴 시작 시
