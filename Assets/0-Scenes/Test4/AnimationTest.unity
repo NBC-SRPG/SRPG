@@ -82551,13 +82551,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86071a70d66552c40bf1cadcc6ac9780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battaleCamera: {fileID: 1638526399}
+  battleCamera: {fileID: 0}
   mainCamera: {fileID: 1315568304}
   followingCharacterCamera: {fileID: 1690008798}
   followingTileCamera: {fileID: 247155717}
   followingCharacterGroupCamera: {fileID: 1113826465}
   followingTargetGroup: {fileID: 1467844256}
-  BattleCameara: {fileID: 817425597}
+  BattleGroupCameara: {fileID: 817425597}
   battleTargetGroup: {fileID: 1310449845}
   canMove: 0
   moveSpeed: 0
@@ -143704,8 +143704,8 @@ GameObject:
   - component: {fileID: 1000456841631870970}
   - component: {fileID: 3648583222837160678}
   - component: {fileID: 5545237159973985593}
-  - component: {fileID: 5545237159973985594}
   - component: {fileID: 486990846097934798}
+  - component: {fileID: 5545237159973985594}
   m_Layer: 0
   m_Name: testch (1)
   m_TagString: Untagged
@@ -143797,7 +143797,7 @@ Animator:
   m_GameObject: {fileID: 4148738481711101527}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 839b1486cdcd85546b17e0d495ac4ebb, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5380818d5e957bb43951dc8eeb6a76ae, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -143817,7 +143817,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4148738481711101527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bcc6e5034a114146809b0b7db236a79, type: 3}
+  m_Script: {fileID: 11500000, guid: 34c967b3286e96b41ba18066c6d7d64e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6110132104483146734

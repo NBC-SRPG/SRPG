@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2315317797269622667}
   - component: {fileID: 5380366162128608099}
-  - component: {fileID: 1942230015174261512}
   - component: {fileID: 4118307551335235847}
+  - component: {fileID: 6837272438105414804}
   - component: {fileID: 5873507689328900983}
   m_Layer: 0
   m_Name: testch2
@@ -88,18 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!114 &1942230015174261512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1896950036040280177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bcc6e5034a114146809b0b7db236a79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &4118307551335235847
 Animator:
   serializedVersion: 5
@@ -121,6 +109,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6837272438105414804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896950036040280177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34c967b3286e96b41ba18066c6d7d64e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5873507689328900983
 MonoBehaviour:
   m_ObjectHideFlags: 0
