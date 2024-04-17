@@ -11,6 +11,8 @@ public class EquipSO : PassiveSO
     public string equipName;
     public string description;
     public int star;
+
+    public Sprite sprite;
     
     [Header("VisibleStatus")]
     public int hp;
