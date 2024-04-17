@@ -17,15 +17,19 @@ public class Particles : MonoBehaviour
         cameraTransform = new Dictionary<string, Transform>();
     }
 
-    public void PlayHitParticle()
+    public void HitParticle()
     {
         hitParticle.Play();
     }
 
     public void PlayParticle(string particleName)
     {
-        Debug.Log("Play " +  particleName);
         particleMap[particleName].Play();
+    }
+
+    public void StopParticle(string particleName)
+    {
+        particleMap[particleName].Stop();
     }
 
     public void AddParticles(ParticleSystem particle)
@@ -52,7 +56,6 @@ public class Particles : MonoBehaviour
 
             if (child.name.Equals("CameraTransform"))
             {
-                Debug.Log("21");
                 foreach(Transform transform in child.GetComponentsInChildren<Transform>())
                 {
                     Debug.Log(transform.name);
@@ -60,5 +63,12 @@ public class Particles : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ChangeParent(string name, Transform parent)
+    {
+        particleMap[name].transform.SetParent(parent);
+        particleMap[name].transform.localPosition = Vector3.zero;
+        particleMap[name].transform.localScale = Vector3.one;
     }
 }

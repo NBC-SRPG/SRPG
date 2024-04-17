@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
@@ -57,7 +58,7 @@ public class CameraController : MonoBehaviour
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
         battleGroupComposer = BattleGroupCameara.GetCinemachineComponent<CinemachineFramingTransposer>();
-        noise = BattleGroupCameara.GetComponent<CinemachineBasicMultiChannelPerlin>();
+        noise = BattleGroupCameara.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
@@ -236,5 +237,19 @@ public class CameraController : MonoBehaviour
     public void SetMinOrtho(int min)
     {
         battleGroupComposer.m_MinimumOrthoSize = min;
+    }
+
+    public void ShakeCamera(float duration, float scale, float frequency)
+    {
+        noise.m_AmplitudeGain = scale;
+        noise.m_FrequencyGain = frequency;
+
+        Invoke(nameof(StopShake), duration);
+    }
+
+    public void StopShake()
+    {
+        noise.m_AmplitudeGain = 0f;
+        noise.m_FrequencyGain = 0f;
     }
 }
