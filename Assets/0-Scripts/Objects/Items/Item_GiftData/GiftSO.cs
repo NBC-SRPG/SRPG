@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ItemData/GiftData", fileName = "Gift_")]
+[CreateAssetMenu(menuName = "ItemData/GiftData", fileName = "ItemSO_")]
 public class GiftSO : ItemSO
 {
     public int affectionValue; //증가시키는 호감도 수치
