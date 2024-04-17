@@ -14,7 +14,7 @@ public class MissionManager
     public event Action<int> OnMissionReceiveCallback;
 
     // 구독중인 미션들
-    private Dictionary<MissionType, List<MissionData>> subscribeMissions = new();
+    private Dictionary<MissionType, List<MissionSO>> subscribeMissions = new();
 
     // 마지막 일일 미션 초기화 날짜
     private DateTime lastDailyReset;
@@ -36,7 +36,7 @@ public class MissionManager
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
         {
-            subscribeMissions[missionData.missionType] = new List<MissionData>();
+            subscribeMissions[missionData.missionType] = new List<MissionSO>();
         }
 
         subscribeMissions[missionData.missionType].Add(missionData);

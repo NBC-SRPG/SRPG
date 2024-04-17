@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="Skill_")]
+[CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="ExSkillSO_")]
 public class ExSkillSO : ScriptableObject
 {
     [Header("Develope")]

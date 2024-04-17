@@ -16,7 +16,7 @@ public static class Utility
     public static void Id2SO<T>(int id, Callback<ScriptableObject> callback) where T : ScriptableObject
     {
         // 어드레서블 경로
-        string path = typeof(T).ToString() + "/" + id.ToString() + ".asset";
+        string path = typeof(T).ToString() + "/" + typeof(T).ToString() + "_" + id.ToString() + ".asset";
 
         var op = Addressables.LoadAssetAsync<T>(path);
         op.Completed += (handler) =>

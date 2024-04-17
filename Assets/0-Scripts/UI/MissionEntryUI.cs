@@ -8,7 +8,7 @@ using static Constants;
 public class MissionEntryUI : UIBase
 {
     public int missionId;
-    private MissionData missionData;
+    private MissionSO missionData;
 
     private enum Texts
     {

@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "CharacterData/CharacterData", fileName ="Character_")]
+[CreateAssetMenu(menuName = "CharacterData/CharacterData", fileName ="CharacterSO_")]
 public class CharacterSO : ScriptableObject
 {
     public AttackMethod attackMethod;     //공격 타입

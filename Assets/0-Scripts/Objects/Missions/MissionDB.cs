@@ -4,16 +4,16 @@ using static Constants;
 
 public class MissionDB
 {
-    private Dictionary<int, MissionData> missionDic = new();
+    private Dictionary<int, MissionSO> missionDic = new();
 
     public MissionDB()
     {
-        List<MissionData> entities = new();
+        List<MissionSO> entities = new();
 
         // TODO
         // DB에서 미션 데이터 가져오기
         // 테스트 데이터
-        MissionData missionData = ScriptableObject.CreateInstance<MissionData>();
+        MissionSO missionData = ScriptableObject.CreateInstance<MissionSO>();
         missionData.missionId = 90001000;
         missionData.missionName = "테스트 미션 1";
         missionData.missionDescription = "테스트 미션 1입니다. 80001000 아이템 1개 얻기";
@@ -27,7 +27,7 @@ public class MissionDB
         missionData.diamond = 100;
         entities.Add(missionData);
 
-        MissionData missionData1 = ScriptableObject.CreateInstance<MissionData>();
+        MissionSO missionData1 = ScriptableObject.CreateInstance<MissionSO>();
         missionData1.missionId = 90001001;
         missionData1.missionName = "테스트 미션 2";
         missionData1.missionDescription = "테스트 미션 2입니다. 70001000 몬스터 10마리 잡기";
@@ -42,7 +42,7 @@ public class MissionDB
         missionData1.nextMissions.Add(90001002);
         entities.Add(missionData1);
 
-        MissionData missionData2 = ScriptableObject.CreateInstance<MissionData>();
+        MissionSO missionData2 = ScriptableObject.CreateInstance<MissionSO>();
         missionData2.missionId = 90001002;
         missionData2.missionName = "테스트 미션 3";
         missionData2.missionDescription = "테스트 미션 3입니다. 80001001 아이템 5개 사용";
@@ -78,7 +78,7 @@ public class MissionDB
         }
     }
 
-    public MissionData Get(int missionId)
+    public MissionSO Get(int missionId)
     {
         if (missionDic.ContainsKey(missionId))
         {

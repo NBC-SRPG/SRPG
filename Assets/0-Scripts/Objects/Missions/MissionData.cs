@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "MissionData", fileName = "Mission_")]
-public class MissionData : ScriptableObject
+[CreateAssetMenu(menuName = "MissionData", fileName = "MissionSO_")]
+public class MissionSO : ScriptableObject
 {
     public int missionId; // 미션 id
     public string missionName; // 미션 이름

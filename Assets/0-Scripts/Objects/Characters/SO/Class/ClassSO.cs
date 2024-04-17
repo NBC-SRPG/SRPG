@@ -2,7 +2,7 @@ using UnityEngine;
 using static Constants;
 
 
-[CreateAssetMenu(menuName = "ClassData", fileName = "Class_")]
+[CreateAssetMenu(menuName = "ClassData", fileName = "ClassSO_")]
 public class ClassSO : PassiveSO
 {
     [Header("Develope")]
