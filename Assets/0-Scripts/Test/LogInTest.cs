@@ -9,12 +9,13 @@ using Firebase.Auth;
 public class FirebaseGoogleAuth : MonoBehaviour
 {
     public Text text;
-
+    /*
 
     void Start()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .RequestServerAuthCode(false /* Don't force refresh */)
+            .RequestServerAuthCode(false /* Don't force refresh *///)
+    /*
             .RequestIdToken()
             .Build();
 
@@ -66,5 +67,5 @@ public class FirebaseGoogleAuth : MonoBehaviour
         });
     }
  
-
+*/
 }

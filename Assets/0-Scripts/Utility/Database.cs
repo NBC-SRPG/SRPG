@@ -15,7 +15,6 @@ public class Database
     private string uid;
     private const int dataCount = 9;
     public delegate void Func(DataSnapshot snapshot);
-
     public static event Action<float> OnLoadingProgressChanged;
 
     public static void UpdateLoadingProgress(float progress)

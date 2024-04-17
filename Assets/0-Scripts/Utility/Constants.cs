@@ -218,4 +218,7 @@ public class Constants
     public const int FriendTabs = 0;
     public const int ApplyingTabs = 1;
     public const int WaitingTabs = 2;
+    public const int AbilityTier2 = 50;
+    public const int AbilityTier2UnlockLevel = 50;
+    public const int AbilityTier3UnlockLevel = 70;
 }
