@@ -36,6 +36,7 @@ public class CharAnimBase : MonoBehaviour
     public int Block { get; private set; }
 
     protected Queue<BattleKeyWords.Damage> damages;
+    protected Queue<BattleKeyWords.Damage> extraDamages;
 
     public void Init(HealthSystem characterHealth)
     {
@@ -58,6 +59,7 @@ public class CharAnimBase : MonoBehaviour
         particles.Init();
 
         damages = new Queue<BattleKeyWords.Damage>();
+        extraDamages = new Queue<BattleKeyWords.Damage>();
 
         healthSystem = characterHealth;
 
@@ -83,7 +85,14 @@ public class CharAnimBase : MonoBehaviour
 
     public void SetDamage(BattleKeyWords.Damage damage)
     {
-        damages.Enqueue(damage);
+        if (damage.attackType == BattleKeyWords.AttackDamageType.Extra)
+        {
+            extraDamages.Enqueue(damage);
+        }
+        else
+        {
+            damages.Enqueue(damage);
+        }
     }
 
     public virtual void ShowDamage()
@@ -93,9 +102,19 @@ public class CharAnimBase : MonoBehaviour
             BattleKeyWords.Damage damage = damages.Dequeue();
             Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
         }
+        ShowExtraDamage();
     }
 
-    public int GetDamage()
+    public void ShowExtraDamage()
+    {
+        if (extraDamages.Count > 0)
+        {
+            BattleKeyWords.Damage damage = extraDamages.Dequeue();
+            Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
+        }
+    }
+
+    public int GetDamageFigure()
     {
         if(damages.Count > 0)
         {
