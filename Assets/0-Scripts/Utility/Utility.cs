@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -48,7 +49,7 @@ public static class Utility
 
         object obj = Activator.CreateInstance(passiveType);
         PassiveLogic passive = obj as PassiveLogic;
-        passive.coefficient = so.coefficients.ToList();
+        passive.coefficient = new Dictionary<string, int>(so.coefficients);
 
         return passive;
     }

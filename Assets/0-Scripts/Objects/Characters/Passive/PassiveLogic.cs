@@ -7,7 +7,7 @@ public class PassiveLogic
 {
     protected CharacterBase character;
 
-    public List<int> coefficient;
+    public Dictionary<string, int> coefficient;
 
     public virtual void init(CharacterBase character)// 패시브 소유자 설정
     {
