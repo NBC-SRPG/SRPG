@@ -36,6 +36,7 @@ public class CharacterInfoUI : UIBase
         AbilityButton,
         ClassButton,
         BackButton,
+        ExSkillButton,
         WeaponButton,
         ArmorButton,
         Ability1Button,
@@ -96,12 +97,6 @@ public class CharacterInfoUI : UIBase
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        // 스킬 이미지 클릭 시작, 클릭 끝 이벤트 걸기
-        BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerDownExSkill, UIEvent.PointerDown);
-        BindEvent(GetImage((int)Images.ExSkillImage).gameObject, OnPointerUpExSkill, UIEvent.PointerUp);
-        BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerDownPassiveSkill, UIEvent.PointerDown);
-        BindEvent(GetImage((int)Images.PassiveSkillImage).gameObject, OnPointerUpPassiveSkill, UIEvent.PointerUp);
-
         // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
         GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
 
@@ -114,6 +109,7 @@ public class CharacterInfoUI : UIBase
         //GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.armor.equip_Id}");
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+        GetButton((int)Buttons.ExSkillButton).onClick.AddListener(OnClickExSkillButton);
         GetButton((int)Buttons.WeaponButton).onClick.AddListener(OnClickWeaponButton);
         GetButton((int)Buttons.ArmorButton).onClick.AddListener(OnClickArmorButton);
 
@@ -141,13 +137,13 @@ public class CharacterInfoUI : UIBase
     
     private void InitSkillTab()
     {
-        //GetText((int)Texts.ExSkillText).text = $"{character.SO.skill.skillName}"; // 뒤에 레벨도 붙어야 함
-        //GetText((int)Texts.ExSkillDescriptionText).text = $"{character.SO.skill.description}";
-        //GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.skill.skill_ID}");
+        GetText((int)Texts.ExSkillText).text = $"{character.exSkill.skillName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.ExSkillDescriptionText).text = $"{character.exSkill.description}";
+        GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.exSkill.skill_ID}");
 
-        //GetText((int)Texts.PassiveSkillText).text = $"{character.SO.passive.PassiveName}"; // 뒤에 레벨도 붙어야 함
-        //GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.SO.passive.description}";
-        //GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.passive.passive_Id}");
+        GetText((int)Texts.PassiveSkillText).text = $"{character.passiveSkill.passiveName}"; // 뒤에 레벨도 붙어야 함
+        GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.passiveSkill.description}";
+        GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.passiveSkill.id}");
     }
 
     private void InitAbilityTab()
@@ -335,33 +331,12 @@ public class CharacterInfoUI : UIBase
     // 특성 정보창은 클릭 시 초기화 -> 특성 5가지 클릭 시 매번 바뀜
     // 초기화 전 마지막 클릭 한 특성 정보를 들고 있다가 같으면 아무것도 하지 않고 return
     // 팝업창은 SetActive로 관리하고 있으나 추후 필요 시 기존과 같이 동적 관리
-    private void OnPointerUpExSkill()
+    private void OnClickExSkillButton()
     {
-        Debug.Log("OnPointerUpExSkill");
+        Debug.Log("OnClickExSkillButton");
 
-        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(false);
-    }
-
-    private void OnPointerDownExSkill()
-    {
-        Debug.Log("OnPointerDownExSkill");
-
-        //GetObject((int)GameObjects.ExSkillInfoUI).SetActive(true);
-    }
-
-    // TODO 고유 스킬 UI는 따로 할 것인지?
-    private void OnPointerUpPassiveSkill()
-    {
-        Debug.Log("OnPointerUpPassiveSkill");
-
-        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
-    }
-
-    private void OnPointerDownPassiveSkill()
-    {
-        Debug.Log("OnPointerDownPassiveSkill");
-
-        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(true);
+        ExSkillInfoUI ui = Managers.UI.ShowUI<ExSkillInfoUI>();
+        ui.Init(character.SO.id);
     }
 
     private void OnClickAbilityButton(int AbilityTier, int AbilityIndex)
