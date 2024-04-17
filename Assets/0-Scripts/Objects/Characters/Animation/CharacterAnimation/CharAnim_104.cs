@@ -7,8 +7,12 @@ public class CharAnim_104 : CharAnimBase
     private Vector2 left;
     private Vector2 right;
 
-    List<Transform> hitTargets;
-    List<Transform> healTargets;
+    List<CharacterBase> hitTargets;
+    List<CharacterBase> healTargets;
+
+
+    Vector3 hitPosition = new Vector3();
+    Vector3 healPosition = new Vector3();
 
     protected override void LoadParticles()
     {
@@ -16,8 +20,8 @@ public class CharAnim_104 : CharAnimBase
 
         particles.LoadParticles(Managers.Resource.Load<GameObject>("Particle/PriestFX"));
 
-        hitTargets = new List<Transform>();
-        healTargets = new List<Transform>();
+        hitTargets = new List<CharacterBase>();
+        healTargets = new List<CharacterBase>();
     }
 
     public override void PlaySkillAnimation(List<CharacterBase> targets)
@@ -69,26 +73,26 @@ public class CharAnim_104 : CharAnimBase
         {
             if (target.characterAnim.GetDamage() < 0)
             {
-                hitTargets.Add(target.transform);
+                hitTargets.Add(target);
             }
             else
             {
-                healTargets.Add(target.transform);
+                healTargets.Add(target);
             }
         }
 
-        Vector3 hitPosition = particles.particleMap["SkillHit"].transform.position;
         for (int i = 0; i < hitTargets.Count; i++)
         {
+            hitPosition = particles.particleMap["SkillHit"].transform.GetChild(i).position;
             particles.particleMap["SkillHit"].transform.GetChild(i).gameObject.SetActive(true);
-            particles.particleMap["SkillHit"].transform.GetChild(i).position = new Vector3(hitTargets[i].position.x, hitPosition.y - 1, hitPosition.z);
+            particles.particleMap["SkillHit"].transform.GetChild(i).position = new Vector3(hitTargets[i].transform.position.x, hitPosition.y, hitPosition.z);
         }
 
-        Vector3 healPosition = particles.particleMap["SkillHeal"].transform.position;
         for (int i = 0; i < healTargets.Count; i++)
         {
+            healPosition = particles.particleMap["SkillHeal"].transform.GetChild(i).position;
             particles.particleMap["SkillHeal"].transform.GetChild(i).gameObject.SetActive(true);
-            particles.particleMap["SkillHeal"].transform.GetChild(i).position = new Vector3(healTargets[i].position.x, healPosition.y - 1, healPosition.z);
+            particles.particleMap["SkillHeal"].transform.GetChild(i).position = new Vector3(healTargets[i].transform.position.x, healPosition.y, healPosition.z);
         }
     }
 
@@ -96,6 +100,13 @@ public class CharAnim_104 : CharAnimBase
     {
         particles.PlayParticle("SkillHeal");
         particles.PlayParticle("SkillHit");
+
+        foreach(CharacterBase target in hitTargets)
+        {
+            AttackEnemy(target);
+            target.characterAnim.ShakeCharacter();
+            Damage();
+        }
     }
 
 
@@ -110,10 +121,40 @@ public class CharAnim_104 : CharAnimBase
         particles.PlayParticle("Skill");
     }
 
+    public void AttackingTiming()
+    {
+        particles.PlayParticle("Attack2");
+
+        particles.ChangeParent("Attack", targetCharacter.characterAnim.transform);
+
+        AttackEnemy(targetCharacter);
+        KnockBackEnemy(targetCharacter, 5);
+
+        particles.PlayParticle("Attack");
+        targetCharacter.characterAnim.ShakeCharacter();
+        Damage();
+    }
+
     protected override void OnCharacterReleased()
     {
         base.OnCharacterReleased();
 
         CameraController.instance.SetMinOrtho(9);
+
+        for(int i =0; i < particles.particleMap["SkillHit"].transform.childCount; i++)
+        {
+            hitPosition = particles.particleMap["SkillHit"].transform.GetChild(i).position;
+            particles.particleMap["SkillHit"].transform.GetChild(i).gameObject.SetActive(false);
+            particles.particleMap["SkillHit"].transform.GetChild(i).position = new Vector3(transform.position.x, hitPosition.y, hitPosition.z);
+        }
+
+        for (int i = 0; i < particles.particleMap["SkillHeal"].transform.childCount; i++)
+        {
+            healPosition = particles.particleMap["SkillHeal"].transform.GetChild(i).position;
+            particles.particleMap["SkillHeal"].transform.GetChild(i).gameObject.SetActive(false);
+            particles.particleMap["SkillHeal"].transform.GetChild(i).position = new Vector3(transform.position.x, healPosition.y, healPosition.z);
+        }
+
+        particles.ChangeParent("Attack", transform);
     }
 }

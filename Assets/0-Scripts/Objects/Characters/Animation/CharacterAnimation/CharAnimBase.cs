@@ -156,7 +156,7 @@ public class CharAnimBase : MonoBehaviour
 
     public void ShowHitParticle()
     {
-        particles.PlayHitParticle();
+        particles.HitParticle();
     }
 
     public void PlayMoveAnimation()
@@ -288,25 +288,32 @@ public class CharAnimBase : MonoBehaviour
 
         FlipCharacter(knockBackDirection, true);
 
-        //StartCoroutine(KnockBack(knockBackDirection));
         StartCoroutine(MoveToTarget(targetposition));
     }
 
-    protected IEnumerator KnockBack(Vector2 direction)
+    public void GetKnockBackByLerp(Vector2 direction, int scale, float duration)
     {
-        float timeSet = 0;
-        while (true)
+        Vector2 knockBackDirection = direction * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
+
+        FlipCharacterDirection(-knockBackDirection);
+
+
+        StartCoroutine(KnockBackByLerp(targetposition, duration));
+    }
+
+    protected IEnumerator KnockBackByLerp(Vector3 targetPosition, float duration)
+    {
+        float time = 0;
+        while (time <= duration)
         {
-            rb.AddRelativeForce(direction / 2, ForceMode2D.Impulse);
-            timeSet += Time.deltaTime;
-            if (timeSet > 0.25f)
-            {
-                Debug.Log("111");
-                rb.velocity = Vector2.zero;
-                break;
-            }
+            transform.parent.position = Vector3.Lerp(transform.parent.position, targetPosition, time / duration);
+            time += Time.deltaTime;
+
             yield return null;
         }
+
+        transform.parent.position = targetPosition;
     }
 
     protected IEnumerator MoveToTarget(Vector3 targetPosition, float speed = 100f)
@@ -336,5 +343,10 @@ public class CharAnimBase : MonoBehaviour
         {
             targets.characterAnim.ShowDamage();
         }
+    }
+
+    public void SetRangePosition(CharacterBase target, Vector2 direction, float distance)
+    {
+        target.transform.position = new Vector3(target.transform.position.x + (direction.x * distance), target.transform.position.y, target.transform.position.z);
     }
 }

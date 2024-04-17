@@ -24,6 +24,9 @@ public class CharAnim_103 : CharAnimBase
         {
             CameraController.instance.AddBattleTargetGroup(targets.transform, 10);
         }
+
+        CameraController.instance.ShakeCamera(0.5f, 5f, 2f);
+        DamageAll();
     }
 
     public void AttackingTiming()
@@ -32,6 +35,7 @@ public class CharAnim_103 : CharAnimBase
         KnockBackEnemy(targetCharacter, 10);
 
         targetCharacter.characterAnim.ShakeCharacter();
+        Damage();
     }
 
     public void SkillTiming()
