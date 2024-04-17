@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "ItemData", fileName = "Item_")]
+[CreateAssetMenu(menuName = "ItemData", fileName = "ItemSO_")]
 public class ItemSO : ScriptableObject
 {
     [Header("Item_description")]

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
+[CreateAssetMenu(menuName = "EquipData", fileName = "EquipSO_")]
 public class EquipSO : PassiveSO
 {
     [Header("Develope")]

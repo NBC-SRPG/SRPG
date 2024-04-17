@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "AbilityData", fileName = "Ability_")]
+[CreateAssetMenu(menuName = "AbilityData", fileName = "AbilitySO_")]
 public class AbilitySO : PassiveSO
 {
     [Header("Develope")]

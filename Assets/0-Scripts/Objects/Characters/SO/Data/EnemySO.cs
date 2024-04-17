@@ -4,7 +4,7 @@ using UnityEngine;
 using static Constants;
 using static BattleKeyWords;
 
-[CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "Enemy_")]
+[CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "EnemySO_")]
 public class EnemySO : ScriptableObject
 {
     public State startState = State.Finding;

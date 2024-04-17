@@ -487,7 +487,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -518,7 +518,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -549,7 +549,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -580,7 +580,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -611,7 +611,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "MailData", fileName = "Mail_")]
+[CreateAssetMenu(menuName = "MailData", fileName = "MailSO_")]
 public class MailSO : ScriptableObject
 {
     public string id; // 메일 ID
