@@ -71,7 +71,7 @@ public class CharAnim_104 : CharAnimBase
 
         foreach (CharacterBase target in targetList)
         {
-            if (target.characterAnim.GetDamage() < 0)
+            if (target.characterAnim.GetDamageFigure() < 0)
             {
                 hitTargets.Add(target);
             }
