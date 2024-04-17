@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharAnimBase : MonoBehaviour
@@ -92,6 +93,16 @@ public class CharAnimBase : MonoBehaviour
             BattleKeyWords.Damage damage = damages.Dequeue();
             Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
         }
+    }
+
+    public int GetDamage()
+    {
+        if(damages.Count > 0)
+        {
+            return damages.First().damage;
+        }
+
+        return 0;
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)

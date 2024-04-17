@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
-    public Camera battaleCamera;
+    public Camera battleCamera;
 
     [Header("Idle_Camera")]
     private Transform PrimeCamera;
@@ -21,11 +21,13 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
 
     [Header("BattleCamera")]
-    [SerializeField] private CinemachineVirtualCamera BattleCameara;
+    [SerializeField] private CinemachineVirtualCamera BattleGroupCameara;
     public CinemachineTargetGroup battleTargetGroup;
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
+
+    private CinemachineFramingTransposer battleGroupComposer;
     private CinemachineBasicMultiChannelPerlin noise;
 
     [HideInInspector] public bool canMove;
@@ -59,7 +61,8 @@ public class CameraController : MonoBehaviour
         followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
         followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
 
-        noise = battaleCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+        battleGroupComposer = BattleGroupCameara.GetCinemachineComponent<CinemachineFramingTransposer>();
+        noise = BattleGroupCameara.GetComponent<CinemachineBasicMultiChannelPerlin>();
 
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
@@ -214,10 +217,12 @@ public class CameraController : MonoBehaviour
         PrimeCamera = mainCamera.transform;
     }
 
+    //------------------------------------------------------------------------------------------------
+    //전투 연출 카메라
+
     public void AddBattleTargetGroup(Transform transform, float scale)
     {
         battleTargetGroup.AddMember(transform, 1, scale);
-        Debug.Log(transform.name);
     }
 
     public void RemoveTargetGroup(Transform transform)
@@ -231,5 +236,10 @@ public class CameraController : MonoBehaviour
     public void ResetBattleGroup()
     {
         battleTargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
+    }
+
+    public void SetMinOrtho(int min)
+    {
+        battleGroupComposer.m_MinimumOrthoSize = min;
     }
 }
