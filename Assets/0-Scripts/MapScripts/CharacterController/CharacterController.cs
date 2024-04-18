@@ -238,7 +238,7 @@ public class CharacterController : MonoBehaviour
     {
         foreach (OverlayTile tile in tileList)
         {
-            tile.ResetTile();
+            tile.ResetTileOnMove();
             if (!moveRangeTiles.Contains(tile))
             {
                 tile.HideTile();
@@ -740,10 +740,7 @@ public class CharacterController : MonoBehaviour
 
         foreach (OverlayTile tile in attackRangeTiles)
         {
-            if (!moveRangeTiles.Contains(tile))
-            {
-                tile.ShowAsAttack();
-            }
+            tile.ShowAsAttack();
         }
 
     }
