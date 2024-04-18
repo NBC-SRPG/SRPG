@@ -92,8 +92,6 @@ public class CharAnim_106 : CharAnimBase
     {
         base.OnCharacterReleased();
 
-        CameraController.instance.SetMinOrtho(9);
-
         particles.ChangeParent("Attack", transform);
     }
 

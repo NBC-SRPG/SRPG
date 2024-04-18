@@ -11,8 +11,10 @@ public class CharAnim_103 : CharAnimBase
         particles.LoadParticles(Managers.Resource.Load<GameObject>("Particle/FlameWarriorFX"));
     }
 
-    public void AtStartSkill()
+    public override void PlaySkillAnimation(List<CharacterBase> targets)
     {
+        base.PlaySkillAnimation(targets);
+
         CameraController.instance.ResetBattleGroup();
         CameraController.instance.AddBattleTargetGroup(particles.cameraTransform["Skill1"], 2);
     }
