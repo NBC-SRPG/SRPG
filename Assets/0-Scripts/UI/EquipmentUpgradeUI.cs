@@ -161,10 +161,13 @@ public class EquipmentUpgradeUI : UIBase
             foreach (var material in nextEquip.upgradeMaterials)
             {
                 GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/EquipmentUpgradeMaterialUI");
-                go.GetComponent<EquipmentUpgradeMaterialUI>().Init(material.Key, material.Value);
-                Managers.Resource.Instantiate(go, GetObject((int)GameObjects.EquipmentUpgradeMaterials).transform);
-            
-                if (material.Value > Managers.AccountData.inventory[material.Key])
+                var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.EquipmentUpgradeMaterials).transform);
+                instance.GetComponent<EquipmentUpgradeMaterialUI>().Init(material.Key, material.Value);
+
+                int materialCount;
+                Managers.AccountData.inventory.TryGetValue(material.Key, out materialCount);
+
+                if (material.Value > materialCount)
                 {
                     GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
                 }
@@ -230,10 +233,13 @@ public class EquipmentUpgradeUI : UIBase
             foreach (var material in nextEquip.upgradeMaterials)
             {
                 GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/EquipmentUpgradeMaterialUI");
-                go.GetComponent<EquipmentUpgradeMaterialUI>().Init(material.Key, material.Value);
-                Managers.Resource.Instantiate(go, GetObject((int)GameObjects.EquipmentUpgradeMaterials).transform);
+                var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.EquipmentUpgradeMaterials).transform);
+                instance.GetComponent<EquipmentUpgradeMaterialUI>().Init(material.Key, material.Value);
 
-                if (material.Value > Managers.AccountData.inventory[material.Key])
+                int materialCount;
+                Managers.AccountData.inventory.TryGetValue(material.Key, out materialCount);
+
+                if (material.Value > materialCount)
                 {
                     GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
                 }
