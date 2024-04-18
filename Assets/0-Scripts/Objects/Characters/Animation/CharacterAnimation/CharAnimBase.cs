@@ -318,10 +318,20 @@ public class CharAnimBase : MonoBehaviour
         FlipCharacterDirection(-knockBackDirection);
 
 
-        StartCoroutine(KnockBackByLerp(targetposition, duration));
+        StartCoroutine(MoveToTargetByLerp(targetposition, duration));
     }
 
-    protected IEnumerator KnockBackByLerp(Vector3 targetPosition, float duration)
+    public void GetKnockBackByLerpToPosition(Vector2 target, int scale, float duration)
+    {
+        Vector2 knockBackDirection = ((Vector2)transform.parent.position - target).normalized * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
+
+        FlipCharacter(knockBackDirection, true);
+
+        StartCoroutine(MoveToTargetByLerp(targetposition, duration));
+    }
+
+    protected IEnumerator MoveToTargetByLerp(Vector3 targetPosition, float duration)
     {
         float time = 0;
         while (time <= duration)
@@ -349,6 +359,7 @@ public class CharAnimBase : MonoBehaviour
     protected virtual void OnCharacterReleased()
     {
         CameraController.instance.ResetBattleGroup();
+        CameraController.instance.SetMinOrtho(9);
     }
 
     public void Damage()
