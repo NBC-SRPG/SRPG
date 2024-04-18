@@ -16,7 +16,7 @@ public class AnimTestCharacter : CharacterBase
         characterAnim = characterObject.GetComponent<CharAnimBase>();
         health = GetComponent<HealthSystem>();
 
-        health.InitHealth(1, tempBonusStat, curCharacterBufList);
+        health.InitHealth(1, tempBonusStat, curCharacterBufList, characterAnim);
         characterAnim.Init(health);
     }
 
