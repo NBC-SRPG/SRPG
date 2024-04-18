@@ -9,10 +9,10 @@ public class LevelUpUI : UIBase
     private Character character;
     // TODO
     // 레벨업 아이템 Id 다른 곳에서도 사용한다면 Constants로 옮기기
-    private const int LevelUpItem1Id = 1;
-    private const int LevelUpItem2Id = 2;
-    private const int LevelUpItem3Id = 3;
-    private const int LevelUpItem4Id = 4;
+    private const int LevelUpItem1Id = 10001;
+    private const int LevelUpItem2Id = 10002;
+    private const int LevelUpItem3Id = 10003;
+    private const int LevelUpItem4Id = 10004;
 
     private int LevelUpItem1ExpValue;
     private int LevelUpItem2ExpValue;
