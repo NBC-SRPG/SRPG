@@ -12,7 +12,8 @@ public class CharacterSO : ScriptableObject
     public int id;      //캐릭터 식별자
 
     [Header("Sprites")]
-    public Sprite standing;    //캐릭터 식별자
+    public Sprite standing;
+    public Sprite icon;
 
     [Header("Status")]      //캐릭터 능력치
     public int hp;
