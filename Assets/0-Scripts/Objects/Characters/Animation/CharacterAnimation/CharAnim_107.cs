@@ -17,7 +17,7 @@ public class CharAnim_107 : CharAnimBase
         CameraController.instance.SetMinOrtho(5);
 
         CameraController.instance.ResetBattleGroup();
-        CameraController.instance.AddBattleTargetGroup(transform.parent, 5);
+        CameraController.instance.AddBattleTargetGroup(transform.parent, 8);
 
         base.PlaySkillAnimation(targets);
 
@@ -36,7 +36,7 @@ public class CharAnim_107 : CharAnimBase
     public override void KnockBackEnemy(CharacterBase targetCharacter, int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBackByLerp(-GetDirectionOfCharacter(), scale, 0.25f);
+        targetCharacter.characterAnim.GetKnockBackByLerp(GetDirectionOfCharacter(), scale, 0.25f);
     }
 
     public void AttackingTiming()

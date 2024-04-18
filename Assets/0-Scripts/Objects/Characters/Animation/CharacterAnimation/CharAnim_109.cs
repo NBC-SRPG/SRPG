@@ -40,7 +40,7 @@ public class CharAnim_109 : CharAnimBase
     public override void KnockBackEnemy(CharacterBase targetCharacter, int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBackByLerp(-GetDirectionOfCharacter(), scale, 0.25f);
+        targetCharacter.characterAnim.GetKnockBackByLerp(GetDirectionOfCharacter(), scale, 0.25f);
     }
 
     public void AttackingTiming()
@@ -67,7 +67,7 @@ public class CharAnim_109 : CharAnimBase
 
     public void Step()
     {
-        FlipCharacterDirection(GetDirectionOfCharacter());
+        FlipCharacterDirection(-GetDirectionOfCharacter());
 
         particles.PlayParticle("Move2");
     }

@@ -17,7 +17,7 @@ public class CharAnim_106 : CharAnimBase
 
         foreach (CharacterBase target in targets)
         {
-            SetRangePosition(target, -GetDirectionOfCharacter(), 20);
+            SetRangePosition(target, GetDirectionOfCharacter(), 20);
         }
 
         base.PlaySkillAnimation(targets);
@@ -29,7 +29,7 @@ public class CharAnim_106 : CharAnimBase
 
     public override void PlayAttackAnimation(CharacterBase targetCharacter)
     {
-        SetRangePosition(targetCharacter, -GetDirectionOfCharacter(), 20);
+        SetRangePosition(targetCharacter, GetDirectionOfCharacter(), 20);
 
         base.PlayAttackAnimation(targetCharacter);
     }
@@ -56,7 +56,7 @@ public class CharAnim_106 : CharAnimBase
 
     public void SkillTiming()
     {
-        Vector2 direction = GetDirectionOfCharacter();
+        Vector2 direction = -GetDirectionOfCharacter();
 
         particles.StopParticle("Charging");
         particles.PlayParticle("ShootArrow");

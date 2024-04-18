@@ -229,11 +229,11 @@ public class CharAnimBase : MonoBehaviour
     {
         if (transform.localScale.x >= 0)
         {
-            return Vector2.right;
+            return Vector2.left;
         }
         else
         {
-            return Vector2.left;
+            return Vector2.right;
         }
     }
 
