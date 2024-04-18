@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PassiveAbility_000 : PassiveLogic
+public class Ability_035: PassiveLogic
 {
-    protected CharacterBase character;
-
-    public Dictionary<string, int> coefficient;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
