@@ -20,7 +20,7 @@ public class CharAnim_105 : CharAnimBase
 
         foreach (CharacterBase target in targets)
         {
-            SetRangePosition(target, -GetDirectionOfCharacter(), 20);
+            SetRangePosition(target, GetDirectionOfCharacter(), 20);
         }
 
         base.PlaySkillAnimation(targets);
