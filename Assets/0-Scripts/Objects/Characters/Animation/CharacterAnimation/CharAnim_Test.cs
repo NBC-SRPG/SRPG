@@ -8,23 +8,27 @@ public class CharAnim_Test : CharAnimBase
     {
         base.LoadParticles();
 
-        particles.AddParticles(Managers.Resource.Load<ParticleSystem>("Particle/Slash1"));
+        particles.LoadParticles(Managers.Resource.Load<GameObject>("Particle/HeraldFX"));
     }
 
     public void AttackingTiming()
     {
-        particles.PlayParticle("Slash1");
-
-        AttackEnemy();
-        KnockBackEnemy(10);
+        AttackEnemy(targetCharacter);
+        KnockBackEnemy(targetCharacter, 10);
 
         targetCharacter.characterAnim.ShakeCharacter();
     }
 
-    public void Damage()
+    public void ShowAttackParticle()
     {
-        targetCharacter.characterAnim.ShowDamage();
+        particles.PlayParticle("Attack");
     }
+
+    public void ShowCounterParticle()
+    {
+        particles.PlayParticle("Counter");
+    }
+
 
     public void MoveToPosition()
     {

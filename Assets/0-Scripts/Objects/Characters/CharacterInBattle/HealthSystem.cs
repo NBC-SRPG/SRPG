@@ -185,6 +185,11 @@ public class HealthSystem : MonoBehaviour
 
         UpdateText();
 
+        if (n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
+
         characterAnim.ShowDamage();
 
         if (CurHealth <= 0)
@@ -198,6 +203,11 @@ public class HealthSystem : MonoBehaviour
         StartCoroutine(TakeHealthBar(true));
 
         UpdateText();
+
+        if(n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
 
         characterAnim.ShowDamage();
     }

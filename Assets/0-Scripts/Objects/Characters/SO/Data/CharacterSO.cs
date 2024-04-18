@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -29,17 +30,17 @@ public class CharacterSO : ScriptableObject
 
     [Header("Ability")]      //특성SO.
     public int abilityT1;
-    public int[] abilityT2; //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장.
-    public int[] abilityT3;
+    public List<int> abilityT2 = new(); //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장.
+    public List<int> abilityT3 = new();
 
     [Header("Class")]       //클래스SO.
     public int basicClass;
-    public int[] superiorClass;
+    public List<int> superiorClass = new();
 
 
     [Header("EquipList")]
-    public int[] weapon;
-    public int[] armor;
+    public List<int> weapon = new();
+    public List<int> armor = new();
 
 
     [Header("Star")]

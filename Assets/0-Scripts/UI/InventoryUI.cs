@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using static Constants;
 
 public class InventoryUI : UIBase
 {
+    private List<ItemSO> loadedItems = new();
     private enum Texts
     {
 
@@ -35,13 +37,29 @@ public class InventoryUI : UIBase
     private enum FilterType
     {
         Option1,
-        Option2
+        Option2,
+        Option3,
+        Option4,
+        Option5,
+        Option6,
+        Option7,
+        Option8,
+        Option9,
+        Option10
     }
 
     private Dictionary<FilterType, string> filterDic = new Dictionary<FilterType, string>
     {
-        { FilterType.Option1, "필터 옵션 1" },
-        { FilterType.Option2, "필터 옵션 2" }
+        { FilterType.Option1, "전체" },
+        { FilterType.Option2, "티켓" },
+        { FilterType.Option3, "조각" },
+        { FilterType.Option4, "토큰" },
+        { FilterType.Option5, "소비" },
+        { FilterType.Option6, "경험치" },
+        { FilterType.Option7, "스킬" },
+        { FilterType.Option8, "재료" },
+        { FilterType.Option9, "선물" },
+        { FilterType.Option10, "기타" }
     };
 
     private enum SortType
@@ -52,7 +70,7 @@ public class InventoryUI : UIBase
 
     private Dictionary<SortType, string> sortDic = new Dictionary<SortType, string>
     {
-        { SortType.Option1, "정렬 옵션 1" },
+        { SortType.Option1, "기본" },
         { SortType.Option2, "정렬 옵션 2" }
     };
 
@@ -79,7 +97,7 @@ public class InventoryUI : UIBase
 
     private IEnumerator LoadAllItems()
     {
-        List<ItemSO> loadedItems = new();
+        loadedItems.Clear();
         int itemsCount = Managers.AccountData.inventory.Count;
         int loadedCount = 0;
 
@@ -103,6 +121,9 @@ public class InventoryUI : UIBase
             var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
             instance.GetComponent<ItemEntryUI>().Init(ItemSO);
         }
+
+        // 아이템 다 생성 후 기본 정렬(Id 오름차순)
+        SortById();
     }
 
     private void InitDropdown()
@@ -120,7 +141,7 @@ public class InventoryUI : UIBase
         Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).AddOptions(sortOptions);
 
         // 목록 아이템 선택 시 실행 할 함수 추가
-        Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).onValueChanged.AddListener(delegate { FilterSelect(); });
+        Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).onValueChanged.AddListener(delegate { FilterItems(); });
         Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).onValueChanged.AddListener(delegate { SortSelect(); });
     }
 
@@ -129,23 +150,6 @@ public class InventoryUI : UIBase
         Debug.Log("OnClickBackButton");
         // TODO 버튼 클릭 효과음
         Managers.UI.CloseUI(this);
-    }
-
-    // 필터 선택
-    private void FilterSelect()
-    {
-        // 현재 선택된 필터 타입 Get
-        FilterType filterType = (FilterType)Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).value;
-        // 필터 타입에 따라 필터 실행
-        switch (filterType)
-        {
-            case FilterType.Option1:
-                Debug.Log("Selected option: " + filterDic[filterType]);
-                break;
-            case FilterType.Option2:
-                Debug.Log("Selected option: " + filterDic[filterType]);
-                break;
-        }
     }
 
     // 정렬 선택
@@ -157,11 +161,59 @@ public class InventoryUI : UIBase
         switch (sortType)
         {
             case SortType.Option1:
+                SortById();
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
             case SortType.Option2:
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
+        }
+    }
+    // 기본 정렬 (Id 오름차순)
+    private void SortById()
+    {
+        var items = GetObject((int)GameObjects.Content).GetComponentsInChildren<ItemEntryUI>().ToList();
+        items.Sort((x, y) => x.GetComponent<ItemEntryUI>().item.id.CompareTo(y.GetComponent<ItemEntryUI>().item.id));
+
+        foreach (var item in items)
+        {
+            item.transform.SetAsLastSibling();
+        }
+    }
+    // 필터 선택
+    private void FilterItems()
+    {
+        ItemType selectedType = (ItemType)Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).value - 1;
+
+        Debug.Log("SelectedType: " + selectedType);
+        if ((int)selectedType == -1)
+        {
+            UpdateItemList(loadedItems);
+        }
+        else
+        {
+            List<ItemSO> filteredItems = loadedItems.Where(item => item.itemType == selectedType).ToList();
+            UpdateItemList(filteredItems);
+        }
+
+        // 필터 후에 선택 된 정렬로 재정렬
+        SortSelect();
+    }
+
+    // 필터에 맞는 아이템 재생성
+    private void UpdateItemList(List<ItemSO> items)
+    {
+        Transform contentPanel = GetObject((int)GameObjects.Content).transform;
+        foreach (Transform child in contentPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var itemSO in items)
+        {
+            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/ItemEntryUI");
+            var instance = Managers.Resource.Instantiate(go, contentPanel);
+            instance.GetComponent<ItemEntryUI>().Init(itemSO);
         }
     }
 }

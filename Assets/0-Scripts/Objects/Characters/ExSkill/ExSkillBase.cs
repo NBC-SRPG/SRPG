@@ -39,6 +39,11 @@ public class ExSkillBase
         InitSkillAbility();
     }
 
+    public ExSkillBase()
+    {
+
+    }
+
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {
