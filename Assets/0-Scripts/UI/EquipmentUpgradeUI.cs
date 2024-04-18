@@ -101,7 +101,7 @@ public class EquipmentUpgradeUI : UIBase
     {
         if (equipType == EquipType.Weapon)
         {
-            Utility.Id2SO<EquipSO>(character.SO.weapon[character.Growth.weapon], (result) =>
+            Utility.Id2SO<EquipSO>(character.SO.weapon[character.Growth.weapon + 1], (result) =>
             {
                 nextEquip = (EquipSO)result;
                 isLoaded = true;
@@ -113,15 +113,16 @@ public class EquipmentUpgradeUI : UIBase
             GetText((int)Texts.EquipmentAfterName).text = nextEquip.equipName;
             // TODO
             // 이미지 초기화
-            if (character.Growth.level < character.weapon.upgradeLevel)
+            if (character.Growth.level < nextEquip.upgradeLevel)
             {
-                GetText((int)Texts.EquipmentUpgradeLevel).text = $"강화가능레벨 : {character.weapon.upgradeLevel}";
+                GetText((int)Texts.EquipmentUpgradeLevel).text = $"강화가능레벨 : {nextEquip.upgradeLevel}";
             }
             else
             {
                 GetText((int)Texts.EquipmentUpgradeLevel).text = "";
             }
 
+            /*
             var previewStats = character.PreviewEnhancedStats(nextEquip, character.armor);
 
             GetText((int)Texts.HpBefore).text = character.hp.ToString();
@@ -130,7 +131,14 @@ public class EquipmentUpgradeUI : UIBase
             GetText((int)Texts.AtkAfter).text = previewStats.atk.ToString();
             GetText((int)Texts.DefBefore).text = character.def.ToString();
             GetText((int)Texts.DefAfter).text = previewStats.def.ToString();
-
+            */
+            GetText((int)Texts.HpBefore).text = character.weapon.hp.ToString();
+            GetText((int)Texts.HpAfter).text = nextEquip.hp.ToString();
+            GetText((int)Texts.AtkBefore).text = character.weapon.atk.ToString();
+            GetText((int)Texts.AtkAfter).text = nextEquip.atk.ToString();
+            GetText((int)Texts.DefBefore).text = character.weapon.def.ToString();
+            GetText((int)Texts.DefAfter).text = nextEquip.def.ToString();
+            
             if (nextEquip.gold > Managers.AccountData.playerData.Gold)
             {
                 GetText((int)Texts.EquipmentUpgradeGoldText).text = $"<color=red>{nextEquip.gold} G</color>";
@@ -164,7 +172,7 @@ public class EquipmentUpgradeUI : UIBase
         }
         else
         {
-            Utility.Id2SO<EquipSO>(character.SO.armor[character.Growth.armor], (result) =>
+            Utility.Id2SO<EquipSO>(character.SO.armor[character.Growth.armor + 1], (result) =>
             {
                 nextEquip = (EquipSO)result;
                 isLoaded = true;
@@ -178,13 +186,13 @@ public class EquipmentUpgradeUI : UIBase
             // 이미지 초기화
             if (character.Growth.level < character.armor.upgradeLevel)
             {
-                GetText((int)Texts.EquipmentUpgradeLevel).text = $"강화가능레벨 : {character.armor.upgradeLevel}";
+                GetText((int)Texts.EquipmentUpgradeLevel).text = $"강화가능레벨 : {nextEquip.upgradeLevel}";
             }
             else
             {
                 GetText((int)Texts.EquipmentUpgradeLevel).text = "";
             }
-
+            /*
             var previewStats = character.PreviewEnhancedStats(character.weapon, nextEquip);
 
             GetText((int)Texts.HpBefore).text = character.hp.ToString();
@@ -193,6 +201,13 @@ public class EquipmentUpgradeUI : UIBase
             GetText((int)Texts.AtkAfter).text = previewStats.atk.ToString();
             GetText((int)Texts.DefBefore).text = character.def.ToString();
             GetText((int)Texts.DefAfter).text = previewStats.def.ToString();
+            */
+            GetText((int)Texts.HpBefore).text = character.armor.hp.ToString();
+            GetText((int)Texts.HpAfter).text = nextEquip.hp.ToString();
+            GetText((int)Texts.AtkBefore).text = character.armor.atk.ToString();
+            GetText((int)Texts.AtkAfter).text = nextEquip.atk.ToString();
+            GetText((int)Texts.DefBefore).text = character.armor.def.ToString();
+            GetText((int)Texts.DefAfter).text = nextEquip.def.ToString();
 
             if (nextEquip.gold > Managers.AccountData.playerData.Gold)
             {
