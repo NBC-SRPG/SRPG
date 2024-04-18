@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -7,21 +8,20 @@ public class DBWriteTest : MonoBehaviour
     Database db;
     int id;
     CharacterGrowth growth;
+    Dictionary<int, int> items;
 
     void Start()
     {
-        db = new Database();
-        id = 102;
-        Utility.Id2SO<CharacterSO>(id, (result) => 
+        items = new Dictionary<int, int>();
+        for (int i = 20001; i < 20033; i++)
         {
-            growth = new CharacterGrowth((CharacterSO)result);
-        });
+            items.Add(i, 20000);
+        }
     }
     
     public void OnClick()
     {
-        Debug.Log(growth.maxExp);
-        db.WriteWithJson(db.userDB.Child("characterData").Child(id.ToString()), growth);
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("inventory"), items);
         Debug.Log("Complete");
     }
 
