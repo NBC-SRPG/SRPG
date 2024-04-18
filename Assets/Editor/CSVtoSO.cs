@@ -4,10 +4,11 @@ using System.IO;
 
 public class CSVtoSO
 {
-    private static string CSVPath = "/1-RawData/EquipWeaponData.csv";
+
     [MenuItem("Utilities/Generate Equips")]
     public static void GenerateEquips()
     {
+        string CSVPath = "/1-RawData/EquipData.csv";
         string[] allLines = File.ReadAllLines(Application.dataPath + CSVPath);
 
         foreach(string allLine in allLines)
@@ -51,6 +52,31 @@ public class CSVtoSO
             equip.gold = int.Parse(splitData[12]);
 
             AssetDatabase.CreateAsset(equip, $"Assets/0-AddressableResources/ScriptableObjects/EquipSO/EquipSO_{equip.id}.asset");
+        }
+
+        AssetDatabase.SaveAssets();
+    }
+
+    [MenuItem("Utilities/Generate Items")]
+    public static void GenerateItems()
+    {
+        string CSVPath = "/1-RawData/ItemData.csv";
+        string[] allLines = File.ReadAllLines(Application.dataPath + CSVPath);
+
+        foreach(string allLine in allLines)
+        {
+            string [] splitData = allLine.Split(',');
+
+            if(splitData.Length != 2)
+            {
+                Debug.Log(allLine + " Does not have 4 values");
+            }
+
+            RankUp_equipSO item = ScriptableObject.CreateInstance<RankUp_equipSO>();
+            item.id = int.Parse(splitData[0]);
+            item.itemName = splitData[1];
+
+            AssetDatabase.CreateAsset(item, $"Assets/0-AddressableResources/ScriptableObjects/ItemSO/ItemSO_{item.id}.asset");
         }
 
         AssetDatabase.SaveAssets();
