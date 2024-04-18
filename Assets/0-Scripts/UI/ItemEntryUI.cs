@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ItemEntryUI : UIBase
 {
-    private ItemSO item;
+    public ItemSO item;
     private enum Texts
     {
         NumberText
