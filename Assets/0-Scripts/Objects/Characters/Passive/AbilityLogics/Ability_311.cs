@@ -2,53 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ability_036: PassiveLogic
+public class Ability_311: PassiveLogic
 {
-
+    BonusStat stat = new BonusStat(); // 보너스 스탯 테스트
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
     }
 
-    public override void OnRoundStart()// 
-    {
-
-    }
-
-    public override void OnTurnStart()// 턴 시작 시 발동
-    {
-
-    }
-
-    public override void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
+        List<CharacterBuf> negativeBufList = enemy.curCharacterBufList.FindNegativeBufAll(); //대상이 보유한 디버프 갯수를 받아온다.
+        if (negativeBufList.Count > 0) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
+        {
+            stat.EnhancedDmg = 15;
+            character.tempBonusStat.AddBonusStat(stat);
+
+            /*
+            이 방식을 사용했을 때 찝찝한 점.
+            1. 
+
+             */
+        }
+        else
+        {
+
+        }
 
     }
 
-    public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
-    {
-
-    }
 
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClassAbility_001 : PassiveLogic
+public class ClassAbility_102 : PassiveLogic
 {
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
