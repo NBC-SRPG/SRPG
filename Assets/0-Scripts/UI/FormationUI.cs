@@ -153,7 +153,7 @@ public class FormationUI : UIBase
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
         if (Managers.AccountData.formationData.ContainsKey(presetIndex) && Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
         {
-            Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex].characterId[index]}");
+            Sprite characterSprite = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].SO.standing;
             GetImage((int)formationImageEnum).sprite = characterSprite;
             // TODO
             // 아웃라인 활성화 및 색상 설정

@@ -78,7 +78,7 @@ public class CharacterEntryUI : UIBase
     private void SetStar()
     {
         // int numberOfStars = character.characterData.defaltStar; // 별의 개수
-        int numberOfStars = 3; // 별의 개수 // 테스트 데이터
+        int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
 
         for (int i = 0; i < numberOfStars; i++)
