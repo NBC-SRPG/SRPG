@@ -4,12 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 public class CameraController : MonoBehaviour
 {
     public static CameraController instance;
 
-    public Camera battaleCamera;
+    public Camera battleCamera;
 
     [Header("Idle_Camera")]
     private Transform PrimeCamera;
@@ -20,11 +22,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineTargetGroup followingTargetGroup;
 
     [Header("BattleCamera")]
-    [SerializeField] private CinemachineVirtualCamera BattleCameara;
-    public CinemachineTargetGroup BattleTargetGroup;
+    [SerializeField] private CinemachineVirtualCamera BattleGroupCameara;
+    public CinemachineTargetGroup battleTargetGroup;
 
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
+
+    private CinemachineFramingTransposer battleGroupComposer;
+    private CinemachineBasicMultiChannelPerlin noise;
 
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
@@ -57,6 +62,9 @@ public class CameraController : MonoBehaviour
         followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
         followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
 
+        battleGroupComposer = BattleGroupCameara.GetCinemachineComponent<CinemachineFramingTransposer>();
+        noise = BattleGroupCameara.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
         Ui = Managers.UI.FindUI<BattleUI>();
         Ui.joyStick.OnPressJoystick += ResetCamera;
 
@@ -80,7 +88,7 @@ public class CameraController : MonoBehaviour
 
         if (!AnimationController.instance.CheckAnimation())
         {
-            BattleTargetGroup.transform.position = Vector3.zero;
+            battleTargetGroup.transform.position = Vector3.zero;
         }
     }
 
@@ -191,10 +199,7 @@ public class CameraController : MonoBehaviour
 
     public void ResetGroup()
     {
-        for(int i = 0; i < followingTargetGroup.m_Targets.Length; i++)
-        {
-            followingTargetGroup.RemoveMember(followingTargetGroup.m_Targets[i].target);
-        }
+        followingTargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
     }
 
     public void ResetCamera()// 카메라 초기화
@@ -211,5 +216,45 @@ public class CameraController : MonoBehaviour
         followingCharacterGroupCamera.Follow = null;
 
         PrimeCamera = mainCamera.transform;
+    }
+
+    //------------------------------------------------------------------------------------------------
+    //전투 연출 카메라
+
+    public void AddBattleTargetGroup(Transform transform, float scale)
+    {
+        battleTargetGroup.AddMember(transform, 1, scale);
+    }
+
+    public void RemoveTargetGroup(Transform transform)
+    {
+        if (Array.Exists(battleTargetGroup.m_Targets, x => x.target == transform))
+        {
+            battleTargetGroup.RemoveMember(transform);
+        }
+    }
+
+    public void ResetBattleGroup()
+    {
+        battleTargetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
+    }
+
+    public void SetMinOrtho(int min)
+    {
+        battleGroupComposer.m_MinimumOrthoSize = min;
+    }
+
+    public void ShakeCamera(float duration, float scale, float frequency)
+    {
+        noise.m_AmplitudeGain = scale;
+        noise.m_FrequencyGain = frequency;
+
+        Invoke(nameof(StopShake), duration);
+    }
+
+    public void StopShake()
+    {
+        noise.m_AmplitudeGain = 0f;
+        noise.m_FrequencyGain = 0f;
     }
 }
