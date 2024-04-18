@@ -38,6 +38,16 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
+    public void ResetTileOnMove()
+    {
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+            scaleTile.SetActive(false);
+            canMoveTile.SetActive(false);
+        }
+    }
+
     public void ShowTile()//기본 타일 보기(하얀색)
     {
         if (canClick)
