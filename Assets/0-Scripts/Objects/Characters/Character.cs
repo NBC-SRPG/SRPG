@@ -132,7 +132,7 @@ public class Character
         SO.id = enemySO.id;
         SO.animatorName = enemySO.animatorName;
         SO.icon = enemySO.icon;
-        SO.name = enemySO.name;
+        SO.characterName = enemySO.characterName;
         SO.story = enemySO.story;
         SO.faction = enemySO.faction;
 
