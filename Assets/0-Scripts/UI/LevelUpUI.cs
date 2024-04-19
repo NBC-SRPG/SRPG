@@ -50,7 +50,11 @@ public class LevelUpUI : UIBase
     private enum Images
     {
         LevelUpBarChangeImage,
-        LevelUpBarFrontImage
+        LevelUpBarFrontImage,
+        LevelUpItemImage_1,
+        LevelUpItemImage_2,
+        LevelUpItemImage_3,
+        LevelUpItemImage_4
     }
 
     private enum Buttons
