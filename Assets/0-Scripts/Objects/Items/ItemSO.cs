@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
@@ -12,5 +13,9 @@ public class ItemSO : ScriptableObject
     [Header("Develope")]
     public int id;//아이템 식별자
     public ItemType itemType; //아이템 분류
+
+    [Header("Additional")]
+    [Tooltip("딕셔너리에 타입별 값을 추가해 사용")]
+    public Dictionary<string, string> values;
 
 }
