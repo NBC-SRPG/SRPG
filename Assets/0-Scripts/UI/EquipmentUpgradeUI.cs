@@ -69,20 +69,18 @@ public class EquipmentUpgradeUI : UIBase
         CleanUpMaterialsUI();
 
         isLoaded = false;
-       
-        EquipSO targetEquip = null;
 
         yield return StartCoroutine(GetNextEquip((equip) => {
-            targetEquip = equip;
+            nextEquip = equip;
         }));
 
-        if (targetEquip == null)
+        if (nextEquip == null)
         {
             DisplayMaxUpgradeMessage();
             yield break;
         }
 
-        UpdateUI(targetEquip);
+        UpdateUI();
     }
     private IEnumerator GetNextEquip(Action<EquipSO> onEquipLoaded)
     {
@@ -105,14 +103,14 @@ public class EquipmentUpgradeUI : UIBase
         yield return new WaitUntil(() => isLoaded);
     }
 
-    private void UpdateUI(EquipSO nextEquip)
+    private void UpdateUI()
     {
-        SetTextValues(nextEquip);
-        SetImageValues(nextEquip);
-        UpdateMaterialList(nextEquip);
+        SetTextValues();
+        SetImageValues();
+        UpdateMaterialList();
     }
 
-    private void SetTextValues(EquipSO nextEquip)
+    private void SetTextValues()
     {
         GetText((int)Texts.EquipmentBeforeName).text = currentEquip.equipName;
         GetText((int)Texts.EquipmentAfterName).text = nextEquip.equipName;
@@ -147,13 +145,13 @@ public class EquipmentUpgradeUI : UIBase
         GetText((int)Texts.AdditionalText).text = nextEquip.additionalOption ?? "";
     }
 
-    private void SetImageValues(EquipSO nextEquip)
+    private void SetImageValues()
     {
         // TODO
         // 이미지 초기화
     }
 
-    private void UpdateMaterialList(EquipSO nextEquip)
+    private void UpdateMaterialList()
     {
         foreach (var material in nextEquip.upgradeMaterials)
         {
@@ -231,12 +229,12 @@ public class EquipmentUpgradeUI : UIBase
 
         if (equipType == EquipType.Weapon)
         {
-            character.weapon = nextEquip;
+            currentEquip = nextEquip;
             character.Growth.weapon++;
         }
         else
         {
-            character.armor = nextEquip;
+            currentEquip = nextEquip;
             character.Growth.armor++;
         }
     }
