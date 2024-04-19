@@ -13,13 +13,15 @@ public class Ability_311: PassiveLogic
 
 
     BonusStat stat_311 = new BonusStat(); // 보너스 스탯
+    bool hasCharacterWithId7; //파티에 "시스"가 있는지 체크해서 bool 값을 저장하는 필드.
 
-    //파티에 시스가 있는지 체크해서 bool 값을 저장하는 필드.
-    bool hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase => characterBase.character.SO.id == 7);
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+        //다만, 아군 파티가 아니라 전투 내에서 "시스"가 있는지 체크하기 때문에 적으로 시스가 있어도 적용되는 문제가 생길 것 같음.
+        hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase => characterBase.character.SO.id == 7);
     }
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
