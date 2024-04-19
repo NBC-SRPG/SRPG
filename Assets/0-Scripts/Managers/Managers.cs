@@ -70,48 +70,6 @@ public class Managers : MonoBehaviour
             missionManager.Init();
             s_gameManager.Init();
 
-            /*
-            // 테스트용 데이터
-            s_accountData.Init(new Dictionary<string, int>(),
-                new Dictionary<int, Character>(),
-                new PlayerData(),
-                //new Dictionary<int, bool>(),
-                new Dictionary<int, string[]>(),
-                new Dictionary<int, FormationData>(),
-                new List<MailSO>());
-            //Character testChatacter1 = Resource.Load<GameObject>("Prefabs/TestCharacter1").GetComponent<Character>();
-            //Character testChatacter2 = Resource.Load<GameObject>("Prefabs/TestCharacter2").GetComponent<Character>();
-            //Character testChatacter3 = Resource.Load<GameObject>("Prefabs/TestCharacter3").GetComponent<Character>();
-            //s_accountData.characterData.Add((testChatacter1.SO.id), testChatacter1);
-            //s_accountData.characterData.Add((testChatacter2.SO.id), testChatacter2);
-            //s_accountData.characterData.Add((testChatacter3.SO.id), testChatacter3);
-            */
-            // 테스트용 캐릭터 추가 (테스트 종료시 Login시 실행되도록 이동)
-            /*
-            DB.Read(DB.userDB.Child("characterData"), (snapshot) =>
-            {
-                foreach (var character in snapshot.Children)
-                {
-                    CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
-
-                    Utility.Id2SO<CharacterSO>(growth.id, (result) =>
-                    {
-                        CharacterSO so = (CharacterSO)result;
-                        AccountData.characterData.Add(growth.id, new Character(so, growth));
-
-
-                        Debug.Log(growth.id);
-                    });
-
-                }
-            });
-            /*
-            s_accountData.formationData.Add(0, new FormationData());
-            s_accountData.formationData.Add(1, new FormationData());
-            s_accountData.formationData.Add(2, new FormationData());
-            s_accountData.formationData.Add(3, new FormationData());
-            s_accountData.formationData.Add(4, new FormationData());
-            */
             // 앱 프레임 60으로 고정
             Application.targetFrameRate = 60;
         }
