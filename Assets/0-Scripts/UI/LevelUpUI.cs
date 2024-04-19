@@ -116,6 +116,7 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.LevelUpItemButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3));
         GetButton((int)Buttons.LevelUpItemButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4));
 
+
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
         LevelUpCalc();
         LevelUpButtonActiveFalse();
@@ -434,28 +435,28 @@ public class LevelUpUI : UIBase
         {
             if (result != null)
             {
-                LevelUpItem1ExpValue = (result as ExpUp_characterSO).expValue;
+                LevelUpItem1ExpValue = (result as ItemSO).values["exp"];
             }
         });
         Utility.Id2SO<ItemSO>(LevelUpItem2Id, (result) =>
         {
             if (result != null)
             {
-                LevelUpItem2ExpValue = (result as ExpUp_characterSO).expValue;
+                LevelUpItem2ExpValue = (result as ItemSO).values["exp"];
             }
         });
         Utility.Id2SO<ItemSO>(LevelUpItem3Id, (result) =>
         {
             if (result != null)
             {
-                LevelUpItem3ExpValue = (result as ExpUp_characterSO).expValue;
+                LevelUpItem3ExpValue = (result as ItemSO).values["exp"];
             }
         });
         Utility.Id2SO<ItemSO>(LevelUpItem4Id, (result) =>
         {
             if (result != null)
             {
-                LevelUpItem4ExpValue = (result as ExpUp_characterSO).expValue;
+                LevelUpItem4ExpValue = (result as ItemSO).values["exp"];
             }
         });
     }

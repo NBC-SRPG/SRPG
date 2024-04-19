@@ -143,14 +143,15 @@ public class CSVtoSO
         {
             string [] splitData = allLine.Split(',');
 
-            if(splitData.Length != 2)
+            if(splitData.Length != 3)
             {
-                Debug.Log(allLine + " Does not have 4 values");
+                Debug.Log(allLine + " Does not have 3 values");
             }
 
-            RankUp_equipSO item = ScriptableObject.CreateInstance<RankUp_equipSO>();
+            ItemSO item = ScriptableObject.CreateInstance<ItemSO>();
             item.id = int.Parse(splitData[0]);
             item.itemName = splitData[1];
+            item.itemType = (Constants.ItemType)int.Parse(splitData[2]);
 
             AssetDatabase.CreateAsset(item, $"Assets/0-AddressableResources/ScriptableObjects/ItemSO/ItemSO_{item.id}.asset");
         }
