@@ -19,7 +19,7 @@ public class Ability_332: PassiveLogic
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-        //대상이 가진 파괴 가능한 버프 중 무작위 하나를 불러와 파괴한다.
+        //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
         enemy.curCharacterBufList.RemoveBuf(enemy.curCharacterBufList.FindPositiveBufRandom(1, true)[0]);
     }
 
@@ -30,6 +30,7 @@ public class Ability_332: PassiveLogic
 
     public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
     {
+        //대상들이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
         foreach (CharacterBase target in targets)
         {
             target.curCharacterBufList.RemoveBuf(target.curCharacterBufList.FindPositiveBufRandom(1, true)[0]);

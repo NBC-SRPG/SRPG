@@ -10,14 +10,9 @@ public class SkillAbility_103 : ExSkillLogic
         this.character = character;
     }
 
-    public override void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    public override void UseSkill(List<CharacterBase> targets)// 스킬 실제 사용
     {
-
-    }
-
-    public override void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
-    {
-
+        BattleManager.Instance.EXSkillAttack(character, targets);
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시

@@ -4,161 +4,78 @@ using UnityEngine;
 
 public class PassiveAbility_104 : PassiveLogic
 {
-    protected CharacterBase character;
-
-    public Dictionary<string, int> coefficient;
+    //ID 004. 포르테 Forte
+    //패시브 스킬
+    //매 턴의 종료시 범위 내의 체력이 가장 낮은 아군 2명의 체력을 자신의 최대 체력의 10%만큼 회복시킨다.
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
     }
 
-    public override void OnRoundStart()// 
-    {
+    //0. 턴이 끝날 때.
+    //1. 범위 내에 자신을 제외한 인접한 아군 목록을 리스트에 저장.
+    //2. 리스트를 체력 순으로 정렬하고 가장 체력이 낮은 아군과, 두번째로 체력이 낮은 아군을 구한다.
+    //3. 해당 아군에게 포르테 최대 체력의 10%만큼 치유 적용
+    // 캐릭터 베이스 리스트를 멤버 변수로 선언
+    List<CharacterBase> charactersInRange = new List<CharacterBase>(); //범위 내의 아군 캐릭터를 저장할 리스트
+    List<CharacterBase> targetsToHeal = new List<CharacterBase>(); //범위 내의 아군 캐릭터 중 치유 대상을 따로 저장할 리스트
 
+    // OnTurnEnd 메서드
+    public override void OnTurnEnd()
+    {
+        // 힐량 = 최대 체력 * 10% ( 10 / 100 )
+        int healAmount = (int)((character.health.MaxHealth) * (coefficient["healRate"] / coefficient["denominator"]));
+
+        // 타일 범위 내의 캐릭터들을 모두 수집하여 리스트를 업데이트
+        UpdateCharactersInRangeList();
+
+        // 가장 체력이 적은 두 캐릭터에게 치유를 시도
+        TryHealWeakestCharacters(ref healAmount);
     }
 
-    public override void OnTurnStart()// 턴 시작 시 발동
+    // 타일 범위 내의 캐릭터들을 수집하여 리스트를 업데이트하는 메서드
+    private void UpdateCharactersInRangeList()
     {
+        charactersInRange.Clear(); // 리스트를 비우고 다시 채움
 
+        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+        {
+            if (tile.curStandingCharater != null && tile.curStandingCharater != character) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
+            {
+                charactersInRange.Add(tile.curStandingCharater);
+            }
+        }
     }
 
-    public override void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
+    // 가장 체력이 적은 두 캐릭터에게 치유를 시도하는 메서드
+    private void TryHealWeakestCharacters(ref int healAmount)
     {
+        // 가장 체력이 적은 캐릭터와 두 번째로 체력이 적은 캐릭터를 찾기 위해 정렬
+        charactersInRange.Sort((a, b) => a.health.CurHealth.CompareTo(b.health.CurHealth));
 
-    }
+        // 가장 체력이 적은 캐릭터와 두 번째로 체력이 적은 캐릭터를 치유 대상 목록에 추가
+        if (charactersInRange.Count > 0)
+        {
+            targetsToHeal.Add(charactersInRange[0]); // 가장 체력이 적은 캐릭터
+            if (charactersInRange.Count > 1)
+            {
+                targetsToHeal.Add(charactersInRange[1]); // 두 번째로 체력이 적은 캐릭터
+            }
+        }
 
-    public override void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
-    {
+        // 치유 대상 목록이 비어 있는지 확인하고, 비어 있지 않은 경우에만 치유를 시도
+        if (targetsToHeal.Count > 0)
+        {
+            // 치유 대상 목록에 저장된 캐릭터들에게 치유를 시도
+            foreach (CharacterBase character in targetsToHeal)
+            {
+                BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
+            }
+        }
 
-    }
-
-    public override void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
-    {
-
-    }
-
-    public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
-    {
-
-    }
-
-    public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
-    {
-
-    }
-
-    public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
-    {
-
-    }
-
-    public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
-    {
-
-    }
-
-    public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
-    {
-
-    }
-
-    public override void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
-    {
-
-    }
-
-    public override void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
-    {
-
-    }
-
-    public override void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
-    {
-
-    }
-
-    public override void OnTakeDamage(ref int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
-    {
-
-    }
-
-    public override void OnTakeHeal(ref int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
-    {
-
-    }
-
-    public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
-    {
-
-    }
-
-    public override void AfterTakeHeal(int heal, CharacterBase skillUser = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
-    {
-
-    }
-
-    public override void OnStartMoving()// 이동 시
-    {
-
-    }
-
-    public override void OnEndMoving()// 이동 끝난 직후
-    {
-
-    }
-
-    public override void OnEndActing()// 행동이 끝난 뒤
-    {
-
-    }
-
-    public override void OnRoundEnd()
-    {
-
-    }
-
-    public override void OnTurnEnd()// 턴이 끝날 때
-    {
-
-    }
-
-    public override void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
-    {
-
-    }
-
-    public override void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
-    {
-
-    }
-
-    public override void OnDie()// 사망 시
-    {
-
-    }
-
-    public override void OnUpdate()// 실시간 판정
-    {
-
+        // 치유 대상 목록 비우기
+        targetsToHeal.Clear();
     }
 }
 
