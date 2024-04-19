@@ -13,10 +13,23 @@ public class ExSkillBase
 
     public List<OverlayTile> targetTiles;
 
-    public int SkillFigure
+    public int SkillFigure_ATK
     {
         get { return (int)(skillData.coefficient * character.character.atk); }
     }
+
+    //체력 계수 스킬에 필요해서 이 필드를 추가했습니다.
+    public int SkillFigure_HP
+    {
+        get { return (int)(skillData.coefficient * character.character.hp); }
+    }
+
+    //위와 같음
+    public int SkillFigure_DEF
+    {
+        get { return (int)(skillData.coefficient * character.character.def); }
+    }
+
 
     //스킬 시전자 설정
     public void Init(CharacterBase character)
