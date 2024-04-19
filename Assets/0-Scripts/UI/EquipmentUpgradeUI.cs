@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UI;
 using static Constants;
 
 public class EquipmentUpgradeUI : UIBase
@@ -38,6 +38,7 @@ public class EquipmentUpgradeUI : UIBase
 
     private enum GameObjects
     {
+        EquipmentArrow,
         EquipmentBeforeStar,
         EquipmentAfterStar,
         EquipmentUpgradeMaterials
@@ -82,12 +83,15 @@ public class EquipmentUpgradeUI : UIBase
         // 장비 레벨 증가
         if (equipType == EquipType.Weapon)
         {
+            character.weapon = nextEquip;
             character.Growth.weapon++;
         }
         else
         {
+            character.armor = nextEquip;
             character.Growth.armor++;
         }
+        
         // UI 업데이트
         StartCoroutine(InitEquip());
     }
@@ -99,7 +103,15 @@ public class EquipmentUpgradeUI : UIBase
 
     private IEnumerator InitEquip()
     {
-        if (equipType == EquipType.Weapon)
+        foreach (Transform material in GetObject((int)GameObjects.EquipmentUpgradeMaterials).transform)
+        {
+            Destroy(material.gameObject);
+        }
+
+        isLoaded = false;
+
+        // 무기 강화 가능할 때
+        if (equipType == EquipType.Weapon && character.Growth.weapon + 1 < character.SO.weapon.Count)
         {
             Utility.Id2SO<EquipSO>(character.SO.weapon[character.Growth.weapon + 1], (result) =>
             {
@@ -122,16 +134,6 @@ public class EquipmentUpgradeUI : UIBase
                 GetText((int)Texts.EquipmentUpgradeLevel).text = "";
             }
 
-            /*
-            var previewStats = character.PreviewEnhancedStats(nextEquip, character.armor);
-
-            GetText((int)Texts.HpBefore).text = character.hp.ToString();
-            GetText((int)Texts.HpAfter).text = previewStats.hp.ToString();
-            GetText((int)Texts.AtkBefore).text = character.atk.ToString();
-            GetText((int)Texts.AtkAfter).text = previewStats.atk.ToString();
-            GetText((int)Texts.DefBefore).text = character.def.ToString();
-            GetText((int)Texts.DefAfter).text = previewStats.def.ToString();
-            */
             GetText((int)Texts.HpBefore).text = character.weapon.hp.ToString();
             GetText((int)Texts.HpAfter).text = nextEquip.hp.ToString();
             GetText((int)Texts.AtkBefore).text = character.weapon.atk.ToString();
@@ -173,7 +175,8 @@ public class EquipmentUpgradeUI : UIBase
                 }
             }
         }
-        else
+        // 방어구 강화 가능할 때
+        else if (equipType == EquipType.Armor && character.Growth.armor + 1 < character.SO.armor.Count)
         {
             Utility.Id2SO<EquipSO>(character.SO.armor[character.Growth.armor + 1], (result) =>
             {
@@ -195,16 +198,7 @@ public class EquipmentUpgradeUI : UIBase
             {
                 GetText((int)Texts.EquipmentUpgradeLevel).text = "";
             }
-            /*
-            var previewStats = character.PreviewEnhancedStats(character.weapon, nextEquip);
 
-            GetText((int)Texts.HpBefore).text = character.hp.ToString();
-            GetText((int)Texts.HpAfter).text = previewStats.hp.ToString();
-            GetText((int)Texts.AtkBefore).text = character.atk.ToString();
-            GetText((int)Texts.AtkAfter).text = previewStats.atk.ToString();
-            GetText((int)Texts.DefBefore).text = character.def.ToString();
-            GetText((int)Texts.DefAfter).text = previewStats.def.ToString();
-            */
             GetText((int)Texts.HpBefore).text = character.armor.hp.ToString();
             GetText((int)Texts.HpAfter).text = nextEquip.hp.ToString();
             GetText((int)Texts.AtkBefore).text = character.armor.atk.ToString();
@@ -245,5 +239,32 @@ public class EquipmentUpgradeUI : UIBase
                 }
             }
         }
+        // 최대 강화일 때
+        else
+        {
+            DisplayMaxUpgradeMessage();
+
+            yield break;
+        }
+    }
+
+    private void DisplayMaxUpgradeMessage()
+    {
+        GetText((int)Texts.EquipmentAfterName).transform.parent.gameObject.SetActive(false);
+        GetText((int)Texts.EquipmentUpgradeLevel).text = $"최대 강화 레벨에 도달하였습니다.";
+        GetObject((int)GameObjects.EquipmentArrow).SetActive(false);
+
+        GetText((int)Texts.HpBefore).text = character.weapon.hp.ToString();
+        GetText((int)Texts.AtkBefore).text = character.weapon.atk.ToString();
+        GetText((int)Texts.DefBefore).text = character.weapon.def.ToString();
+
+        GetText((int)Texts.HpAfter).gameObject.SetActive(false);
+        GetText((int)Texts.AtkAfter).gameObject.SetActive(false);
+        GetText((int)Texts.DefAfter).gameObject.SetActive(false);
+
+        GetText((int)Texts.AdditionalText).text = "";
+
+        GetText((int)Texts.EquipmentUpgradeGoldText).text = $"0 G";
+        GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
     }
 }

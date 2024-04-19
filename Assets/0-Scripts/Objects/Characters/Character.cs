@@ -1,8 +1,4 @@
-using System;
-using Unity.Mathematics;
 using UnityEngine;
-using static Constants;
-
 public class Character
 {
     public CharacterSO SO;
