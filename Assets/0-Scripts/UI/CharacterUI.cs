@@ -30,7 +30,7 @@ public class CharacterUI : UIBase
     // 한글로 List를 만들어서 넘겨주어도 되지만 가독성 때문에 해당 방법 채택
     private Dictionary<FilterType, string> filterDic = new Dictionary<FilterType, string>
     {
-        { FilterType.Option1, "필터 옵션 1" },
+        { FilterType.Option1, "전체" },
         { FilterType.Option2, "필터 옵션 2" }
     };
     // 정렬 타입
@@ -45,7 +45,7 @@ public class CharacterUI : UIBase
     // 실제 게임에서 보이게 할 한글 목록
     private Dictionary<SortType, string> sortDic = new Dictionary<SortType, string>
     {
-        { SortType.Option1, "정렬 옵션 1" },
+        { SortType.Option1, "기본" },
         { SortType.Option2, "정렬 옵션 2" }
     };
 
@@ -67,11 +67,7 @@ public class CharacterUI : UIBase
         // 3. 플레이어 버튼 UI를 생성한다.
         // 4. 이 때 버튼 UI에게 정보를 넘겨준다.
         // 5. 똑같이 갖고 있지 않는 캐릭터 목록에도 적용
-        // 
-        // 1. 필터 적용 시
-        // 2. UI를 밀어버리고
-        // 3. 플레이어 데이터에서 가지고 있는 캐릭터 목록을 가져온다.
-        // 4. 필터에 맞는 애들만 생성
+
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
@@ -148,13 +144,4 @@ public class CharacterUI : UIBase
                 break;
         }
     }
-    /*
-필터 항목을 클릭하였을 때 전체 캐릭터 삭제 & 필터에 해당하는 캐릭터들로 초기화
-
-정렬 항목에 맞게 캐릭터 정렬
-
-캐릭터 버튼 클릭 (캐릭터 데이터 or 캐릭터 id)
-
-캐릭터 UI 생성 및 해당 값 넘겨주기
-    */
 }

@@ -62,7 +62,7 @@ public class CharacterEntryUI : UIBase
         // TODO
         // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
         // 테스트 데이터
-        GetImage((int)Images.CharacterImage).sprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.characterData[characterId].SO.id}");
+        GetImage((int)Images.CharacterImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
         UpdateLevel();
         // TODO 속성 이미지 세팅
         // TODO 캐릭터 아웃라인 속성 이미지에 맞게 세팅
@@ -78,7 +78,7 @@ public class CharacterEntryUI : UIBase
     private void SetStar()
     {
         // int numberOfStars = character.characterData.defaltStar; // 별의 개수
-        int numberOfStars = 3; // 별의 개수 // 테스트 데이터
+        int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
 
         for (int i = 0; i < numberOfStars; i++)

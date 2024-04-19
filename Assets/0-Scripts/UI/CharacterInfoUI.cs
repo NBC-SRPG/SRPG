@@ -228,7 +228,7 @@ public class CharacterInfoUI : UIBase
 
     private void InitCharacterInfo()
     {
-        GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.id}");
+        GetImage((int)Images.IllustrationImage).sprite = character.SO.standing;
         GetText((int)Texts.NameText).text = $"{character.SO.characterName}";
 
         int numberOfStars = character.Growth.star; // 별의 개수

@@ -45,7 +45,6 @@ public class Particles : MonoBehaviour
         for(int i = 0; i < particles.transform.childCount; i++)
         {
             Transform child = particles.transform.GetChild(i);
-            Debug.Log(child.name);
 
             ParticleSystem particle;
             child.TryGetComponent<ParticleSystem>(out particle);
@@ -58,7 +57,6 @@ public class Particles : MonoBehaviour
             {
                 foreach(Transform transform in child.GetComponentsInChildren<Transform>())
                 {
-                    Debug.Log(transform.name);
                     cameraTransform.Add(transform.name, transform);
                 }
             }
