@@ -175,6 +175,15 @@ public class Constants
         Character,
         Item
     }
+
+    public enum Status
+    {
+        Atk,
+        Def,
+        Health,
+        Mov,
+    }
+
     public enum MissionCategory
     {
         Daily, // 일일 퀘스트

@@ -366,7 +366,7 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure_ATK, victim);
+            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
             //------
 
             victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
@@ -394,7 +394,7 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser , skillUser.curCharacterSkill.SkillFigure_HP);
+            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser , skillUser.curCharacterSkill.SkillFigure);
             //------
 
             victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);

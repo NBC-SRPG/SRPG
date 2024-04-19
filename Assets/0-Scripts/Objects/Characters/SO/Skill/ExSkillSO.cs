@@ -1,9 +1,17 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName ="SkillData/SkillData", fileName ="ExSkillSO_")]
 public class ExSkillSO : ScriptableObject
 {
+    [System.Serializable]
+    public struct SkillCoefficient
+    {
+        public Constants.Status status;
+        public float value;
+    }
+
     [Header("Develope")]
     public int skill_ID;//스킬 식별자
 
@@ -15,7 +23,7 @@ public class ExSkillSO : ScriptableObject
     public Constants.SkillTargetType targetType;//스킬 사용 대상
     //public Constants.SkillDamageType damageType;//데미지 타입 //데미지 타입은 기획안에서 더이상 사용하지 않기로 했으므로 일단 주석처리했습니다.
     public int cost;//스킬 코스트
-    public float coefficient;//스킬 계수
+    public List<SkillCoefficient> coefficient;//스킬 계수
     public float growthCoefficient; //레벨 당 증가하는 스킬 계수
     public bool onhit;//스킬이 기본 공격 적중 효과를 발동 시키는 지
 
