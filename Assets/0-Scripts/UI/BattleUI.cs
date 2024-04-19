@@ -315,6 +315,8 @@ public class BattleUI : UIBase
         GetText((int)Texts.CharacterName).text = curSelectedCharacter.character.SO.characterName;
         GetText((int)Texts.LvText).text = "Lv. " + curSelectedCharacter.character.Growth.level.ToString("#00");
 
+        GetImage((int)Images.CharacterImage).sprite = curSelectedCharacter.character.SO.icon;
+
         GetText((int)Texts.AtkText).text = curSelectedCharacter.Attack.ToString();
         GetText((int)Texts.DefText).text = curSelectedCharacter.Defend.ToString();
         GetText((int)Texts.MovText).text = curSelectedCharacter.Mov.ToString();
@@ -360,6 +362,9 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.TargetName).text = curTargetCharacter.character.SO.characterName;
         GetText((int)Texts.TargetLevel).text = "Lv. " + curTargetCharacter.character.Growth.level.ToString("#00");
+
+        GetImage((int)Images.TargetImage).sprite = curTargetCharacter.character.SO.icon;
+
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();
 

@@ -17,13 +17,15 @@ public class EnemySO : ScriptableObject
     [Header("Develope")]
     public int id;      //캐릭터 식별자
 
+    [Header("Sprites")]
+    public Sprite icon;
+
     [Header("Status")]      //캐릭터 능력치
     public int hp;
     public int atk;
     public int def;
     public int mov;
     public int range;     //공격 사정거리(근거리의 경우 0으로)
-    public Faction faction;     //캐릭터 소속
 
     public ExSkillSO exSkillSO;
     public PassiveSkillSO passiveSkillSO;
@@ -37,6 +39,10 @@ public class EnemySO : ScriptableObject
     public ClassSO basicClass;
     public ClassSO superiorClass;
 
+    [Header("Story")]
+    public string characterName;        //캐릭터 이름
+    public string story;        //캐릭터 스토리
+    public Faction faction;     //캐릭터 소속
 
     [Header("EquipList")]
     public EquipSO weapon;
