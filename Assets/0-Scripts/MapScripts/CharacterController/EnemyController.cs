@@ -180,7 +180,7 @@ public class EnemyController : MonoBehaviour
             }
         }
 
-        BattleManager.Instance.nowWave = nowWave;
+        BattleManager.Instance.SetWave(nowWave);
 
         Debug.Log("nowWave " + nowWave);
     }

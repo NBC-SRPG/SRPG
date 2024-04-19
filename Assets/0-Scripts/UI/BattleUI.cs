@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static System.Net.Mime.MediaTypeNames;
+using static Constants;
 
 public class BattleUI : UIBase
 {
@@ -30,6 +31,9 @@ public class BattleUI : UIBase
         TargetHealthText,
         RoundText,
         TurnText,
+        GoalText,
+        RemainText,
+        WaveText,
 
     }
 
@@ -94,6 +98,8 @@ public class BattleUI : UIBase
     private List<GameObject> bufList;
     private List<GameObject> targetBufList;
 
+    private StageSO stage;
+
     private void Start()
     {
         Init();
@@ -103,7 +109,6 @@ public class BattleUI : UIBase
     {
         // TODO
         // curTargetCharacter가 null이 아니라면 해당 캐릭터의 정보 보여주기
-
     }
 
     public void Init()
@@ -150,6 +155,8 @@ public class BattleUI : UIBase
             targetBufList.Add(obj);
             obj.SetActive(false);
         }
+
+        stage = Managers.GameManager.thisStage;
 
     }
 
@@ -303,6 +310,18 @@ public class BattleUI : UIBase
         GetText((int)Texts.RoundText).text = nowRound.ToString();
     }
 
+    public void ShowWave(int nowWave)
+    {
+        string waveNumber = stage.waveNumber.ToString();
+
+        if(stage.spawnType == EnemySpawnType.Infinite)
+        {
+            waveNumber = "??";
+        }
+
+        GetText((int)Texts.WaveText).text = nowWave.ToString() + " / " + waveNumber;
+    }
+
     public void ShowTurn(bool myTurn)
     {
         if (myTurn)
@@ -326,6 +345,36 @@ public class BattleUI : UIBase
         yield return new WaitForSeconds(1f);
 
         GetObject((int)GameObjects.TurnObject).SetActive(false);
+    }
+
+    public void SetGoalText()
+    {
+        TextMeshProUGUI goal = (TextMeshProUGUI)GetText((int)Texts.GoalText);
+        TextMeshProUGUI remain = (TextMeshProUGUI)GetText((int)Texts.RemainText);
+
+        switch (stage.clear)
+        {
+            case StageClear.ClearAll:
+                goal.text = "모든 적을 섬멸해야 합니다.";
+                remain.text = "남은 적 수 : " + BattleManager.Instance.GetRemainEnemy().ToString();
+                break;
+            case StageClear.Assasinate:
+                goal.text = "대상을 처치해야 합니다.";
+                remain.text = "목표 대상 : ";
+                foreach(EnemySO character in stage.targetEnemy)
+                {
+                    remain.text += character.characterName + ", ";
+                }
+                break;
+            case StageClear.Run:
+                goal.text = "목표 지점까지 도달해야 합니다.";
+                remain.text = "";
+                break;
+            case StageClear.Defence:
+                goal.text = stage.defenceTurn + " 라운드 동안 살아남아야 합니다.";
+                remain.text = "남은 라운드 수 : " + (stage.defenceTurn - BattleManager.Instance.nowRound).ToString();
+                break;
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

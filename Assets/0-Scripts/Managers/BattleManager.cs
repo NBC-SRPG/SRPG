@@ -98,6 +98,8 @@ public class BattleManager : MonoBehaviour
 
         GameStart?.Invoke();
 
+        Ui.SetGoalText();
+
         StartRound();
     }
 
@@ -571,6 +573,12 @@ public class BattleManager : MonoBehaviour
         StartRound();
     }
 
+    public void SetWave(int wave)
+    {
+        nowWave = wave;
+        Ui.ShowWave(nowWave);
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
@@ -633,6 +641,7 @@ public class BattleManager : MonoBehaviour
         }
 
         //-----
+        Ui.SetGoalText();
 
     }
 
@@ -697,6 +706,21 @@ public class BattleManager : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     //조건 판단 함수
+
+    public int GetRemainEnemy()
+    {
+        int cnt = 0;
+
+        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        {
+            if (!chracter.isDead)
+            {
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
 
     public void EnemyAllDead()
     {

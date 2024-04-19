@@ -61,7 +61,10 @@ public class CharacterAI : CharacterBase
         base.OnDisable();
 
         //--TODO EnemyController에 사망 이벤트
-        Disable?.Invoke();
+        if (!BattleManager.Instance.gameEnd)
+        {
+            Disable?.Invoke();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
