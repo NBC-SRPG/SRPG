@@ -21,7 +21,8 @@ public class ItemInfoUI : UIBase
     private enum Buttons
     {
         BackImage,
-        UseButton
+        UseButton,
+        CloseButton
     }
 
     public void Init(ItemSO item)
@@ -34,12 +35,17 @@ public class ItemInfoUI : UIBase
 
         GetButton((int)Buttons.UseButton).onClick.AddListener(OnClickUseButton);
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
 
         GetText((int)Texts.NameText).text = item.itemName;
         GetText((int)Texts.DescriptionText).text = item.itemDescription;
-        GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.id].ToString();
+        GetText((int)Texts.NumberText).text = "보유 수량 : " + Managers.AccountData.inventory[item.id].ToString();
+        GetImage((int)Images.ItemImage).sprite = item.icon;
 
-        // GetImage((int)Images.ItemImage).sprite = ;
+        if (item.itemType != Constants.ItemType.Consumable)
+        {
+            GetButton((int)Buttons.UseButton).transform.gameObject.SetActive(false);
+        }
     }
 
     private void OnClickUseButton()
