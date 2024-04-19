@@ -574,6 +574,11 @@ public class BattleManager : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
+    public void CharacterDie(CharacterBase character)
+    {
+        CheckWin(character);
+    }
+
     public void CheckWin(CharacterBase dieChracter = null, OverlayTile location = null)
     {
         PVEWin(dieChracter, location);
@@ -672,6 +677,11 @@ public class BattleManager : MonoBehaviour
         {
             if (i < MapManager.instance.enemyStartTiles[spawnPosition].startTile.Count)
             {
+                if(MapManager.instance.enemyStartTiles[spawnPosition].startTile[i].curStandingCharater != null)// 소환할 자리에 무언가가 있다면
+                {
+                    continue;
+                }
+
                 character.transform.SetParent(transform);
 
                 character.SpawnCharacter(MapManager.instance.enemyStartTiles[spawnPosition].startTile[i], transform, MapManager.instance.enemyStartTiles[spawnPosition].startDirection);

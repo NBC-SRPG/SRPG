@@ -1002,6 +1002,8 @@ public class CharacterBase : MonoBehaviour
     {
         if (!onDiePassive)
         {
+            player.GainMana(10);
+
             foreach (PassiveLogic passive in curCharacterPassive)
             {
                 passive?.OnDie();
@@ -1010,11 +1012,9 @@ public class CharacterBase : MonoBehaviour
 
             Debug.Log("die");
 
-            BattleManager.Instance.CheckWin(this);
+            BattleManager.Instance.CharacterDie(this);
 
             onDiePassive = true;
-
-            player.GainMana(10);
         }
     }
 

@@ -45,6 +45,17 @@ public class CharacterAI : CharacterBase
         waiting = false;
     }
 
+    public override void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.ElementType elementType = Constants.ElementType.None)
+    {
+        base.OnTakeDamage(ref damage, enemy, damageType, elementType);
+
+        if (enemy != null && state == EnemyState.Waiting)
+        {
+            attractTarget = enemy;
+            ChangeState(EnemyState.Chasing);
+        }
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -279,16 +290,18 @@ public class CharacterAI : CharacterBase
         }
     }
 
-    public override void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy, BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, Constants.ElementType elementType = Constants.ElementType.None)
+    private void Running()
     {
-        base.OnTakeDamage(ref damage, enemy, damageType, elementType);
+        CharacterBase nearsetCharacter = FindNearestEnemyByDistance();
 
-        if(enemy != null && state == EnemyState.Waiting)
-        {
-            attractTarget = enemy;
-            ChangeState(EnemyState.Chasing);
-        }
 
+
+    }
+
+    private void Staying()// 비행동
+    {
+        Wait?.Invoke();
+        AnimationController.instance.onAnimationEnd -= EndActing;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

@@ -42,19 +42,19 @@ MonoBehaviour:
       Entry: 8
       Data: 
   stageName: 
-  clear: 2
+  clear: 0
+  stageType: 0
   enemies:
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  spawnType: 1
+  spawnType: 0
+  chaseAtStart: 0
   prefabsName: Main1-1
   waveNumber: 1
   defenceTurn: 0
-  targetGrid:
-  - {x: -16, y: -1}
+  targetGrid: []
   targetEnemy: []
   infiniteWave: -1
   infiniteEnemy: []
+  spawnByTurn: 0

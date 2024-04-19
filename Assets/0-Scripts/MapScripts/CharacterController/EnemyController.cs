@@ -135,11 +135,14 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void InitiateWaveDefault()
+    //-----------------------------------------------------------------------
+    //웨이브 생성
+
+    private void InitiateWaveDefault()// 기본적인 적 생성(웨이브 출현, 전부 처치 시 다음 웨이브 출현)
     {
         nowWave++;
 
-        if (stage.spawnType == Constants.EnemySpawnType.Infinite && nowWave == stage.infiniteWave)// 무한 웨이브에 도달했을 때
+        if (stage.spawnType == Constants.EnemySpawnType.Infinite && nowWave >= stage.infiniteWave)// 무한 웨이브에 도달했을 때
         {
             if (characterWave.ContainsKey(nowWave))// 이미 있는 파티 웨이브라면
             {
@@ -180,6 +183,30 @@ public class EnemyController : MonoBehaviour
         BattleManager.Instance.nowWave = nowWave;
 
         Debug.Log("nowWave " + nowWave);
+    }
+
+
+
+    //-----------------------------------------------------------------------
+    //다음 웨이브 조건
+
+    private void CheckRemainEnemy()
+    {
+        int cnt = 0;
+
+        foreach (CharacterAI character in characterWave[nowWave])
+        {
+            if (character.isDead || !character.gameObject.activeInHierarchy)
+            {
+                cnt++;
+                character.Disable -= CheckRemainEnemy;
+
+                if (cnt == characterWave[nowWave].Count)
+                {
+                    InitiateWave();
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------------------
@@ -266,24 +293,4 @@ public class EnemyController : MonoBehaviour
     }
 
 
-    //-----------------------------------------------------------------------
-
-    private void CheckRemainEnemy()
-    {
-        int cnt = 0;
-
-        foreach(CharacterAI character in characterWave[nowWave])
-        {
-            if (character.isDead)
-            {
-                cnt++;
-                character.Disable -= CheckRemainEnemy;
-
-                if(cnt == characterWave[nowWave].Count)
-                {
-                    InitiateWave();
-                }
-            }
-        }
-    }
 }
