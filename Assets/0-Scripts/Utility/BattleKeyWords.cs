@@ -50,5 +50,8 @@ public class BattleKeyWords
         AtkAura,
         Herald,
 
+        ReceivedDgmReduce,
+        ReceivedDgmIncrease,
+
     }
 }
