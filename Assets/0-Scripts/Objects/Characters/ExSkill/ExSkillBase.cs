@@ -24,18 +24,17 @@ public class ExSkillBase
                 switch (coefficient.status)
                 {
                     case Constants.Status.Atk:
-                        damage += coefficient.value + character.Attack;
+                        damage += (int)(coefficient.value / 100f * character.Attack);
                         break;
                     case Constants.Status.Def:
-                        damage += coefficient.value + character.Defend;
+                        damage += (int)(coefficient.value / 100f * character.Defend);
                         break;
                     case Constants.Status.Health:
-                        damage += coefficient.value + character.health.MaxHealth;
+                        damage += (int)(coefficient.value / 100f * character.health.MaxHealth);
                         break;
                     case Constants.Status.Mov:
-                        damage += coefficient.value + character.Mov;
+                        damage += (int)(coefficient.value / 100f * character.Mov);
                         break;
-                    
                 }
             }
 
