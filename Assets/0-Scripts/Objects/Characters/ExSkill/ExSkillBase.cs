@@ -13,21 +13,34 @@ public class ExSkillBase
 
     public List<OverlayTile> targetTiles;
 
-    public int SkillFigure_ATK
+    public int SkillFigure
     {
-        get { return (int)(skillData.coefficient * character.character.atk); }
-    }
+        get
+        {
+            float damage = 0;
+            
+            foreach(ExSkillSO.SkillCoefficient coefficient in skillData.coefficient)
+            {
+                switch (coefficient.status)
+                {
+                    case Constants.Status.Atk:
+                        damage += coefficient.value + character.Attack;
+                        break;
+                    case Constants.Status.Def:
+                        damage += coefficient.value + character.Defend;
+                        break;
+                    case Constants.Status.Health:
+                        damage += coefficient.value + character.health.MaxHealth;
+                        break;
+                    case Constants.Status.Mov:
+                        damage += coefficient.value + character.Mov;
+                        break;
+                    
+                }
+            }
 
-    //체력 계수 스킬에 필요해서 이 필드를 추가했습니다.
-    public int SkillFigure_HP
-    {
-        get { return (int)(skillData.coefficient * character.character.hp); }
-    }
-
-    //위와 같음
-    public int SkillFigure_DEF
-    {
-        get { return (int)(skillData.coefficient * character.character.def); }
+            return (int)damage;
+        }
     }
 
 

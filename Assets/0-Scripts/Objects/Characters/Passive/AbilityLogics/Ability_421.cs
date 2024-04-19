@@ -6,7 +6,7 @@ public class Ability_421: PassiveLogic
 {
     BonusStat stat_421_1 = new BonusStat(); // 보너스 스탯 테스트
     BonusStat stat_421_2 = new BonusStat(); // 보너스 스탯 테스트
-    enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
+    //enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2);// 상태이상 화상 테스트
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
