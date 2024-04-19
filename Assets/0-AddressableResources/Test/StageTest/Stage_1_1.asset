@@ -42,7 +42,7 @@ MonoBehaviour:
       Entry: 8
       Data: 
   stageName: 
-  clear: 0
+  clear: 2
   enemies:
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
@@ -53,7 +53,8 @@ MonoBehaviour:
   prefabsName: Main1-1
   waveNumber: 1
   defenceTurn: 0
-  targetGrid: []
+  targetGrid:
+  - {x: -16, y: -1}
   targetEnemy: []
   infiniteWave: -1
   infiniteEnemy: []

@@ -55,4 +55,9 @@ public class TestCharCreater : MonoBehaviour
         SceneManager.LoadScene("SCY_AITest");
     }
 
+    public void OnClickButton2()
+    {
+        SceneManager.LoadScene("SCY_MapTest");
+    }
+
 }

@@ -12,10 +12,12 @@ public class StageSO : SerializedScriptableObject
     [Header("StageInfo")]
     public string stageName;
     public StageClear clear;
+    public StageType stageType;
 
     [Header("Enemy")]
     public List<EnemySO> enemies;
-    public EnemySpawnType spawnType = EnemySpawnType.AtOnce;
+    public EnemySpawnType spawnType = EnemySpawnType.Wave;
+    public bool chaseAtStart;
 
     [Header("Prefabs")]
     public string prefabsName;

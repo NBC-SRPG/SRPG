@@ -7,7 +7,7 @@ using static BattleKeyWords;
 [CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "EnemySO_")]
 public class EnemySO : ScriptableObject
 {
-    public State startState = State.Finding;
+    public EnemyState startState = EnemyState.Finding;
 
     public AttackMethod attackMethod;     //공격 타입
     public ElementType elementType;      //캐릭터 속성

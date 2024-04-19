@@ -216,7 +216,6 @@ public class Constants
     public enum EnemySpawnType
     {
         Wave,
-        AtOnce,
         Infinite
     }
 

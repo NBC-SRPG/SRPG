@@ -7,7 +7,7 @@ using static BattleKeyWords;
 
 public class CharacterAI : CharacterBase
 {
-    [SerializeField]protected State state;
+    [SerializeField] protected EnemyState state;
 
     protected CharacterBase attractTarget;
     protected CharacterAI ally;
@@ -23,6 +23,8 @@ public class CharacterAI : CharacterBase
 
     protected EnemySO enemyData;
 
+    public event Action Disable;
+
     //-----------------------------------------------------------------------------------------------------------------------
     //override 함수
 
@@ -34,10 +36,6 @@ public class CharacterAI : CharacterBase
 
         state = enemyData.startState;
 
-        //if (enemyData.isElite)
-        //{
-
-        //}
     }
 
     public override void OnStartPlayerTurn()
@@ -45,6 +43,14 @@ public class CharacterAI : CharacterBase
         base.OnStartPlayerTurn();
 
         waiting = false;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        //--TODO EnemyController에 사망 이벤트
+        Disable?.Invoke();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -65,16 +71,16 @@ public class CharacterAI : CharacterBase
 
         switch (state)
         {
-            case State.Waiting:
+            case EnemyState.Waiting:
                 Waiting();
                 break;
-            case State.Finding:
+            case EnemyState.Finding:
                 Finding();
                 break;
-            case State.Watching:
+            case EnemyState.Watching:
                 Watching();
                 break;
-            case State.Chasing:
+            case EnemyState.Chasing:
                 Chasing(); 
                 break;
         }
@@ -145,7 +151,7 @@ public class CharacterAI : CharacterBase
     {
         if(attractTarget != null && attractTarget.isDead)// 추적 대상이 죽었다면
         {
-            ChangeState(State.Finding);// 색적 상태로 전환
+            ChangeState(EnemyState.Finding);// 색적 상태로 전환
             return;
         }
 
@@ -177,7 +183,7 @@ public class CharacterAI : CharacterBase
             attractTarget = nearsetCharacter;// 해당 적을 목표로 설정
 
             AlertEnemy();// 주위 아군을 경계상태로 만듬
-            ChangeState(State.Chasing);// 추격 시작
+            ChangeState(EnemyState.Chasing);// 추격 시작
         }
         else// 적이 공격 범위에 없을 시
         {
@@ -206,9 +212,9 @@ public class CharacterAI : CharacterBase
             attractTarget = nearsetCharacter;
         }
 
-        if(attractTarget == null)// 가까운 적이 없다면
+        if(attractTarget == null)// 어그로 끌린 적이 없다면
         {
-            ChangeState (State.Finding);// 색적 상태로 전환
+            ChangeState (EnemyState.Finding);// 색적 상태로 전환
             return;
         }
 
@@ -227,7 +233,7 @@ public class CharacterAI : CharacterBase
 
         if (ally.isDead)// 추격중인 아군이 죽었다면
         {
-            ChangeState(State.Finding);// 색적상태로 전환
+            ChangeState(EnemyState.Finding);// 색적상태로 전환
             return;
         }
 
@@ -236,7 +242,7 @@ public class CharacterAI : CharacterBase
         if (nearsetCharacter != null)// 적이 있다면
         {
             attractTarget = nearsetCharacter;
-            ChangeState(State.Chasing);// 추격 상태로 전환
+            ChangeState(EnemyState.Chasing);// 추격 상태로 전환
             return;
         }
 
@@ -251,7 +257,7 @@ public class CharacterAI : CharacterBase
         if(nearsetCharacter != null)// 적이 있다면
         {
             attractTarget = nearsetCharacter;
-            ChangeState(State.Chasing);// 추격 상태로 전환
+            ChangeState(EnemyState.Chasing);// 추격 상태로 전환
         }
     }
 
@@ -262,7 +268,7 @@ public class CharacterAI : CharacterBase
         if (nearsetCharacter != null)// 적이 있다면
         {
             attractTarget = nearsetCharacter;
-            ChangeState(State.Chasing);// 추격 상태로 전환
+            ChangeState(EnemyState.Chasing);// 추격 상태로 전환
         }
         else // 없다면
         {
@@ -277,10 +283,10 @@ public class CharacterAI : CharacterBase
     {
         base.OnTakeDamage(ref damage, enemy, damageType, elementType);
 
-        if(enemy != null && state == State.Waiting)
+        if(enemy != null && state == EnemyState.Waiting)
         {
             attractTarget = enemy;
-            ChangeState(State.Chasing);
+            ChangeState(EnemyState.Chasing);
         }
 
     }
@@ -288,17 +294,17 @@ public class CharacterAI : CharacterBase
     //-----------------------------------------------------------------------------------------------------------------------
     //상태 관련 함수들
 
-    protected void ChangeState(State state)
+    protected void ChangeState(EnemyState state)
     {
         this.state = state;
 
         switch (state)
         {
-            case State.Chasing:
+            case EnemyState.Chasing:
                 ally = null;
                 Chasing();
                 break;
-            case State.Finding:
+            case EnemyState.Finding:
                 ally = null;
                 Finding();
                 break;
@@ -307,12 +313,24 @@ public class CharacterAI : CharacterBase
 
     public void GetAlert(CharacterAI character)
     {
-        if(this.state == State.Finding)// 색적 상태였다면
+        if(this.state == EnemyState.Finding)// 색적 상태였다면
         {
-            ChangeState(State.Watching);// 경계상태로 전환
+            ChangeState(EnemyState.Watching);// 경계상태로 전환
         }
 
         ally = character;
+    }
+
+    public void ChaseStart()
+    {
+        if (character.enemySO.isElite)
+        {
+            return;
+        }
+
+        attractTarget = FindNearestEnemyByDistance();
+
+        ChangeState(EnemyState.Chasing);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -400,6 +418,30 @@ public class CharacterAI : CharacterBase
         }
 
         return nearestTile;
+    }
+
+    public CharacterBase FindNearestEnemyByDistance()
+    {
+        int min = -1;
+        CharacterBase nearestCharacter = null;
+
+        foreach (CharacterBase character in BattleManager.Instance.charactersInBattle)
+        {
+            if (character.playerId == playerId || character.isDead)// 아군 캐릭터이거나 사망한 캐릭터 혹인 이미 탐색한 캐릭터 스킵
+            {
+                continue;
+            }
+
+            int distance = pathFinder.GetManhattenDistance(curStandingTile, character.curStandingTile);
+
+            if ((distance < min || min == -1) && distance != 0 && distance != -1)
+            {
+                min = distance;
+                nearestCharacter = character;
+            }
+        }
+
+        return nearestCharacter;
     }
 
     public CharacterBase FindNearestEnemy(OverlayTile curTile, List<CharacterBase> checkedCharacter)// 전체 캐릭터 중에 가장 가까운 적 찾기
@@ -637,4 +679,5 @@ public class CharacterAI : CharacterBase
 
         return list;
     }
+
 }

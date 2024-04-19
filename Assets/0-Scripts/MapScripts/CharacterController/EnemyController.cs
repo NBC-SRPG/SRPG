@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class EnemyController : MonoBehaviour
 {
@@ -80,7 +81,10 @@ public class EnemyController : MonoBehaviour
         BattleManager.Instance.GameStart += GameStart;
     }
 
-    public void SetWave()
+    //--------------------------------------------------------------------------------------------------
+    //게임 시작 설정
+
+    public void SetWave()// 웨이브 설정
     {
         int i = 1;
         List<CharacterAI> wave = new List<CharacterAI>();
@@ -98,7 +102,7 @@ public class EnemyController : MonoBehaviour
             {
                 if (wave.Count == stage.enemyAtWave[i] && stage.enemyAtWave[i] > 0)
                 {
-                    characterWave.Add(i, wave);
+                    characterWave.Add(i, new List<CharacterAI>(wave));
                     wave.Clear();
                     i++;
                 }
@@ -107,7 +111,7 @@ public class EnemyController : MonoBehaviour
 
         if (i <= stage.waveNumber)
         {
-            characterWave.Add(i, wave);
+            characterWave.Add(i, new List<CharacterAI>(wave));
         }
 
         nowWave = 0;
@@ -120,14 +124,30 @@ public class EnemyController : MonoBehaviour
 
     public void InitiateWave()// 웨이브 소환
     {
+        if (BattleManager.Instance.gameEnd)
+        {
+            return;
+        }
+
+        if (stage.stageType == Constants.StageType.MainStory)
+        {
+            InitiateWaveDefault();
+        }
+    }
+
+    private void InitiateWaveDefault()
+    {
         nowWave++;
 
-        if(stage.spawnType == Constants.EnemySpawnType.Infinite && nowWave == stage.infiniteWave)
+        if (stage.spawnType == Constants.EnemySpawnType.Infinite && nowWave == stage.infiniteWave)// 무한 웨이브에 도달했을 때
         {
-            characterWave.Remove(nowWave);
+            if (characterWave.ContainsKey(nowWave))// 이미 있는 파티 웨이브라면
+            {
+                characterWave.Remove(nowWave);//없애버림
+            }
             characterWave.Add(nowWave, new List<CharacterAI>());
 
-            foreach (EnemySO enemy in stage.infiniteEnemy)
+            foreach (EnemySO enemy in stage.infiniteEnemy)// 적을 생성함
             {
                 Character enemyCharacter = new Character(enemy);
                 CharacterAI character = Instantiate(chaPrefabs, transform);
@@ -135,14 +155,36 @@ public class EnemyController : MonoBehaviour
 
                 characterWave[nowWave].Add(character);
             }
-
         }
 
-        BattleManager.Instance.SpawnEnemy(characterWave[nowWave], player.playerStartPosition);
+        if (MapManager.instance.enemyStartTiles.Count > 1)// 특정 웨이브는 특정 위치에 소환
+        {
+            BattleManager.Instance.SpawnEnemy(characterWave[nowWave], nowWave - 1);
+        }
+        else
+        {
+            BattleManager.Instance.SpawnEnemy(characterWave[nowWave], 0);
+        }
+
+
+        foreach (CharacterAI character in characterWave[nowWave])// 소환된 캐릭터에 이벤트 연결
+        {
+            character.Disable += CheckRemainEnemy;
+
+            if (stage.chaseAtStart)
+            {
+                character.ChaseStart();
+            }
+        }
+
         BattleManager.Instance.nowWave = nowWave;
 
         Debug.Log("nowWave " + nowWave);
     }
+
+    //--------------------------------------------------------------------------------------------------
+    //게임 플레이
+
 
     private void GetPlayerTurn()
     {
@@ -174,14 +216,14 @@ public class EnemyController : MonoBehaviour
 
         //Debug.Log("now Acting " + index);
 
-        if (index >= characterList.Count)// 모든 AI가 대기 상태일 때
+        if (index >= characterWave[nowWave].Count)// 모든 AI가 대기 상태일 때
         {
             //Debug.Log("AI turn end");
             Invoke(nameof(TurnEnd), 0.1f);// 턴 종료
             return;
         }
 
-        if (!characterList[index].canActing)// 해당 AI가 행동 불가 상태일 때
+        if (!characterWave[nowWave][index].canActing)// 해당 AI가 행동 불가 상태일 때
         {
             //Debug.Log(index + " already Act");
             index++;// 다음 AI 행동
@@ -189,18 +231,18 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        characterList[index].Wait += CheckWait;// 해당 AI가 행동했는지 확인
-        characterList[index].Act += CheckActing;
+        characterWave[nowWave][index].Wait += CheckWait;// 해당 AI가 행동했는지 확인
+        characterWave[nowWave][index].Act += CheckActing;
 
         Debug.Log(index + " start Act");
-        characterList[index].StartAI();// AI 작동 시작
+        characterWave[nowWave][index].StartAI();// AI 작동 시작
     }
 
     private void CheckWait()// Ai가 대기 상태일 때
     {
         //Debug.Log(index + " is waiting");
-        characterList[index].Wait -= CheckWait;
-        characterList[index].Act -= CheckActing;
+        characterWave[nowWave][index].Wait -= CheckWait;
+        characterWave[nowWave][index].Act -= CheckActing;
 
         index++;// 다음 AI 차례로 넘어감
 
@@ -210,8 +252,8 @@ public class EnemyController : MonoBehaviour
     private void CheckActing()// AI가 행동했을 때
     {
         //Debug.Log(index + " is acting");
-        characterList[index].Wait -= CheckWait;
-        characterList[index].Act -= CheckActing;
+        characterWave[nowWave][index].Wait -= CheckWait;
+        characterWave[nowWave][index].Act -= CheckActing;
 
         index = 0;// 다시 처음부터 행동 가능한 캐릭터가 행동함
 
@@ -221,5 +263,27 @@ public class EnemyController : MonoBehaviour
     private void TurnEnd()
     {
         BattleManager.Instance.PlayerTurnEnd();
+    }
+
+
+    //-----------------------------------------------------------------------
+
+    private void CheckRemainEnemy()
+    {
+        int cnt = 0;
+
+        foreach(CharacterAI character in characterWave[nowWave])
+        {
+            if (character.isDead)
+            {
+                cnt++;
+                character.Disable -= CheckRemainEnemy;
+
+                if(cnt == characterWave[nowWave].Count)
+                {
+                    InitiateWave();
+                }
+            }
+        }
     }
 }

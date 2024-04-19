@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BattleKeyWords
 {
-    public enum State
+    public enum EnemyState
     {
         Waiting,// 대기
         Watching,// 경계

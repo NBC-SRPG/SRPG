@@ -74,6 +74,7 @@ public class CharacterBase : MonoBehaviour
         BattleManager.Instance.charactersAsTeam[playerId].Add(this);
 
         characterAnim.FlipCharacterDirection(direction);
+        characterAnim.Activate();
     }
 
     public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
@@ -553,7 +554,7 @@ public class CharacterBase : MonoBehaviour
 
         OnEndWalk?.Invoke();
 
-        BattleManager.Instance.CheckWin();
+        BattleManager.Instance.CheckWin(null, curStandingTile);
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
@@ -610,7 +611,7 @@ public class CharacterBase : MonoBehaviour
 
     private void CheckActivated()
     {
-        if (!canActing && BattleManager.Instance.nowPlayer.playerId == playerId)
+        if (!canActing && BattleManager.Instance.nowPlayer == player && gameObject.activeInHierarchy)
         {
             characterAnim.DeActivate();
         }
@@ -1017,7 +1018,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if(curStandingTile == null)
         {

@@ -574,12 +574,12 @@ public class BattleManager : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
-    public void CheckWin(CharacterBase dieChracter = null)
+    public void CheckWin(CharacterBase dieChracter = null, OverlayTile location = null)
     {
-        PVEWin(dieChracter);
+        PVEWin(dieChracter, location);
     }
 
-    public void PVEWin(CharacterBase dieChracter)
+    public void PVEWin(CharacterBase dieChracter, OverlayTile location)
     {
         if (gameEnd)
         {
@@ -610,38 +610,26 @@ public class BattleManager : MonoBehaviour
         }
         //-----
 
-
-
-
         //----- 스테이지 목표에 따라 추가
         switch (stage.clear)
         {
             case StageClear.ClearAll:
                 EnemyAllDead(); 
                 break;
+            case StageClear.Assasinate:
+                TargetEnemyDead(dieChracter);
+                break;
+            case StageClear.Run:
+                MoveToTarget(location);
+                break;
+            case StageClear.Defence:
+                DefenceTurn();
+                break;
         }
 
         //-----
 
     }
-
-    public void EnemyAllDead()
-    {
-        int numbers = 0;
-        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
-        {
-            if (chracter.isDead)
-            {
-                numbers++;
-            }
-
-            if (numbers == charactersAsTeam["enemy"].Count && nowWave == stage.waveNumber)
-            {
-                EndGame(Managers.GameManager.player.playerId);
-            }
-        }
-    }
-
 
     private void EndGame(string player)
     {
@@ -694,6 +682,83 @@ public class BattleManager : MonoBehaviour
                 character.gameObject.SetActive(false);
                 i++;
             }
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //조건 판단 함수
+
+    public void EnemyAllDead()
+    {
+        int numbers = 0;
+        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        {
+            if (chracter.isDead)
+            {
+                numbers++;
+            }
+
+            if (numbers == charactersAsTeam["enemy"].Count && nowWave == stage.waveNumber)
+            {
+                EndGame(Managers.GameManager.player.playerId);
+            }
+        }
+    }
+
+    public void TargetEnemyDead(CharacterBase dieCharacter)
+    {
+        if(dieCharacter == null)
+        {
+            return;
+        }
+
+        if(stage.targetEnemy == null || stage.targetEnemy.Count == 0)
+        {
+            Debug.Log("no targetEnemy");
+            return;
+        }
+
+        int cnt = 0;
+        if(dieCharacter.character.enemySO != null && stage.targetEnemy.Contains(dieCharacter.character.enemySO))
+        {
+            cnt++;
+            if(cnt == stage.targetEnemy.Count)
+            {
+                EndGame(Managers.GameManager.player.playerId);
+            }
+        }
+    }
+
+    public void MoveToTarget(OverlayTile location)
+    {
+        if(location == null)
+        {
+            return;
+        }
+
+        if(stage.targetGrid == null || stage.targetGrid.Count == 0)
+        {
+            Debug.Log("no targetGrid");
+            return;
+        }
+
+        if (stage.targetGrid.Contains(location.grid2DLocation))
+        {
+            EndGame(Managers.GameManager.player.playerId);
+        }
+    }
+
+    public void DefenceTurn()
+    {
+        if(stage.defenceTurn == 0)
+        {
+            Debug.Log("no turn");
+            return;
+        }
+
+        if(nowRound == stage.defenceTurn)
+        {
+            EndGame(Managers.GameManager.player.playerId);
         }
     }
 }
