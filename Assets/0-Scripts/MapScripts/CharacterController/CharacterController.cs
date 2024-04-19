@@ -130,7 +130,7 @@ public class CharacterController : MonoBehaviour
 
     private void GetPlayerTurn()
     {
-        if (BattleManager.Instance.nowPlayer.playerId == player.playerId)
+        if (BattleManager.Instance.nowPlayer == player)
         {
             canClick = true;
             nowPlayerTurn = true;
@@ -155,8 +155,9 @@ public class CharacterController : MonoBehaviour
             Ui.OnClickSkillConFirmButton += UseSkill;
             //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
             //----------------------------------------
-
         }
+
+        Ui.ShowTurn(BattleManager.Instance.nowPlayer == player);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

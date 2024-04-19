@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         canMove = true;
-        moveSpeed = 15f;
+        moveSpeed = 20f;
 
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();

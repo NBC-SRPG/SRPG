@@ -29,6 +29,7 @@ public class BattleUI : UIBase
         TargetDefText,
         TargetHealthText,
         RoundText,
+        TurnText,
 
     }
 
@@ -44,6 +45,7 @@ public class BattleUI : UIBase
         GameResult,
         Win,
         Lose,
+        TurnObject,
 
     }
 
@@ -206,6 +208,8 @@ public class BattleUI : UIBase
         GetImage((int)Images.ResultBackGround).GetComponent<CanvasRenderer>().SetAlpha(0f);
 
         GetObject((int)GameObjects.GameResult).SetActive(false);
+
+        GetObject((int)GameObjects.TurnObject).SetActive(false);
     }
 
     public void CloseTexts()
@@ -297,6 +301,31 @@ public class BattleUI : UIBase
     public void ShowRound(int nowRound)
     {
         GetText((int)Texts.RoundText).text = nowRound.ToString();
+    }
+
+    public void ShowTurn(bool myTurn)
+    {
+        if (myTurn)
+        {
+            GetText((int)Texts.TurnText).color = Color.blue;
+            GetText((int)Texts.TurnText).text = "당신의 턴";
+        }
+        else
+        {
+            GetText((int)Texts.TurnText).color = Color.red;
+            GetText((int)Texts.TurnText).text = "상대의 턴";
+        }
+
+        StartCoroutine(ShowNowTurn());
+    }
+
+    private IEnumerator ShowNowTurn()
+    {
+        GetObject((int)GameObjects.TurnObject).SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        GetObject((int)GameObjects.TurnObject).SetActive(false);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
