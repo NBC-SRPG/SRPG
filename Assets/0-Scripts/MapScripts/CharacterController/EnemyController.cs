@@ -7,7 +7,13 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     private List<CharacterAI> characterList;
+    private Dictionary<int, List<CharacterAI>> characterWave;
+
+    private int nowWave;
+
     [SerializeField] private CharacterAI chaPrefabs;
+
+    private StageSO stage;
 
     public GamePlayer player;
 
@@ -19,6 +25,9 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         characterList = new List<CharacterAI>();
+        characterWave = new Dictionary<int, List<CharacterAI>>();
+
+        stage = Managers.GameManager.thisStage;
     }
 
     private void Start()
@@ -49,6 +58,8 @@ public class EnemyController : MonoBehaviour
             player.party = characters.ToArray();
         }
 
+        player.party = stage.GetEnemy().ToArray();
+
         foreach (Character charac in player.party)
         {
             if (charac == null)
@@ -57,19 +68,80 @@ public class EnemyController : MonoBehaviour
             }
 
             CharacterAI character = Instantiate(chaPrefabs, transform);
-            character.InitCharacter(charac, player.playerId);
+            character.InitCharacter(charac, player);
 
             characterList.Add(character);
         }
 
-        InitiateCharacter();
-    }
-
-    public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
-    {
-        BattleManager.Instance.SpawnEnemy(characterList, player.playerStartPosition);
+        SetWave();
 
         player.isReady = true;
+
+        BattleManager.Instance.GameStart += GameStart;
+    }
+
+    public void SetWave()
+    {
+        int i = 1;
+        List<CharacterAI> wave = new List<CharacterAI>();
+
+        foreach(CharacterAI ai in characterList)
+        {
+            if(i > stage.waveNumber)
+            {
+                break;
+            }
+
+            wave.Add(ai);
+
+            if (stage.enemyAtWave.ContainsKey(i))
+            {
+                if (wave.Count == stage.enemyAtWave[i] && stage.enemyAtWave[i] > 0)
+                {
+                    characterWave.Add(i, wave);
+                    wave.Clear();
+                    i++;
+                }
+            }
+        }
+
+        if (i <= stage.waveNumber)
+        {
+            characterWave.Add(i, wave);
+        }
+
+        nowWave = 0;
+    }
+
+    public void GameStart()
+    {
+        InitiateWave();
+    }
+
+    public void InitiateWave()// 웨이브 소환
+    {
+        nowWave++;
+
+        if(stage.spawnType == Constants.EnemySpawnType.Infinite && nowWave == stage.infiniteWave)
+        {
+            characterWave.Remove(nowWave);
+            characterWave.Add(nowWave, new List<CharacterAI>());
+
+            foreach (EnemySO enemy in stage.infiniteEnemy)
+            {
+                Character enemyCharacter = new Character(enemy);
+                CharacterAI character = Instantiate(chaPrefabs, transform);
+                character.InitCharacter(enemyCharacter, player);
+
+                characterWave[nowWave].Add(character);
+            }
+
+        }
+
+        BattleManager.Instance.SpawnEnemy(characterWave[nowWave], player.playerStartPosition);
+        BattleManager.Instance.nowWave = nowWave;
+
+        Debug.Log("nowWave " + nowWave);
     }
 
     private void GetPlayerTurn()
@@ -78,8 +150,19 @@ public class EnemyController : MonoBehaviour
         {
             index = 0;
 
-            StartAIActing();
+            StartCoroutine(nameof(WaitForaSecond));
         }
+    }
+
+    private IEnumerator WaitForaSecond()
+    {
+        CameraController.instance.AddGroupRange(new List<CharacterBase>(characterWave[nowWave].FindAll(x => !x.isDead)));
+        CameraController.instance.SetCameraOnSelected();
+
+        yield return new WaitForSeconds(1f);
+
+        StartAIActing();
+        CameraController.instance.ResetGroup();
     }
 
     private void StartAIActing()// Ai 작동

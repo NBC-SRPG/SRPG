@@ -11,6 +11,7 @@ public class CharacterController : MonoBehaviour
 {
     private enum PlayerPhase
     {
+        Wait,
         Idle,
         CharacterSetting,
         CharacterSelect,
@@ -79,7 +80,7 @@ public class CharacterController : MonoBehaviour
             }
 
             CharacterBase character = Instantiate(chaPrefabs, transform);
-            character.InitCharacter(charac, player.playerId);
+            character.InitCharacter(charac, player);
 
             characterList.Add(character);
         }
@@ -134,7 +135,10 @@ public class CharacterController : MonoBehaviour
             canClick = true;
             nowPlayerTurn = true;
 
-            player.manaCost += 2;
+            player.GainMana(player.manaNextTurn);
+            player.manaNextTurn = 0;
+
+            player.GainMana(10);
 
             //-----------------------------------------
 
@@ -151,6 +155,7 @@ public class CharacterController : MonoBehaviour
             Ui.OnClickSkillConFirmButton += UseSkill;
             //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
             //----------------------------------------
+
         }
     }
 
@@ -167,7 +172,7 @@ public class CharacterController : MonoBehaviour
 
         ChangePhase(PlayerPhase.Idle);
 
-        player.manaCost = 4;
+        player.manaCost = 0;
 
         player.isReady = true;
         BattleManager.Instance.GetReady();
@@ -469,7 +474,7 @@ public class CharacterController : MonoBehaviour
 
     private void MoveCharacter()// 캐릭터 이동
     {
-        if (movePath.Last().curStandingCharater == null)
+        if (movePath.Last().CheckCanMove())
         {
             canClick = false;
             ResetTileOnMove(surroundPath);
@@ -769,8 +774,20 @@ public class CharacterController : MonoBehaviour
     {
         if (nowPlayerTurn && canClick)
         {
-            ChangePhase(PlayerPhase.CharacterSelect);
+            ChangePhase(PlayerPhase.Wait);
+            StartCoroutine(nameof(ShowAlly));
         }
+    }
+
+    private IEnumerator ShowAlly()
+    {
+        CameraController.instance.AddGroupRange(characterList.FindAll(x => !x.isDead));
+        CameraController.instance.SetCameraOnSelected();
+
+        yield return new WaitForSeconds(1f);
+
+        ChangePhase(PlayerPhase.CharacterSelect);
+        CameraController.instance.ResetGroup();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

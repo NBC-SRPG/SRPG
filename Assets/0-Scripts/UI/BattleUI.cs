@@ -422,6 +422,7 @@ public class BattleUI : UIBase
 
     private void OnClickNextButton()
     {
+        Managers.GameManager.player.ResetPlayer();
         SceneManager.LoadScene("MainScene");
     }
 

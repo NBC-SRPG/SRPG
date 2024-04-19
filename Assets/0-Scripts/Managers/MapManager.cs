@@ -166,13 +166,22 @@ public class MapManager : MonoBehaviour
 
                     MapManager.instance.map.Add(tileKey, tile);
 
-                    if (pos.z >= 1)
+                    if (pos.z == 1)
                     {
                         tile.canClick = false;
                     }
                     else
                     {
                         tile.canClick = true;
+                    }
+
+                    if(pos.z == 2)
+                    {
+                        tile.isEnemySpawn = true;
+                    }
+                    else
+                    {
+                        tile.isEnemySpawn = false;
                     }
                 }
             }

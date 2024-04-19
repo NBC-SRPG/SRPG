@@ -8,6 +8,7 @@ public class GameManager
     public GamePlayer player;
     public GamePlayer enemy;
 
+    public StageSO thisStage; 
 
     public void Init()
     {

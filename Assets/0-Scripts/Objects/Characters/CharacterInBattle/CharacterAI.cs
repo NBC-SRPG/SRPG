@@ -26,9 +26,9 @@ public class CharacterAI : CharacterBase
     //-----------------------------------------------------------------------------------------------------------------------
     //override 함수
 
-    public override void InitCharacter(Character charac, string id)
+    public override void InitCharacter(Character charac, GamePlayer player)
     {
-        base.InitCharacter(charac, id);
+        base.InitCharacter(charac, player);
 
         enemyData = character.enemySO;// 적 데이터를 따로 받아옴
 
@@ -341,20 +341,20 @@ public class CharacterAI : CharacterBase
             return new List<OverlayTile> { curStandingTile };
         }
 
-        while (list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
+        while (!list.Last().CheckCanMove())// 도착지점이 이동 불가 지역일 때
         {
             if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
-                    if (tile.curStandingCharater == null && !list.Contains(tile))
+                    if (tile.CheckCanMove() && !list.Contains(tile))
                     {
                         list.Add(tile);
                         break;
                     }
                 }
 
-                if (list.Last().curStandingCharater != null)// 주위에도 남은 타일이 없다면, 한칸 뒤로
+                if (!list.Last().CheckCanMove())// 주위에도 남은 타일이 없다면, 한칸 뒤로
                 {
                     list.Remove(list.Last());
                 }
@@ -515,7 +515,7 @@ public class CharacterAI : CharacterBase
             {
                 foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))// 그 주위로 이동
                 {
-                    if (tile.curStandingCharater == null && !list.Contains(tile))
+                    if (tile.CheckCanMove() && !list.Contains(tile))
                     {
                         list.Add(tile);
                         break;
@@ -546,20 +546,20 @@ public class CharacterAI : CharacterBase
             return new List<OverlayTile> { curStandingTile };
         }
 
-        while(list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
+        while(!list.Last().CheckCanMove())// 도착지점이 이동 불가 지역일 때
         {
             if (leftWalkRange + 1 - list.Count >= 1)// 걸음 횟수가 남아있다면, 목표 타일 주위로 이동
             {
                 foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
-                    if (tile.curStandingCharater == null && !list.Contains(tile))
+                    if (tile.CheckCanMove() && !list.Contains(tile))
                     {
                         list.Add(tile);
                         break;
                     }
                 }
 
-                if(list.Last().curStandingCharater != null)// 주위에도 남은 타일이 없다면, 한칸 뒤로
+                if(!list.Last().CheckCanMove())// 주위에도 남은 타일이 없다면, 한칸 뒤로
                 {
                     list.Remove(list.Last());
                 }
@@ -609,7 +609,7 @@ public class CharacterAI : CharacterBase
             return new List<OverlayTile>() { curStandingTile };
         }
 
-        while (list.Last().curStandingCharater != null)// 도착지점에 캐릭터가 있을 때
+        while (!list.Last().CheckCanMove())// 도착지점이 이동 불가 지역일 때
         {
             Debug.Log("there is");
 
@@ -617,14 +617,14 @@ public class CharacterAI : CharacterBase
             {
                 foreach (OverlayTile tile in MapManager.instance.GetSurroundingTiles(list.Last().grid2DLocation, true))
                 {
-                    if (tile.curStandingCharater == null && !list.Contains(tile))
+                    if (tile.CheckCanMove() && !list.Contains(tile))
                     {
                         list.Add(tile);
                         break;
                     }
                 }
 
-                if (list.Last().curStandingCharater != null)// 주위에도 남은 타일이 없다면, 한칸 뒤로
+                if (!list.Last().CheckCanMove())// 주위에도 남은 타일이 없다면, 한칸 뒤로
                 {
                     list.Remove(list.Last());
                 }

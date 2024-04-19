@@ -7,6 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 using UnityEngine.TextCore.Text;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using GooglePlayGames.BasicApi;
+using static Constants;
 
 public class BattleManager : MonoBehaviour
 {
@@ -18,8 +19,11 @@ public class BattleManager : MonoBehaviour
 
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
-    public int nowRound; 
+    public int nowRound;
 
+    public int nowWave;
+
+    public event Action GameStart;
     public event Action TurnStart;
     public event Action<string> Win;
     public event Action<string> Lose;
@@ -29,6 +33,8 @@ public class BattleManager : MonoBehaviour
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     private BattleUI Ui;
+
+    public StageSO stage;
 
     private void Awake()
     {
@@ -42,6 +48,10 @@ public class BattleManager : MonoBehaviour
         }
 
         Init();
+
+        stage = Managers.GameManager.thisStage;
+
+        Managers.Resource.Instantiate("Map/" + stage.prefabsName);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -85,6 +95,8 @@ public class BattleManager : MonoBehaviour
         nowRound = 0;
 
         gameEnd = false;
+
+        GameStart?.Invoke();
 
         StartRound();
     }
@@ -574,9 +586,11 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        //----- 스테이지 목표에 따라 추가
-        //switch(stageinfo)
+        //-----스테이지 목표에 따라 추가
+        //switch (stage.clear)
         //{
+
+
 
         //}
 
@@ -600,12 +614,20 @@ public class BattleManager : MonoBehaviour
 
 
         //----- 스테이지 목표에 따라 추가
-        //switch(stageinfo)
-        //{
+        switch (stage.clear)
+        {
+            case StageClear.ClearAll:
+                EnemyAllDead(); 
+                break;
+        }
 
-        //}
+        //-----
 
-        numbers = 0;
+    }
+
+    public void EnemyAllDead()
+    {
+        int numbers = 0;
         foreach (CharacterBase chracter in charactersAsTeam["enemy"])
         {
             if (chracter.isDead)
@@ -613,14 +635,13 @@ public class BattleManager : MonoBehaviour
                 numbers++;
             }
 
-            if (numbers == charactersAsTeam["enemy"].Count)
+            if (numbers == charactersAsTeam["enemy"].Count && nowWave == stage.waveNumber)
             {
                 EndGame(Managers.GameManager.player.playerId);
             }
         }
-        //-----
-
     }
+
 
     private void EndGame(string player)
     {

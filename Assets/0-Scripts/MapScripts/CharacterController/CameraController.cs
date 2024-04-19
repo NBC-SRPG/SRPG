@@ -188,6 +188,19 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public void AddGroupRange(List<CharacterBase> list)
+    {
+        if(list.Count == 0)
+        {
+            return;
+        }
+
+        foreach(CharacterBase character in list)
+        {
+            AddGroup(character);
+        }
+    }
+
     //그룹에서 목표물 제거
     public void RemoveGroup(CharacterBase character)
     {

@@ -26,6 +26,8 @@ public class TestCharCreater : MonoBehaviour
     public List<Character> character = new List<Character>();
     public List<Character> enemy = new List<Character>();
 
+    public StageSO stage;
+
     private void Awake()
     {
         foreach (TempGrowth tempGrowth in temp)
@@ -43,6 +45,8 @@ public class TestCharCreater : MonoBehaviour
         Managers.GameManager.player.party = character.ToArray();
 
         Managers.GameManager.enemy.party = enemy.ToArray();
+
+        Managers.GameManager.thisStage = stage;
     }
 
 

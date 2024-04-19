@@ -9,11 +9,11 @@ public class CharacterBase : MonoBehaviour
     public GameObject characterObject;
     public CharAnimBase characterAnim;
     public HealthSystem health;
+    public GamePlayer player;
     public string playerId;
 
     public ExSkillBase curCharacterSkill;
     public List<PassiveLogic> curCharacterPassive;
-
 
     public CharacterBufList curCharacterBufList;
     public TempBonusStat tempBonusStat;
@@ -62,6 +62,7 @@ public class CharacterBase : MonoBehaviour
 
     public void SpawnCharacter(OverlayTile spawnPosition, Transform parent, Vector2 direction)
     {
+        gameObject.SetActive(true);
         transform.SetParent(parent);
 
         curStandingTile = spawnPosition;
@@ -75,10 +76,11 @@ public class CharacterBase : MonoBehaviour
         characterAnim.FlipCharacterDirection(direction);
     }
 
-    public virtual void InitCharacter(Character charac, string id)
+    public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
     {
         character = charac;
-        playerId = id;
+        player = gamePlayer;
+        playerId = gamePlayer.playerId;
 
         MapManager.instance.OnCompleteMove += CheckCurTile;
         characterObject = Managers.Resource.Instantiate("character", transform);
@@ -120,6 +122,8 @@ public class CharacterBase : MonoBehaviour
         health.DieAnimation += DieAnimation;
 
         historyCurrentRound = new CharacterHistory();
+
+        gameObject.SetActive(false);
     }
 
     // 캐릭터가 가질 수 있는 모든 패시브 효과 추가
@@ -677,6 +681,12 @@ public class CharacterBase : MonoBehaviour
         {
             historyCurrentRound.dealDamageCount++;
         }
+
+        if (!historyCurrentRound.gainManaByAttack)
+        {
+            player.GainMana(5);
+            historyCurrentRound.gainManaByAttack = true;
+        }
     }
 
     public void OnEndAttack(CharacterBase enemy)// 공격 종료 시
@@ -960,6 +970,8 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.OnKillEnemy(target, elementType);
         }
+
+        player.GainMana(4);
     }
 
     private void CharacterDie()// 캐릭터 사망
@@ -1000,6 +1012,8 @@ public class CharacterBase : MonoBehaviour
             BattleManager.Instance.CheckWin(this);
 
             onDiePassive = true;
+
+            player.GainMana(10);
         }
     }
 
