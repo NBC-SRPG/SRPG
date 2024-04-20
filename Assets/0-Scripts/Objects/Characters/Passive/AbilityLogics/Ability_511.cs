@@ -47,7 +47,15 @@ public class Ability_511: PassiveLogic
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
+        List<CharacterBase> enemyList = new List<CharacterBase>();
+        enemyList.Add(enemy);
 
+        int randomValue = UnityEngine.Random.Range(0, 10); // 0 ~ 9 반환
+        if (randomValue == 0) // 1/2 확률로 실행
+        {
+            enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character); //1턴 동안 기절 상태이상 적용
+        }
+        BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지(임시)
     }
 
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
@@ -62,7 +70,15 @@ public class Ability_511: PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
+        List<CharacterBase> enemyList = new List<CharacterBase>();
+        enemyList.Add(target);
 
+        int randomValue = UnityEngine.Random.Range(0, 10); // 0 ~ 9 반환
+        if (randomValue == 0) // 1/2 확률로 실행
+        {
+            target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character); //1턴 동안 기절 상태이상 적용
+        }
+        BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지(임시)
     }
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
