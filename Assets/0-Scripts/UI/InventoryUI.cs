@@ -51,15 +51,14 @@ public class InventoryUI : UIBase
     private Dictionary<FilterType, string> filterDic = new Dictionary<FilterType, string>
     {
         { FilterType.Option1, "전체" },
-        { FilterType.Option2, "티켓" },
-        { FilterType.Option3, "조각" },
-        { FilterType.Option4, "토큰" },
+        { FilterType.Option2, "조각" },
+        { FilterType.Option3, "성장" },
+        { FilterType.Option4, "재료" },
         { FilterType.Option5, "소비" },
-        { FilterType.Option6, "경험치" },
-        { FilterType.Option7, "스킬" },
-        { FilterType.Option8, "재료" },
-        { FilterType.Option9, "선물" },
-        { FilterType.Option10, "기타" }
+        { FilterType.Option6, "티켓" },
+        { FilterType.Option7, "토큰" },
+        { FilterType.Option8, "선물" },
+        { FilterType.Option9, "기타" }
     };
 
     private enum SortType

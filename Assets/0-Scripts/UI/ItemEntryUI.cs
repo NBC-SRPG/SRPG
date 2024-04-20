@@ -28,6 +28,7 @@ public class ItemEntryUI : UIBase
 
         GetText((int)Texts.NumberText).text = Managers.AccountData.inventory[item.id].ToString();
         GetButton((int)Buttons.SelectButton).onClick.AddListener(OnClickSelectButton);
+        GetImage((int)Images.ItemImage).sprite = item.icon;
     }
 
     private void OnClickSelectButton()
