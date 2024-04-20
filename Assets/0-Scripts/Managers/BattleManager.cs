@@ -7,6 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 using UnityEngine.TextCore.Text;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using GooglePlayGames.BasicApi;
+using static Constants;
 
 public class BattleManager : MonoBehaviour
 {
@@ -18,8 +19,11 @@ public class BattleManager : MonoBehaviour
 
     public GamePlayer nowPlayer;
     private int nowPlayerNum;
-    public int nowRound; 
+    public int nowRound;
 
+    public int nowWave;
+
+    public event Action GameStart;
     public event Action TurnStart;
     public event Action<string> Win;
     public event Action<string> Lose;
@@ -29,6 +33,8 @@ public class BattleManager : MonoBehaviour
     //private WaitWhile animationWait = new WaitWhile(() => AnimationController.instance.isAnimationPlaying);
 
     private BattleUI Ui;
+
+    public StageSO stage;
 
     private void Awake()
     {
@@ -42,6 +48,10 @@ public class BattleManager : MonoBehaviour
         }
 
         Init();
+
+        stage = Managers.GameManager.thisStage;
+
+        Managers.Resource.Instantiate("Map/" + stage.prefabsName);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -85,6 +95,10 @@ public class BattleManager : MonoBehaviour
         nowRound = 0;
 
         gameEnd = false;
+
+        GameStart?.Invoke();
+
+        Ui.SetGoalText();
 
         StartRound();
     }
@@ -559,24 +573,37 @@ public class BattleManager : MonoBehaviour
         StartRound();
     }
 
+    public void SetWave(int wave)
+    {
+        nowWave = wave;
+        Ui.ShowWave(nowWave);
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //기타 함수들
 
-    public void CheckWin(CharacterBase dieChracter = null)
+    public void CharacterDie(CharacterBase character)
     {
-        PVEWin(dieChracter);
+        CheckWin(character);
     }
 
-    public void PVEWin(CharacterBase dieChracter)
+    public void CheckWin(CharacterBase dieChracter = null, OverlayTile location = null)
+    {
+        PVEWin(dieChracter, location);
+    }
+
+    public void PVEWin(CharacterBase dieChracter, OverlayTile location)
     {
         if (gameEnd)
         {
             return;
         }
 
-        //----- 스테이지 목표에 따라 추가
-        //switch(stageinfo)
+        //-----스테이지 목표에 따라 추가
+        //switch (stage.clear)
         //{
+
+
 
         //}
 
@@ -596,29 +623,25 @@ public class BattleManager : MonoBehaviour
         }
         //-----
 
-
-
-
         //----- 스테이지 목표에 따라 추가
-        //switch(stageinfo)
-        //{
-
-        //}
-
-        numbers = 0;
-        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        switch (stage.clear)
         {
-            if (chracter.isDead)
-            {
-                numbers++;
-            }
-
-            if (numbers == charactersAsTeam["enemy"].Count)
-            {
-                EndGame(Managers.GameManager.player.playerId);
-            }
+            case StageClear.ClearAll:
+                EnemyAllDead(); 
+                break;
+            case StageClear.Assasinate:
+                TargetEnemyDead(dieChracter);
+                break;
+            case StageClear.Run:
+                MoveToTarget(location);
+                break;
+            case StageClear.Defence:
+                DefenceTurn();
+                break;
         }
+
         //-----
+        Ui.SetGoalText();
 
     }
 
@@ -663,6 +686,11 @@ public class BattleManager : MonoBehaviour
         {
             if (i < MapManager.instance.enemyStartTiles[spawnPosition].startTile.Count)
             {
+                if(MapManager.instance.enemyStartTiles[spawnPosition].startTile[i].curStandingCharater != null)// 소환할 자리에 무언가가 있다면
+                {
+                    continue;
+                }
+
                 character.transform.SetParent(transform);
 
                 character.SpawnCharacter(MapManager.instance.enemyStartTiles[spawnPosition].startTile[i], transform, MapManager.instance.enemyStartTiles[spawnPosition].startDirection);
@@ -673,6 +701,98 @@ public class BattleManager : MonoBehaviour
                 character.gameObject.SetActive(false);
                 i++;
             }
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //조건 판단 함수
+
+    public int GetRemainEnemy()
+    {
+        int cnt = 0;
+
+        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        {
+            if (!chracter.isDead)
+            {
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    public void EnemyAllDead()
+    {
+        int numbers = 0;
+        foreach (CharacterBase chracter in charactersAsTeam["enemy"])
+        {
+            if (chracter.isDead)
+            {
+                numbers++;
+            }
+
+            if (numbers == charactersAsTeam["enemy"].Count && nowWave == stage.waveNumber)
+            {
+                EndGame(Managers.GameManager.player.playerId);
+            }
+        }
+    }
+
+    public void TargetEnemyDead(CharacterBase dieCharacter)
+    {
+        if(dieCharacter == null)
+        {
+            return;
+        }
+
+        if(stage.targetEnemy == null || stage.targetEnemy.Count == 0)
+        {
+            Debug.Log("no targetEnemy");
+            return;
+        }
+
+        int cnt = 0;
+        if(dieCharacter.character.enemySO != null && stage.targetEnemy.Contains(dieCharacter.character.enemySO))
+        {
+            cnt++;
+            if(cnt == stage.targetEnemy.Count)
+            {
+                EndGame(Managers.GameManager.player.playerId);
+            }
+        }
+    }
+
+    public void MoveToTarget(OverlayTile location)
+    {
+        if(location == null)
+        {
+            return;
+        }
+
+        if(stage.targetGrid == null || stage.targetGrid.Count == 0)
+        {
+            Debug.Log("no targetGrid");
+            return;
+        }
+
+        if (stage.targetGrid.Contains(location.grid2DLocation))
+        {
+            EndGame(Managers.GameManager.player.playerId);
+        }
+    }
+
+    public void DefenceTurn()
+    {
+        if(stage.defenceTurn == 0)
+        {
+            Debug.Log("no turn");
+            return;
+        }
+
+        if(nowRound == stage.defenceTurn)
+        {
+            EndGame(Managers.GameManager.player.playerId);
         }
     }
 }

@@ -131,6 +131,10 @@ public class Character
         SO = new CharacterSO();
         SO.id = enemySO.id;
         SO.animatorName = enemySO.animatorName;
+        SO.icon = enemySO.icon;
+        SO.characterName = enemySO.characterName;
+        SO.story = enemySO.story;
+        SO.faction = enemySO.faction;
 
         hp = so.hp;
         atk = so.atk;

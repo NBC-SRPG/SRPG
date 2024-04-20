@@ -213,6 +213,21 @@ public class Constants
         Defence // 방어
     }
 
+    public enum EnemySpawnType
+    {
+        Wave,
+        Infinite
+    }
+
+    public enum StageType
+    {
+        MainStory,
+        GoldFarming,
+        EquipFarming,
+        CharacterFarming,
+        GrowthFarming
+    }
+
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
 

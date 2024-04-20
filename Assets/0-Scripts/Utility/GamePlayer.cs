@@ -10,10 +10,34 @@ public class GamePlayer
     public int playerStartPosition = 0;//플레이어의 시작 위치를 잡기 위한 번호
 
     public int prioty;
-    public bool isReady;
+    public bool isReady = false;
 
     public int manaCost;
+    public int manaNextTurn;
 
     public Character[] party = new Character[5];
 
+    public void ResetPlayer()
+    {
+        playerStartPosition = 0;
+        prioty = 10;
+        isReady = false;
+
+        manaCost = 0;
+        manaNextTurn = 0;
+    }
+
+    public void GainMana(int n)
+    {
+        manaCost += n;
+        if(manaCost > 60)
+        {
+            manaCost = 60;
+        }
+    }
+
+    public void GainManaNextTurn(int n)
+    {
+        manaNextTurn += n;
+    }
 }
