@@ -56,5 +56,7 @@ public class BattleKeyWords
         CrtRateIncrease,
         HealReversal,
 
+        Corrosion,
+
     }
 }

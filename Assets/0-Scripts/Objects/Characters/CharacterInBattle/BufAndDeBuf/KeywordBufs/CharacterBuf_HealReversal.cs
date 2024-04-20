@@ -12,6 +12,7 @@ public class CharacterBuf_HealReversal : CharacterBuf
 
     public override void Init(CharacterBase character, CharacterBase buffer)
     {
+        cantStack = true;
         base.Init(character, buffer);
     }
 

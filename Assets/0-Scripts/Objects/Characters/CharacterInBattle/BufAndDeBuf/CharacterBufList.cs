@@ -74,6 +74,9 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.HealReversal:
                     buf = new CharacterBuf_HealReversal();
                     break;
+                case BattleKeyWords.BufKeyword.Corrosion:
+                    buf = new CharacterBuf_Corrosion();
+                    break; 
             }
 
             if (buf != null)// 버프 생성 이후 리스트에 삽입

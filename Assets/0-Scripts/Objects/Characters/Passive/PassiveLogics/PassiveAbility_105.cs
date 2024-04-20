@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PassiveAbility_105 : PassiveLogic
 {
-    protected CharacterBase character;
-
-    public Dictionary<string, int> coefficient;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
