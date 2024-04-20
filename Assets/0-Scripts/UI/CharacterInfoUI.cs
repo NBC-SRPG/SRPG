@@ -151,18 +151,25 @@ public class CharacterInfoUI : UIBase
         // 특성 이미지 세팅
         Utility.Id2SO<AbilitySO>(character.SO.abilityT1, (result) =>
         {
-            AbilitySO so = (AbilitySO)result;
-            GetImage((int)Images.Ability1Image).sprite = so.icon;
+            GetImage((int)Images.Ability1Image).sprite = (result as AbilitySO).icon;
+        });
+        Utility.Id2SO<AbilitySO>(character.SO.abilityT2[0], (result) =>
+        {
+            GetImage((int)Images.Ability2_1Image).sprite = (result as AbilitySO).icon;
+        });
+        Utility.Id2SO<AbilitySO>(character.SO.abilityT2[1], (result) =>
+        {
+            GetImage((int)Images.Ability2_2Image).sprite = (result as AbilitySO).icon;
+        });
+        Utility.Id2SO<AbilitySO>(character.SO.abilityT3[0], (result) =>
+        {
+            GetImage((int)Images.Ability3_1Image).sprite = (result as AbilitySO).icon;
+        });
+        Utility.Id2SO<AbilitySO>(character.SO.abilityT3[1], (result) =>
+        {
+            GetImage((int)Images.Ability3_2Image).sprite = (result as AbilitySO).icon;
         });
 
-        GetImage((int)Images.Ability1Image).sprite = Managers.Resource.Load<Sprite>($"{character.abilityT1.id}");
-        GetImage((int)Images.Ability2_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.abilityT2[0]}");
-        GetImage((int)Images.Ability2_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.abilityT2[1]}");
-        GetImage((int)Images.Ability3_1Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.abilityT3[0]}");
-        GetImage((int)Images.Ability3_2Image).sprite = Managers.Resource.Load<Sprite>($"{character.SO.abilityT3[1]}");
-
-        // 특성 버튼 세팅
-        // TODO: IdToSO 구현 후 수정
         
         GetButton((int)Buttons.Ability1Button).onClick.AddListener(() => OnClickAbilityButton(1, 0));
         GetButton((int)Buttons.Ability2_1Button).onClick.AddListener(() => OnClickAbilityButton(2, 0));
