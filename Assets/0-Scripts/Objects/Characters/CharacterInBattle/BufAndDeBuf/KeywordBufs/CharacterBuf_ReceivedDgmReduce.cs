@@ -34,4 +34,5 @@ public class CharacterBuf_ReceivedDgmReduce : CharacterBuf
 
         turnCnt++;
     }
+
 }

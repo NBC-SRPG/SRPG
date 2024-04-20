@@ -39,7 +39,7 @@ public class PassiveAbility_104 : PassiveLogic
     {
         charactersInRange.Clear(); // 리스트를 비우고 다시 채움
 
-        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(character)))
         {
             if (tile.curStandingCharater != null && tile.curStandingCharater != character) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
             {

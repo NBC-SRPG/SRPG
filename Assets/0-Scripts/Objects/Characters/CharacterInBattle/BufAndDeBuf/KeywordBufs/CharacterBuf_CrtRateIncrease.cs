@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
+public class CharacterBuf_CrtRateIncrease : CharacterBuf
 {
-    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.ReceivedDgmIncrease;
+    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.CrtRateIncrease;
 
-    public override BattleKeyWords.BufType BufType { get; protected set; } = BattleKeyWords.BufType.Negative;
+    public override BattleKeyWords.BufType BufType { get; protected set; } = BattleKeyWords.BufType.Positive;
 
-    public override string Keyword { get; protected set; } = "ReceivedDgmIncrease";
+    public override string Keyword { get; protected set; } = "CrtRateIncrease";
 
     public override void Init(CharacterBase character, CharacterBase buffer)
     {
@@ -19,7 +19,7 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
     {
         return new BonusStat
         {
-            ReducedDmg = power * (-1)
+            EXCritRate = power
         };
     }
 
@@ -34,4 +34,5 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
 
         turnCnt++;
     }
+
 }

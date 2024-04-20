@@ -62,6 +62,18 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.Herald:
                     buf = new CharacterBuf_Herald();
                     break;
+                case BattleKeyWords.BufKeyword.ReceivedDgmReduce:
+                    buf = new CharacterBuf_ReceivedDgmReduce();
+                    break;
+                case BattleKeyWords.BufKeyword.ReceivedDgmIncrease:
+                    buf = new CharacterBuf_ReceivedDgmIncrease();
+                    break;
+                case BattleKeyWords.BufKeyword.CrtRateIncrease:
+                    buf = new CharacterBuf_CrtRateIncrease();
+                    break;
+                case BattleKeyWords.BufKeyword.HealReversal:
+                    buf = new CharacterBuf_HealReversal();
+                    break;
             }
 
             if (buf != null)// 버프 생성 이후 리스트에 삽입

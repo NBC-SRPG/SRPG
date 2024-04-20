@@ -453,7 +453,7 @@ public class CharacterController : MonoBehaviour
         //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
         Ui.ShowMove(movePath.Count > 1 && curTargetCharacter == null && !curSelectedCharacter.isWalking);
         Ui.ShowAttack(movePath.Count <= 1 && curTargetCharacter != null && attackRangeTiles.Contains(curTargetCharacter.curStandingTile)
-            && curTargetCharacter.CheckEnenmy(curSelectedCharacter) && !curSelectedCharacter.isAttacking);
+            && curTargetCharacter.CheckEnemy(curSelectedCharacter) && !curSelectedCharacter.isAttacking);
     }
 
     private void AttackTarget()// 캐릭터 공격
@@ -592,13 +592,13 @@ public class CharacterController : MonoBehaviour
                     //캐릭터가 공격 가능한 범위 내에 있는 캐릭터 터치 시
                     if (attackRangeTiles.Contains(curTile) && curTile.curStandingCharater != null)
                     {
-                        if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnemy(curSelectedCharacter))
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
                             CameraController.instance.SetCameraOnSelected();
                         }
-                        else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnemy(curSelectedCharacter))
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);

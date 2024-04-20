@@ -53,5 +53,8 @@ public class BattleKeyWords
         ReceivedDgmReduce,
         ReceivedDgmIncrease,
 
+        CrtRateIncrease,
+        HealReversal,
+
     }
 }

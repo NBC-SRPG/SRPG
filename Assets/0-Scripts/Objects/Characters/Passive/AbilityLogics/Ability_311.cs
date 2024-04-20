@@ -20,15 +20,38 @@ public class Ability_311: PassiveLogic
     {
         this.character = character;
 
-        //다만, 아군 파티가 아니라 전투 내에서 "시스"가 있는지 체크하기 때문에 적으로 시스가 있어도 적용되는 문제가 생길 것 같음.
-        hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase => characterBase.character.SO.id == 7);
+
     }
+    public override void OnRoundStart()
+    {
+
+    }
+
+    private void checkExisistSis() //배틀 중인 캐릭터 중 아군 캐릭터에 시스가 있는지 확인하는 메서드
+    {
+        hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase =>
+        {
+            if (characterBase.character.SO.id == 7)
+            {
+                // ID가 7인 캐릭터를 찾았으니 아군인지 적인지 확인
+                if (!characterBase.CheckEnemy(characterBase))
+                {
+                    // 아군이라면 true를 반환합니다.
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-
         if (enemy.curCharacterBufList.FindNegativeBufAll().Count > 0) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
+            checkExisistSis();
+
             if (hasCharacterWithId7)
             {
                 stat_311.EnhancedDmg = coefficient["enhancedDmgRate"] * coefficient["multiply"]; //파티에 시스가 있으면 계수 2배
@@ -62,6 +85,8 @@ public class Ability_311: PassiveLogic
 
         if (bufCount > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
+            checkExisistSis();
+
             if (hasCharacterWithId7)
             {
                 stat_311.EnhancedDmg = coefficient["enhancedDmgRate"] * coefficient["multiply"]; //파티에 시스가 있으면 계수 2배

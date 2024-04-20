@@ -264,7 +264,7 @@ public class BattleManager : MonoBehaviour
     // 서버에 올라가면 어떻게 될지 모르겠음
     public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
-        if (!curCharacter.CheckEnenmy(standingCharacter))// 아군 위를 지나갔을 때
+        if (!curCharacter.CheckEnemy(standingCharacter))// 아군 위를 지나갔을 때
         {
             curCharacter.OnPassAlly(standingCharacter);
             standingCharacter.OnAllyPassedMe(curCharacter);
