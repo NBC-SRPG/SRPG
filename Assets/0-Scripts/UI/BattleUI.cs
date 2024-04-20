@@ -34,6 +34,8 @@ public class BattleUI : UIBase
         GoalText,
         RemainText,
         WaveText,
+        SkillText,
+        SkillNameText,
 
     }
 
@@ -50,6 +52,7 @@ public class BattleUI : UIBase
         Win,
         Lose,
         TurnObject,
+        SkillInfo,
 
     }
 
@@ -240,6 +243,8 @@ public class BattleUI : UIBase
 
         GetObject((int)GameObjects.SelectCharacterInfo).SetActive(false);
         GetObject((int)GameObjects.TargetCharacterInfo).SetActive(false);
+
+        GetObject((int)GameObjects.SkillInfo).SetActive(false);
     }
 
     public void ShowAtCharacterSelectPhase()
@@ -296,6 +301,8 @@ public class BattleUI : UIBase
 
     public void ShowAtSkillTargetPhase()
     {
+        ShowSkillInfo();
+
         GetButton((int)Buttons.CancelButton).gameObject.SetActive(true);
         GetButton((int)Buttons.SkillConFirmButton).gameObject.SetActive(true);
     }
@@ -380,6 +387,21 @@ public class BattleUI : UIBase
 
     //-----------------------------------------------------------------------------------------------------------------------
     //Character Ui
+
+    public void ShowSkillInfo()
+    {
+        if (curSelectedCharacter == null)
+        {
+            GetObject((int)GameObjects.SkillInfo).SetActive(false);
+            return;
+        }
+
+        GetObject((int)GameObjects.SkillInfo).SetActive(true);
+
+        GetText((int)Texts.SkillNameText).text = curSelectedCharacter.curCharacterSkill.skillData.skillName;
+        GetText((int)Texts.SkillText).text = curSelectedCharacter.curCharacterSkill.skillData.description;
+
+    }
 
     public void ShowSelectCharacterInfo()
     {
