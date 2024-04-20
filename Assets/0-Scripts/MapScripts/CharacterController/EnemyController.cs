@@ -225,6 +225,7 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator WaitForaSecond()
     {
+        CameraController.instance.ResetGroup();
         CameraController.instance.AddGroupRange(new List<CharacterBase>(characterWave[nowWave].FindAll(x => !x.isDead)));
         CameraController.instance.SetCameraOnSelected();
 

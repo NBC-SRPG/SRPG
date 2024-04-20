@@ -100,6 +100,44 @@ public class BattleManager : MonoBehaviour
 
         Ui.SetGoalText();
 
+        StartCoroutine(intro());
+    }
+
+    private IEnumerator intro()
+    {
+        float waitTime = 1f;
+
+        if(stage.clear == StageClear.Run && stage.targetGrid.Count > 0)
+        {
+            foreach(Vector2Int trans in stage.targetGrid)
+            {
+                CameraController.instance.AddTargetGroup(MapManager.instance.map[trans].transform);
+            }
+
+            CameraController.instance.SetCameraOnSelected();
+
+            waitTime = 1.5f;
+        }
+        
+        if(stage.clear == StageClear.Assasinate && stage.targetEnemy.Count > 0)
+        {
+            foreach(CharacterBase enemy in charactersAsTeam["enemy"])
+            {
+                if (stage.GetTargetEnemy().Contains(enemy.character))
+                {
+                    CameraController.instance.AddTargetGroup(enemy.transform);
+                }
+            }
+
+            CameraController.instance.SetCameraOnSelected();
+
+            waitTime = 1.5f;
+        }
+
+        CameraController.instance.CameraIntro();
+
+        yield return new WaitForSeconds(waitTime);
+
         StartRound();
     }
 
@@ -753,7 +791,7 @@ public class BattleManager : MonoBehaviour
         }
 
         int cnt = 0;
-        if(dieCharacter.character.enemySO != null && stage.targetEnemy.Contains(dieCharacter.character.enemySO))
+        if(dieCharacter.character != null && stage.GetTargetEnemy().Contains(dieCharacter.character))
         {
             cnt++;
             if(cnt == stage.targetEnemy.Count)

@@ -361,9 +361,10 @@ public class BattleUI : UIBase
             case StageClear.Assasinate:
                 goal.text = "대상을 처치해야 합니다.";
                 remain.text = "목표 대상 : ";
-                foreach(EnemySO character in stage.targetEnemy)
+                foreach(Character character in stage.GetTargetEnemy())
                 {
-                    remain.text += character.characterName + ", ";
+                    remain.text += character.enemySO.characterName;
+                    remain.text += (stage.GetTargetEnemy().Count > 1 ? ", " : "");
                 }
                 break;
             case StageClear.Run:

@@ -782,6 +782,7 @@ public class CharacterController : MonoBehaviour
 
     private IEnumerator ShowAlly()
     {
+        CameraController.instance.ResetGroup();
         CameraController.instance.AddGroupRange(characterList.FindAll(x => !x.isDead));
         CameraController.instance.SetCameraOnSelected();
 
