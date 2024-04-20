@@ -230,12 +230,12 @@ public class EquipmentUpgradeUI : UIBase
         if (equipType == EquipType.Weapon)
         {
             currentEquip = nextEquip;
-            character.Growth.weapon++;
+            character.Growth.UpgradeWeapon();
         }
         else
         {
             currentEquip = nextEquip;
-            character.Growth.armor++;
+            character.Growth.UpgradeArmor();
         }
     }
 

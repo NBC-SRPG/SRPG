@@ -73,23 +73,8 @@ public class Character
         {
             abilityT1 = (AbilitySO)result;
         });
-
-        if (Growth.abilityT2 !=-1)
-        {
-            Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
-        {
-            abilityT2 = (AbilitySO)result;
-        });
-
-        }
-
-        if (Growth.abilityT3 !=-1)
-        {
-            Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
-        {
-            abilityT3 = (AbilitySO)result;
-        });
-        }
+        LoadAbilityT2();
+        LoadAbilityT3();
 
 
         // 클래스 초기화
@@ -121,6 +106,8 @@ public class Character
         // TODO
         // MonoBehaviour를 상속받지 않아 해당 이벤트를 언제 해제 할지??
         Growth.OnLevelUp += CalculateStat;
+        Growth.OnAbilityT2Changed += LoadAbilityT2;
+        Growth.OnAbilityT3Changed += LoadAbilityT3;
     }
 
     public Character(EnemySO so)
@@ -166,6 +153,28 @@ public class Character
         hp = SO.hp + SO.hpPerLv * Growth.level + weapon.hp + armor.hp;
         atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
         def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
+    }
+
+    private void LoadAbilityT2()
+    {
+        if (Growth.abilityT2 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
+            {
+                abilityT2 = (AbilitySO)result;
+            });
+        }
+    }
+
+    private void LoadAbilityT3()
+    {
+        if (Growth.abilityT3 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
+            {
+                abilityT3 = (AbilitySO)result;
+            });
+        }
     }
 
     public (int hp, int atk, int def) PreviewEnhancedStats(EquipSO newWeapon, EquipSO newArmor)

@@ -149,16 +149,7 @@ public class AbilityInfoUI : UIBase
     {
         Debug.Log("OnClickAbilityApplyButton");
 
-        if (AbilityTier == 2)
-        {
-            character.Growth.abilityT2 = selectAbilityIndex;
-            Managers.DB.Write<int>(Managers.DB.userDB.Child("characterData").Child(character.SO.id.ToString()).Child("abilityT2"), selectAbilityIndex);
-        }
-        else if (AbilityTier == 3)
-        {
-            character.Growth.abilityT3 = selectAbilityIndex;
-            Managers.DB.Write<int>(Managers.DB.userDB.Child("characterData").Child(character.SO.id.ToString()).Child("abilityT3"), selectAbilityIndex);
-        }
+        character.Growth.SelectAbility(AbilityTier, selectAbilityIndex);
 
         // TODO
         // 아래 함수를 public 선언 후 그냥 호출하고 있는데 더 좋은 방법이 있을지??

@@ -26,6 +26,11 @@ public static class Utility
         };
     }
 
+    public static Character GetCharacter(int id)
+    {
+        return Managers.AccountData.characterData[id];
+    }
+
     //taskAsync
 
 
