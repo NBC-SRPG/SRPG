@@ -9,11 +9,11 @@ public class CharacterBase : MonoBehaviour
     public GameObject characterObject;
     public CharAnimBase characterAnim;
     public HealthSystem health;
+    public GamePlayer player;
     public string playerId;
 
     public ExSkillBase curCharacterSkill;
     public List<PassiveLogic> curCharacterPassive;
-
 
     public CharacterBufList curCharacterBufList;
     public TempBonusStat tempBonusStat;
@@ -62,6 +62,7 @@ public class CharacterBase : MonoBehaviour
 
     public void SpawnCharacter(OverlayTile spawnPosition, Transform parent, Vector2 direction)
     {
+        gameObject.SetActive(true);
         transform.SetParent(parent);
 
         curStandingTile = spawnPosition;
@@ -73,12 +74,14 @@ public class CharacterBase : MonoBehaviour
         BattleManager.Instance.charactersAsTeam[playerId].Add(this);
 
         characterAnim.FlipCharacterDirection(direction);
+        characterAnim.Activate();
     }
 
-    public virtual void InitCharacter(Character charac, string id)
+    public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
     {
         character = charac;
-        playerId = id;
+        player = gamePlayer;
+        playerId = gamePlayer.playerId;
 
         MapManager.instance.OnCompleteMove += CheckCurTile;
         characterObject = Managers.Resource.Instantiate("character", transform);
@@ -120,6 +123,8 @@ public class CharacterBase : MonoBehaviour
         health.DieAnimation += DieAnimation;
 
         historyCurrentRound = new CharacterHistory();
+
+        gameObject.SetActive(false);
     }
 
     // 캐릭터가 가질 수 있는 모든 패시브 효과 추가
@@ -549,7 +554,7 @@ public class CharacterBase : MonoBehaviour
 
         OnEndWalk?.Invoke();
 
-        BattleManager.Instance.CheckWin();
+        BattleManager.Instance.CheckWin(null, curStandingTile);
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
@@ -606,7 +611,7 @@ public class CharacterBase : MonoBehaviour
 
     private void CheckActivated()
     {
-        if (!canActing && BattleManager.Instance.nowPlayer.playerId == playerId)
+        if (!canActing && BattleManager.Instance.nowPlayer == player && gameObject.activeInHierarchy)
         {
             characterAnim.DeActivate();
         }
@@ -676,6 +681,12 @@ public class CharacterBase : MonoBehaviour
         if (damage.damage > 0)
         {
             historyCurrentRound.dealDamageCount++;
+        }
+
+        if (!historyCurrentRound.gainManaByAttack)
+        {
+            player.GainMana(5);
+            historyCurrentRound.gainManaByAttack = true;
         }
     }
 
@@ -960,6 +971,8 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.OnKillEnemy(target, elementType);
         }
+
+        player.GainMana(4);
     }
 
     private void CharacterDie()// 캐릭터 사망
@@ -989,6 +1002,8 @@ public class CharacterBase : MonoBehaviour
     {
         if (!onDiePassive)
         {
+            player.GainMana(10);
+
             foreach (PassiveLogic passive in curCharacterPassive)
             {
                 passive?.OnDie();
@@ -997,13 +1012,13 @@ public class CharacterBase : MonoBehaviour
 
             Debug.Log("die");
 
-            BattleManager.Instance.CheckWin(this);
+            BattleManager.Instance.CharacterDie(this);
 
             onDiePassive = true;
         }
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if(curStandingTile == null)
         {

@@ -11,7 +11,6 @@ public class CharAnimBase : MonoBehaviour
     protected CharacterBase targetCharacter;
     protected List<CharacterBase> targetList;
     protected SpriteRenderer sprite;
-    private Color color;
     protected Rigidbody2D rb;
     protected Particles particles;
 
@@ -52,7 +51,6 @@ public class CharAnimBase : MonoBehaviour
         Block = Animator.StringToHash(blockParameter);
 
         sprite = GetComponent<SpriteRenderer>();
-        color = sprite.color;
 
         rb = GetComponentInParent<Rigidbody2D>();
         particles = GetComponent<Particles>();
@@ -80,7 +78,7 @@ public class CharAnimBase : MonoBehaviour
 
     public void Activate()
     {
-        sprite.color = color;
+        sprite.color = new Color(1f, 1f, 1f, 1f);
     }
 
     public void SetDamage(BattleKeyWords.Damage damage)

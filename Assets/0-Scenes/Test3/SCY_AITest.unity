@@ -701,9 +701,12 @@ MonoBehaviour:
     prioty: 0
     isReady: 0
     manaCost: 0
+    manaNextTurn: 0
   nowRound: 0
+  nowWave: 0
   isShowAnimation: 0
   gameEnd: 0
+  stage: {fileID: 0}
 --- !u!1 &602190366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,6 +1165,7 @@ MonoBehaviour:
     prioty: 10
     isReady: 0
     manaCost: 0
+    manaNextTurn: 0
   movePath: []
   nowPlayerTurn: 0
   curSelectedCharacter: {fileID: 0}

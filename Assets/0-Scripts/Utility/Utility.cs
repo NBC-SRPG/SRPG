@@ -26,20 +26,6 @@ public static class Utility
         };
     }
 
-    public static void Id2Item<T>(int id, Callback<ScriptableObject> callback) where T : ItemSO
-    {
-        // 어드레서블 경로
-        string path = "ItemSO/ItemSO_" + id.ToString() + ".asset";
-
-        var op = Addressables.LoadAssetAsync<T>(path);
-        op.Completed += (handler) =>
-        {
-            // 로딩이 완료되면 콜백함수로 로직처리
-            callback(handler.Result);
-        };
-    }
-
-
     //taskAsync
 
 

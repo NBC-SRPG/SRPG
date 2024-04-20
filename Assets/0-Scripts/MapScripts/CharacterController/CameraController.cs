@@ -52,7 +52,7 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         canMove = true;
-        moveSpeed = 15f;
+        moveSpeed = 20f;
 
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
@@ -185,6 +185,19 @@ public class CameraController : MonoBehaviour
         if (!Array.Exists(followingTargetGroup.m_Targets, x => x.target == character.transform))
         {
             followingTargetGroup.AddMember(character.transform, 1, 1);
+        }
+    }
+
+    public void AddGroupRange(List<CharacterBase> list)
+    {
+        if(list.Count == 0)
+        {
+            return;
+        }
+
+        foreach(CharacterBase character in list)
+        {
+            AddGroup(character);
         }
     }
 

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static System.Net.Mime.MediaTypeNames;
+using static Constants;
 
 public class BattleUI : UIBase
 {
@@ -29,6 +30,10 @@ public class BattleUI : UIBase
         TargetDefText,
         TargetHealthText,
         RoundText,
+        TurnText,
+        GoalText,
+        RemainText,
+        WaveText,
 
     }
 
@@ -44,6 +49,7 @@ public class BattleUI : UIBase
         GameResult,
         Win,
         Lose,
+        TurnObject,
 
     }
 
@@ -92,6 +98,8 @@ public class BattleUI : UIBase
     private List<GameObject> bufList;
     private List<GameObject> targetBufList;
 
+    private StageSO stage;
+
     private void Start()
     {
         Init();
@@ -101,7 +109,6 @@ public class BattleUI : UIBase
     {
         // TODO
         // curTargetCharacter가 null이 아니라면 해당 캐릭터의 정보 보여주기
-
     }
 
     public void Init()
@@ -148,6 +155,8 @@ public class BattleUI : UIBase
             targetBufList.Add(obj);
             obj.SetActive(false);
         }
+
+        stage = Managers.GameManager.thisStage;
 
     }
 
@@ -206,6 +215,8 @@ public class BattleUI : UIBase
         GetImage((int)Images.ResultBackGround).GetComponent<CanvasRenderer>().SetAlpha(0f);
 
         GetObject((int)GameObjects.GameResult).SetActive(false);
+
+        GetObject((int)GameObjects.TurnObject).SetActive(false);
     }
 
     public void CloseTexts()
@@ -299,6 +310,73 @@ public class BattleUI : UIBase
         GetText((int)Texts.RoundText).text = nowRound.ToString();
     }
 
+    public void ShowWave(int nowWave)
+    {
+        string waveNumber = stage.waveNumber.ToString();
+
+        if(stage.spawnType == EnemySpawnType.Infinite)
+        {
+            waveNumber = "??";
+        }
+
+        GetText((int)Texts.WaveText).text = nowWave.ToString() + " / " + waveNumber;
+    }
+
+    public void ShowTurn(bool myTurn)
+    {
+        if (myTurn)
+        {
+            GetText((int)Texts.TurnText).color = Color.blue;
+            GetText((int)Texts.TurnText).text = "당신의 턴";
+        }
+        else
+        {
+            GetText((int)Texts.TurnText).color = Color.red;
+            GetText((int)Texts.TurnText).text = "상대의 턴";
+        }
+
+        StartCoroutine(ShowNowTurn());
+    }
+
+    private IEnumerator ShowNowTurn()
+    {
+        GetObject((int)GameObjects.TurnObject).SetActive(true);
+
+        yield return new WaitForSeconds(1f);
+
+        GetObject((int)GameObjects.TurnObject).SetActive(false);
+    }
+
+    public void SetGoalText()
+    {
+        TextMeshProUGUI goal = (TextMeshProUGUI)GetText((int)Texts.GoalText);
+        TextMeshProUGUI remain = (TextMeshProUGUI)GetText((int)Texts.RemainText);
+
+        switch (stage.clear)
+        {
+            case StageClear.ClearAll:
+                goal.text = "모든 적을 섬멸해야 합니다.";
+                remain.text = "남은 적 수 : " + BattleManager.Instance.GetRemainEnemy().ToString();
+                break;
+            case StageClear.Assasinate:
+                goal.text = "대상을 처치해야 합니다.";
+                remain.text = "목표 대상 : ";
+                foreach(EnemySO character in stage.targetEnemy)
+                {
+                    remain.text += character.characterName + ", ";
+                }
+                break;
+            case StageClear.Run:
+                goal.text = "목표 지점까지 도달해야 합니다.";
+                remain.text = "";
+                break;
+            case StageClear.Defence:
+                goal.text = stage.defenceTurn + " 라운드 동안 살아남아야 합니다.";
+                remain.text = "남은 라운드 수 : " + (stage.defenceTurn - BattleManager.Instance.nowRound).ToString();
+                break;
+        }
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //Character Ui
 
@@ -314,6 +392,8 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.CharacterName).text = curSelectedCharacter.character.SO.characterName;
         GetText((int)Texts.LvText).text = "Lv. " + curSelectedCharacter.character.Growth.level.ToString("#00");
+
+        GetImage((int)Images.CharacterImage).sprite = curSelectedCharacter.character.SO.icon;
 
         GetText((int)Texts.AtkText).text = curSelectedCharacter.Attack.ToString();
         GetText((int)Texts.DefText).text = curSelectedCharacter.Defend.ToString();
@@ -360,6 +440,9 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.TargetName).text = curTargetCharacter.character.SO.characterName;
         GetText((int)Texts.TargetLevel).text = "Lv. " + curTargetCharacter.character.Growth.level.ToString("#00");
+
+        GetImage((int)Images.TargetImage).sprite = curTargetCharacter.character.SO.icon;
+
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();
 
@@ -422,6 +505,7 @@ public class BattleUI : UIBase
 
     private void OnClickNextButton()
     {
+        Managers.GameManager.player.ResetPlayer();
         SceneManager.LoadScene("MainScene");
     }
 

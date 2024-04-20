@@ -25,6 +25,8 @@ public class CharacterHistory
 
     public int moveFigure;
 
+    public bool gainManaByAttack;
+
     public void ResetHistory()
     {
         enemyDidAttack.Clear();
@@ -48,6 +50,8 @@ public class CharacterHistory
         useSkillCount = 0;
 
         moveFigure = 0;
+
+        gainManaByAttack = false;
     }
 
     public CharacterHistory()
@@ -80,6 +84,8 @@ public class CharacterHistory
         useSkillCount = history.useSkillCount;
 
         moveFigure = history.moveFigure;
+
+        gainManaByAttack = history.gainManaByAttack;
     }
 
     public void AddAttackEnemy(CharacterBase enemy, int damage)

@@ -146,14 +146,12 @@ public class Constants
     //아이템 분류 선별 기준 = '인벤토리에 표시되고 정보를 볼 수 있어야 하는지? 여부가 성립하면 아이템'
     public enum ItemType
     {
+        Piece = 0, //캐릭터 조각류
+        LevelUp = 1, //캐릭터 경험치, 스킬 레벨업 등 강화에 필요한 아이템
+        Material = 2, //장비 등급 상승에 필요한 아이템류. = Material
+        Consumable = 3, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
         Ticket, //캐릭터 뽑기 티켓류
-        Piece, //캐릭터 조각류
         Token, //토큰류 = 이벤트 상점 교환 재화
-        Consumable, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
-        //RankUp_character, //캐릭터 돌파에 필요한 아이템류. 일단은 조각이 그 역할을 하므로 더미 데이터.
-        ExpUp_character, //캐릭터 경험치를 상승시켜주는 아이템류. 캐릭터 육성 창에서 사용 가능
-        RankUp_skill, //캐릭터 스킬 레벨업에 필요한 아이템류.
-        RankUp_equip, //장비 등급 상승에 필요한 아이템류. = Material
         Gift, //호감도 상승에 필요한 아이템류. 선물.
         Memorial, //특별한 기능은 없지만 보관 자체로 의미가 있는 기념품/중요한 아이템류. = 트로피, 훈장, 스토리에서 중요한 의미를 가진 아이템 등.
     }
@@ -213,6 +211,21 @@ public class Constants
         Assasinate, // 특정 적 처치
         Run, // 특정 위치로 이동
         Defence // 방어
+    }
+
+    public enum EnemySpawnType
+    {
+        Wave,
+        Infinite
+    }
+
+    public enum StageType
+    {
+        MainStory,
+        GoldFarming,
+        EquipFarming,
+        CharacterFarming,
+        GrowthFarming
     }
 
     public const int MaxDiamond = 999999;

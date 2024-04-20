@@ -14,6 +14,8 @@ public class OverlayTile : MonoBehaviour
     public Vector3Int gridLocation;//타일 위치(월드 위치랑 다름)
     public Vector2Int grid2DLocation { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
 
+    public bool isEnemySpawn;
+
     public int H { get; set; }//목적지까지 거리
     public int G { get; set; }//목적지까지 걷는 횟수
     public int F { get { return H + G; } }//최종 점수
@@ -93,5 +95,17 @@ public class OverlayTile : MonoBehaviour
     public void HideScale()
     {
         scaleTile.SetActive(false);
+    }
+
+    public bool CheckCanMove()
+    {
+        if (curStandingCharater != null || isEnemySpawn)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
