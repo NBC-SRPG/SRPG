@@ -25,6 +25,8 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public event Action OnLevelUp;
     public event Action OnAbilityT2Changed;
     public event Action OnAbilityT3Changed;
+    public event Action OnWeaponChanged;
+    public event Action OnArmorChanged;
 
 
     public CharacterGrowth() {}
@@ -152,11 +154,13 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public void UpgradeWeapon()
     {
         weapon++;
+        OnWeaponChanged?.Invoke();
         UpdateToDB();
     }
     public void UpgradeArmor()
     {
         armor++;
+        OnArmorChanged?.Invoke();
         UpdateToDB();
     }
 

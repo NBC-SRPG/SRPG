@@ -105,8 +105,8 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.AbilityButton).onClick.AddListener(() => ShowTab(PlayTab.Ability));
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
-        //GetImage((int)Images.WeaponImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.weapon.equip_Id}");
-        //GetImage((int)Images.ArmorImage).sprite = Managers.Resource.Load<Sprite>($"{character.SO.armor.equip_Id}");
+        GetImage((int)Images.WeaponImage).sprite = character.weapon.sprite;
+        GetImage((int)Images.ArmorImage).sprite = character.armor.sprite;
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.ExSkillButton).onClick.AddListener(OnClickExSkillButton);

@@ -95,12 +95,7 @@ public class Character
         Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
         {
             weapon = (EquipSO)result;
-
-            Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
-            {
-                armor = (EquipSO)result;
-                CalculateStat();
-            });
+            LoadArmor();
         });
 
         // TODO
@@ -108,6 +103,8 @@ public class Character
         Growth.OnLevelUp += CalculateStat;
         Growth.OnAbilityT2Changed += LoadAbilityT2;
         Growth.OnAbilityT3Changed += LoadAbilityT3;
+        Growth.OnWeaponChanged += LoadWeapon;
+        Growth.OnArmorChanged += LoadArmor;
     }
 
     public Character(EnemySO so)
@@ -175,6 +172,24 @@ public class Character
                 abilityT3 = (AbilitySO)result;
             });
         }
+    }
+
+    private void LoadWeapon()
+    {
+        Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
+        {
+            weapon = (EquipSO)result;
+            CalculateStat();
+        });
+    }
+
+    private void LoadArmor()
+    {
+        Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
+        {
+            armor = (EquipSO)result;
+            CalculateStat();
+        });
     }
 
     public (int hp, int atk, int def) PreviewEnhancedStats(EquipSO newWeapon, EquipSO newArmor)
