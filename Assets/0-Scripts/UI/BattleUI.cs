@@ -567,12 +567,14 @@ public class BattleUI : UIBase
     {
         TextMeshPro text = ShowText(transform);
 
-        text.text = damage.damage.ToString();
+        text.text = "";
 
         if (damage.isCriticalHit)
         {
-            //---
+            text.text += "치명타!\r\n";
         }
+
+        text.text += damage.damage.ToString();
 
         if (isHeal)
         {
