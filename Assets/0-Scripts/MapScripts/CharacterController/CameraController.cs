@@ -25,6 +25,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera BattleGroupCameara;
     public CinemachineTargetGroup battleTargetGroup;
 
+    private CinemachineFramingTransposer mainComposer;
     private CinemachineFramingTransposer characterComposer;
     private CinemachineFramingTransposer characterGroupComposer;
 
@@ -54,6 +55,7 @@ public class CameraController : MonoBehaviour
         canMove = true;
         moveSpeed = 20f;
 
+        mainComposer = mainCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
@@ -69,6 +71,25 @@ public class CameraController : MonoBehaviour
         Ui.joyStick.OnPressJoystick += ResetCamera;
 
         ResetCamera();
+    }
+
+    public void CameraIntro()
+    {
+        StartCoroutine(Intro());
+    }
+
+    private IEnumerator Intro()
+    {
+        float time = 0;
+
+        while (time < 0.5f)
+        {
+            mainCamera.m_Lens.OrthographicSize = Mathf.Lerp(20, 10, time / 0.5f);
+            time += Time.deltaTime;
+
+            yield return null;
+        }
+
     }
 
     private void Update()
@@ -199,6 +220,11 @@ public class CameraController : MonoBehaviour
         {
             AddGroup(character);
         }
+    }
+
+    public void AddTargetGroup(Transform trans)
+    {
+        followingTargetGroup.AddMember(trans, 1, 5);
     }
 
     //그룹에서 목표물 제거

@@ -46,6 +46,7 @@ public class AbilityInfoUI : UIBase
             Utility.Id2SO<AbilitySO>(character.abilityT1.id, (result) =>
             {
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
+                GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택한 특성이면 아웃라인 켜기
                 SetupSelectedAbilityUI();
             });
@@ -55,6 +56,7 @@ public class AbilityInfoUI : UIBase
             Utility.Id2SO<AbilitySO>(character.SO.abilityT2[AbilityIndex], (result) =>
             {
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
+                GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
                 if (character.Growth.level < AbilityTier2UnlockLevel)
                 {
@@ -77,6 +79,7 @@ public class AbilityInfoUI : UIBase
             Utility.Id2SO<AbilitySO>(character.SO.abilityT3[AbilityIndex], (result) =>
             {
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
+                GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
                 if (character.Growth.level < AbilityTier3UnlockLevel || character.Growth.abilityT2 == NONE_SELECTED)
                 {
@@ -146,14 +149,7 @@ public class AbilityInfoUI : UIBase
     {
         Debug.Log("OnClickAbilityApplyButton");
 
-        if (AbilityTier == 2)
-        {
-            character.Growth.abilityT2 = selectAbilityIndex;
-        }
-        else if (AbilityTier == 3)
-        {
-            character.Growth.abilityT3 = selectAbilityIndex;
-        }
+        character.Growth.SelectAbility(AbilityTier, selectAbilityIndex);
 
         // TODO
         // 아래 함수를 public 선언 후 그냥 호출하고 있는데 더 좋은 방법이 있을지??

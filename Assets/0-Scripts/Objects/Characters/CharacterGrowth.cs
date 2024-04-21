@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Constants;
 
@@ -22,6 +23,10 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public int armor;
 
     public event Action OnLevelUp;
+    public event Action OnAbilityT2Changed;
+    public event Action OnAbilityT3Changed;
+    public event Action OnWeaponChanged;
+    public event Action OnArmorChanged;
 
 
     public CharacterGrowth() {}
@@ -111,7 +116,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         level = result[0];
         curExp = result[1];
         maxExp = GetMaxExp(result[0]);
-        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), this);
+        UpdateToDB();
         OnLevelUp?.Invoke();
     }
 
@@ -144,5 +149,38 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         }
 
         return result;
+    }
+
+    public void UpgradeWeapon()
+    {
+        weapon++;
+        OnWeaponChanged?.Invoke();
+        UpdateToDB();
+    }
+    public void UpgradeArmor()
+    {
+        armor++;
+        OnArmorChanged?.Invoke();
+        UpdateToDB();
+    }
+
+    public void SelectAbility(int tier, int index)
+    {
+        if (tier == 2)
+        {
+            abilityT2 = index;
+            OnAbilityT2Changed?.Invoke();
+        }
+        else if (tier == 3)
+        {
+            abilityT3 = index;
+            OnAbilityT3Changed?.Invoke();
+        }
+        UpdateToDB();
+    }
+
+    private void UpdateToDB()
+    {
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), this);
     }
 }

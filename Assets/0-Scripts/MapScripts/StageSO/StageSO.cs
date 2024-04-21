@@ -33,13 +33,15 @@ public class StageSO : SerializedScriptableObject
     public List<Vector2Int> targetGrid;// 목표 위치
 
     [Header("Assassinate Detail")]
-    public List<EnemySO> targetEnemy;// 목표 적
+    public List<int> targetEnemy;// 목표 적
 
     [Header("Infinite Detail")]
     public int infiniteWave = -1;// 몇 번째 턴부터 같은 적이 계속 등장하는지
     public List<EnemySO> infiniteEnemy;// 무한히 등장할 적
     public bool spawnByTurn;// 매턴 소환할지 설정
-    
+
+    [HideInInspector] public List<Character> characterList;
+
     public List<Character> GetEnemy()
     {
         List<Character> list = new List<Character>();
@@ -48,6 +50,20 @@ public class StageSO : SerializedScriptableObject
         {
             Character enemyCharacter = new Character(enemy);
             list.Add(enemyCharacter);
+        }
+
+        characterList = list;
+
+        return list;
+    }
+
+    public List<Character> GetTargetEnemy()
+    {
+        List<Character> list = new List<Character>();
+
+        foreach (int number in targetEnemy)
+        {
+            list.Add(characterList[number]);
         }
 
         return list;

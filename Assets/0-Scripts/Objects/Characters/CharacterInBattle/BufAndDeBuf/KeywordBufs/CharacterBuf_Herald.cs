@@ -37,7 +37,7 @@ public class CharacterBuf_Herald : CharacterBuf
     {
         return new BonusStat
         {
-            ExtraDefend = 50,
+            ExtraDefend = 0.5f,
             ExtraMov = 2
         };
     }

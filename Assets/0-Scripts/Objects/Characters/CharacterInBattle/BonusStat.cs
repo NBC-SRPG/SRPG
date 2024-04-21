@@ -11,31 +11,22 @@ public class BonusStat
     public int EXCritRate {  get; set; }
     public int EXCritDMG {  get; set; }
     public float PenetrateDef { get; set; }// % 방어 관통
-    public int EnhancedDmg {  get; set; }
+    public float EnhancedDmg { get; set; }
     public float ReducedDmg { get; set; }
 
     public void AddBonusStat(BonusStat stat)
     {
         ExtraHealth += stat.ExtraHealth;
-        ExtraAtk *= ((100f + stat.ExtraAtk) / 100f);
-        ExtraDefend *= ((100f + stat.ExtraDefend) / 100f);
+        ExtraAtk *= 1f+stat.ExtraAtk;
+        ExtraDefend *= 1f+stat.ExtraDefend;
         ExtraMov += stat.ExtraMov;
         EXCritRate += stat.EXCritRate;
         EXCritDMG += stat.EXCritDMG;
-        PenetrateDef *= ((100f + stat.PenetrateDef) / 100f);
-        EnhancedDmg += stat.EnhancedDmg;
-        ReducedDmg *= ((100f + stat.ReducedDmg) / 100f);
+        PenetrateDef *= 1f-stat.PenetrateDef; // 초기값 0
+        EnhancedDmg *= 1f+stat.EnhancedDmg;
+        ReducedDmg *= 1f-stat.ReducedDmg;
     }
 
-    public void AddDecreaseStat(BonusStat stat)
-    {
-        ExtraHealth += stat.ExtraHealth;
-        ExtraAtk += stat.ExtraAtk;
-        ExtraDefend += stat.ExtraDefend;
-        ExtraMov += stat.ExtraMov;
-        EXCritRate += stat.EXCritRate;
-        EXCritDMG += stat.EXCritDMG;
-    }
 
 }
 
