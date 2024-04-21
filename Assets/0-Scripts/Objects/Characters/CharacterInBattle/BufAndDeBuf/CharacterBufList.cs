@@ -329,6 +329,7 @@ public class CharacterBufList
             ExtraAtk = 1f,
             ExtraDefend = 1f,
             PenetrateDef = 1f,
+            EnhancedDmg = 1f,
             ReducedDmg = 1f,
         };// 곱연산인 변수들은 초기값 1로
 
@@ -337,21 +338,6 @@ public class CharacterBufList
             if (!buf.IsDestroyed && buf.GetAdditionalStat() != null)
             {
                 stat.AddBonusStat(buf.GetAdditionalStat());
-            }
-        }
-
-        return stat;
-    }
-
-    public BonusStat GetDecreaseStat()// 감소 스탯 적용
-    {
-        BonusStat stat = new BonusStat();
-
-        foreach (CharacterBuf buf in bufList)
-        {
-            if (!buf.IsDestroyed && buf.GetDecreaseStat() != null)
-            {
-                stat.AddDecreaseStat(buf.GetDecreaseStat());
             }
         }
 

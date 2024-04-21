@@ -34,6 +34,8 @@ public class BattleUI : UIBase
         GoalText,
         RemainText,
         WaveText,
+        SkillText,
+        SkillNameText,
 
     }
 
@@ -50,6 +52,7 @@ public class BattleUI : UIBase
         Win,
         Lose,
         TurnObject,
+        SkillInfo,
 
     }
 
@@ -240,6 +243,8 @@ public class BattleUI : UIBase
 
         GetObject((int)GameObjects.SelectCharacterInfo).SetActive(false);
         GetObject((int)GameObjects.TargetCharacterInfo).SetActive(false);
+
+        GetObject((int)GameObjects.SkillInfo).SetActive(false);
     }
 
     public void ShowAtCharacterSelectPhase()
@@ -254,6 +259,12 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.UseSkillButton).gameObject.SetActive(true);
 
         ShowSelectCharacterInfo();
+    }
+
+    public void ActingSelect(bool canActing)
+    {
+        GetButton((int)Buttons.MoveAndAttackButton).gameObject.SetActive(canActing);
+        GetButton((int)Buttons.UseSkillButton).gameObject.SetActive(canActing);
     }
 
     public void SetCanUseSkill(bool canSkill)
@@ -296,6 +307,8 @@ public class BattleUI : UIBase
 
     public void ShowAtSkillTargetPhase()
     {
+        ShowSkillInfo();
+
         GetButton((int)Buttons.CancelButton).gameObject.SetActive(true);
         GetButton((int)Buttons.SkillConFirmButton).gameObject.SetActive(true);
     }
@@ -361,9 +374,10 @@ public class BattleUI : UIBase
             case StageClear.Assasinate:
                 goal.text = "대상을 처치해야 합니다.";
                 remain.text = "목표 대상 : ";
-                foreach(EnemySO character in stage.targetEnemy)
+                foreach(Character character in stage.GetTargetEnemy())
                 {
-                    remain.text += character.characterName + ", ";
+                    remain.text += character.enemySO.characterName;
+                    remain.text += (stage.GetTargetEnemy().Count > 1 ? ", " : "");
                 }
                 break;
             case StageClear.Run:
@@ -379,6 +393,21 @@ public class BattleUI : UIBase
 
     //-----------------------------------------------------------------------------------------------------------------------
     //Character Ui
+
+    public void ShowSkillInfo()
+    {
+        if (curSelectedCharacter == null)
+        {
+            GetObject((int)GameObjects.SkillInfo).SetActive(false);
+            return;
+        }
+
+        GetObject((int)GameObjects.SkillInfo).SetActive(true);
+
+        GetText((int)Texts.SkillNameText).text = curSelectedCharacter.curCharacterSkill.skillData.skillName;
+        GetText((int)Texts.SkillText).text = curSelectedCharacter.curCharacterSkill.skillData.description;
+
+    }
 
     public void ShowSelectCharacterInfo()
     {
@@ -413,7 +442,10 @@ public class BattleUI : UIBase
             GetObject((int)GameObjects.RangeObject).SetActive(false);
         }
 
-        GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() + " / " + curSelectedCharacter.health.MaxHealth.ToString();
+        GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() +
+            ((curSelectedCharacter.health.GetShield() > 0) ?" + " + curSelectedCharacter.health.GetShield().ToString() : "") +
+        " / " + curSelectedCharacter.health.TotalHealth.ToString();
+
         GetImage((int)Images.HealthBar).fillAmount = curSelectedCharacter.health.HealthRatio;
         GetImage((int)Images.ShieldBar).fillAmount = curSelectedCharacter.health.ShieldRatio;
 
@@ -446,7 +478,8 @@ public class BattleUI : UIBase
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();
 
-        GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString();
+        GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString() +
+            ((curTargetCharacter.health.GetShield() > 0) ? " + " + curTargetCharacter.health.GetShield().ToString() : "");
         GetImage((int)Images.TargetHealthBar).fillAmount = curTargetCharacter.health.HealthRatio;
         GetImage((int)Images.TargetShieldBar).fillAmount = curTargetCharacter.health.ShieldRatio;
 
@@ -534,12 +567,14 @@ public class BattleUI : UIBase
     {
         TextMeshPro text = ShowText(transform);
 
-        text.text = damage.damage.ToString();
+        text.text = "";
 
         if (damage.isCriticalHit)
         {
-            //---
+            text.text += "치명타!\r\n";
         }
+
+        text.text += damage.damage.ToString();
 
         if (isHeal)
         {

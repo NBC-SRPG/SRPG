@@ -30,7 +30,6 @@ public class AnimationController : MonoBehaviour
     [SerializeField] private GameObject attackerPosition;
     [SerializeField] private GameObject victimPosition;
     [SerializeField] private GameObject backGround;
-    [SerializeField] private GameObject battleCanvas;
 
     private CharacterBase attacker;
     private List<CharacterBase> attackTargets;
@@ -71,7 +70,6 @@ public class AnimationController : MonoBehaviour
         Managers.UI.FindUI<BattleUI>().ResetUI();
 
         backGround.gameObject.SetActive(true);
-        battleCanvas.gameObject.SetActive(true);
 
         this.attacker = attacker;
         this.attackTargets = victims.ConvertAll(data => data);
@@ -120,7 +118,6 @@ public class AnimationController : MonoBehaviour
         CameraController.instance.SetCharacterCameraMove(0);
 
         backGround.gameObject.SetActive(false);
-        battleCanvas.gameObject.SetActive(false);
 
         CameraController.instance.ResetBattleGroup();
 

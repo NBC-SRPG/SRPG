@@ -54,7 +54,11 @@ public static class Utility
 
         object obj = Activator.CreateInstance(passiveType);
         PassiveLogic passive = obj as PassiveLogic;
-        passive.coefficient = new Dictionary<string, int>(so.coefficients);
+
+        if (so.coefficients != null)
+        {
+            passive.coefficient = new Dictionary<string, int>(so.coefficients);
+        }
 
         return passive;
     }
