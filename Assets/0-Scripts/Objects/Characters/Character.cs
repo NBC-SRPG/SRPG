@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 public class Character
 {
     public CharacterSO SO;

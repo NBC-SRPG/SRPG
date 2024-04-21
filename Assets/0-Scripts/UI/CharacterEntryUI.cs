@@ -15,6 +15,7 @@ public class CharacterEntryUI : UIBase
     private float pressedTimer;
     // 1초 이상 눌렀을 때 캐릭터 정보창이 켜져있는지 체크하는 변수
     private bool hasShownCharacterInfo;
+    private bool isCharacterInFormation;
 
     private enum Texts
     {
@@ -29,7 +30,8 @@ public class CharacterEntryUI : UIBase
     private enum Images
     {
         CharacterImage,
-        CharacterAttributeImage
+        CharacterAttributeImage,
+        InFormationImage
     }
     
     private enum GameObjects
@@ -66,6 +68,18 @@ public class CharacterEntryUI : UIBase
         UpdateLevel();
         // TODO 속성 이미지 세팅
         // TODO 캐릭터 아웃라인 속성 이미지에 맞게 세팅
+
+        FormationUI ui = Managers.UI.FindUI<FormationUI>();
+        // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
+        FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
+        // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
+        isCharacterInFormation = currentFormation.characterId.Contains(characterId);
+
+        // 편성에 포함되어 있지 않다면 편성됨 이미지 끄기
+        if (isCharacterInFormation == false)
+        {
+            GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
+        }
 
         SetStar();
     }
@@ -124,15 +138,30 @@ public class CharacterEntryUI : UIBase
 
         FormationUI ui = Managers.UI.FindUI<FormationUI>();
 
-        // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
-        FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
-        // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
-        bool isCharacterInFormation = currentFormation.characterId.Contains(characterId);
+        /*
         // 이미 편성에 포함되어 있으면 불가 안내 UI
         if (isCharacterInFormation)
         {
             WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
             warningUi.SetText("이미 편성에 포함되어 있습니다");
+            return;
+        }
+        */
+
+        // 이미 편성에 포함되어 있다면 편성 해제
+        if (isCharacterInFormation)
+        {
+            // 해당 캐릭터가 있는 인덱스
+            int characterIndex = Array.IndexOf(Managers.AccountData.formationData[ui.presetIndex].characterId, characterId);
+            // 편성 이미지 비활성화
+            GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
+            // 편성 데이터 업데이트
+            Managers.AccountData.SetFormationCharacter(ui.presetIndex, characterIndex, 0);
+            // UI 업데이트
+            ui.UpdateFormationMember(characterIndex);
+
+            isCharacterInFormation = false;
+
             return;
         }
 
