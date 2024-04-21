@@ -114,6 +114,10 @@ public class Character
         enemySO = so;
 
         SO = new CharacterSO();
+
+        SO.range = so.range;
+        SO.attackMethod = so.attackMethod;
+
         SO.id = enemySO.id;
         SO.animatorName = enemySO.animatorName;
         SO.icon = enemySO.icon;

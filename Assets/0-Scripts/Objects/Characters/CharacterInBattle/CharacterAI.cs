@@ -154,9 +154,14 @@ public class CharacterAI : CharacterBase
             }
             else
             {
-                Wait?.Invoke();
+                if(waiting)
+                {
+                    Wait?.Invoke();
 
-                AnimationController.instance.onAnimationEnd -= EndActing;
+                    AnimationController.instance.onAnimationEnd -= EndActing;
+                }
+
+                waiting = true;
             }
         }
     }
@@ -167,6 +172,13 @@ public class CharacterAI : CharacterBase
         {
             ChangeState(EnemyState.Finding);// 색적 상태로 전환
             return;
+        }
+
+        if (waiting)
+        {
+            Wait?.Invoke();
+
+            AnimationController.instance.onAnimationEnd -= EndActing;
         }
 
         if (!canActing)// 행동 불가 상태면
@@ -339,7 +351,7 @@ public class CharacterAI : CharacterBase
 
     public void ChaseStart()
     {
-        if (character.enemySO.isElite)
+        if (character.enemySO.isElite || state == EnemyState.Waiting)
         {
             return;
         }
@@ -652,8 +664,6 @@ public class CharacterAI : CharacterBase
         }
 
         List<OverlayTile> list = pathFinder.FindPath(curStandingTile, nearestTile);
-
-        Debug.Log(list.Count);
 
         leftWalk -= list.Count;
 

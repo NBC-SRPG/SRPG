@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
     public GamePlayer player;
 
     private int index;
+    private int roundCount;
 
     public List<Character> characters = new List<Character>();
     public List<EnemySO> enemyList = new List<EnemySO>();
@@ -79,6 +80,12 @@ public class EnemyController : MonoBehaviour
         player.isReady = true;
 
         BattleManager.Instance.GameStart += GameStart;
+
+        if (stage.spawnByRound)// 몬스터가 매턴 소환되는 구조라면
+        {
+            BattleManager.Instance.RoundStart += SpawnEnemyByTurn;
+            roundCount = stage.spawnRound;
+        }
     }
 
     //--------------------------------------------------------------------------------------------------
@@ -133,6 +140,11 @@ public class EnemyController : MonoBehaviour
         {
             InitiateWaveDefault();
         }
+
+        if (stage.spawnByRound)
+        {
+            roundCount = stage.spawnRound;
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -176,7 +188,10 @@ public class EnemyController : MonoBehaviour
 
             if (stage.chaseAtStart)
             {
-                character.ChaseStart();
+                if (character.gameObject.activeInHierarchy)
+                {
+                    character.ChaseStart();
+                }
             }
         }
 
@@ -189,6 +204,16 @@ public class EnemyController : MonoBehaviour
 
     //-----------------------------------------------------------------------
     //다음 웨이브 조건
+
+    private void SpawnEnemyByTurn()
+    {
+        roundCount--;
+
+        if(roundCount == 0)
+        {
+            InitiateWave();
+        }
+    }
 
     private void CheckRemainEnemy()
     {
@@ -242,7 +267,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        //Debug.Log("now Acting " + index);
+        Debug.Log("now Acting " + index);
 
         if (index >= characterWave[nowWave].Count)// 모든 AI가 대기 상태일 때
         {
@@ -279,7 +304,7 @@ public class EnemyController : MonoBehaviour
 
     private void CheckActing()// AI가 행동했을 때
     {
-        //Debug.Log(index + " is acting");
+        //Debug.Log(index + " is acted");
         characterWave[nowWave][index].Wait -= CheckWait;
         characterWave[nowWave][index].Act -= CheckActing;
 

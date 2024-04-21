@@ -168,7 +168,7 @@ public class CharAnimBase : MonoBehaviour
     public virtual void KnockBackEnemy(CharacterBase targetCharacter ,int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBack(transform.parent.position, scale);
+        targetCharacter.characterAnim.GetKnockBackByLerp(GetDirectionOfCharacter(), scale, 0.25f);
     }
 
     public void ShowHitParticle()
