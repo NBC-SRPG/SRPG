@@ -27,7 +27,7 @@ public class StageSO : SerializedScriptableObject
     public Dictionary<int, int> enemyAtWave = new();// 한 웨이브 당 적 수
 
     [Header("Defence Detail")]
-    public int defenceTurn;// 버텨야 하는 턴
+    public int defenceRound;// 버텨야 하는 턴
 
     [Header("Run Detail")]
     public List<Vector2Int> targetGrid;// 목표 위치
@@ -38,7 +38,8 @@ public class StageSO : SerializedScriptableObject
     [Header("Infinite Detail")]
     public int infiniteWave = -1;// 몇 번째 턴부터 같은 적이 계속 등장하는지
     public List<EnemySO> infiniteEnemy;// 무한히 등장할 적
-    public bool spawnByTurn;// 매턴 소환할지 설정
+    public bool spawnByRound;// 매턴 소환할지 설정
+    public int spawnRound;// 몇 턴 마다 소환될 지 설정
 
     [HideInInspector] public List<Character> characterList;
 

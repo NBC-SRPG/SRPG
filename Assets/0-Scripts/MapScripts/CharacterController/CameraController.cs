@@ -59,10 +59,13 @@ public class CameraController : MonoBehaviour
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
-        mainCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
-        followingCharacterCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
-        followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
-        followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+        if (MapManager.instance != null && MapManager.instance.cameraArea != null)
+        {
+            mainCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+            followingCharacterCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+            followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+            followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+        }
 
         battleGroupComposer = BattleGroupCameara.GetCinemachineComponent<CinemachineFramingTransposer>();
         noise = BattleGroupCameara.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
