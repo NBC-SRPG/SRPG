@@ -171,8 +171,6 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 스탯 관련 함수
 
-    // 데미지 계산식 : Dmg = (Attack(ex스킬일 경우 x계수/100) - 0.25*enemy.Defend*PenetrateDef) * EnhanceDMG * enemy.ReduceDMG * (치명타시)CritDMG * 속성상성
-
     public float AtkIncrease
     {
         get
@@ -296,6 +294,11 @@ public class CharacterBase : MonoBehaviour
         get
         {
             float reduce = 1 * character.ReducedDmg * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
+            if(reduce > 1)
+            {
+                reduce = 1;
+            }
+
             if(reduce < 0)
             {
                 reduce = 1f;
