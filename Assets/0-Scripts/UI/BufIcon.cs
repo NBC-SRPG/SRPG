@@ -22,7 +22,7 @@ public class BufIcon : MonoBehaviour
 
         gameObject.SetActive(true);
         //bufIcon = 
-        stack.text = buf.stack.ToString();
+        stack.text = buf.duration.ToString();
 
         if(buf.BufType == BattleKeyWords.BufType.Positive)
         {

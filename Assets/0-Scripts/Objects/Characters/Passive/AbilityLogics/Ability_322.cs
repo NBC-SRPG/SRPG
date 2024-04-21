@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ability_322: PassiveLogic
 {
     //"무너지지 않는 마음"
-    //자신의 체력이 50%, 30%,10% 이하일 때 자신에게 받는 피해 감소 버프를 부여한다.
+    //자신의 체력이 50%, 30%,10% 이하일 때 자신에게 받는 피해 감소 보너스 스탯을 부여한다.
     //제네의 2-2 특성.
 
     BonusStat stat_322 = new BonusStat(); // 보너스 스탯
@@ -17,7 +17,7 @@ public class Ability_322: PassiveLogic
 
     private void DamageReduceInit()
     {
-        int healthPercentage = (character.health.CurHealth * 100) / character.health.MaxHealth; // 체력 비율 계산
+        int healthPercentage = (character.health.CurHealth * coefficient["denominator"]) / character.health.TotalHealth; // 체력 비율 계산
 
         //조건을 체크한다.
         //일정 체력 비율 이하일 경우 그에 맞는 데미지 감소 수치 적용.
@@ -28,17 +28,17 @@ public class Ability_322: PassiveLogic
 
         if (healthPercentage <= coefficient["hpRatio_1"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_1"];
+            stat_322.ReducedDmg = coefficient["reducedDmgRate_1"] / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else if (healthPercentage <= coefficient["hpRatio_2"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_2"];
+            stat_322.ReducedDmg = coefficient["reducedDmgRate_2"] / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else if (healthPercentage <= coefficient["hpRatio_3"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_3"];
+            stat_322.ReducedDmg = coefficient["reducedDmgRate_3"] / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else
@@ -73,7 +73,7 @@ public class Ability_322: PassiveLogic
         DamageReduceInit();
     }
 
-    public virtual void AfterTakeHeal(int heal, CharacterBase skillUser = null,
+    public override void AfterTakeHeal(int heal, CharacterBase skillUser = null,
     BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
     Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
     {

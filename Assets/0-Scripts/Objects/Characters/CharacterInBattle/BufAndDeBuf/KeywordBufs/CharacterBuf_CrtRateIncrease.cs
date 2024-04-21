@@ -10,9 +10,10 @@ public class CharacterBuf_CrtRateIncrease : CharacterBuf
 
     public override string Keyword { get; protected set; } = "CrtRateIncrease";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
+        isIndependent = true;
     }
 
     public override BonusStat GetAdditionalStat()
@@ -29,7 +30,7 @@ public class CharacterBuf_CrtRateIncrease : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
 
         turnCnt++;

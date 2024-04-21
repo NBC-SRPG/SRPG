@@ -11,10 +11,10 @@ public class CharacterBuf_Bleed : CharacterBuf
 
     public override string Keyword { get; protected set; } = "Bleed";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
-
+        base.Init(character, buffer, duration, power, stack);
+        maxStack = 99;
         this.Buffer = this.character;
     }
 
@@ -22,8 +22,22 @@ public class CharacterBuf_Bleed : CharacterBuf
     {
         base.OnEndActing();
 
-        character.TakeDamageByInt(ref stack, null, BattleKeyWords.AttackDamageType.Buf);
+        for (int i = 0; i < stack; i++) //출혈에 걸린 상태에서 움직일 시, 피해량 power의 데미지를 중첩된 출혈 수 만큼 반복.
+        {
+            character.TakeDamageByInt(ref power, null, BattleKeyWords.AttackDamageType.Buf);
+        }
 
-        DecreaseStack(stack/2);
+        stack = stack/2; //그리고 스택이 절반으로 줄어든다.
+        if (stack <= 0)
+        {
+            DestoyBuf(); //스택이 0이 되면 출혈 제거.
+        }
+    }
+
+    public override void OnTurnEnd() //턴의 끝에 지속 시간이 1 감소한다.
+    {
+        base.OnTurnEnd();
+
+        DecreaseDuration(1);
     }
 }

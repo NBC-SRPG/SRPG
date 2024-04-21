@@ -10,10 +10,10 @@ public class CharacterBuf_HealReversal : CharacterBuf
 
     public override string Keyword { get; protected set; } = "HealReversal";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        cantStack = true;
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
+        onlyOne = true;
     }
 
     public override void OnTurnStart()
@@ -22,7 +22,7 @@ public class CharacterBuf_HealReversal : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
 
         turnCnt++;

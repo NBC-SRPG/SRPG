@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class CharacterBuf_Corrosion : CharacterBuf
 {
@@ -10,12 +11,27 @@ public class CharacterBuf_Corrosion : CharacterBuf
 
     public override string Keyword { get; protected set; } = "Corrosion";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
-
-        this.Buffer = this.character;
+        base.Init(character, buffer, duration, power, stack);
+        maxStack = 99;
     }
+
+    public override BonusStat GetAdditionalStat()
+    {
+        if (Buffer.character.abilityT2.id == 521) //521. 무장해제 특성 적용 중일 경우
+        {
+            return new BonusStat
+            {
+                ExtraDefend = (stack * 0.03f) * (-1) //중첩당 방어력 -0.03%
+            };
+        }
+        else
+        {
+            return null;
+        }
+    }
+
 
     public override void OnTurnStart()
     {
@@ -29,15 +45,15 @@ public class CharacterBuf_Corrosion : CharacterBuf
         }
 
 
-        character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf);
+        for (int i = 0; i < stack; i++)
+        {
+            character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf, Constants.ElementType.Water);
+        }
     }
 
     public override void OnTurnEnd()
     {
         base.OnTurnEnd();
-
-
-
-        DecreaseStack(1);
+        DecreaseDuration(1);
     }
 }

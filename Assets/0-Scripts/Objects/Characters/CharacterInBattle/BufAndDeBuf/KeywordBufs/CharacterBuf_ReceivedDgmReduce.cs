@@ -10,16 +10,17 @@ public class CharacterBuf_ReceivedDgmReduce : CharacterBuf
 
     public override string Keyword { get; protected set; } = "ReceivedDgmReduce";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
+        isIndependent = true;
     }
 
     public override BonusStat GetAdditionalStat()
     {
         return new BonusStat
         {
-            ReducedDmg = power
+            ReducedDmg = (power / 100)
         };
     }
 
@@ -29,7 +30,7 @@ public class CharacterBuf_ReceivedDgmReduce : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
 
         turnCnt++;

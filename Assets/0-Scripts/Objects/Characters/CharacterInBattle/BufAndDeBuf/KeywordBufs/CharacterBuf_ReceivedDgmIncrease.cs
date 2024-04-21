@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
+public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증가 디버프
 {
     public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.ReceivedDgmIncrease;
 
@@ -10,16 +10,17 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
 
     public override string Keyword { get; protected set; } = "ReceivedDgmIncrease";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
+        isIndependent = true;
     }
 
     public override BonusStat GetAdditionalStat()
     {
         return new BonusStat
         {
-            ReducedDmg = power * (-1)
+            ReducedDmg = (power / 100) * (-1)
         };
     }
 
@@ -29,7 +30,7 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
 
         turnCnt++;

@@ -31,7 +31,7 @@ public class Ability_311: PassiveLogic
     {
         hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase =>
         {
-            if (characterBase.character.SO.id == 7)
+            if (characterBase.character.SO.id == coefficient["constants1"])
             {
                 // ID가 7인 캐릭터를 찾았으니 아군인지 적인지 확인
                 if (!characterBase.CheckEnemy(characterBase))
@@ -48,7 +48,7 @@ public class Ability_311: PassiveLogic
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-        if (enemy.curCharacterBufList.FindNegativeBufAll().Count > 0) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
+        if (enemy.curCharacterBufList.FindNegativeBufAll().Count > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
             checkExisistSis();
 

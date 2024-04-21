@@ -47,7 +47,7 @@ public class PassiveAbility_105 : PassiveLogic
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
-
+        enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Corrosion, coefficient["debufDuration"], character, 0, 1); //2턴 동안 1스택의 부식 디버프 적용
     }
 
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
@@ -62,7 +62,7 @@ public class PassiveAbility_105 : PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
-        target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Corrosion, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
+        target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Corrosion, coefficient["debufDuration"], character, 0, 3); //2턴 동안 3스택의 부식 디버프 적용
     }
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
