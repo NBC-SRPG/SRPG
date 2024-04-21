@@ -326,13 +326,18 @@ public class BattleUI : UIBase
     public void ShowWave(int nowWave)
     {
         string waveNumber = stage.waveNumber.ToString();
+        string nowWaveNumber = nowWave.ToString();
 
         if(stage.spawnType == EnemySpawnType.Infinite)
         {
             waveNumber = "??";
+            if (stage.spawnByRound)
+            {
+                nowWaveNumber = "??";
+            }
         }
 
-        GetText((int)Texts.WaveText).text = nowWave.ToString() + " / " + waveNumber;
+        GetText((int)Texts.WaveText).text = nowWaveNumber + " / " + waveNumber;
     }
 
     public void ShowTurn(bool myTurn)
@@ -385,8 +390,8 @@ public class BattleUI : UIBase
                 remain.text = "";
                 break;
             case StageClear.Defence:
-                goal.text = stage.defenceTurn + " 라운드 동안 살아남아야 합니다.";
-                remain.text = "남은 라운드 수 : " + (stage.defenceTurn - BattleManager.Instance.nowRound).ToString();
+                goal.text = stage.defenceRound + " 라운드 동안 살아남아야 합니다.";
+                remain.text = "남은 라운드 수 : " + (stage.defenceRound - BattleManager.Instance.nowRound).ToString();
                 break;
         }
     }
