@@ -36,6 +36,9 @@ public class BattleUI : UIBase
         WaveText,
         SkillText,
         SkillNameText,
+        SkillCostText,
+        SkillTargetText,
+        ManaText,
 
     }
 
@@ -53,6 +56,7 @@ public class BattleUI : UIBase
         Lose,
         TurnObject,
         SkillInfo,
+        ManaObject,
 
     }
 
@@ -245,6 +249,8 @@ public class BattleUI : UIBase
         GetObject((int)GameObjects.TargetCharacterInfo).SetActive(false);
 
         GetObject((int)GameObjects.SkillInfo).SetActive(false);
+
+        GetObject((int)GameObjects.ManaObject).SetActive(false);
     }
 
     public void ShowAtCharacterSelectPhase()
@@ -269,12 +275,36 @@ public class BattleUI : UIBase
 
     public void SetCanUseSkill(bool canSkill)
     {
-        GetButton((int)Buttons.UseSkillButton).interactable = canSkill;
+        GetButton((int)Buttons.SkillConFirmButton).interactable = canSkill;
     }
 
     public void SetNoManaText(bool haveMana)
     {
         GetText((int)Texts.NoMana).gameObject.SetActive(haveMana);
+    }
+
+    public void ShowManaText()
+    {
+        GetObject((int)GameObjects.ManaObject).SetActive(true);
+
+        GetText((int)Texts.ManaText).text = Managers.GameManager.player.manaCost.ToString() + " / 60";
+        GetText((int)Texts.ManaText).color = Color.blue;
+    }
+
+    public void SetManaText()
+    {
+        int skillcost = Managers.GameManager.player.manaCost - curSelectedCharacter.skillCost;
+
+        GetText((int)Texts.ManaText).text =  skillcost.ToString() + " / 60";
+
+        if(skillcost < 0)
+        {
+            GetText((int)Texts.ManaText).color = Color.red;
+        }
+        else
+        {
+            GetText((int)Texts.ManaText).color = Color.blue;
+        }
     }
 
     public void ShowAtMoveAndAttackPhase()
@@ -411,6 +441,30 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.SkillNameText).text = curSelectedCharacter.curCharacterSkill.skillData.skillName;
         GetText((int)Texts.SkillText).text = curSelectedCharacter.curCharacterSkill.skillData.description;
+
+        GetText((int)Texts.SkillCostText).text = curSelectedCharacter.skillCost.ToString();
+
+        string target = "";
+        switch (curSelectedCharacter.curCharacterSkill.skillData.targetType)
+        {
+            case SkillTargetType.Me:
+                target = "이 캐릭터";
+                break;
+            case SkillTargetType.Enemy:
+                target = "적";
+                break;
+            case SkillTargetType.Ally:
+                target = "아군";
+                break;
+            case SkillTargetType.All:
+                target = "전체";
+                break;
+            case SkillTargetType.AllExceptME:
+                target = "이 캐릭터를 제외한 전체";
+                break;
+        }
+
+        GetText((int)Texts.SkillTargetText).text = target;
 
     }
 
