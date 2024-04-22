@@ -80,7 +80,7 @@ public class MailEntryUI : UIBase
     private void DeleteMailEntry()
     {
         Managers.AccountData.DeleteMail(mailSO);
-        Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
+        Managers.UI.FindUI<MailUI>().UpdateReceiveText();
 
         Destroy(gameObject);
     }
