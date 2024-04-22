@@ -20,7 +20,9 @@ public class GachaUI : UIBase
         GachaName,
         GachaInfo,
         GachaPoint,
-        EndDate
+        EndDate,
+        GeasCountText,
+        Geas10CountText
     }
     private enum Buttons
     {
@@ -31,13 +33,19 @@ public class GachaUI : UIBase
         CharacterInfoButton,
         PointExchangeButton,
         CommonBanner,
-        PickUpBanner
+        PickUpBanner,
+        BackButton
     }
     private enum Images
     {
         PickUpImage,
         CommonBanner,
         PickUpBanner
+    }
+
+    private enum GameObjects
+    {
+        Star
     }
 
     private void Start()
@@ -52,18 +60,27 @@ public class GachaUI : UIBase
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
         GetButton((int)Buttons.GeasButton).onClick.AddListener(OnGeasButton);
         GetButton((int)Buttons.Geas10Button).onClick.AddListener(OnGeas10Button);
-        GetButton((int)Buttons.GeasWithScrollButton).onClick.AddListener(OnGeasWithScrollButton);
+        // GetButton((int)Buttons.GeasWithScrollButton).onClick.AddListener(OnGeasWithScrollButton);
         GetButton((int)Buttons.PercentageInfoButton).onClick.AddListener(OnPercentageInfoButton);
         GetButton((int)Buttons.CharacterInfoButton).onClick.AddListener(OnCharacterInfoButton);
         GetButton((int)Buttons.PointExchangeButton).onClick.AddListener(OnPointExchangeButton);
         GetButton((int)Buttons.CommonBanner).onClick.AddListener(OnCommonBannerButton);
         GetButton((int)Buttons.PickUpBanner).onClick.AddListener(OnPickUpBannerButton);
+        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
         gachaType = Constants.GachaType.Common;
         gachaList = Managers.AccountData.versionData.curGacha;
+
+        // TODO
+        // GachaInfoUI 초기화
+        // 캐릭터 이름 / 설명 / 남은 기간 / 캐릭터 정보 / 캐릭터 일러스트
+
+        // 버튼 초기화
+        // 계약 포인트, 계약 티켓 존재 ? 계약 티켓 개수 : 다이아 개수
     }
 
     private void OnGeasButton()
@@ -116,5 +133,10 @@ public class GachaUI : UIBase
         gachaType = Constants.GachaType.PickUp;
     }
 
+    private void OnClickBackButton()
+    {
+        Debug.Log("OnClickBackButton");
 
+        Managers.UI.CloseUI(this);
+    }
 }

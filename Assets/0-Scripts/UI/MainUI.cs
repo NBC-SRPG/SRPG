@@ -111,7 +111,7 @@ public class MainUI : UIBase
         Debug.Log("OnClickGachaButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<GachaUI>();
+        Managers.UI.ShowUI<GachaUI>();
     }
     private void OnClickShopButton()
     {
