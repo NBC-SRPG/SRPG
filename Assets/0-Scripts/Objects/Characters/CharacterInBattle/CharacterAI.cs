@@ -21,6 +21,8 @@ public class CharacterAI : CharacterBase
 
     protected bool hasSkill = false;
 
+    private int mana;
+
     protected EnemySO enemyData;
 
     public event Action Disable;
@@ -36,12 +38,16 @@ public class CharacterAI : CharacterBase
 
         state = enemyData.startState;
 
+        mana = 0;
+        hasSkill = character.enemySO.hasSkill;
+
     }
 
     public override void OnStartPlayerTurn()
     {
         base.OnStartPlayerTurn();
 
+        mana += 10;
         waiting = false;
     }
 
@@ -115,53 +121,67 @@ public class CharacterAI : CharacterBase
     private IEnumerator ChaseEnemy()
     {
 
-        if (hasSkill)// 엘리트 몹 전용
+        if (hasSkill && canSkill)// 스킬이 있는 몬스터라면
         {
+            targets = GetBestSkillTarget();
 
+            if(targets != null && targets.Count > 0 && mana - skillCost >= 0)
+            {
+                UseSkill();
+                mana -= skillCost;
+            }
+
+            if(targets == null)
+            {
+                targets = new List<CharacterBase>();
+            }
         }
 
-        if (character.SO.attackMethod == Constants.AttackMethod.Melee)// 근접 캐릭터라면
+        if (!didUseSkill)
         {
-            if (!attractTarget.isDead && canActing)
+            if (character.SO.attackMethod == Constants.AttackMethod.Melee)// 근접 캐릭터라면
             {
-                yield return delay;
+                if (!attractTarget.isDead && canActing)
+                {
+                    yield return delay;
 
-                movePath = FindMeleePath();
-                MoveCharacter();
-            }
-            else
-            {
-                Wait?.Invoke();
-
-                AnimationController.instance.onAnimationEnd -= EndActing;
-            }
-        }
-        else// 원거리 캐릭터라면
-        {
-            if (!attractTarget.isDead && !didWalk)
-            {
-                yield return delay;
-
-                movePath = FindRangePath();
-                MoveCharacter();
-            }
-
-            if (CheckEnemyInAttackRange() && !didAttack)
-            {
-                yield return delay;
-
-                SetAttackTarget(attractTarget);
-            }
-            else
-            {
-                if(waiting)
+                    movePath = FindMeleePath();
+                    MoveCharacter();
+                }
+                else
                 {
                     Wait?.Invoke();
 
                     AnimationController.instance.onAnimationEnd -= EndActing;
                 }
+            }
+            else// 원거리 캐릭터라면
+            {
+                if (!attractTarget.isDead && !didWalk)
+                {
+                    yield return delay;
 
-                waiting = true;
+                    movePath = FindRangePath();
+                    MoveCharacter();
+                }
+
+                if (CheckEnemyInAttackRange() && !didAttack)
+                {
+                    yield return delay;
+
+                    SetAttackTarget(attractTarget);
+                }
+                else
+                {
+                    if (waiting)
+                    {
+                        Wait?.Invoke();
+
+                        AnimationController.instance.onAnimationEnd -= EndActing;
+                    }
+
+                    waiting = true;
+                }
             }
         }
     }
@@ -706,4 +726,43 @@ public class CharacterAI : CharacterBase
         return list;
     }
 
+    private void GetSkillScaleTile(Vector2Int location, int scale)// 스킬 범위 가져오기
+    {
+        if(!hasSkill)
+        {
+            return;
+        }
+
+        skillScale = curCharacterSkill.skillScaleClass.GetSkillScale(location, scale);
+    }
+
+    private List<CharacterBase> GetBestSkillTarget()// 가장 많은 적을 노릴 수 있는 스킬 위치 가져옴
+    {
+        if (!hasSkill)
+        {
+            return null;
+        }
+
+        int max = 0;
+        List<CharacterBase> bestList = null;
+
+        List<OverlayTile> range = new List<OverlayTile>();
+        List<CharacterBase> list = new List<CharacterBase>();
+
+        range = rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, curCharacterSkill.skillData.skillRange, false);
+
+        foreach(OverlayTile tile in range)
+        {
+            GetSkillScaleTile(tile.grid2DLocation, curCharacterSkill.skillData.skillScale);
+            list = GetSkillTargetList();
+
+            if(list.Count > 0 && list.Count > max)
+            {
+                bestList = list;
+                max = bestList.Count;
+            }
+        }
+
+        return bestList;
+    }
 }
