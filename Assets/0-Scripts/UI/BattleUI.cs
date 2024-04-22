@@ -343,11 +343,6 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.SkillConFirmButton).gameObject.SetActive(true);
     }
 
-    public void SetCanConfirm(bool isTarget)
-    {
-        GetButton((int)Buttons.SkillConFirmButton).interactable = isTarget;
-    }
-
     public void ShowRound(int nowRound)
     {
         GetText((int)Texts.RoundText).text = nowRound.ToString();

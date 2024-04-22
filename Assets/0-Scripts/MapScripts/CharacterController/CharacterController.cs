@@ -55,6 +55,7 @@ public class CharacterController : MonoBehaviour
         phase = PlayerPhase.CharacterSetting;
 
         targetTiles = Instantiate(targetTiles, transform);
+
     }
 
     private void Start()
@@ -448,7 +449,7 @@ public class CharacterController : MonoBehaviour
                 }
                 else
                 {
-                    SelectTargetCharacter(null);
+                    //SelectTargetCharacter(null); // 모바일에서 실행 시 버튼이 제대로 안눌리는 버그가 있음
                 }
             }
 
@@ -619,9 +620,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost >= curSelectedCharacter?.skillCost);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost - curSelectedCharacter?.skillCost > 0 && skillScale.Count > 0);
         Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
-        Ui.SetCanConfirm(skillScale.Count > 0);
     }
 
     private void UseSkill()// 스킬 사용
@@ -801,7 +801,7 @@ public class CharacterController : MonoBehaviour
 
         if (EventSystem.current.IsPointerOverGameObject() == false)
         {
-            if ((Input.GetMouseButtonDown(0) && canClick) || TouchOnce())
+            if ((Input.GetMouseButtonDown(0) && canClick))
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
