@@ -31,15 +31,14 @@ public class AccountData
     #region Init
     public void InitStageClearData(DataSnapshot snapshot)
     {
-        Dictionary<string, int> data = snapshot.Exists ? JsonUtility.FromJson<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
+        Dictionary<string, int> data = snapshot.Exists ? JsonConvert.DeserializeObject<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
         stageClearData = data;
     }
     public void InitCharacterData(DataSnapshot snapshot)
     {
-
+        characterData = new();
         foreach (var character in snapshot.Children)
         {
-            characterData = new();
 
             CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
 
@@ -61,7 +60,10 @@ public class AccountData
         PlayerData data = snapshot.Exists ? JsonUtility.FromJson<PlayerData>(snapshot.GetRawJsonValue()) : new PlayerData();
         playerData = data;
         */
-        playerData = new();
+        if (playerData == null)
+        {
+            playerData = new();
+        }
 
         if (snapshot.Exists)
         {
@@ -86,6 +88,21 @@ public class AccountData
         {
             // TODO
             // 저장된 값이 없을 때 기본 세팅
+            playerData.Init(
+                Managers.DB.GetUID(),
+                "의문의 유저",
+                "잘 부탁드립니다",
+                0,
+                0,
+                20,
+                20,
+                1,
+                0,
+                8,
+                "",
+                3
+            );
+            Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
         }
     }
     public void InitInventoryData(DataSnapshot snapshot)
@@ -341,6 +358,8 @@ public class AccountData
                 CharacterGrowth characterGrowth = new CharacterGrowth((CharacterSO)result);
                 characterData.Add(id, new Character((CharacterSO)result, characterGrowth));
                 Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
+
+                // TODO : 인벤토리에 조각 0으로 추가
             });
         }
         else

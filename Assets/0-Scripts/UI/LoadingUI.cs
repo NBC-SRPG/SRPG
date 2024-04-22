@@ -17,6 +17,10 @@ public class LoadingUI : UIBase
         ProgressBar
     }
 
+    private enum Buttons
+    {
+        BackImage
+    }
     private void Start()
     {
         Init();
@@ -39,13 +43,21 @@ public class LoadingUI : UIBase
     {
         Managers.UI.SetCanvas(gameObject);
 
+        BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));
 
         Database.OnLoadingProgressChanged += UpdateProgress;
 
-        StartCoroutine(Managers.DB.DataLoad());
+        GetButton((int)Buttons.BackImage).onClick.AddListener(OnClickStart);
+
+        //StartCoroutine(Managers.DB.DataLoad());
         //StartCoroutine(LoadAllData());
+    }
+
+    private void OnClickStart()
+    {
+        StartCoroutine(Managers.DB.DataLoad());
     }
 
     private void UpdateProgress(float progress)

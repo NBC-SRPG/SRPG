@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
+using Firebase.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
 
 public class Database
 {
     private FirebaseUser user;
-    private DatabaseReference reference = null;
+    public DatabaseReference reference = null;
     public DatabaseReference userDB = null;
     private string uid;
-    private const int dataCount = 9;
+    private const int dataCount = 8;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
 
@@ -30,20 +31,58 @@ public class Database
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         uid = user != null ? user.UserId : null;
 
-        // test용 임시 uid
-        uid = "uid";
+        // test용 임시 uid -> 빌드시 user.UserId 사용
+        string test_uid = "6rE86SoqxReCSKcoBVhosUpLrN34";
 
-        
         // 데이터베이스의 경로설정
         FirebaseApp app = FirebaseDatabase.DefaultInstance.App;
         app.Options.DatabaseUrl = new Uri("https://nbc-srpg-default-rtdb.asia-southeast1.firebasedatabase.app/");
         // 데이터베이스의 RootReference를 가리킴
         reference = FirebaseDatabase.DefaultInstance.RootReference;
-        userDB = reference.Child("users").Child(uid);
+
+        reference.Child("UIDs").Child(test_uid).GetValueAsync().ContinueWithOnMainThread(task => 
+        {
+            if  (task.IsFaulted)
+            {
+                Debug.LogError("GetValueAsync encountered an error: " + task.Exception);
+                //return;
+            }
+            // 데이터 읽기 성공
+            else if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                if (snapshot.Value == null)
+                {
+                    // 신규 계정생성
+                    string newUID = reference.Child("users").Push().Key;
+                    Write<string>(reference.Child("UIDs").Child(test_uid), newUID);
+                    uid = newUID;
+                }
+                else
+                {
+                    uid = snapshot.Value.ToString();
+                }
+
+                userDB = reference.Child("users").Child(uid);
+                Debug.Log(userDB.ToString());
+
+                // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
+                userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+                userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+            }
+        });
+        
+
+        //userDB = reference.Child("users").Child(uid);
 
         // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
-        userDB.Child("friendData").ValueChanged += FriendDataValueChange;
-        userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+        //userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+        //userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+    }
+
+    public string GetUID()
+    {
+        return uid;
     }
 
     private void FriendDataValueChange(object sender, ValueChangedEventArgs args)
@@ -63,7 +102,8 @@ public class Database
         //Managers.AccountData.InitMailBox(args.Snapshot);
     }
 
-    public IEnumerator DataLoad()
+    public IEnumerator DataLoad
+    ()
     {
         yield return Read(userDB.Child("stageClearData"), data =>
         {
@@ -95,11 +135,11 @@ public class Database
             Managers.AccountData.InitFormationData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("versionData"), data =>
-        {
-            Managers.AccountData.InitVersionData(data);
-            UpdateLoadingProgress(1.0f / dataCount);
-        });
+        //yield return Read(userDB.Child("versionData"), data =>
+        //{
+        //    Managers.AccountData.InitVersionData(data);
+        //    UpdateLoadingProgress(1.0f / dataCount);
+        //});
         yield return Read(userDB.Child("gachaPoint"), data =>
         {
             Managers.AccountData.InitGachaPoint(data);
@@ -127,6 +167,7 @@ public class Database
             Managers.AccountData.InitMailBox(data);
         });
     }
+
     #region CRUD
 
     /// <summary>
