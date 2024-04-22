@@ -221,7 +221,7 @@ public class CharacterController : MonoBehaviour
 
                 GetMoveAndAttackTiles();
                 Ui.ShowAtMoveAndAttackPhase();
-                CameraController.instance.SetCameraOnSelected();
+                CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
                 break;
             case PlayerPhase.SkillTargetSelect:
                 Ui.ShowAtSkillTargetPhase();
@@ -620,7 +620,7 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost - curSelectedCharacter?.skillCost > 0 && skillScale.Count > 0);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost - curSelectedCharacter?.skillCost >= 0 && skillScale.Count > 0);
         Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
     }
 

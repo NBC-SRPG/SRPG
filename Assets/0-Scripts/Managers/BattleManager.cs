@@ -450,12 +450,12 @@ public class BattleManager : MonoBehaviour
 
     public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)// 스킬 사용
     {
+        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
+
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
 
         skillUser.curCharacterSkill.skillAbility.UseSkill(target);
-
-        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
 
         skillUser.OnEndSkill(target);
 
