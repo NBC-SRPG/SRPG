@@ -132,7 +132,7 @@ public class CharacterEntryUI : UIBase
         if (isCharacterInFormation)
         {
             WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-            warningUi.SetText("이미 편성에 포함되어 있습니다");
+            warningUi.Init("이미 편성에 포함되어 있습니다");
             return;
         }
 
