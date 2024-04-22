@@ -61,12 +61,6 @@ public class Ability_311: PassiveLogic
                 stat_311.EnhancedDmg = (float)coefficient["enhancedDmgRate"] / coefficient["denominator"];
             }
             character.tempBonusStat.AddBonusStat(stat_311);
-
-            /*
-            참고 사항
-            1. 이 방식을 사용하면 다수의 적을 공격할 때, 상태이상을 갖고 있는 적과 갖고 있지 않은 적이 섞여있어도 모두에게 15% 증가한 데미지를 가하게 됨.
-            2. 편성 중인 파티에 특정 캐릭터(여기서는 ID 7번 시스)가 있는지 확인하는 로직 구현 완료.
-             */
         }
         else
         {

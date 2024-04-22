@@ -61,11 +61,6 @@ public class Ability_711: PassiveLogic
                 stat_711.EnhancedDmg = (float)coefficient["enhancedDmgRate"] / coefficient["denominator"];
             }
             character.tempBonusStat.AddBonusStat(stat_711);
-
-            /*
-            참고 사항
-            1. 이 방식을 사용하면 다수의 적을 공격할 때, 상태이상을 갖고 있는 적과 갖고 있지 않은 적이 섞여있어도 모두에게 15% 증가한 데미지를 가하게 됨.
-             */
         }
         else
         {
