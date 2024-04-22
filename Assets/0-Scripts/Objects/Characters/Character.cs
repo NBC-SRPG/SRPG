@@ -184,13 +184,6 @@ public class Character
         {
             weapon = (EquipSO)result;
             CalculateStat();
-
-            CharacterInfoUI ui = Managers.UI.FindUI<CharacterInfoUI>();
-
-            if (ui != null)
-            {
-                ui.UpdateStat();
-            }
         });
     }
 
@@ -200,16 +193,6 @@ public class Character
         {
             armor = (EquipSO)result;
             CalculateStat();
-
-            // TODO
-            // 비동기 처리인지라 여기에서 CharacterInfoUI를 찾고 UI를 업데이트
-            // 구조가 맘에 안듦..
-            CharacterInfoUI ui = Managers.UI.FindUI<CharacterInfoUI>();
-
-            if (ui != null)
-            {
-                ui.UpdateStat();
-            }
         });
     }
 

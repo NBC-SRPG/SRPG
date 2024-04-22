@@ -20,7 +20,7 @@ public class MailUI : UIBase
 
     private void Start()
     {
-        
+        /*
         // 테스트용 더미메일
         MailSO so = new()
         {
@@ -30,7 +30,7 @@ public class MailUI : UIBase
             expiration = 7
         };
         Managers.DB.PushChild(Managers.DB.userDB.Child("mailBox"), so);
-        
+        */
         Init();
     }
 
