@@ -2,15 +2,13 @@ using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MailEntryUI : UIBase
 {
     private MailSO mailSO; // 메일 정보
-    private DateTime expireDate; // 메일 만료 날짜
-    private string formattedTime; // 날짜 -> 일 시 분 포맷 변경용
-    private int curMin; // 현재 시간
-    private int lastMin = -1; // 이전 시간 (현재 시간과 다르면 남은 시간 업데이트용)
+    private TimeSpan expiration; // 만료까지 남은 시간
 
     private enum Texts
     {
@@ -35,41 +33,18 @@ public class MailEntryUI : UIBase
         Init();
     }
 
-    private void Update()
-    {
-        // 메일의 남은 날짜 업데이트
-        mailSO.remainingTime = expireDate - DateTime.Now;
-
-        // 현재 남은 시간 업데이트
-        curMin = mailSO.remainingTime.Days * 24 * 60 + mailSO.remainingTime.Hours * 60 + mailSO.remainingTime.Minutes;
-
-        // 이전 남은 시간과 다르다면 (분이 바뀌었다면)
-        if (lastMin != curMin)
-        {
-            // 남은 날짜 일 시 분 포맷에 맞춰 업데이트
-            formattedTime = $"{mailSO.remainingTime.Days}일 {mailSO.remainingTime.Hours}시간 {mailSO.remainingTime.Minutes}분";
-            GetText((int)Texts.MailRemainingTimeText).text = formattedTime;
-            lastMin = curMin;
-        }
-       
-        // 남은 시간이 0이라면 삭제
-        if (mailSO.remainingTime.Days * 24 * 60 + mailSO.remainingTime.Hours * 60 + mailSO.remainingTime.Minutes <= 0)
-        {
-            DeleteMailEntry();
-        }
-    }
-
     private void Init()
     {
-        expireDate = mailSO.dateSent.AddDays(14);
+        expiration = mailSO.dateSent.AddDays(mailSO.expiration) - DateTime.Now;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
 
+        Debug.Log(mailSO.title);
         GetText((int)Texts.MailTitleText).text = mailSO.title;
-        GetText((int)Texts.MailSenderText).text = mailSO.sender;
-        GetText((int)Texts.MailDateText).text = mailSO.dateSent.ToString();
+        GetText((int)Texts.MailDateText).text = "받은 날짜 " + mailSO.dateSent.ToString("yyyy-MM-dd");
+        GetText((int)Texts.MailRemainingTimeText).text = "수령 기한 " + GetExpiration();
 
         // TODO
         // MailItemImage를 아이템 데이터의 아이콘 이미지로 업데이트
@@ -86,23 +61,40 @@ public class MailEntryUI : UIBase
     {
         Debug.Log("OnClickReceiveButton");
 
-        // TODO
-        // 아이템 인벤토리에 수령
-        // 수령 완료 팝업
-        DeleteMailEntry();
+        if (mailSO.isExpired())
+        {
+            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
+            ui.Init("수령기간이 만료되었습니다.");
+            DeleteMailEntry();
+        }
+        else
+        {
+            mailSO.GetRewards();
+
+            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
+            ui.Init("수령 완료");
+            DeleteMailEntry();
+        }
     }
 
     private void DeleteMailEntry()
     {
-        // TODO
-        // 메일박스에서 안지워도 될 것 같음
-        // 어차피 메일함 열 때마다 새로 불러오는중
-        Managers.AccountData.mailBox.Remove(mailSO);
-        Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
-
-        DatabaseReference mailRef = Managers.DB.userDB.Child("mailBox").Child(mailSO.id);
-        Managers.DB.Delete(mailRef);
+        Managers.AccountData.DeleteMail(mailSO);
+        Managers.UI.FindUI<MailUI>().UpdateReceiveText();
 
         Destroy(gameObject);
+    }
+
+    private string GetExpiration()
+    {
+        if (expiration > TimeSpan.FromHours(24))
+        {
+            return expiration.ToString("%d") + "일";
+        }
+        else if (expiration > TimeSpan.FromHours(1))
+        {
+            return expiration.ToString("%h") + "시간";
+        }
+        else return "1시간 미만";
     }
 }

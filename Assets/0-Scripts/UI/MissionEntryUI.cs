@@ -283,7 +283,7 @@ public class MissionEntryUI : UIBase
         if (Managers.AccountData.playerData.CanAddGold(missionData.gold) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(missionData.gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
+            ui.Init(missionData.gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
 
             return false;
         }
@@ -292,7 +292,7 @@ public class MissionEntryUI : UIBase
         if (Managers.AccountData.playerData.CanAddDiamond(missionData.diamond) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(missionData.diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
+            ui.Init(missionData.diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
 
             return false;
         }

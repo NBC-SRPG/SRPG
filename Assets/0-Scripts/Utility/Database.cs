@@ -43,7 +43,7 @@ public class Database
 
         // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
         userDB.Child("friendData").ValueChanged += FriendDataValueChange;
-        userDB.Child("mailBox").ValueChanged += MailBoxValueChange;
+        userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
     }
 
     private void FriendDataValueChange(object sender, ValueChangedEventArgs args)
@@ -51,9 +51,16 @@ public class Database
         FriendDataUpdate();
     }
 
-    private void MailBoxValueChange(object sender, ValueChangedEventArgs args)
+    private void MailBoxValueChange(object sender, ChildChangedEventArgs args)
     {
-
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+        Debug.Log("Mail Added");
+        // TODO : NullException 해결
+        //Managers.AccountData.InitMailBox(args.Snapshot);
     }
 
     public IEnumerator DataLoad()
@@ -143,6 +150,13 @@ public class Database
         string json = JsonConvert.SerializeObject(obj);
         Debug.Log(json);
         path.SetRawJsonValueAsync(json);
+    }
+
+    public string PushChild(DatabaseReference path, object obj)
+    {
+        string newKey = path.Push().Key;
+        WriteWithJson(path.Child(newKey), obj);
+        return newKey;
     }
 
     

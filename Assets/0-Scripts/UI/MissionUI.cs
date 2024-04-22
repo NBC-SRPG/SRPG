@@ -768,7 +768,7 @@ public class MissionUI : UIBase
         if (Managers.AccountData.playerData.CanAddGold(gold) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
+            ui.Init(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
 
             return false;
         }
@@ -777,7 +777,7 @@ public class MissionUI : UIBase
         if (Managers.AccountData.playerData.CanAddDiamond(diamond) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
+            ui.Init(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
 
             return false;
         }

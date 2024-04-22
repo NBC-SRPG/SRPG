@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MailUI : UIBase
@@ -19,6 +20,17 @@ public class MailUI : UIBase
 
     private void Start()
     {
+        /*
+        // 테스트용 더미메일
+        MailSO so = new()
+        {
+            title = "운영자의 선물",
+            dateSent = DateTime.Now,
+            diamond = 30,
+            expiration = 7
+        };
+        Managers.DB.PushChild(Managers.DB.userDB.Child("mailBox"), so);
+        */
         Init();
     }
 

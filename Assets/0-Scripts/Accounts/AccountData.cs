@@ -170,28 +170,40 @@ public class AccountData
     // 메일을 받았을 때 이벤트를 걸어서 업데이트 하는걸로 변경
     public void InitMailBox(DataSnapshot snapshot)
     {
-        mailBox = new();
+        if (mailBox == null)
+        {
+            mailBox = new();
+        }
+        else
+        {
+            mailBox.Clear();
+        }
+
 
         foreach (var mail in snapshot.Children)
         {
             MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
-            mailSO.id = mail.Child("id").Value.ToString();
+            mailSO.key = mail.Key;
             mailSO.title = mail.Child("title").Value.ToString();
-            mailSO.sender = mail.Child("sender").Value.ToString();
-            string dateString = mail.Child("dateSent").Value.ToString();
-            DateTime dateSent = DateTime.Parse(dateString);
-            mailSO.dateSent = dateSent;
-            DateTime expireDate = mailSO.dateSent.AddDays(14);
-            mailSO.remainingTime = expireDate - DateTime.Now;
-            if (expireDate <= DateTime.Now)
+            foreach (var reward in mail.Child("rewards").Children)
             {
-                mailSO.remainingTime = TimeSpan.Zero;
+                mailSO.rewards.Add(int.Parse(reward.Key), int.Parse(reward.Value.ToString()));
+            }
+            mailSO.ap = int.Parse(mail.Child("ap").Value.ToString());
+            mailSO.gold = int.Parse(mail.Child("gold").Value.ToString());
+            mailSO.diamond = int.Parse(mail.Child("diamond").Value.ToString());
+
+            mailSO.dateSent = DateTime.Parse(mail.Child("dateSent").Value.ToString());
+            mailSO.expiration = int.Parse(mail.Child("expiration").Value.ToString());
+
+            if (!mailSO.isExpired())
+            {
+                mailBox.Add(mailSO);
             }
             else
             {
-                mailSO.remainingTime = expireDate - DateTime.Now;
+                Managers.DB.Delete(Managers.DB.userDB.Child("mailBox").Child(mail.Key));
             }
-            mailBox.Add(mailSO);
         }
     }
     public void InitMissionData(DataSnapshot snapshot)
@@ -352,4 +364,43 @@ public class AccountData
         Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
     }
 
+    public void DeleteMail(MailSO mail)
+    {
+        Managers.DB.Delete(Managers.DB.userDB.Child("mailBox").Child(mail.key));
+        mailBox.Remove(mail);
+    }
+
+    public void SetFormationPartyName(int presetIndex, string partyName)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = partyName,
+                characterId = new int[5]
+            };
+        }
+        else
+        {
+            formationData[presetIndex].partyName = partyName;
+        }
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
+
+    public void SetFormationCharacter(int presetIndex, int characterIndex, int characterId)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = "레이드용 파티",
+                characterId = new int[5]
+            };
+        }
+
+        formationData[presetIndex].characterId[characterIndex] = characterId;
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
 }

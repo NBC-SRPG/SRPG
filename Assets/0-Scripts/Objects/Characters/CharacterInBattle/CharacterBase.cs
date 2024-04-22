@@ -573,7 +573,7 @@ public class CharacterBase : MonoBehaviour
     {
         if(didAttack || didWalk)
         {
-            canSkill = false;
+            DeActivateSkill();
         }
 
         if((didAttack && didWalk) || didUseSkill)
@@ -816,7 +816,10 @@ public class CharacterBase : MonoBehaviour
 
     public void UseSkill()// 스킬 사용
     {
-        GetSkillTarget();
+        if (targets == null || targets.Count == 0)
+        {
+            GetSkillTarget();
+        }
 
         BattleManager.Instance.UseSkill(this, targets);
 
@@ -856,6 +859,39 @@ public class CharacterBase : MonoBehaviour
         {
             targets.Add(scale.curStandingCharater);
         }
+    }
+
+    protected List<CharacterBase> GetSkillTargetList()
+    {
+        List<OverlayTile> temp = new List<OverlayTile>();
+        List<CharacterBase> tempTargets = new List<CharacterBase>();
+        curCharacterSkill.targetTiles = skillScale;
+
+        switch (curCharacterSkill.skillData.targetType)
+        {
+            case Constants.SkillTargetType.Me:
+                tempTargets.Add(this);
+                break;
+            case Constants.SkillTargetType.Enemy:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                break;
+            case Constants.SkillTargetType.Ally:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                break;
+            case Constants.SkillTargetType.All:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null);
+                break;
+            case Constants.SkillTargetType.AllExceptME:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater != this);
+                break;
+        }
+
+        foreach (OverlayTile scale in temp)
+        {
+            tempTargets.Add(scale.curStandingCharater);
+        }
+
+        return tempTargets;
     }
 
     public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시

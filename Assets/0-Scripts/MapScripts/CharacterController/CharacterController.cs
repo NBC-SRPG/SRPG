@@ -55,6 +55,7 @@ public class CharacterController : MonoBehaviour
         phase = PlayerPhase.CharacterSetting;
 
         targetTiles = Instantiate(targetTiles, transform);
+
     }
 
     private void Start()
@@ -193,6 +194,7 @@ public class CharacterController : MonoBehaviour
         skillTargets.Clear();
 
         Ui.ResetUI();
+        Ui.ShowManaText();
 
         if (phase != PlayerPhase.Idle)
         {
@@ -219,10 +221,11 @@ public class CharacterController : MonoBehaviour
 
                 GetMoveAndAttackTiles();
                 Ui.ShowAtMoveAndAttackPhase();
-                CameraController.instance.SetCameraOnSelected();
+                CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
                 break;
             case PlayerPhase.SkillTargetSelect:
                 Ui.ShowAtSkillTargetPhase();
+                Ui.SetManaText();
                 break;
         }
 
@@ -376,8 +379,6 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost >= curSelectedCharacter?.skillCost);
-        Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
     }
 
     private void OnClickMoveAndAttack()
@@ -448,7 +449,7 @@ public class CharacterController : MonoBehaviour
                 }
                 else
                 {
-                    SelectTargetCharacter(null);
+                    //SelectTargetCharacter(null); // 모바일에서 실행 시 버튼이 제대로 안눌리는 버그가 있음
                 }
             }
 
@@ -619,7 +620,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanConfirm(skillScale.Count > 0);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost - curSelectedCharacter?.skillCost >= 0 && skillScale.Count > 0);
+        Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
     }
 
     private void UseSkill()// 스킬 사용
@@ -799,7 +801,7 @@ public class CharacterController : MonoBehaviour
 
         if (EventSystem.current.IsPointerOverGameObject() == false)
         {
-            if (Input.GetMouseButtonDown(0) && canClick)
+            if ((Input.GetMouseButtonDown(0) && canClick))
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -810,6 +812,20 @@ public class CharacterController : MonoBehaviour
         }
 
         return hit;
+    }
+
+    public bool TouchOnce()
+    {
+        if(Input.touchCount == 1 && canClick)
+        {
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Began)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public RaycastHit2D GetTouching()// 드래그 방식

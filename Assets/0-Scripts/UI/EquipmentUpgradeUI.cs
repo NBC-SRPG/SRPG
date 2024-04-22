@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using static Constants;
 
 public class EquipmentUpgradeUI : UIBase
@@ -211,7 +210,7 @@ public class EquipmentUpgradeUI : UIBase
         if (Managers.AccountData.playerData.ReduceGold(nextEquip.gold) == false)
         {
             WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText("골드가 부족합니다.");
+            ui.Init("골드가 부족합니다.");
 
             return;
         }
@@ -241,6 +240,12 @@ public class EquipmentUpgradeUI : UIBase
 
     private void OnClickEquipmentUpgradeUICloseButton()
     {
+        CharacterInfoUI ui = Managers.UI.FindUI<CharacterInfoUI>();
+
+        if (ui != null)
+        {
+            ui.UpdateStat();
+        }
         Managers.UI.CloseUI(this);
     }
 }

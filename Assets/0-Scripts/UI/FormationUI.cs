@@ -106,7 +106,6 @@ public class FormationUI : UIBase
         Get<TMP_InputField>((int)InputFields.PartyNameInputField).onEndEdit.AddListener(ChangePartyName);
 
         presetIndex = 0;
-
         UpdateFormationToPreset(presetIndex);
     }
 
@@ -127,19 +126,38 @@ public class FormationUI : UIBase
 
         presetImage = (Images)Enum.Parse(typeof(Images), $"PresetImage{index + 1}");
         GetImage((int)presetImage).color = Color.green;
-        // 딕셔너리에서 index에 해당하는 캐릭터 정보 들고오기
-        // 편성에 채우기
 
         presetIndex = index;
 
         // 파티 이름 불러오기
-        Get<TMP_InputField>((int)InputFields.PartyNameInputField).text = $"{Managers.AccountData.formationData[presetIndex].partyName}";
-       
+        string partyName;
+        if (!Managers.AccountData.formationData.TryGetValue(presetIndex, out var formation))
+        {
+            // 키 값이 없다면 기본 이름
+            partyName = "레이드용 파티";
+            Managers.AccountData.SetFormationPartyName(presetIndex, partyName);
+        }
+        else
+        {
+            partyName = formation.partyName;
+        }
+
+        Get<TMP_InputField>((int)InputFields.PartyNameInputField).text = partyName;
+
         // 바뀐 프리셋 편성 데이터 업데이트
         for (int i = 0; i < 5; i++)
         {
             UpdateFormationMember(i);
         }
+
+        // AccountData의 formationData 업데이트
+        if (formation == null)
+        {
+            formation = new FormationData();
+        }
+
+        formation.partyName = partyName;
+        Managers.AccountData.formationData[presetIndex] = formation;
     }
 
     // 편성의 index에 해당하는 부분 업데이트
@@ -213,7 +231,7 @@ public class FormationUI : UIBase
         {
             Debug.Log("New PartyName: " + newPartyName);
 
-            Managers.AccountData.formationData[presetIndex].partyName = newPartyName;
+            Managers.AccountData.SetFormationPartyName(presetIndex, newPartyName);
         }
     }
 
@@ -255,14 +273,6 @@ public class FormationUI : UIBase
         // 아니라면 프리셋++ & 업데이트
         presetIndex++;
         UpdateFormationToPreset(presetIndex);
-    }
-
-    private void OnClickPartyNameButton()
-    {
-        Debug.Log("OnClickPartyNameButton");
-        // TODO
-        // 키보드창 뜨기
-        // 입력한 문자열로 업데이트
     }
 
     private void OnClickResetButton()

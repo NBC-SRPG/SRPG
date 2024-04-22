@@ -26,6 +26,7 @@ public class BattleManager : MonoBehaviour
 
     public event Action GameStart;
     public event Action TurnStart;
+    public event Action RoundStart;
     public event Action<string> Win;
     public event Action<string> Lose;
 
@@ -449,12 +450,12 @@ public class BattleManager : MonoBehaviour
 
     public void UseSkill(CharacterBase skillUser, List<CharacterBase> target)// 스킬 사용
     {
+        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
+
         Debug.Log("useSkill");
         skillUser.OnUseSkill(target);
 
         skillUser.curCharacterSkill.skillAbility.UseSkill(target);
-
-        AnimationController.instance.EnqueueSkillAnimation(skillUser, target);
 
         skillUser.OnEndSkill(target);
 
@@ -638,7 +639,9 @@ public class BattleManager : MonoBehaviour
         nowRound++;
 
         Ui.ShowRound(nowRound);
-        
+
+        RoundStart?.Invoke();
+
         players = players.OrderByDescending(x => x.prioty).ToList();
 
         foreach (CharacterBase characters in charactersInBattle.FindAll(x => !x.isDead))
@@ -874,13 +877,13 @@ public class BattleManager : MonoBehaviour
 
     public void DefenceTurn()
     {
-        if(stage.defenceTurn == 0)
+        if(stage.defenceRound == 0)
         {
             Debug.Log("no turn");
             return;
         }
 
-        if(nowRound == stage.defenceTurn)
+        if(nowRound == stage.defenceRound)
         {
             EndGame(Managers.GameManager.player.playerId);
         }

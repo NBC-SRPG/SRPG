@@ -28,7 +28,8 @@ public class CharacterInfoUI : UIBase
         AtkText,
         DefText,
         LevelText,
-        ExpText
+        ExpText,
+        ClassDescriptionText
     }
     private enum Buttons
     {
@@ -44,7 +45,10 @@ public class CharacterInfoUI : UIBase
         Ability2_2Button,
         Ability3_1Button,
         Ability3_2Button,
-        TestLevelUpButton // 테스트 버튼
+        Class1Button,
+        Calss2_1Button,
+        Calss2_2Button,
+        LevelUpButton
     }
     private enum Images
     {
@@ -66,6 +70,12 @@ public class CharacterInfoUI : UIBase
         Ability2_2Image,
         Ability3_1Image,
         Ability3_2Image,
+        Class1Image,
+        Class2_1Image,
+        Class2_2Image,
+        ClassPath2,
+        ClassPath2_1,
+        ClassPath2_2
     }
     private enum GameObjects
     {
@@ -115,13 +125,12 @@ public class CharacterInfoUI : UIBase
 
         ShowTab(PlayTab.Skill);
 
-        // 테스트 데이터
         InitSkillTab();
         InitAbilityTab();
         InitClassTab();
         InitCharacterInfo();
 
-        GetButton((int)Buttons.TestLevelUpButton).onClick.AddListener(OnClickLevelUpButton);
+        GetButton((int)Buttons.LevelUpButton).onClick.AddListener(OnClickLevelUpButton);
 
         character.Growth.OnLevelUp += UpdateStat;
     }
