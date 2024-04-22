@@ -9,12 +9,12 @@ using Firebase.Auth;
 public class Login : MonoBehaviour
 {
     private FirebaseAuth auth;
-    /*
+    
     void Awake()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-            .RequestServerAuthCode(false /* Don't force refresh *///)     // 연결된 백엔드 서버 애플리케이션에 전달되고 OAuth 토큰으로 교환될 수 있도록 서버 인증 코드를 생성하도록 요청
-            /*.RequestIdToken()       // ID 토큰 생성을 요청(Firebase에서 플레이어를 식별하는 데 사용)
+            .RequestServerAuthCode(false /* Don't force refresh */)     // 연결된 백엔드 서버 애플리케이션에 전달되고 OAuth 토큰으로 교환될 수 있도록 서버 인증 코드를 생성하도록 요청
+            .RequestIdToken()       // ID 토큰 생성을 요청(Firebase에서 플레이어를 식별하는 데 사용)
             .Build();
 
         PlayGamesPlatform.InitializeInstance(config);
@@ -75,5 +75,5 @@ public class Login : MonoBehaviour
         });
     }
 
-    */
+
 }
