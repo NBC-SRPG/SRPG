@@ -240,6 +240,12 @@ public class EquipmentUpgradeUI : UIBase
 
     private void OnClickEquipmentUpgradeUICloseButton()
     {
+        CharacterInfoUI ui = Managers.UI.FindUI<CharacterInfoUI>();
+
+        if (ui != null)
+        {
+            ui.UpdateStat();
+        }
         Managers.UI.CloseUI(this);
     }
 }
