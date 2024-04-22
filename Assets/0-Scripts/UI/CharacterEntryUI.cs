@@ -69,14 +69,22 @@ public class CharacterEntryUI : UIBase
         // TODO 속성 이미지 세팅
         // TODO 캐릭터 아웃라인 속성 이미지에 맞게 세팅
 
-        FormationUI ui = Managers.UI.FindUI<FormationUI>();
-        // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
-        FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
-        // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
-        isCharacterInFormation = currentFormation.characterId.Contains(characterId);
+        if (isFormation)
+        {
+            FormationUI ui = Managers.UI.FindUI<FormationUI>();
+            // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
+            FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
+            // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
+            isCharacterInFormation = currentFormation.characterId.Contains(characterId);
 
-        // 편성에 포함되어 있지 않다면 편성됨 이미지 끄기
-        if (isCharacterInFormation == false)
+            // 편성에 포함되어 있지 않다면 편성됨 이미지 끄기
+            if (isCharacterInFormation == false)
+            {
+                GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
+            }
+        }
+        // 메인화면에서 캐릭터 버튼을 누르고 왔다면 편성됨 이미지 끄기
+        else
         {
             GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
         }
