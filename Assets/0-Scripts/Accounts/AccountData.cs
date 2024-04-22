@@ -370,4 +370,37 @@ public class AccountData
         mailBox.Remove(mail);
     }
 
+    public void SetFormationPartyName(int presetIndex, string partyName)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = partyName,
+                characterId = new int[5]
+            };
+        }
+        else
+        {
+            formationData[presetIndex].partyName = partyName;
+        }
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
+
+    public void SetFormationCharacter(int presetIndex, int characterIndex, int characterId)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = "레이드용 파티",
+                characterId = new int[5]
+            };
+        }
+
+        formationData[presetIndex].characterId[characterIndex] = characterId;
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
 }
