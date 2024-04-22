@@ -54,11 +54,11 @@ public class Ability_311: PassiveLogic
 
             if (hasCharacterWithId7)
             {
-                stat_311.EnhancedDmg = coefficient["enhancedDmgRate"] * coefficient["multiply"]; //파티에 시스가 있으면 계수 2배
+                stat_311.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]) * coefficient["multiply"];  //파티에 시스가 있으면 계수 2배
             }
             else
             {
-                stat_311.EnhancedDmg = coefficient["enhancedDmgRate"];
+                stat_311.EnhancedDmg = (float)coefficient["enhancedDmgRate"] / coefficient["denominator"];
             }
             character.tempBonusStat.AddBonusStat(stat_311);
 
@@ -89,11 +89,11 @@ public class Ability_311: PassiveLogic
 
             if (hasCharacterWithId7)
             {
-                stat_311.EnhancedDmg = coefficient["enhancedDmgRate"] * coefficient["multiply"]; //파티에 시스가 있으면 계수 2배
+                stat_311.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]) * coefficient["multiply"]; //파티에 시스가 있으면 계수 2배
             }
             else
             {
-                stat_311.EnhancedDmg = coefficient["enhancedDmgRate"];
+                stat_311.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]);
             }
             character.tempBonusStat.AddBonusStat(stat_311);
 

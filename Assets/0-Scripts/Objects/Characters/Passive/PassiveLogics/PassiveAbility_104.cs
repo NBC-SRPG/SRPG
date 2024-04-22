@@ -25,7 +25,7 @@ public class PassiveAbility_104 : PassiveLogic
     public override void OnTurnEnd()
     {
         // 힐량 = 최대 체력 * 10% ( 10 / 100 )
-        int healAmount = (int)((character.health.TotalHealth) * (coefficient["healRate"] / coefficient["denominator"]));
+        int healAmount = (int)((character.health.TotalHealth) * ((float)(coefficient["healRate"] / coefficient["denominator"])));
 
         // 타일 범위 내의 캐릭터들을 모두 수집하여 리스트를 업데이트
         UpdateCharactersInRangeList();

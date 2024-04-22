@@ -4,48 +4,20 @@ using UnityEngine;
 
 public class PassiveAbility_107 : PassiveLogic
 {
-    protected CharacterBase character;
+    //ID 007. 시스 Sis
+    //패시브 스킬
+    //시스의 일반 공격 및 스킬 공격에 피격당한 적의 체력이 이번 공격으로 50% 이상에서 50% 미만으로 내려간 경우, 대상에게 1턴 동안 [기절]을 부여한다.
 
-    public Dictionary<string, int> coefficient;
+    int enemyPrevHp;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
     }
 
-    public override void OnRoundStart()// 
-    {
-
-    }
-
-    public override void OnTurnStart()// 턴 시작 시 발동
-    {
-
-    }
-
-    public override void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-
+        enemyPrevHp = enemy.health.CurHealth;
     }
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
@@ -55,12 +27,20 @@ public class PassiveAbility_107 : PassiveLogic
 
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {
-
+        //대상의 피격 이전 체력에 50% 이상이고 피격 이후 체력이 50% 미만인 경우
+        if (enemyPrevHp >= (enemy.health.TotalHealth / (float)coefficient["divider"]) && enemy.health.CurHealth < (enemy.health.TotalHealth / (float)coefficient["divider"]) && !enemy.isDead)
+        {
+            //1턴 동안 기절 적용
+            enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
+        }
     }
 
     public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
     {
-
+        foreach (CharacterBase target in targets)
+        {
+            enemyPrevHp = target.health.CurHealth;
+        }
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
@@ -68,97 +48,17 @@ public class PassiveAbility_107 : PassiveLogic
 
     }
 
-    public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
+    public override void OnEndSkill(List<CharacterBase> targets)// 스킬 사용 종료 시
     {
-
-    }
-
-    public override void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
-    {
-
-    }
-
-    public override void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
-    {
-
-    }
-
-    public override void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
-    {
-
-    }
-
-    public override void OnTakeDamage(ref int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
-    {
-
-    }
-
-    public override void OnTakeHeal(ref int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
-    {
-
-    }
-
-    public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
-    {
-
-    }
-
-    public override void AfterTakeHeal(int heal, CharacterBase skillUser = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
-    {
-
-    }
-
-    public override void OnStartMoving()// 이동 시
-    {
-
-    }
-
-    public override void OnEndMoving()// 이동 끝난 직후
-    {
-
-    }
-
-    public override void OnEndActing()// 행동이 끝난 뒤
-    {
-
-    }
-
-    public override void OnRoundEnd()
-    {
-
-    }
-
-    public override void OnTurnEnd()// 턴이 끝날 때
-    {
-
-    }
-
-    public override void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
-    {
-
-    }
-
-    public override void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
-    {
-
-    }
-
-    public override void OnDie()// 사망 시
-    {
-
-    }
-
-    public override void OnUpdate()// 실시간 판정
-    {
-
+        foreach (CharacterBase target in targets)
+        {
+            //대상의 피격 이전 체력에 50% 이상이고 피격 이후 체력이 50% 미만인 경우
+            if (enemyPrevHp >= (target.health.TotalHealth / (float)coefficient["divider"]) && target.health.CurHealth < (target.health.TotalHealth / (float)coefficient["divider"]) && !target.isDead)
+            {
+                //1턴 동안 기절 적용
+                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
+            }
+        }
     }
 }
 

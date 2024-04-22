@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PassiveAbility_105 : PassiveLogic
 {
-
+    //ID 005. 레인 Rain
+    //패시브 스킬
+    //레인의 일반 공격은 적에게 2턴동안 [부식] 상태이상을 부여한다.  ( 부식 :  매 턴이 시작 될 때마다 중첩당 최대체력의 2% 데미지를 입는다. 최대 중첩 수 : 99)
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
@@ -62,7 +64,7 @@ public class PassiveAbility_105 : PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
-        target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Corrosion, coefficient["debufDuration"], character, 0, 3); //2턴 동안 3스택의 부식 디버프 적용
+        target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Corrosion, coefficient["debufDuration"], character, 0, 1); //2턴 동안 3스택의 부식 디버프 적용. 3회 타격하므로 총합 3스택.
     }
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시

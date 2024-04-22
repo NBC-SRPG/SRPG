@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Ability_532: PassiveLogic
 {
-
+    //"허리케인"
+    //Ex스킬의 비용이 10  증가하는 대신,
+    //데미지가 50% 증가한다.
+    //레인의 3-2 특성.
+    BonusStat stat_532 = new BonusStat(); // 보너스 스탯
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
@@ -15,49 +19,12 @@ public class Ability_532: PassiveLogic
 
     }
 
-    public override void OnTurnStart()// 턴 시작 시 발동
-    {
-
-    }
-
-    public override void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
-    {
-
-    }
-
-    public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
-    {
-
-    }
-
-    public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
-    {
-
-    }
-
     public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
     {
+        stat_532.EnhancedDmg = (float)(coefficient["enhanceDmgRate"]) / (float)(coefficient["denominator"]); //스킬 사용 ~ 스킬 사용 종료까지 주는 데미지가 50% 상승한다.
+        character.tempBonusStat.AddBonusStat(stat_532);
 
+        //여기에 비용 10 추가 소모 코드
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
@@ -72,7 +39,7 @@ public class Ability_532: PassiveLogic
 
     public override void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {
-
+        character.tempBonusStat.RemoveBonusStat(stat_532);
     }
 
     public override void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에

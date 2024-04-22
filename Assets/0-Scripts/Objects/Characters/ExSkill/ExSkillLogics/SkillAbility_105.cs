@@ -6,7 +6,7 @@ public class SkillAbility_105 : ExSkillLogic
 {
     //레인
     //Ex스킬
-    //지정 범위 마름모꼴 13칸의 적을 공격하고 [부식] 디버프를 3회 중첩한다. (부식은 패시브에서 겁니다.)
+    //지정 범위 마름모꼴 13칸의 적을 3회 공격하고 [부식] 디버프를 3회 중첩한다. (부식은 패시브에서 겁니다.)
     //현재 스킬 계수는 80은 너무 약한 것 같아서 160.
 
     public override void init(CharacterBase character)// 스킬 소유자 설정
@@ -21,7 +21,16 @@ public class SkillAbility_105 : ExSkillLogic
 
     public override void UseSkill(List<CharacterBase> targets)// 스킬 실제 사용
     {
-        BattleManager.Instance.EXSkillAttack(character, targets);
+        /*
+        if(character.character.abilityT3.id == 532)
+        {
+            
+        }
+        */
+        for(int i = 0; i < 4; i++) // 3회 타격
+        {
+            BattleManager.Instance.EXSkillAttack(character, targets);
+        }
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시

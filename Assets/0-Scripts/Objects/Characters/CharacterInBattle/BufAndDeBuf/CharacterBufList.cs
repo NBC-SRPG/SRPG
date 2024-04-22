@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using static BattleKeyWords;
 
 public class CharacterBufList
@@ -76,7 +77,11 @@ public class CharacterBufList
                     break;
                 case BattleKeyWords.BufKeyword.Corrosion:
                     buf = new CharacterBuf_Corrosion();
-                    break; 
+                    break;
+                case BattleKeyWords.BufKeyword.TargetMarker:
+                    buf = new CharacterBuf_TargetMarker();
+                    break;
+
             }
 
             if (buf != null)// 버프 생성 이후 리스트에 삽입

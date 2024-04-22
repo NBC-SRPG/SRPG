@@ -28,17 +28,17 @@ public class Ability_322: PassiveLogic
 
         if (healthPercentage <= coefficient["hpRatio_1"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_1"] / coefficient["denominator"];
+            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_1"]) / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else if (healthPercentage <= coefficient["hpRatio_2"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_2"] / coefficient["denominator"];
+            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_2"]) / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else if (healthPercentage <= coefficient["hpRatio_3"])
         {
-            stat_322.ReducedDmg = coefficient["reducedDmgRate_3"] / coefficient["denominator"];
+            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_3"]) / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_322);
         }
         else

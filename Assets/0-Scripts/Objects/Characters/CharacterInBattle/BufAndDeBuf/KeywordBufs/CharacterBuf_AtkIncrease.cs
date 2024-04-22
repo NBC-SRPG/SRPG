@@ -20,7 +20,7 @@ public class CharacterBuf_AtkIncrease : CharacterBuf
     {
         return new BonusStat
         {
-            ExtraAtk = power
+            ExtraAtk = (float)power / 100
         };
     }
 

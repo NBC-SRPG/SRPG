@@ -59,6 +59,6 @@ public class BattleKeyWords
         HealReversal,
 
         Corrosion,
-
+        TargetMarker,
     }
 }
