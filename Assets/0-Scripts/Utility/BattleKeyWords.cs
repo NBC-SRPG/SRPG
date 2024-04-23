@@ -19,6 +19,7 @@ public class BattleKeyWords
         public int damage;
         public bool isCriticalHit;
         public AttackDamageType attackType;
+        public float attributeDamage;
     }
 
     public enum AttackDamageType

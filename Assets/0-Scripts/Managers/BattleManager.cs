@@ -179,11 +179,15 @@ public class BattleManager : MonoBehaviour
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        float totalDefend = (0.25f * ((float)victim.Defend * (1 - attacker.PenetrateDef)));
+        float totalDefend = (0.25f * ((float)victim.Defend * attacker.PenetrateDef));
 
         float damage = attacker.Attack - totalDefend;// 방어력 계산
 
-        damage = damage * (1 + attacker.EnhanceDMG) * (1 - victim.ReduceDMG);// 데미지 증감 계산
+        Debug.Log("damage1 " + damage);
+
+        damage = damage * attacker.EnhanceDMG * victim.ReduceDMG;// 데미지 증감 계산
+
+        Debug.Log("damage2 " + damage);
 
         if (CheckCrit(attacker.CritRate))// 치명타 계산
         {
@@ -191,9 +195,12 @@ public class BattleManager : MonoBehaviour
             damage = damage * attacker.CritDMG;
         }
 
-        damage = (damage * ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType));
+        damagest.attributeDamage = ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType);
+        damage = (damage * damagest.attributeDamage);
+        Debug.Log("extra " + damagest.attributeDamage);
+        Debug.Log("damage3 " + damage);
 
-        if(damage < 0)
+        if (damage < 0)
         {
             damage = 0;
         }
@@ -204,7 +211,7 @@ public class BattleManager : MonoBehaviour
         return damagest;
     }
 
-    private BattleKeyWords.Damage CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim)
+    private BattleKeyWords.Damage CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim, ElementType elementType)
     {
         BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
 
@@ -213,11 +220,11 @@ public class BattleManager : MonoBehaviour
         //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
         //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
         //다른 클라이언트는 서버가 준 데미지를 받아옴
-        float totalDefend = (0.25f * ((float)victim.Defend * (1 - attacker.PenetrateDef)));
+        float totalDefend = (0.25f * ((float)victim.Defend * attacker.PenetrateDef));
 
         float damage = figure - totalDefend;// 방어력 계산
 
-        damage = damage * (1 + attacker.EnhanceDMG) * (1 - victim.ReduceDMG);// 데미지 증감 계산
+        damage = damage * attacker.EnhanceDMG * victim.ReduceDMG;// 데미지 증감 계산
 
         if (CheckCrit(attacker.CritRate))// 치명타 계산
         {
@@ -225,7 +232,8 @@ public class BattleManager : MonoBehaviour
             damage = damage * attacker.CritDMG;
         }
 
-        damage = (damage * ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType));
+        damagest.attributeDamage = ExtraDmgbyAttribute(elementType, victim.character.SO.elementType);
+        damage = (damage * damagest.attributeDamage);
 
         if (damage < 0)
         {
@@ -255,15 +263,15 @@ public class BattleManager : MonoBehaviour
         return damagest;
     }
 
-    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase skillUser, CharacterBase victim, int figure, bool isCrit, Constants.ElementType damageType = Constants.ElementType.None, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.None)
+    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase skillUser, CharacterBase victim, int figure, bool isCrit, ElementType damageType = ElementType.None, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.None)
     {
         BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
 
-        float totalDefend = (0.25f * ((float)victim.Defend * (1 - skillUser.PenetrateDef)));
+        float totalDefend = (0.25f * ((float)victim.Defend * skillUser.PenetrateDef));
 
         float damage = figure - totalDefend;// 방어력 계산
 
-        damage = damage * (1 + skillUser.EnhanceDMG) * (1 - victim.ReduceDMG);// 데미지 증감 계산
+        damage = damage * skillUser.EnhanceDMG * victim.ReduceDMG;// 데미지 증감 계산
 
         if (CheckCrit(skillUser.CritRate) && isCrit)// 치명타 계산
         {
@@ -271,7 +279,8 @@ public class BattleManager : MonoBehaviour
             damage = damage * skillUser.CritDMG;
         }
 
-        damage = (damage * ExtraDmgbyAttribute(skillUser.character.SO.elementType, victim.character.SO.elementType));
+        damagest.attributeDamage = ExtraDmgbyAttribute(damageType, victim.character.SO.elementType);
+        damage = (damage * damagest.attributeDamage);
 
         if (damage < 0)
         {
@@ -284,16 +293,16 @@ public class BattleManager : MonoBehaviour
         return damagest;
     }
 
-    public float ExtraDmgbyAttribute(Constants.ElementType attackerAttribute, Constants.ElementType victimAttribute)
+    public float ExtraDmgbyAttribute(ElementType attackerAttribute, ElementType victimAttribute)
     {
         switch (attackerAttribute)
         {
-            case Constants.ElementType.Fire:
-                if(victimAttribute == Constants.ElementType.Water)
+            case ElementType.Fire:
+                if(victimAttribute == ElementType.Water)
                 {
                     return 0.75f;
                 }
-                else if(victimAttribute == Constants.ElementType.Grass)
+                else if(victimAttribute == ElementType.Grass)
                 {
                     return 1.5f;
                 }
@@ -301,12 +310,12 @@ public class BattleManager : MonoBehaviour
                 {
                     return 1;
                 }
-            case Constants.ElementType.Water:
-                if (victimAttribute == Constants.ElementType.Bolt)
+            case ElementType.Water:
+                if (victimAttribute == ElementType.Bolt)
                 {
                     return 0.75f;
                 }
-                else if (victimAttribute == Constants.ElementType.Fire)
+                else if (victimAttribute == ElementType.Fire)
                 {
                     return 1.5f;
                 }
@@ -314,12 +323,12 @@ public class BattleManager : MonoBehaviour
                 {
                     return 1;
                 }
-            case Constants.ElementType.Bolt:
-                if (victimAttribute == Constants.ElementType.Grass)
+            case ElementType.Bolt:
+                if (victimAttribute == ElementType.Grass)
                 {
                     return 0.75f;
                 }
-                else if (victimAttribute == Constants.ElementType.Water)
+                else if (victimAttribute == ElementType.Water)
                 {
                     return 1.5f;
                 }
@@ -327,12 +336,12 @@ public class BattleManager : MonoBehaviour
                 {
                     return 1;
                 }
-            case Constants.ElementType.Grass:
-                if (victimAttribute == Constants.ElementType.Fire)
+            case ElementType.Grass:
+                if (victimAttribute == ElementType.Fire)
                 {
                     return 0.75f;
                 }
-                else if (victimAttribute == Constants.ElementType.Bolt)
+                else if (victimAttribute == ElementType.Bolt)
                 {
                     return 1.5f;
                 }
@@ -340,8 +349,8 @@ public class BattleManager : MonoBehaviour
                 {
                     return 1;
                 }
-            case Constants.ElementType.Light:
-                if (victimAttribute == Constants.ElementType.Dark)
+            case ElementType.Light:
+                if (victimAttribute == ElementType.Dark)
                 {
                     return 1.5f;
                 }
@@ -349,8 +358,8 @@ public class BattleManager : MonoBehaviour
                 {
                     return 1;
                 }
-            case Constants.ElementType.Dark:
-                if (victimAttribute == Constants.ElementType.Light)
+            case ElementType.Dark:
+                if (victimAttribute == ElementType.Light)
                 {
                     return 1.5f;
                 }
@@ -471,7 +480,7 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim);
+            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim, skillUser.character.SO.elementType);
             //------
 
             victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
@@ -517,7 +526,9 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill, string anim = null, bool isCrit = false)// 기타 스킬(추가타 등)
+    public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, 
+        BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill, ElementType elmentType = ElementType.None,
+        string anim = null, bool isCrit = false)// 기타 스킬(추가타 등)
     {
         if(anim != null)
         {
@@ -535,7 +546,7 @@ public class BattleManager : MonoBehaviour
 
             if(attackType == BattleKeyWords.AttackDamageType.Skill)
             {
-                damage = CheckSkillDamage(skillUser, figure, victim);
+                damage = CheckSkillDamage(skillUser, figure, victim, elmentType);
             }
             else if(attackType == BattleKeyWords.AttackDamageType.Attack)
             {

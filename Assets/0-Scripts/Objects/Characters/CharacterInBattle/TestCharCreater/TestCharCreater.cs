@@ -12,9 +12,21 @@ public class TempGrowth
 
     public CharacterSO tempCharacter;
 
+    public int startLevel = 1;
+
+    [Range(-1, 1)] public int ability2 = -1;
+    [Range(-1, 1)] public int ability3 = -1;
+    [Range(-1, 1)] public int superClass = -1;
+
     public void Init()
     {
         growth = new CharacterGrowth(tempCharacter);
+        growth.level = startLevel;
+
+        growth.abilityT2 = ability2;
+        growth.abilityT3 = ability3;
+
+        growth.superiorClass = superClass;
     }
 }
 

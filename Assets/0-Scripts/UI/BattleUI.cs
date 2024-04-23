@@ -630,6 +630,15 @@ public class BattleUI : UIBase
 
         text.text += damage.damage.ToString();
 
+        if (damage.attributeDamage == 1.5f)
+        {
+            text.text += " 취약";
+        }
+        else if (damage.attributeDamage == 0.75f)
+        {
+            text.text += " 내성";
+        }
+
         if (isHeal)
         {
             text.color = Color.green;
