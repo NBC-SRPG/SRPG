@@ -27,7 +27,6 @@ public class BattleManager : MonoBehaviour
     public event Action GameStart;
     public event Action TurnStart;
     public event Action RoundStart;
-    public event Action<string> Win;
     public event Action<string> Lose;
 
     public bool isShowAnimation;
@@ -722,7 +721,7 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam[Managers.GameManager.player.playerId].Count)
             {
-                EndGame("enemy");
+                EndGame(Managers.GameManager.player.playerId);
             }
         }
         //-----
@@ -751,7 +750,7 @@ public class BattleManager : MonoBehaviour
 
     private void EndGame(string player)
     {
-        Win?.Invoke(player);
+        Lose?.Invoke(player);
         gameEnd = true;
     }
 
@@ -811,6 +810,12 @@ public class BattleManager : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     //조건 판단 함수
 
+    public void GiveUpStage()
+    {
+        AnimationController.instance.ClearAnimationQueue();
+        EndGame(Managers.GameManager.player.playerId);
+    }
+
     public int GetRemainEnemy()
     {
         int cnt = 0;
@@ -838,7 +843,7 @@ public class BattleManager : MonoBehaviour
 
             if (numbers == charactersAsTeam["enemy"].Count && nowWave == stage.waveNumber)
             {
-                EndGame(Managers.GameManager.player.playerId);
+                EndGame("enemy");
             }
         }
     }
@@ -862,7 +867,7 @@ public class BattleManager : MonoBehaviour
             cnt++;
             if(cnt == stage.targetEnemy.Count)
             {
-                EndGame(Managers.GameManager.player.playerId);
+                EndGame("enemy");
             }
         }
     }
@@ -882,7 +887,7 @@ public class BattleManager : MonoBehaviour
 
         if (stage.targetGrid.Contains(location.grid2DLocation))
         {
-            EndGame(Managers.GameManager.player.playerId);
+            EndGame("enemy");
         }
     }
 
@@ -896,7 +901,7 @@ public class BattleManager : MonoBehaviour
 
         if(nowRound == stage.defenceRound)
         {
-            EndGame(Managers.GameManager.player.playerId);
+            EndGame("enemy");
         }
     }
 }

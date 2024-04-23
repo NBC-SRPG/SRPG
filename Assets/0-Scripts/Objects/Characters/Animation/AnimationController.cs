@@ -587,6 +587,12 @@ public class AnimationController : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 기타 함수들
 
+    public void ClearAnimationQueue()
+    {
+        animationQueue.Clear();
+        stitchedAnim.Clear();
+    }
+
     public bool CheckSetting()
     {
         return isSetting;

@@ -57,6 +57,7 @@ public class BattleUI : UIBase
         TurnObject,
         SkillInfo,
         ManaObject,
+        SettingObject,
 
     }
 
@@ -71,6 +72,10 @@ public class BattleUI : UIBase
         SkillConFirmButton,
         ClassInfo,
         NextButton,
+        SettingButton,
+        //Setting,
+        GiveUp,
+        Resume,
 
     }
     private enum Images
@@ -137,6 +142,9 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.AttackButton).onClick.AddListener(OnClickAttack);
         GetButton((int)Buttons.SkillConFirmButton).onClick.AddListener(OnClickSkillConfirm);
         GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
+        GetButton((int)Buttons.SettingButton).onClick.AddListener(ShowSettingBox);
+        GetButton((int)Buttons.GiveUp).onClick.AddListener(OnGiveUpButton);
+        GetButton((int)Buttons.Resume).onClick.AddListener(OnResumeButton);
 
         //조이스틱 가져오기
         joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
@@ -208,8 +216,15 @@ public class BattleUI : UIBase
     private void RefreshUI()//ui 초기화
     {
         ResetUI();
+        CloseOtherUI();
 
         CloseResult();
+    }
+
+    private void CloseOtherUI()
+    {
+        GetObject((int)GameObjects.TurnObject).SetActive(false);
+        GetObject((int)GameObjects.SettingObject).SetActive(false);
     }
 
     private void CloseResult()
@@ -222,8 +237,6 @@ public class BattleUI : UIBase
         GetImage((int)Images.ResultBackGround).GetComponent<CanvasRenderer>().SetAlpha(0f);
 
         GetObject((int)GameObjects.GameResult).SetActive(false);
-
-        GetObject((int)GameObjects.TurnObject).SetActive(false);
     }
 
     public void CloseTexts()
@@ -420,6 +433,34 @@ public class BattleUI : UIBase
                 break;
         }
     }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //Setting Ui
+
+    private void ShowSettingBox()
+    {
+        if (GetObject((int)GameObjects.SettingObject).activeInHierarchy)
+        {
+            GetObject((int)GameObjects.SettingObject).SetActive(false);
+        }
+        else
+        {
+            GetObject((int)GameObjects.SettingObject).SetActive(true);
+        }
+        
+    }
+
+    private void OnGiveUpButton()
+    {
+        GetObject((int)GameObjects.SettingObject).SetActive(false);
+        BattleManager.Instance.GiveUpStage();
+    }
+
+    private void OnResumeButton()
+    {
+        GetObject((int)GameObjects.SettingObject).SetActive(false);
+    } 
+
 
     //-----------------------------------------------------------------------------------------------------------------------
     //Character Ui
