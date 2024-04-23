@@ -100,4 +100,21 @@ public class RangeFinder
             return Vector2.down;
         }
     }
+
+    public OverlayTile GetBackOfCharacter(CharacterBase curCharacter, CharacterBase target)
+    {
+        OverlayTile back = null;
+        Vector2Int targetGrid = target.curStandingTile.grid2DLocation;
+
+        Vector2 direction = GetDirection(targetGrid, curCharacter);
+
+        Vector2Int backOfTarget = new Vector2Int(targetGrid.x + (int)direction.x, targetGrid.y + (int)direction.y);
+
+        if(MapManager.instance.map.ContainsKey(backOfTarget))
+        {
+            back = MapManager.instance.map[backOfTarget];
+        }
+
+        return back;
+    }
 }
