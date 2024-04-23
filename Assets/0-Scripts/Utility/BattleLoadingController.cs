@@ -13,7 +13,12 @@ public class BattleLoadingController : MonoBehaviour
         SceneManager.LoadScene("BattleLoadingScene");
     }
 
-    private IEnumerator LoadSceneProcess()
+    private void Start()
+    {
+        StartCoroutine(LoadBattleSceneProcess());
+    }
+
+    private IEnumerator LoadBattleSceneProcess()
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
         op.allowSceneActivation = false;

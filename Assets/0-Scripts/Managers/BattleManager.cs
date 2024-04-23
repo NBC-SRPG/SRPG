@@ -8,6 +8,7 @@ using UnityEngine.TextCore.Text;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using GooglePlayGames.BasicApi;
 using static Constants;
+using static BattleKeyWords;
 using UnityEditor.Experimental.GraphView;
 
 public class BattleManager : MonoBehaviour
@@ -168,9 +169,9 @@ public class BattleManager : MonoBehaviour
     // 데미지 계산식 : Dmg = (Attack(ex스킬일 경우 x계수/100) - 0.25*enemy.Defend*PenetrateDef) * EnhanceDMG * enemy.ReduceDMG * (치명타시)CritDMG * 속성상성
 
 
-    private BattleKeyWords.Damage CheckAttackDamage(CharacterBase attacker, CharacterBase victim)
+    private Damage CheckAttackDamage(CharacterBase attacker, CharacterBase victim)
     {
-        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+        Damage damagest = new Damage();
 
         attacker.OnStartAttack(victim);
 
@@ -206,14 +207,14 @@ public class BattleManager : MonoBehaviour
         }
 
         damagest.damage = (int)damage;
-        damagest.attackType = BattleKeyWords.AttackDamageType.Attack;
+        damagest.attackType = AttackDamageType.Attack;
 
         return damagest;
     }
 
-    private BattleKeyWords.Damage CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim, ElementType elementType)
+    private Damage CheckSkillDamage(CharacterBase attacker, int figure, CharacterBase victim, ElementType elementType)
     {
-        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+        Damage damagest = new Damage();
 
         //------
         //이 부분은 서버에서 처리한 뒤 클라이언트로 전달하도록 후에 변경(치명타 발생 확률 때문)
@@ -241,14 +242,14 @@ public class BattleManager : MonoBehaviour
         }
 
         damagest.damage = (int)damage;
-        damagest.attackType = BattleKeyWords.AttackDamageType.Skill;
+        damagest.attackType = AttackDamageType.Skill;
 
         return damagest;
     }
 
-    private BattleKeyWords.Damage CheckSkillHealDamage(CharacterBase skillUser, int figure)
+    private Damage CheckSkillHealDamage(CharacterBase skillUser, int figure)
     {
-        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+        Damage damagest = new Damage();
 
         int damage = figure;
 
@@ -263,9 +264,9 @@ public class BattleManager : MonoBehaviour
         return damagest;
     }
 
-    public BattleKeyWords.Damage CheckExtraDamage(CharacterBase skillUser, CharacterBase victim, int figure, bool isCrit, ElementType damageType = ElementType.None, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.None)
+    public Damage CheckExtraDamage(CharacterBase skillUser, CharacterBase victim, int figure, bool isCrit, ElementType damageType = ElementType.None, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.None)
     {
-        BattleKeyWords.Damage damagest = new BattleKeyWords.Damage();
+        Damage damagest = new Damage();
 
         float totalDefend = (0.25f * ((float)victim.Defend * skillUser.PenetrateDef));
 
@@ -387,7 +388,7 @@ public class BattleManager : MonoBehaviour
         {
             curCharacter.OnPassEnemy(standingCharacter);
 
-            if (curCharacter.character.SO.attackMethod == Constants.AttackMethod.Melee)// 근거리 캐릭터라면
+            if (curCharacter.character.SO.attackMethod == AttackMethod.Melee)// 근거리 캐릭터라면
             {
                 curCharacter.SetAttackTarget(standingCharacter);
             }
@@ -422,13 +423,13 @@ public class BattleManager : MonoBehaviour
     {
         victim.OnTakeAttack(attacker);
 
-        BattleKeyWords.Damage damage = CheckAttackDamage(attacker, victim);
+        Damage damage = CheckAttackDamage(attacker, victim);
 
         //--------------------------------------------------
 
         AnimationController.instance.EnqueueAttackAnimation(attacker, victim);
 
-        victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
+        victim.OnTakeDamage(ref damage, attacker, AttackDamageType.Attack);
 
         attacker.OnAttackSuccess(victim, damage);
             
@@ -440,13 +441,13 @@ public class BattleManager : MonoBehaviour
     {
         victim.OnTakeAttack(attacker);
 
-        BattleKeyWords.Damage damage = CheckAttackDamage(attacker, victim);
+        Damage damage = CheckAttackDamage(attacker, victim);
 
         //--------------------------------------------------
 
         AnimationController.instance.EnqueueCounterAttackAnimation(attacker, victim);
 
-        victim.OnTakeDamage(ref damage, attacker, BattleKeyWords.AttackDamageType.Attack);
+        victim.OnTakeDamage(ref damage, attacker, AttackDamageType.Attack);
 
         attacker.OnAttackSuccess(victim, damage);
 
@@ -480,10 +481,10 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim, skillUser.character.SO.elementType);
+            Damage damage = CheckSkillDamage(skillUser, skillUser.curCharacterSkill.SkillFigure, victim, skillUser.character.SO.elementType);
             //------
 
-            victim.OnTakeDamage(ref damage, skillUser, BattleKeyWords.AttackDamageType.Skill);
+            victim.OnTakeDamage(ref damage, skillUser, AttackDamageType.Skill);
 
             skillUser.OnSkillAttackSuccess(victim, damage);
         }
@@ -508,10 +509,10 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage figure = CheckSkillHealDamage(skillUser , skillUser.curCharacterSkill.SkillFigure);
+            Damage figure = CheckSkillHealDamage(skillUser , skillUser.curCharacterSkill.SkillFigure);
             //------
 
-            victim.OnTakeHeal(ref figure, victim, BattleKeyWords.AttackDamageType.Skill);
+            victim.OnTakeHeal(ref figure, victim, AttackDamageType.Skill);
 
             skillUser.OnSkillHealSuccess(victim, figure);
         }
@@ -527,7 +528,7 @@ public class BattleManager : MonoBehaviour
     }
 
     public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, 
-        BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill, ElementType elmentType = ElementType.None,
+        AttackDamageType attackType = AttackDamageType.Skill, ElementType elmentType = ElementType.None,
         string anim = null, bool isCrit = false)// 기타 스킬(추가타 등)
     {
         if(anim != null)
@@ -542,13 +543,13 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage damage;
+            Damage damage;
 
-            if(attackType == BattleKeyWords.AttackDamageType.Skill)
+            if(attackType == AttackDamageType.Skill)
             {
                 damage = CheckSkillDamage(skillUser, figure, victim, elmentType);
             }
-            else if(attackType == BattleKeyWords.AttackDamageType.Attack)
+            else if(attackType == AttackDamageType.Attack)
             {
                 damage = CheckAttackDamage(skillUser, victim);
             }
@@ -561,11 +562,11 @@ public class BattleManager : MonoBehaviour
 
             victim.OnTakeDamage(ref damage, skillUser, attackType);
 
-            if (attackType == BattleKeyWords.AttackDamageType.Skill)
+            if (attackType == AttackDamageType.Skill)
             {
                 skillUser.OnSkillAttackSuccess(victim, damage);
             }
-            else if (attackType == BattleKeyWords.AttackDamageType.Attack)
+            else if (attackType == AttackDamageType.Attack)
             {
                 skillUser.OnAttackSuccess(victim, damage);
             }
@@ -581,7 +582,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ExtraSkillHeal(CharacterBase skillUser, int figure, List<CharacterBase> target, BattleKeyWords.AttackDamageType attackType = BattleKeyWords.AttackDamageType.Skill)// 기타 스킬(추가타 등)
+    public void ExtraSkillHeal(CharacterBase skillUser, int figure, List<CharacterBase> target, AttackDamageType attackType = AttackDamageType.Skill)// 기타 스킬(추가타 등)
     {
         foreach (CharacterBase victim in target)
         {
@@ -590,12 +591,12 @@ public class BattleManager : MonoBehaviour
             //입력의 주체인 클라이언트가 서버에 데미지 계산 요청 
             //이후 서버가 데미지를 계산해서 모든 클라이언트에 전달
             //다른 클라이언트는 서버가 준 데미지를 받아옴
-            BattleKeyWords.Damage heal = CheckSkillHealDamage(skillUser, figure);
+            Damage heal = CheckSkillHealDamage(skillUser, figure);
             //------
 
             victim.OnTakeHeal(ref heal, skillUser, attackType);
 
-            if (attackType == BattleKeyWords.AttackDamageType.Skill)
+            if (attackType == AttackDamageType.Skill)
             {
                 skillUser.OnSkillHealSuccess(victim, heal);
             }
