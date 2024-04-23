@@ -48,7 +48,8 @@ public class CharacterInfoUI : UIBase
         Class1Button,
         Calss2_1Button,
         Calss2_2Button,
-        LevelUpButton
+        LevelUpButton,
+        HomeButton
     }
     private enum Images
     {
@@ -122,6 +123,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.ExSkillButton).onClick.AddListener(OnClickExSkillButton);
         GetButton((int)Buttons.WeaponButton).onClick.AddListener(OnClickWeaponButton);
         GetButton((int)Buttons.ArmorButton).onClick.AddListener(OnClickArmorButton);
+        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
 
         ShowTab(PlayTab.Skill);
 
@@ -386,5 +388,12 @@ public class CharacterInfoUI : UIBase
         ui.Init(character, EquipType.Armor);
 
         //GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
+    }
+    
+    private void OnClickHomeButton()
+    {
+        Debug.Log("OnClickHomeButton");
+
+        Managers.UI.ReturnMainUI();
     }
 }

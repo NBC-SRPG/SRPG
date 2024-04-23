@@ -32,7 +32,8 @@ public class Database
         uid = user != null ? user.UserId : null;
 
         // test용 임시 uid -> 빌드시 user.UserId 사용
-        string test_uid = "6rE86SoqxReCSKcoBVhosUpLrN34";
+        // string test_uid = "6rE86SoqxReCSKcoBVhosUpLrN34";
+        string test_uid = "uid";
 
         // 데이터베이스의 경로설정
         FirebaseApp app = FirebaseDatabase.DefaultInstance.App;
