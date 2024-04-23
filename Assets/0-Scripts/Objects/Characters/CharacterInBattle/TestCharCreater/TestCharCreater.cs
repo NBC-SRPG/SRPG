@@ -40,6 +40,8 @@ public class TestCharCreater : MonoBehaviour
 
     public StageSO stage;
 
+    private DialogUI dialog;
+
     private void Awake()
     {
         foreach (TempGrowth tempGrowth in temp)
@@ -59,6 +61,8 @@ public class TestCharCreater : MonoBehaviour
         Managers.GameManager.enemy.party = enemy.ToArray();
 
         Managers.GameManager.thisStage = stage;
+
+        dialog = Managers.UI.ShowUI<DialogUI>();
     }
 
 
@@ -72,4 +76,16 @@ public class TestCharCreater : MonoBehaviour
         SceneManager.LoadScene("SCY_MapTest");
     }
 
+    public void OnClickDialog()
+    {
+        dialog.StartDialog();
+    }
+
+    private void Update()
+    {
+        if (dialog.nowShowDialog)
+        {
+            dialog.UpdateDialog();
+        }
+    }
 }

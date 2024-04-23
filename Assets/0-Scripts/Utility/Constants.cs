@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Constants
 {
@@ -243,4 +244,13 @@ public class Constants
     public const int AbilityTier2 = 50;
     public const int AbilityTier2UnlockLevel = 50;
     public const int AbilityTier3UnlockLevel = 70;
+
+    [System.Serializable]
+    public struct Dialog
+    {
+        public string characterName;
+        public string spriteName;
+        [TextArea(3, 5)]
+        public string dialog;
+    }
 }
