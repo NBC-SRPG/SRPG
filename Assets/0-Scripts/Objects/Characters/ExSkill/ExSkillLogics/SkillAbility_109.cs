@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class SkillAbility_109 : ExSkillLogic
 {
+    //E-03
+    //Ex스킬
+    //지정한 적의 뒤로 순간 이동할 수 있을 때만 시전할 수 있다.
+    ///적의 뒤로 순간 이동해서,
+    //대상의 잃은 체력에 비례해 E-03 공격력의 250 % ~ 500% 만큼 광속성 피해를 입힌다.
+
+
+
 
     public override void init(CharacterBase character)// 스킬 소유자 설정
     {
@@ -37,6 +45,13 @@ public class SkillAbility_109 : ExSkillLogic
 
     public override void OnUpdate()// 실시간 판정
     {
-
+        if (character.skillScale[0].curStandingCharater.CheckEnemy(character))
+        {
+            character.DeActivateSkill();
+        }
+        else
+        {
+            character.ActivateSkill();
+        }
     }
 }

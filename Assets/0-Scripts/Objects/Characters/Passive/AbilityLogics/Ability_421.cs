@@ -27,7 +27,7 @@ public class Ability_421: PassiveLogic
     {
         if (character.character.abilityT3.id == coefficient["abilityIdT3"]) //현재 432번 특성 "신의 축복"이 적용 중일 경우
         {
-            if (target.CheckEnemy(target))
+            if (character.CheckEnemy(target))
             {
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmIncrease, coefficient["debufDuration_2"], character, coefficient["debufCoefficients_2"]);//적일 경우 2턴 간 받는 피해 15% 증가
             }
@@ -38,7 +38,7 @@ public class Ability_421: PassiveLogic
         }
         else
         {
-            if (target.CheckEnemy(target))
+            if (character.CheckEnemy(target))
             {
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmIncrease, coefficient["debufDuration"], character, coefficient["debufCoefficients"]);//적일 경우 받는 피해 10% 증가
             }

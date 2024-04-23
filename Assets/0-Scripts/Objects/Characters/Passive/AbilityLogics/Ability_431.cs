@@ -19,7 +19,7 @@ public class Ability_431: PassiveLogic
     {
         foreach(CharacterBase target in targets) //모든 스킬 대상에게 순회
         {
-            if (target.CheckEnemy(target)) //적이라면
+            if (character.CheckEnemy(target)) //적이라면
             {
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.HealReversal, coefficient["bufDuration"], character); //1턴 동안 "치유 반전" 디버프 적용 (힐 받을 때 힐을 체력에 적용하기 전에 힐량에 -1을 곱하는 디버프)
             }

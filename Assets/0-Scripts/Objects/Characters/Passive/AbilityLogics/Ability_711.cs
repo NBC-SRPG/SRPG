@@ -34,7 +34,7 @@ public class Ability_711: PassiveLogic
             if (characterBase.character.SO.id == coefficient["constants1"])
             {
                 // ID가 1인 캐릭터를 찾았으니 아군인지 적인지 확인
-                if (!characterBase.CheckEnemy(characterBase))
+                if (!characterBase.CheckEnemy(character))
                 {
                     // 아군이라면 true를 반환합니다.
                     return true;

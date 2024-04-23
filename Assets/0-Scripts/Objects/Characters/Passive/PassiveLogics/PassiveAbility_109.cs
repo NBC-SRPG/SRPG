@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class PassiveAbility_109 : PassiveLogic
 {
-    protected CharacterBase character;
+    //ID 009. 에오스 E-03
+    //패시브 스킬
+    //E03는 보조무기를 메인무기와 동일하게 장착한다.
+    //추가로 크리티컬확률이 10% 증가한다
 
-    public Dictionary<string, int> coefficient;
+    BonusStat stat_008;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+        stat_008 = new BonusStat();
+        stat_008.EXCritRate = coefficient["increaseCrtRate"];
     }
 
     public override void OnRoundStart()// 
