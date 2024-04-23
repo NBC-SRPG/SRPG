@@ -21,8 +21,6 @@ public class DialogUI : UIBase
 
     public void Init()
     {
-        Managers.UI.SetCanvas(gameObject, true);
-
         BindObject(typeof(GameObjects));
 
         dialogSystem = GetComponent<DialogSystem>();
