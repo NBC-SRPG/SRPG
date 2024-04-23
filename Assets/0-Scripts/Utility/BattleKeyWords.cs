@@ -60,5 +60,8 @@ public class BattleKeyWords
 
         Corrosion,
         TargetMarker,
+
+        AmethystShield,
+
     }
 }

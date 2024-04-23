@@ -9,15 +9,25 @@ public class PassiveAbility_107 : PassiveLogic
     //시스의 일반 공격 및 스킬 공격에 피격당한 적의 체력이 이번 공격으로 50% 이상에서 50% 미만으로 내려간 경우, 대상에게 1턴 동안 [기절]을 부여한다.
 
     int enemyPrevHp;
+    BonusStat stat_107;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+        if(character.character.abilityT2.id == 722)
+        {
+            stat_107 = new BonusStat();
+            character.tempBonusStat.AddBonusStat(stat_107);
+        }
     }
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         enemyPrevHp = enemy.health.CurHealth;
+
+
+
+
     }
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
@@ -32,6 +42,13 @@ public class PassiveAbility_107 : PassiveLogic
         {
             //1턴 동안 기절 적용
             enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
+
+            //적에게 기절을 거는 데 성공 && 특성 722 "연계공격" 적용 중일 경우
+            if(enemy.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2.id == 722)
+            {
+                //stat_107에 0.1을 더한다.
+                stat_107.ExtraAtk += (float)(coefficient["atkIncreaseRatio"]) / coefficient["denominator"]; 
+            }
         }
     }
 
@@ -57,6 +74,13 @@ public class PassiveAbility_107 : PassiveLogic
             {
                 //1턴 동안 기절 적용
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
+
+                //적에게 기절을 거는 데 성공 && 특성 722 "연계공격" 적용 중일 경우
+                if (target.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2.id == 722)
+                {
+                    //stat_107에 0.1을 더한다.
+                    stat_107.ExtraAtk += (float)(coefficient["atkIncreaseRatio"]) / coefficient["denominator"];
+                }
             }
         }
     }

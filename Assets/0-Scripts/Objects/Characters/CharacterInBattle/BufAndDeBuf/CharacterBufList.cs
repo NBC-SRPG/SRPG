@@ -16,6 +16,8 @@ public class CharacterBufList
 
     private List<CharacterBuf> bufs;
 
+    public bool debufimmunity;
+
     public CharacterBufList(CharacterBase character)
     {
         this.character = character;
@@ -30,7 +32,11 @@ public class CharacterBufList
 
     public void AddBuf(BattleKeyWords.BufKeyword key, int duration,  CharacterBase buffer = null, int power = 0, int stack = 1)
     {
+
         CharacterBuf buf;
+
+
+
 
         // 리스트에 버프가 있는지 확인
         if(buffer == null)
@@ -81,8 +87,17 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.TargetMarker:
                     buf = new CharacterBuf_TargetMarker();
                     break;
+                case BattleKeyWords.BufKeyword.AmethystShield:
+                    buf = new CharacterBuf_AmethystShield();
+                    break;
 
             }
+
+            if(buf.BufType == BufType.Negative && debufimmunity == true) //디버프 면역 상태일 경우(아메의 자수정 방패가 있고 3-1 특성 적용중일 경우)
+            {
+                return;
+            }
+
 
             if (buf != null)// 버프 생성 이후 리스트에 삽입
             {

@@ -4,161 +4,75 @@ using UnityEngine;
 
 public class PassiveAbility_108 : PassiveLogic
 {
-    protected CharacterBase character;
+    //ID 008. 아메 Ame
+    //패시브 스킬
+    //죽음에 이르는 치명적인 피해를 입으면.체력을 40% 회복하고 다음의 효과를 얻는다.
+    //부활 시, 자수정 방패를 자신에게 적용하며, 공격력이 50%, 받는 피해가 25%, 받는 체력 회복이 25% 증가한다. 전투중 1회만 발동한다.
+    //정확한 메커니즘은
+    //1. 죽음에 이르는 치명적인 데미지를 입게 되면
+    //2. 치명적인 데미지의 값을 자신의 남은 체력(또는 체력 + 실드) -1 값으로 변경하고 데미지를 받는다. (체력이 1 남고 생존한다)
+    //3. 데미지를 받고 생존한 뒤,  패시브 효과를 발동함. 따라서, "죽을 시" 트리거는 발동하지 않음.
+    //("죽을 시" 트리거를 발동시키도록 로직을 짜면, 배틀 매니저가 게임 승패를 검사할 때 아메가 패시브를 통해 부활할 수 있어도 무시하고 게임이 끝날 수 있기 때문에.)  
 
-    public Dictionary<string, int> coefficient;
+    int isSkill_008;
+    BonusStat stat_008;
+    List<CharacterBase> characterSelf;
+
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-    }
-
-    public override void OnRoundStart()// 
-    {
-
-    }
-
-    public override void OnTurnStart()// 턴 시작 시 발동
-    {
-
-    }
-
-    public override void OnPassAlly(CharacterBase allyCharacter)// 아군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnAllyPassedMe(CharacterBase allyCharacter)// 아군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnPassEnemy(CharacterBase enemtCharacter)// 적군 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnEnemyPassesMe(CharacterBase enemyCharacter)// 적군이 이 캐릭터 위를 지나갔을 때 발동
-    {
-
-    }
-
-    public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
-    {
-
-    }
-
-    public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
-    {
-
-    }
-
-    public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
-    {
-
-    }
-
-    public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
-    {
-
-    }
-
-    public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
-    {
-
-    }
-
-    public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
-    {
-
-    }
-
-    public override void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
-    {
-
-    }
-
-    public override void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
-    {
-
-    }
-
-    public override void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
-    {
-
+        characterSelf.Add(character);
+        isSkill_008 = 0;
+        stat_008 = new BonusStat();
     }
 
     public override void OnTakeDamage(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
     {
+        if(character.health.shieldList.Count > 0 && damage >= (character.health.GetShield() + character.health.CurHealth) && isSkill_008 == 0)
+        {
+            damage = (character.health.GetShield() + character.health.CurHealth) - 1;
+            isSkill_008 = 1;
+        }
+        else if (damage >= character.health.CurHealth && isSkill_008 == 0)
+        {
+            damage = character.health.CurHealth - 1;
+            isSkill_008 = 1;
+        }
+    }
+
+    public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
+    BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
+    Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
+    {
+        if (isSkill_008 == 1)
+        {
+            stat_008.ExtraAtk = (float)(coefficient["increaseAtkRate"] / coefficient["denominator"]);
+            stat_008.ReducedDmg = -1 * (float)(coefficient["reducedDmgRate"]) / coefficient["denominator"];
+            character.tempBonusStat.AddBonusStat(stat_008);
+
+            int healAmount = (int)(character.health.TotalHealth * ((float)(coefficient["healRate"]) / coefficient["denominator"]));
+
+            BattleManager.Instance.UseSkill(character, characterSelf);
+            BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Skill);
+            isSkill_008 = 2;
+        }
 
     }
+
+
 
     public override void OnTakeHeal(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
     {
-
-    }
-
-    public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
-    {
-
-    }
-
-    public override void AfterTakeHeal(int heal, CharacterBase skillUser = null,
-        BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
-        Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
-    {
-
-    }
-
-    public override void OnStartMoving()// 이동 시
-    {
-
-    }
-
-    public override void OnEndMoving()// 이동 끝난 직후
-    {
-
-    }
-
-    public override void OnEndActing()// 행동이 끝난 뒤
-    {
-
-    }
-
-    public override void OnRoundEnd()
-    {
-
-    }
-
-    public override void OnTurnEnd()// 턴이 끝날 때
-    {
-
-    }
-
-    public override void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
-    {
-
-    }
-
-    public override void OnDieInBattle(CharacterBase killer)// 전투 중 사망 시
-    {
-
-    }
-
-    public override void OnDie()// 사망 시
-    {
-
-    }
-
-    public override void OnUpdate()// 실시간 판정
-    {
-
+        if (isSkill_008 == 2)
+        {
+            //패시브가 활성화 된 후라면 힐량을 회복효율 값만큼 증가시킴.
+            damage = (int)(damage * (1 + ((float)(coefficient["healEfficiency"]) / coefficient["denominator"])));
+        }
     }
 }
 

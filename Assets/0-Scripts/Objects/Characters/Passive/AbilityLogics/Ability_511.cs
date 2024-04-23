@@ -93,7 +93,7 @@ public class Ability_511: PassiveLogic
         {
             target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character); //1턴 동안 기절 상태이상 적용
         }
-        BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지(임시)
+        BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지
     }
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시

@@ -558,6 +558,8 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTurnEnd();
         }
         curCharacterBufList?.OnTurnEnd();
+
+        
     }
 
     public void OnRoundEnd()// 턴이 끝날 때
@@ -567,6 +569,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnRoundEnd();
         }
         curCharacterBufList?.OnRoundEnd();
+        health?.OnRoundEnd();
     }
 
     private void CheckingActing()// 행동 가능 횟수 확인
