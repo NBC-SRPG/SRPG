@@ -59,7 +59,7 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(go);
 
             // 들고있는 매니저들 Init
-            database.Init();
+            //database.Init();
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();

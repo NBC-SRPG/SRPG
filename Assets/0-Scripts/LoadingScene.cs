@@ -11,7 +11,7 @@ public class LoadingScene : MonoBehaviour
 
     private void Init()
     {
-        Managers.UI.ShowUI<LoadingUI>();
+        Managers.UI.ShowUI<DownloadUI>();
         Debug.Log("LoadingSceneInit");
     }
 }

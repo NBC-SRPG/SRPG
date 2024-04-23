@@ -301,8 +301,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 735687906}
-        m_TargetAssemblyTypeName: DBWriteTest, Assembly-CSharp
-        m_MethodName: OnClick
+        m_TargetAssemblyTypeName: Login, Assembly-CSharp
+        m_MethodName: GoogleLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -359,9 +359,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 735687901}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32dd0564208d50d42b549090628c2a4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4031de5d0bed8a143ac86f9314fbcc0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 1732019321}
 --- !u!1 &1224033606
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +533,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3221225527
 --- !u!114 &1311100234
 MonoBehaviour:
   m_ObjectHideFlags: 0

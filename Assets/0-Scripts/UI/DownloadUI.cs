@@ -45,18 +45,19 @@ public class DownloadUI : UIBase
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Init();
     }
 
     private void Init()
     {
-        //Managers.UI.SetCanvas(gameObject);
+        Managers.UI.SetCanvas(gameObject);
 
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
         GetObject((int)GameObjects.PopUp).SetActive(false);
 
@@ -98,7 +99,8 @@ public class DownloadUI : UIBase
             }
             else
             {
-                SceneManager.LoadScene("LoadingScene");
+                yield return new WaitForSeconds(2f);
+                Managers.UI.ShowUI<LoadingUI>();
             }
         }
     }
@@ -167,7 +169,7 @@ public class DownloadUI : UIBase
 
             if (total.Equals(_patchSize))
             {
-                SceneManager.LoadScene("LoadingScene");
+                Managers.UI.ShowUI<LoadingUI>();
                 break;
             }
 

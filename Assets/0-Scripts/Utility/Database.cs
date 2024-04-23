@@ -6,6 +6,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Database
@@ -15,6 +16,7 @@ public class Database
     public DatabaseReference userDB = null;
     private string uid;
     private const int dataCount = 8;
+    public bool isInited = false;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
 
@@ -31,17 +33,13 @@ public class Database
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         uid = user != null ? user.UserId : null;
 
-        // test용 임시 uid -> 빌드시 user.UserId 사용
-        // string test_uid = "6rE86SoqxReCSKcoBVhosUpLrN34";
-        string test_uid = "uid";
-
         // 데이터베이스의 경로설정
         FirebaseApp app = FirebaseDatabase.DefaultInstance.App;
         app.Options.DatabaseUrl = new Uri("https://nbc-srpg-default-rtdb.asia-southeast1.firebasedatabase.app/");
         // 데이터베이스의 RootReference를 가리킴
         reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-        reference.Child("UIDs").Child(test_uid).GetValueAsync().ContinueWithOnMainThread(task => 
+        reference.Child("UIDs").Child(user.UserId).GetValueAsync().ContinueWithOnMainThread(task => 
         {
             if  (task.IsFaulted)
             {
@@ -56,7 +54,7 @@ public class Database
                 {
                     // 신규 계정생성
                     string newUID = reference.Child("users").Push().Key;
-                    Write<string>(reference.Child("UIDs").Child(test_uid), newUID);
+                    Write<string>(reference.Child("UIDs").Child(user.UserId), newUID);
                     uid = newUID;
                 }
                 else
@@ -70,6 +68,7 @@ public class Database
                 // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
                 userDB.Child("friendData").ValueChanged += FriendDataValueChange;
                 userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+                isInited = true;
             }
         });
         
