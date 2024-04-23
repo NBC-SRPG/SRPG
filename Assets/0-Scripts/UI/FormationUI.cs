@@ -65,7 +65,12 @@ public class FormationUI : UIBase
         FormationStar2,
         FormationStar3,
         FormationStar4,
-        FormationStar5
+        FormationStar5,
+        CharacterData1,
+        CharacterData2,
+        CharacterData3,
+        CharacterData4,
+        CharacterData5,
     }
     private void Start()
     {
@@ -175,7 +180,7 @@ public class FormationUI : UIBase
             GetImage((int)formationImageEnum).sprite = characterSprite;
             // TODO
             // 아웃라인 활성화 및 색상 설정
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = true;
+            //GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = true;
             // GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().effectColor = Color.red;
             // 속성 이미지 변경
             GetImage((int)formationAttributeImageEnum).color = Color.red;
@@ -211,7 +216,7 @@ public class FormationUI : UIBase
         else
         {
             GetImage((int)formationImageEnum).sprite = null;
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = false;
+            //GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = false;
             GetImage((int)formationAttributeImageEnum).color = Color.white;
             GetText((int)formationLevelTextEnum).text = "";
 
