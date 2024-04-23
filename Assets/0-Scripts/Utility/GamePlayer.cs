@@ -11,6 +11,7 @@ public class GamePlayer
 
     public int prioty;
     public bool isReady = false;
+    public bool isWin = false;
 
     public int manaCost;
     public int manaNextTurn;
@@ -22,6 +23,7 @@ public class GamePlayer
         playerStartPosition = 0;
         prioty = 10;
         isReady = false;
+        isWin = false;
 
         manaCost = 0;
         manaNextTurn = 0;

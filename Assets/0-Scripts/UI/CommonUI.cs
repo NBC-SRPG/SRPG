@@ -111,7 +111,7 @@ public class CommonUI : UIBase
     private void UpdateApUI(int newAp)
     {
         GetText((int)Texts.ApText).text = $"{newAp} / {playerData.maxAp}";
-        GetImage((int)Images.ApFillImage).fillAmount = (float)newAp / playerData.maxAp;
+        //GetImage((int)Images.ApFillImage).fillAmount = (float)newAp / playerData.maxAp;
     }
     private void UpdateGoldUI(int newGold)
     {

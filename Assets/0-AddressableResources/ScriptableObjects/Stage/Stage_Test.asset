@@ -16,13 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 0}
     - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-    - {fileID: 11400000, guid: 57342ecb51d27fc48acfd00dbb1e9813, type: 2}
-    - {fileID: 11400000, guid: 7ee961ae20ff3dc409db7c0bcbcba063, type: 2}
-    - {fileID: 11400000, guid: 8c01dd24444756f4bbb171117104609f, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -58,8 +52,8 @@ MonoBehaviour:
       Entry: 7
       Data: 3|Character, Assembly-CSharp
     - Name: SO
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: Growth
       Entry: 7
       Data: 4|CharacterGrowth, Assembly-CSharp
@@ -74,7 +68,7 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: hp
       Entry: 3
       Data: 10
@@ -106,14 +100,14 @@ MonoBehaviour:
       Entry: 4
       Data: 0
     - Name: exSkill
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
     - Name: passiveSkill
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
     - Name: abilityT1
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
     - Name: abilityT2
       Entry: 6
       Data: 
@@ -139,8 +133,8 @@ MonoBehaviour:
       Entry: 7
       Data: 5|Character, Assembly-CSharp
     - Name: SO
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
     - Name: Growth
       Entry: 7
       Data: 6|CharacterGrowth, Assembly-CSharp
@@ -155,7 +149,7 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: hp
       Entry: 3
       Data: 10
@@ -187,14 +181,14 @@ MonoBehaviour:
       Entry: 4
       Data: 0
     - Name: exSkill
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
     - Name: passiveSkill
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
     - Name: abilityT1
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
     - Name: abilityT2
       Entry: 6
       Data: 
@@ -220,8 +214,8 @@ MonoBehaviour:
       Entry: 7
       Data: 7|Character, Assembly-CSharp
     - Name: SO
-      Entry: 10
-      Data: 6
+      Entry: 6
+      Data: 
     - Name: Growth
       Entry: 7
       Data: 8|CharacterGrowth, Assembly-CSharp
@@ -236,7 +230,7 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: hp
       Entry: 3
       Data: 10
@@ -268,14 +262,14 @@ MonoBehaviour:
       Entry: 4
       Data: 0
     - Name: exSkill
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
     - Name: passiveSkill
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
     - Name: abilityT1
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
     - Name: abilityT2
       Entry: 6
       Data: 
@@ -307,16 +301,17 @@ MonoBehaviour:
   clear: 0
   stageType: 0
   enemies:
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
   spawnType: 0
   chaseAtStart: 0
   prefabsName: Test
   waveNumber: 1
-  defenceTurn: 0
+  defenceRound: 0
   targetGrid: []
   targetEnemy: 
   infiniteWave: -1
   infiniteEnemy: []
-  spawnByTurn: 0
+  spawnByRound: 0
+  spawnRound: 0

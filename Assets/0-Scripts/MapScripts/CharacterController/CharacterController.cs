@@ -88,7 +88,7 @@ public class CharacterController : MonoBehaviour
 
         Ui = Managers.UI.FindUI<BattleUI>();
 
-        BattleManager.Instance.Win += EndGame;
+        BattleManager.Instance.Lose += EndGame;
     }
 
     private void Update()
@@ -891,11 +891,12 @@ public class CharacterController : MonoBehaviour
 
         if(player.playerId == playerId)
         {
-            Ui.ShowWin();
+            Ui.ShowLose();
         }
         else
         {
-            Ui.ShowLose();
+            player.isWin = true;
+            Ui.ShowWin();
         }
     }
 

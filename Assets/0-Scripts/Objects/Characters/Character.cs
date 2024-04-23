@@ -116,6 +116,7 @@ public class Character
 
         SO.range = so.range;
         SO.attackMethod = so.attackMethod;
+        SO.elementType = so.elementType;
 
         SO.id = enemySO.id;
         SO.animatorName = enemySO.animatorName;
@@ -129,14 +130,14 @@ public class Character
         def = so.def;
         mov = so.mov;
 
-        atkIncrease = 0;
-        defIncrease = 0;
+        atkIncrease = 1f;
+        defIncrease = 1f;
 
         critRate = 20;      // 기본 치명타 확률 20%
         critDmg = 50;       // 기본 치명타 데미지 50%
 
-        EnhancedDmg = 0;
-        ReducedDmg = 0;
+        EnhancedDmg = 1f;
+        ReducedDmg = 1f;
 
         exSkill = so.exSkillSO;
         passiveSkill =  so.passiveSkillSO;

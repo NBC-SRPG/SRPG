@@ -57,18 +57,18 @@ MonoBehaviour:
   clear: 2
   stageType: 0
   enemies:
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
-  - {fileID: 11400000, guid: f8d19c20a9a59004ea81af707abc4c5e, type: 2}
-  - {fileID: 11400000, guid: f8d19c20a9a59004ea81af707abc4c5e, type: 2}
-  - {fileID: 11400000, guid: f8d19c20a9a59004ea81af707abc4c5e, type: 2}
+  - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
+  - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
+  - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
+  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
+  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
+  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
   - {fileID: 11400000, guid: ee1fc30c53460cf4baf4d162721e9bd8, type: 2}
   spawnType: 0
   chaseAtStart: 0
   prefabsName: Main1-2
   waveNumber: 1
-  defenceTurn: 0
+  defenceRound: 0
   targetGrid:
   - {x: 20, y: 9}
   - {x: 21, y: 9}
@@ -76,4 +76,5 @@ MonoBehaviour:
   targetEnemy: 
   infiniteWave: -1
   infiniteEnemy: []
-  spawnByTurn: 0
+  spawnByRound: 0
+  spawnRound: 0

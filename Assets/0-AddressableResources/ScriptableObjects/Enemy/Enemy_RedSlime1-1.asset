@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15a73e2a1002f44caa47549b65e6a29, type: 3}
+  m_Name: Enemy_RedSlime1-1
+  m_EditorClassIdentifier: 
+  startState: 2
+  attackMethod: 1
+  elementType: 3
+  level: 3
+  id: 1002
+  icon: {fileID: 21300000, guid: ade82596b828bfb4584709c039b580f0, type: 3}
+  hp: 400
+  atk: 300
+  def: 120
+  mov: 5
+  range: 6
+  exSkillSO: {fileID: 11400000, guid: 57342ecb51d27fc48acfd00dbb1e9813, type: 2}
+  passiveSkillSO: {fileID: 11400000, guid: c2465dc4c84e4df41b12ea5fed45dc3b, type: 2}
+  abilityT1: {fileID: 11400000, guid: 8c01dd24444756f4bbb171117104609f, type: 2}
+  abilityT2: {fileID: 0}
+  abilityT3: {fileID: 0}
+  basicClass: {fileID: 0}
+  superiorClass: {fileID: 0}
+  characterName: "\uBD89\uC740 \uC2AC\uB77C\uC784"
+  story: 
+  faction: 0
+  weapon: {fileID: 0}
+  armor: {fileID: 0}
+  animatorName: EnemyBase
+  hasSkill: 0
+  isElite: 0
