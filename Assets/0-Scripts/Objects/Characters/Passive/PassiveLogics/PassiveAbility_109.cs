@@ -9,13 +9,14 @@ public class PassiveAbility_109 : PassiveLogic
     //E03는 보조무기를 메인무기와 동일하게 장착한다.
     //추가로 크리티컬확률이 10% 증가한다
 
-    BonusStat stat_008;
+    BonusStat stat_009;
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-        stat_008 = new BonusStat();
-        stat_008.EXCritRate = coefficient["increaseCrtRate"];
+        stat_009 = new BonusStat();
+        stat_009.EXCritRate = coefficient["increaseCrtRate"];
+        character.tempBonusStat.AddBonusStat(stat_009);
     }
 
     public override void OnRoundStart()// 

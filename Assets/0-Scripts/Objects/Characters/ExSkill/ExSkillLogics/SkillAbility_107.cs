@@ -22,6 +22,11 @@ public class SkillAbility_107 : ExSkillLogic
 
     public override void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
+
+    }
+
+    public override void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
+    {
         //스킬 시전 칸으로 이동
         character.MoveTileAndPosition(character.skillScale[0]);
 
@@ -39,11 +44,6 @@ public class SkillAbility_107 : ExSkillLogic
                 BattleManager.Instance.EXSkillAttack(character, exSkillTarget);
             }
         }
-    }
-
-    public override void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
-    {
-
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
