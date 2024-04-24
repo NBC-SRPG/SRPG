@@ -313,12 +313,14 @@ public class CharacterBase : MonoBehaviour
     // Update
     private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
     {
+        /*
         foreach(PassiveLogic passive in curCharacterPassive)
         {
                 passive?.OnUpdate();
         }
         curCharacterSkill.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
+        */
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

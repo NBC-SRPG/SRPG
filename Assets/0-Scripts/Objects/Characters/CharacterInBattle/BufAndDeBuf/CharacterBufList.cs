@@ -662,11 +662,14 @@ public class CharacterBufList
 
     public void OnUpdate()// 실시간 판정
     {
-        foreach (CharacterBuf buf in bufList)
+        if (bufList.Count > 0)
         {
-            if (buf != null && !buf.IsDestroyed)
+            foreach (CharacterBuf buf in bufList)
             {
-                buf.OnUpdate();
+                if (buf != null && !buf.IsDestroyed)
+                {
+                    buf.OnUpdate();
+                }
             }
         }
     }

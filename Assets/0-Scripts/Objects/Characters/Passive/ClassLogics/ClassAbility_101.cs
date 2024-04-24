@@ -11,7 +11,15 @@ public class ClassAbility_101 : PassiveLogic
         this.character = character;
         stat_Class101 = new BonusStat();
         stat_Class101.ReducedDmg = (float)(coefficient["reducedDmg"]) / coefficient["denominator"];
-        character.tempBonusStat.AddBonusStat(stat_Class101);
+        
+    }
+
+    public override void OnRoundStart()
+    {
+        if (!character.tempBonusStat.statList.Contains(stat_Class101))
+        {
+            character.tempBonusStat.AddBonusStat(stat_Class101);
+        }
     }
 }
 
