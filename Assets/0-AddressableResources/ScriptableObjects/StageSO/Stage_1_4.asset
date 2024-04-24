@@ -53,9 +53,16 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  stageName: 
+  stageName: "\uC808\uBCBD"
+  stageNumber: 1-4
   clear: 3
   stageType: 0
+  enemiesInfo:
+  - {fileID: 11400000, guid: 9366dbd3ccd3fda4c8ed24663c245787, type: 2}
+  - {fileID: 11400000, guid: a06dd1e9a12f74b47b35cde8ab43ea02, type: 2}
+  - {fileID: 11400000, guid: 5497908fc348d404ca4320c58b4de278, type: 2}
+  - {fileID: 11400000, guid: 0f231524f7f8bfc4bbb32b89af6faa95, type: 2}
+  recommendLevel: 60
   enemies: []
   spawnType: 1
   chaseAtStart: 1
@@ -75,3 +82,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5497908fc348d404ca4320c58b4de278, type: 2}
   spawnByRound: 1
   spawnRound: 4
+  extraGoal:
+  - type: 0
+    value: 0
+  - type: 2
+    value: 10
+  - type: 4
+    value: 0

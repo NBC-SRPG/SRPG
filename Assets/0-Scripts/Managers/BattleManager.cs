@@ -9,6 +9,7 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 using GooglePlayGames.BasicApi;
 using static Constants;
 using static BattleKeyWords;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BattleManager : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class BattleManager : MonoBehaviour
 
     public StageSO stage;
 
+    public bool[] extraClear;
+
     private void Awake()
     {
         if (Instance == null)
@@ -53,6 +56,8 @@ public class BattleManager : MonoBehaviour
         stage = Managers.GameManager.thisStage;
 
         Managers.Resource.Instantiate("Map/" + stage.prefabsName);
+
+        extraClear = new bool[3];
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -692,6 +697,7 @@ public class BattleManager : MonoBehaviour
 
     public void CheckWin(CharacterBase dieChracter = null, OverlayTile location = null)
     {
+        CheckExtraGoal();
         PVEWin(dieChracter, location);
     }
 
@@ -748,10 +754,50 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    public void CheckExtraGoal()
+    {
+        int index = 0;
+        foreach(ExtraGoalDetail extra in stage.extraGoal)
+        {
+            switch(extra.type)
+            {
+                case ExtraGoal.Clear:
+                    extraClear[index] = CheckClear();
+                    break;
+                case ExtraGoal.InnerTurn:
+                    extraClear[index] = CheckInnerTurn(extra.value);
+                    break;
+                case ExtraGoal.KillOver:
+                    extraClear[index] = CheckKillOver(extra.value);
+                    break;
+                case ExtraGoal.KillSomeone:
+                    extraClear[index] = CheckKillSomeone(extra.value);
+                    break;
+                case ExtraGoal.NoDie:
+                    extraClear[index] = CheckAllAlive();
+                    break;
+                case ExtraGoal.Empty:
+                    extraClear[index] = true;
+                    break;
+            }
+
+            index++;
+        }
+    }
+
     private void EndGame(string player)
     {
         Lose?.Invoke(player);
         gameEnd = true;
+
+        if (Managers.GameManager.player.isWin)
+        {
+            Ui.ShowWin();
+        }
+        else
+        {
+            Ui.ShowLose();
+        }
     }
 
 
@@ -808,7 +854,7 @@ public class BattleManager : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
-    //조건 판단 함수
+    //승리 조건 판단 함수
 
     public void GiveUpStage()
     {
@@ -903,5 +949,79 @@ public class BattleManager : MonoBehaviour
         {
             EndGame("enemy");
         }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //부가 목표 조건 판단 함수
+
+    public bool CheckClear()
+    {
+        if (Managers.GameManager.player.isWin)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckInnerTurn(int value)
+    {
+        if(nowRound <= value)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckKillOver(int value)
+    {
+        int numbers = 0;
+        foreach (CharacterBase character in charactersAsTeam["enemy"])
+        {
+            if (character.isDead)
+            {
+                numbers++;
+            }
+        }
+
+        if(numbers >= value)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckKillSomeone(int value)
+    {
+        foreach (CharacterBase character in charactersAsTeam["enemy"])
+        {
+            if (character.character == stage.GetTargetByInt(value) && character.isDead)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool CheckAllAlive()
+    {
+        foreach (CharacterBase character in charactersAsTeam[Managers.GameManager.player.playerId])
+        {
+            if (character.isDead)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

@@ -422,4 +422,17 @@ public class AccountData
 
         Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
     }
+
+    public void UpdateClearData(string stage, int achievement)
+    {
+        if(stageClearData.TryAdd(stage, achievement) == false)
+        {
+            if (stageClearData[stage] == 3) // 이미 3별이라면 추가로 값을 변동하지 않음
+            {
+                return;
+            }
+            stageClearData[stage] = achievement;
+        }
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
+    }
 }

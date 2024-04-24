@@ -86,9 +86,9 @@ public class Character
         if (Growth.superiorClass !=-1)
         {
             Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
-        {
-            superiorClass = (ClassSO)result;
-        });
+            {
+                superiorClass = (ClassSO)result;
+            });
         }
 
         // 장비 초기화
@@ -103,6 +103,7 @@ public class Character
         Growth.OnLevelUp += CalculateStat;
         Growth.OnAbilityT2Changed += LoadAbilityT2;
         Growth.OnAbilityT3Changed += LoadAbilityT3;
+        Growth.OnSuperiorClassChanged += LoadSuperiorClass;
         Growth.OnWeaponChanged += LoadWeapon;
         Growth.OnArmorChanged += LoadArmor;
     }
@@ -175,6 +176,17 @@ public class Character
             Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
             {
                 abilityT3 = (AbilitySO)result;
+            });
+        }
+    }
+
+    private void LoadSuperiorClass()
+    {
+        if (Growth.superiorClass != -1)
+        {
+            Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
+            {
+                superiorClass = (ClassSO)result;
             });
         }
     }

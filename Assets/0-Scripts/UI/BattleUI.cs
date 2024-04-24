@@ -39,6 +39,9 @@ public class BattleUI : UIBase
         SkillCostText,
         SkillTargetText,
         ManaText,
+        FisrtExtraText,
+        SecondExtraText,
+        ThirdExtraText,
 
     }
 
@@ -58,6 +61,12 @@ public class BattleUI : UIBase
         SkillInfo,
         ManaObject,
         SettingObject,
+        FirstCheck,
+        SecondCheck,
+        ThirdCheck,
+        FirstStar,
+        SecondStar,
+        ThirdStar,
 
     }
 
@@ -173,6 +182,9 @@ public class BattleUI : UIBase
 
         stage = Managers.GameManager.thisStage;
 
+        GetText((int)Texts.FisrtExtraText).text = stage.GetExtraGoalDetail(0);
+        GetText((int)Texts.SecondExtraText).text = stage.GetExtraGoalDetail(1);
+        GetText((int)Texts.ThirdExtraText).text = stage.GetExtraGoalDetail(2);
     }
 
     private void OnClickCancel()
@@ -231,6 +243,10 @@ public class BattleUI : UIBase
     {
         GetObject((int)GameObjects.Win).SetActive(false);
         GetObject((int)GameObjects.Lose).SetActive(false);
+
+        GetObject((int)GameObjects.FirstStar).SetActive(false);
+        GetObject((int)GameObjects.SecondStar).SetActive(false);
+        GetObject((int)GameObjects.ThirdStar).SetActive(false);
 
         GetButton((int)Buttons.NextButton).gameObject.SetActive(false);
 
@@ -445,9 +461,33 @@ public class BattleUI : UIBase
         }
         else
         {
-            GetObject((int)GameObjects.SettingObject).SetActive(true);
+            SetSettingBox();
         }
-        
+    }
+
+    private void SetSettingBox()
+    {
+        BattleManager.Instance.CheckExtraGoal();
+
+        GetObject((int)GameObjects.SettingObject).SetActive(true);
+
+        GetObject((int)GameObjects.FirstCheck).SetActive(BattleManager.Instance.extraClear[0]);
+        if(stage.extraGoal[0].type == ExtraGoal.Empty)
+        {
+            GetObject((int)GameObjects.FirstCheck).SetActive(false);
+        }
+
+        GetObject((int)GameObjects.SecondCheck).SetActive(BattleManager.Instance.extraClear[1]);
+        if (stage.extraGoal[1].type == ExtraGoal.Empty)
+        {
+            GetObject((int)GameObjects.SecondCheck).SetActive(false);
+        }
+
+        GetObject((int)GameObjects.ThirdCheck).SetActive(BattleManager.Instance.extraClear[2]);
+        if (stage.extraGoal[2].type == ExtraGoal.Empty)
+        {
+            GetObject((int)GameObjects.ThirdCheck).SetActive(false);
+        }
     }
 
     private void OnGiveUpButton()
@@ -619,9 +659,32 @@ public class BattleUI : UIBase
             yield return null;
         }
 
+        WaitForSeconds wait = new WaitForSeconds(0.25f);
+
         if (win)
         {
             GetObject((int)GameObjects.Win).SetActive(true);
+
+            yield return wait;
+
+            if (BattleManager.Instance.extraClear[0])
+            {
+                GetObject((int)GameObjects.FirstStar).SetActive(true);
+                yield return wait;
+            }
+
+            if (BattleManager.Instance.extraClear[1])
+            {
+                GetObject((int)GameObjects.SecondStar).SetActive(true);
+                yield return wait;
+            }
+
+            if (BattleManager.Instance.extraClear[2])
+            {
+                GetObject((int)GameObjects.ThirdStar).SetActive(true);
+                yield return wait;
+            }
+
         }
         else
         {

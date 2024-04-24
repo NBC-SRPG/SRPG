@@ -887,16 +887,9 @@ public class CharacterController : MonoBehaviour
 
     public void EndGame(string playerId)
     {
-        Debug.Log(playerId);
-
-        if(player.playerId == playerId)
-        {
-            Ui.ShowLose();
-        }
-        else
+        if(player.playerId != playerId)
         {
             player.isWin = true;
-            Ui.ShowWin();
         }
     }
 
