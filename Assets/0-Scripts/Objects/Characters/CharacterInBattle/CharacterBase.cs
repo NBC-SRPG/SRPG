@@ -558,6 +558,8 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTurnEnd();
         }
         curCharacterBufList?.OnTurnEnd();
+
+        
     }
 
     public void OnRoundEnd()// 턴이 끝날 때
@@ -567,6 +569,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnRoundEnd();
         }
         curCharacterBufList?.OnRoundEnd();
+        health?.OnRoundEnd();
     }
 
     private void CheckingActing()// 행동 가능 횟수 확인
@@ -590,7 +593,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public bool CheckEnenmy(CharacterBase target)// 적인지 확인
+    public bool CheckEnemy(CharacterBase target)// 적인지 확인
     {
         if(target.playerId != playerId)
         {
@@ -701,7 +704,7 @@ public class CharacterBase : MonoBehaviour
     {
         List<OverlayTile> temp = new List<OverlayTile>();
 
-        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
 
         foreach (OverlayTile scale in temp)
         {
@@ -842,10 +845,10 @@ public class CharacterBase : MonoBehaviour
                 targets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);
@@ -873,10 +876,10 @@ public class CharacterBase : MonoBehaviour
                 tempTargets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);
