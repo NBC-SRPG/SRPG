@@ -229,6 +229,8 @@ public class Constants
         GrowthFarming
     }
 
+    public static int presetIndex = 0;
+
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
 

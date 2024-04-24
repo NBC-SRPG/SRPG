@@ -49,6 +49,19 @@ public class GameManager
 
     }
 
+    public void UpdateParty(FormationData formation)
+    {
+        for (int i = 0; i < formation.characterId.Length; i++)
+        {
+            if (Managers.AccountData.characterData[formation.characterId[i]] == null)
+            {
+                continue;
+            }
+
+            UpdatePartyCharacter(formation, i);
+        }
+    }
+
     public void UpdatePartyCharacter(FormationData formationData, int index)
     {
         //파티에 이미 캐릭터가 있는지 확인

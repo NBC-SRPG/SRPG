@@ -35,6 +35,8 @@ public class AdventureUI : UIBase
     private void OnClickSpecialButtonButton()
     {
         Debug.Log("OnClickSpecialButtonButton");
+
+        Managers.UI.ShowUI<SpecialUI>();
     }
     private void OnClickMainStoryButton()
     {

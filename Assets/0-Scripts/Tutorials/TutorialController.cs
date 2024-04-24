@@ -4,15 +4,45 @@ using UnityEngine;
 
 public class TutorialController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private List<TutorialBase> tutorials;
+
+    private TutorialBase currentTutorial;
+    private int index = -1;
+
+    private void Start()
     {
-        
+        SetNextTutorial();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if(currentTutorial != null)
+        {
+            currentTutorial.Execute(this);
+        }
+    }
+
+    private void SetNextTutorial()
+    {
+        if(currentTutorial != null)
+        {
+            currentTutorial.Exit();
+        }
+
+        if(index >= tutorials.Count - 1)
+        {
+            CompletedAllTutorial();
+            return;
+        }
+
+        index++;
+        currentTutorial = tutorials[index];
+
+        currentTutorial.Enter();
+    }
+
+    private void CompletedAllTutorial()
+    {
+        currentTutorial = null;
     }
 }

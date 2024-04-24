@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class StageSelectUI : UIBase
 {
@@ -58,7 +56,7 @@ public class StageSelectUI : UIBase
 
             if (!Managers.AccountData.stageClearData.TryGetValue($"{chapter}_{i}", out stageClearStars))
             {
-                stageClearStars = 0; // 키가 없을 때의 기본 값
+                stageClearStars = 0;
             }
 
             numberOfStars += stageClearStars;

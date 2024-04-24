@@ -1,9 +1,6 @@
 using Sirenix.OdinInspector;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using static BattleKeyWords;
 using static Constants;
 
 [CreateAssetMenu(menuName = "Stage", fileName = "Stage_")]
