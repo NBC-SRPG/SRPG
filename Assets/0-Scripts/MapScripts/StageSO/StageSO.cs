@@ -12,6 +12,7 @@ public class StageSO : SerializedScriptableObject
     public StageClear clear;
     public StageType stageType;
     public List<EnemySO> enemiesInfo;
+    public int recommendLevel;
 
     [Header("Enemy")]
     public List<EnemySO> enemies;
