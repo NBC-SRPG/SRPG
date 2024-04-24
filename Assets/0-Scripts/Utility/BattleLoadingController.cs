@@ -21,34 +21,37 @@ public class BattleLoadingController : MonoBehaviour
     private IEnumerator LoadBattleSceneProcess()
     {
         AsyncOperation op = SceneManager.LoadSceneAsync(nextScene);
-        op.allowSceneActivation = false;
+        op.allowSceneActivation = true;
 
         float time = 0;
-        bool waitSO = false;
+        //bool waitSO = false;
 
-        Utility.Stage2SO<StageSO>(Managers.GameManager.stageName, (result) =>
-        {
-            Managers.GameManager.thisStage = (StageSO)result;
-            waitSO = true;
-        });
+        //Utility.Stage2SO<StageSO>(Managers.GameManager.stageName, (result) =>
+        //{
+        //    Managers.GameManager.thisStage = (StageSO)result;
+        //    waitSO = true;
+        //});
 
-        while (!op.isDone)
-        {
-            yield return null;
+        yield return null;
 
-            if(op.progress < 0.9)
-            {
+        //while (!op.isDone)
+        //{
+        //    yield return null;
 
-            }
-            else
-            {
-                time += Time.unscaledDeltaTime;
-                if(time >= 1 && waitSO)
-                {
-                    op.allowSceneActivation = true;
-                    yield break;
-                }
-            }
-        }
+        //    if(op.progress < 0.9)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        op.allowSceneActivation = true;
+        //        time += Time.unscaledDeltaTime;
+        //        if (time >= 1 && waitSO)
+        //        {
+        //            op.allowSceneActivation = true;
+        //            yield break;
+        //        }
+        //    }
+        //}
     }
 }

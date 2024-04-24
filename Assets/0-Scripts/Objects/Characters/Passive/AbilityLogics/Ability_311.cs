@@ -21,7 +21,16 @@ public class Ability_311: PassiveLogic
         this.character = character;
 
         //다만, 아군 파티가 아니라 전투 내에서 "시스"가 있는지 체크하기 때문에 적으로 시스가 있어도 적용되는 문제가 생길 것 같음.
-        hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase => characterBase.character.SO.id == 7);
+        //hasCharacterWithId7 = BattleManager.Instance.charactersInBattle.Any(characterBase => characterBase.character.SO.id == 7);
+        hasCharacterWithId7 = false;
+        foreach (Character ally in character.player.party)// 플레이어의 파티에 시스가 있을 경우를 체크하도록 변경
+        {
+            if (ally != null && ally.SO.id == 7)
+            {
+                hasCharacterWithId7 = true;
+            }
+        }
+
     }
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시

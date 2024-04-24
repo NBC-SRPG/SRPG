@@ -172,6 +172,8 @@ public class FormationUI : UIBase
 
         formation.partyName = partyName;
         Managers.AccountData.formationData[presetIndex] = formation;
+
+        Managers.GameManager.UpdateParty(Managers.AccountData.formationData[presetIndex]);
     }
 
     // 편성의 index에 해당하는 부분 업데이트
@@ -212,14 +214,6 @@ public class FormationUI : UIBase
                 rt.anchoredPosition = new Vector2(starIndex * starWidth, 0);
             }
 
-            //파티에 이미 캐릭터가 있는지 확인
-            int exist = Array.IndexOf(Managers.GameManager.player.party, Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
-
-            if(exist > -1)//있다면 해당 자리를 null로
-            {
-                Managers.GameManager.player.party[exist] = null;
-            }
-            Managers.GameManager.player.party[index] = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
         }
         // 없다면(0이라면) 빈칸으로 밀어버리기
         else

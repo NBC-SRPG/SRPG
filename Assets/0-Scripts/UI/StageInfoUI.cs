@@ -1,6 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StageInfoUI : UIBase
 {
@@ -103,6 +104,8 @@ public class StageInfoUI : UIBase
         InitImage();
 
         isInit = true;
+
+        Managers.GameManager.thisStage = stage;
     }
 
     private void InitImage()
@@ -181,6 +184,7 @@ public class StageInfoUI : UIBase
     {
         // TODO
         // 해당 스테이지 입장
+        BattleLoadingController.LoadBattle("BattleScene");
     }
     private void OnClickEnemyInfoButton()
     {
