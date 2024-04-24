@@ -2842,16 +2842,6 @@ Tilemap:
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
-  - first: {x: -11, y: 4, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 40
-      m_TileSpriteIndex: 40
-      m_TileMatrixIndex: 1
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741825
   - first: {x: -9, y: 4, z: 0}
     second:
       serializedVersion: 2
@@ -5658,8 +5648,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 4800d20c950d7df43a6337208586ee83, type: 2}
   - m_RefCount: 20
     m_Data: {fileID: 11400000, guid: 6a346018e5df93a4593d71ca94f695b5, type: 2}
-  - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: 44edebb906cfeae488adffe1d4557b9e, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: 78303c177c25fb543ad151270f1dfaf8, type: 2}
   - m_RefCount: 2
@@ -5755,8 +5745,8 @@ Tilemap:
     m_Data: {fileID: 1103846155, guid: 4bc6f860264570545924c48a4825cf5f, type: 3}
   - m_RefCount: 20
     m_Data: {fileID: -914739016, guid: 4bc6f860264570545924c48a4825cf5f, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 1214853054, guid: 92667150650e4844ab231a2637794ccf, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 2
     m_Data: {fileID: 479791139, guid: dc92de974d3bf154ca252e8b82d17419, type: 3}
   - m_RefCount: 2
@@ -5790,7 +5780,7 @@ Tilemap:
       e31: 7.34684e-40
       e32: 3.48e-43
       e33: 1
-  - m_RefCount: 435
+  - m_RefCount: 434
     m_Data:
       e00: 1
       e01: 0
@@ -5809,7 +5799,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 435
+  - m_RefCount: 434
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -36912,6 +36902,7 @@ MonoBehaviour:
     playerStartPosition: 0
     prioty: 2
     isReady: 0
+    isWin: 0
     manaCost: 0
     manaNextTurn: 0
   enemyList: []
