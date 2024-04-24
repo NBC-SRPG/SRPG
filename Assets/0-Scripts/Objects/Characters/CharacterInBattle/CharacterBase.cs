@@ -75,6 +75,8 @@ public class CharacterBase : MonoBehaviour
 
         characterAnim.FlipCharacterDirection(direction);
         characterAnim.Activate();
+
+        OnStageStart();
     }
 
     public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
@@ -151,6 +153,9 @@ public class CharacterBase : MonoBehaviour
     //스킬 및 패시브 시전자 설정
     private void SetSkillOwner()
     {
+        curCharacterBufList = new CharacterBufList(this);
+        tempBonusStat = new TempBonusStat();
+
         if (curCharacterSkill != null)
         {
             curCharacterSkill.Init(this);
@@ -164,8 +169,6 @@ public class CharacterBase : MonoBehaviour
             }
         }
 
-        curCharacterBufList = new CharacterBufList(this);
-        tempBonusStat = new TempBonusStat();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -418,6 +421,14 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 유틸 관련
+    public void OnStageStart()// 스테이지 시작 시 발동
+    {
+        foreach (PassiveLogic passive in curCharacterPassive)
+        {
+            passive?.OnStageStart();
+        }
+    }
+
     public void OnRoundStart()
     {
         historyPrevRound = new CharacterHistory(historyCurrentRound);
@@ -429,7 +440,6 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterBufList?.OnRoundStart();
 
-        tempBonusStat.ClearAllStat();
     }
 
     public virtual void OnStartPlayerTurn()// 턴 시작 시

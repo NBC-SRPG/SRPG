@@ -679,6 +679,8 @@ public class CharacterAI : CharacterBase
     {
         int leftWalk = leftWalkRange + 1;
 
+        int outRange = 1;
+
         List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
         List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - 1, false);
 
@@ -686,9 +688,30 @@ public class CharacterAI : CharacterBase
 
         kiteRange = kiteRange.FindAll(x => x.canClick);// 이동 가능한 타일 선택
 
+        while(kiteRange.Count == 0)// 끝사거리가 이동 가능한 타일이 없다면
+        {
+            kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - outRange, false);// 범위를 줄여가며 탐색
+            range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - outRange - 1, false);
+
+            kiteRange = kiteRange.Except(range).ToList();// 끝 사거리만 가져옴
+
+            kiteRange = kiteRange.FindAll(x => x.canClick);// 이동 가능한 타일 선택
+
+            outRange++;
+            if(character.SO.range - outRange <= 0)
+            {
+                break;
+            }
+        }
+
+        if(kiteRange.Count == 0)//그래도 없다면
+        {
+            return new List<OverlayTile>(); // 움직이지 않도록 설정
+        }
+
         OverlayTile nearestTile = FindNearestTile(kiteRange, curStandingTile);// 그 중에서 가장 가까운 타일 찾기
 
-        while(nearestTile.curStandingCharater != null)
+        while(nearestTile != null && nearestTile.curStandingCharater != null)
         {
             kiteRange.Remove(nearestTile);
 
