@@ -53,5 +53,5 @@ public class ClassAbility_201 : PassiveLogic
         UpdateStat();
     }
 }
-}
+
 

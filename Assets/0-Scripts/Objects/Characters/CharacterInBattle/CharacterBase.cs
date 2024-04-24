@@ -876,10 +876,10 @@ public class CharacterBase : MonoBehaviour
                 tempTargets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);

@@ -10,9 +10,9 @@ public class CharacterBuf_AtkAura : CharacterBuf
 
     public override string Keyword { get; protected set; } = "Unique";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
 
         dontDestroy = true;
         isPermanent = true;
