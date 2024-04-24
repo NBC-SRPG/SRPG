@@ -13,7 +13,7 @@ public class CharacterBuildTest : MonoBehaviour
     
     public void OnClick()
     {
-        Managers.DB.Read(Managers.DB.userDB.Child("characterData"), (snapshot) =>
+        Managers.DB.Load(Managers.DB.userDB.Child("characterData"), (snapshot) =>
         {
             foreach (var character in snapshot.Children)
             {

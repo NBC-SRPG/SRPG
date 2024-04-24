@@ -55,24 +55,12 @@ public class PlayerData
         }
     } // ap
 
-    public int maxAp { get; private set; } = (int)PlayerCons.DefaltMaxAp; // maxAp
-    private int level = (int)PlayerCons.DefaltLevel; // 레벨
-    public int Level { get { return level; }  // 레벨 & 경험치, ap 자동 설정
-                       private set
-                        {
-                            level = math.clamp(value, (int)PlayerCons.DefaltLevel, maxLevel);
-                            maxExp = (level * 70);
-                            maxAp = math.clamp((160 + ((level - 1) * 2)), (int)PlayerCons.DefaltMaxAp, 240);
-                        }
-                     }
-    public int maxLevel { get; private set; } = (int)PlayerCons.MaxLevel; // 최대 레벨
-    public int exp { get; private set; } // 경험치
-    public int maxExp { get; private set; } = (int)PlayerCons.DefaltMaxExp; // 최대 경험치
-    public string birthday { get; private set; } // 생일
-    //public int[] favoriteCharacter { get; private set; } // 선호 캐릭터
-    public int lobbyCharacter { get; private set; } // 로비 캐릭터
-    //public int characterIcon { get; private set; } // 캐릭터 아이콘
-    //public int supportCharacter { get; private set; } // 지원 캐릭터
+    public int maxAp { get; private set; } = DEFAULT_AP; // maxAp
+    public int Level { get; private set; } = 1; // 레벨
+    public int exp { get; private set; } = 0; // 경험치
+    public int maxExp { get; private set; } = 8; // 최대 경험치
+    public string birthday { get; private set; } = ""; // 생일
+    public int lobbyCharacter { get; private set; } = 3; // 로비 캐릭터
 
     // Init 메서드
     public void Init(
@@ -99,7 +87,7 @@ public class PlayerData
         this.gold = gold;
         this.ap = ap;
         this.maxAp = maxAp;
-        this.level = level;
+        this.Level = level;
         this.exp = exp;
         this.maxExp = maxExp;
         this.birthday = birthday;
@@ -266,7 +254,7 @@ public class PlayerData
     public void AddExp(int value) //경험치값을 증가시킬 때 호출하는 메서드. 경험치가 최대 경험치 이상일 시 경험치가 maxExp 미만이 될 때까지 레벨업 메서드를 반복해서 실행한다.
     {
         exp += value;
-        while (exp >= maxExp && level < maxLevel)
+        while (exp >= maxExp && Level < MAX_LEVEL)
         {
             LevelUp();
         }
@@ -277,6 +265,12 @@ public class PlayerData
     {
         exp -= maxExp;
         Level += 1;
+        maxExp = Constants.dataTables["playerExpTable"][Level];
+        maxAp = DEFAULT_AP + Level*2;
+        AddAP(maxAp);
+
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("maxExp"), maxExp);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("maxAp"), maxAp);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("Level"), Level);
     }
     public bool SetBirthDay(string MMDD) //생일값 설정 메서드. 유효한 생일 값인지 검사한다.

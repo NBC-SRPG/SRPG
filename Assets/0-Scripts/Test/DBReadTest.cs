@@ -18,7 +18,7 @@ public class DBReadTest : MonoBehaviour
     
     public void OnClick()
     {
-        db.Read(db.userDB.Child("characterData").Child(id.ToString()), (snapshot) =>
+        db.Load(db.userDB.Child("characterData").Child(id.ToString()), (snapshot) =>
         {
             string s = snapshot.GetRawJsonValue();
             Debug.Log(s);
