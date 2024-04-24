@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static BattleKeyWords;
 
 public class Ability_332: PassiveLogic
 {
@@ -18,8 +20,13 @@ public class Ability_332: PassiveLogic
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
+        int positiveBuffCount = enemy.curCharacterBufList.bufList.Count(buf => buf.BufType == BattleKeyWords.BufType.Positive);
+
         //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
-        enemy.curCharacterBufList.RemoveBuf(enemy.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+        if (positiveBuffCount > 0)
+        {
+            enemy.curCharacterBufList.RemoveBuf(enemy.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+        }
     }
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
@@ -32,7 +39,13 @@ public class Ability_332: PassiveLogic
         //대상들이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
         foreach (CharacterBase target in targets)
         {
-            target.curCharacterBufList.RemoveBuf(target.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+            int positiveBuffCount = target.curCharacterBufList.bufList.Count(buf => buf.BufType == BattleKeyWords.BufType.Positive);
+
+            //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
+            if (positiveBuffCount > 0)
+            {
+                target.curCharacterBufList.RemoveBuf(target.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+            }
         }
     }
 

@@ -31,6 +31,6 @@ public class CharacterBuf_HealReversal : CharacterBuf
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때
     {
-        damage *= damage * (-1); //힐량을 데미지로 반전
+        damage = (damage * (-1)); //힐량을 데미지로 반전
     }
 }

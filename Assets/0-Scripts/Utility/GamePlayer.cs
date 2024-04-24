@@ -32,9 +32,9 @@ public class GamePlayer
     public void GainMana(int n)
     {
         manaCost += n;
-        if(manaCost > 60)
+        if(manaCost > 300) //테스트용 수정
         {
-            manaCost = 60;
+            manaCost = 300;
         }
     }
 

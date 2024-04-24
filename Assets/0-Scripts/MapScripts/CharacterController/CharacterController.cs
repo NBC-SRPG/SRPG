@@ -174,7 +174,7 @@ public class CharacterController : MonoBehaviour
 
         ChangePhase(PlayerPhase.Idle);
 
-        player.manaCost = 0;
+        player.manaCost = 300; //테스트용
 
         player.isReady = true;
         BattleManager.Instance.GetReady();

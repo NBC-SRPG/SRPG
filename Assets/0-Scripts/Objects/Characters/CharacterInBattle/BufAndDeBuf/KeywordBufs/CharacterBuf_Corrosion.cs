@@ -19,7 +19,7 @@ public class CharacterBuf_Corrosion : CharacterBuf
 
     public override BonusStat GetAdditionalStat()
     {
-        if (Buffer.character.abilityT2.id == 521) //521. 무장해제 특성 적용 중일 경우
+        if (Buffer.character.abilityT2.id == Buffer.character.passiveSkill.coefficients["AbilityID_T2_2"]) //521. 무장해제 특성 적용 중일 경우
         {
             return new BonusStat
             {
