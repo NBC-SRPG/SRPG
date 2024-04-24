@@ -73,6 +73,11 @@ public class StageSO : SerializedScriptableObject
         return list;
     }
 
+    public EnemySO GetSOByInt(int index)
+    {
+        return enemies[index];
+    }
+
     public Character GetTargetByInt(int index)
     {
         return characterList[index];
@@ -82,7 +87,7 @@ public class StageSO : SerializedScriptableObject
     {
         ExtraGoalDetail detail = extraGoal[index];
         string detailString = "";
-        GetEnemy();
+
         switch (detail.type)
         {
             case ExtraGoal.Clear:
@@ -95,7 +100,7 @@ public class StageSO : SerializedScriptableObject
                 detailString = "적 " + detail.value + " 명 이상 처치";
                 break;
             case ExtraGoal.KillSomeone:
-                detailString = GetTargetByInt(detail.value).SO.characterName + " 처치";
+                detailString = GetSOByInt(detail.value).characterName + " 처치";
                 break;
             case ExtraGoal.NoDie:
                 detailString = "파티원이 모두 생존한 채로 클리어";

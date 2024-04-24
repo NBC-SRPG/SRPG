@@ -62,6 +62,8 @@ public class TestCharCreater : MonoBehaviour
 
         Managers.GameManager.thisStage = stage;
 
+        Managers.GameManager.nowTesting = true;
+
         dialog = Managers.UI.ShowUI<DialogUI>();
     }
 
