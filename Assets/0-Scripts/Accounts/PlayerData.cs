@@ -61,6 +61,7 @@ public class PlayerData
     public int maxExp { get; private set; } = 8; // 최대 경험치
     public string birthday { get; private set; } = ""; // 생일
     public int lobbyCharacter { get; private set; } = 3; // 로비 캐릭터
+    public int gachaPoint { get; private set;} = 0;
 
     // Init 메서드
     public void Init(
@@ -76,8 +77,8 @@ public class PlayerData
         int maxExp,
         string birthday,
         //int[] favoriteCharacter,
-        int lobbyCharacter
-        //int characterIcon
+        int lobbyCharacter,
+        int gachaPoint
         )
     {
         this.uId = uId ?? "0000000"; // 임시 기본값
@@ -93,7 +94,7 @@ public class PlayerData
         this.birthday = birthday;
         //this.favoriteCharacter = favoriteCharacter ?? new int[3];
         this.lobbyCharacter = lobbyCharacter;
-        //this.characterIcon = characterIcon;
+        this.gachaPoint = gachaPoint;
     }
     public bool IsTodayBirthDayCheck() //오늘이 생일인지 체크하는 메서드
     {
@@ -249,6 +250,18 @@ public class PlayerData
             Ap += 1;
             Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("Ap"), Ap);
         }
+    }
+
+    public void AddGachaPoint(int amount)
+    {
+        gachaPoint += amount;
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("gachaPoint"), gachaPoint);
+    }
+
+    public void ReduceGachaPoint(int amount)
+    {
+        gachaPoint -= amount;
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("gachaPoint"), gachaPoint);
     }
 
     public void AddExp(int value) //경험치값을 증가시킬 때 호출하는 메서드. 경험치가 최대 경험치 이상일 시 경험치가 maxExp 미만이 될 때까지 레벨업 메서드를 반복해서 실행한다.
