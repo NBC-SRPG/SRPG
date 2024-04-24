@@ -12,6 +12,11 @@ public class ClassAbility_201 : PassiveLogic
         stat_Class201 = new BonusStat();
         stat_Class201.EnhancedDmg = (float)(coefficient["increaseDmg_2"]) / coefficient["denominator"];
         stat_Class201.EXCritRate = coefficient["increaseCrtRate_2"];
+       
+    }
+
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_Class201);
     }
 

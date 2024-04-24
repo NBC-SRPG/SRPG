@@ -12,9 +12,12 @@ public class ClassAbility_301 : PassiveLogic
         stat_Class301 = new BonusStat();
         stat_Class301.EnhancedDmg = (float)(coefficient["increaseDmg_1"]) / coefficient["denominator"];
         stat_Class301.EXCritRate = coefficient["increaseCrtRate_1"];
+        
+    }
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_Class301);
     }
-
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         if (enemy.health.CurHealth / enemy.health.TotalHealth < coefficient["hpRatio"] / coefficient["denominator"])

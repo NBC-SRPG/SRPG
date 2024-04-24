@@ -10,6 +10,11 @@ public class Ability_821: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+    }
+
+    public override void OnStageStart()
+    {
         character.skillCost = character.curCharacterSkill.skillData.cost;
         character.skillCost -= coefficient["reduceCost"];
     }

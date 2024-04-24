@@ -12,9 +12,14 @@ public class ClassAbility_200 : PassiveLogic
         stat_Class200 = new BonusStat();
         stat_Class200.EnhancedDmg = (float)(coefficient["increaseDmg_2"]) / coefficient["denominator"];
         stat_Class200.EXCritRate = coefficient["increaseCrtRate"];
-        character.tempBonusStat.AddBonusStat(stat_Class200);
+        
     }
 
+
+    public override void OnStageStart()
+    {
+        character.tempBonusStat.AddBonusStat(stat_Class200);
+    }
     private void UpdateStat()
     {
         if (character.health.CurHealth / character.health.TotalHealth >= coefficient["hpRatio"] / coefficient["denominator"])

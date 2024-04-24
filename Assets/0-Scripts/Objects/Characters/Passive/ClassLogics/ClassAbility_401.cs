@@ -9,7 +9,10 @@ public class ClassAbility_401 : PassiveLogic
     {
         this.character = character;
     }
+    public override void OnStageStart()
+    {
 
+    }
 
     public override void OnEndSkill(List<CharacterBase> target)// 스킬 사용 종료 시
     {

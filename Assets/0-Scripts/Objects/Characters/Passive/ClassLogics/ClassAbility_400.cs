@@ -11,9 +11,12 @@ public class ClassAbility_400 : PassiveLogic
         this.character = character;
         stat_Class400 = new BonusStat();
         stat_Class400.EnhancedDmg = (float)(coefficient["increaseDmg"]) / coefficient["denominator"];
-        character.tempBonusStat.AddBonusStat(stat_Class400);
+        
     }
 
-
+    public override void OnStageStart()
+    {
+        character.tempBonusStat.AddBonusStat(stat_Class400);
+    }
 }
 

@@ -24,7 +24,7 @@ public class Ability_321: PassiveLogic
         {
             characterSelf.Add(character);
         }
-        int healAmount = (int)((character.health.TotalHealth - character.health.CurHealth) * ((float)(coefficient["healRate"] / coefficient["denominator"]))); //잃은 체력을 구한다
+        int healAmount = (int)((character.health.TotalHealth - character.health.CurHealth) * ((float)(coefficient["healRate"]) / coefficient["denominator"])); //잃은 체력을 구한다
         BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Extra);//잃은 체력의 10% 회복
         //character.TakeHealByInt(ref healAmount); 
     }

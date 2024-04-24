@@ -12,6 +12,11 @@ public class ClassAbility_300 : PassiveLogic
         stat_Class300 = new BonusStat();
         stat_Class300.EXCritRate = coefficient["increaseCrtRate"];
         stat_Class300.EXCritDMG = coefficient["increaseCrtDmg"];
+        
+    }
+
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_Class300);
     }
 }

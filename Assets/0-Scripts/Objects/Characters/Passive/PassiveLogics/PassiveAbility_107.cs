@@ -14,7 +14,12 @@ public class PassiveAbility_107 : PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-        if(character.character.abilityT2.id == coefficient["abilityId_T2"])
+
+    }
+
+    public override void OnStageStart()
+    {
+        if (character.character.abilityT2.id == coefficient["abilityId_T2"])
         {
             stat_107 = new BonusStat();
             character.tempBonusStat.AddBonusStat(stat_107);

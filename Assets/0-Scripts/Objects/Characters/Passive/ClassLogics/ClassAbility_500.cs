@@ -11,6 +11,11 @@ public class ClassAbility_500 : PassiveLogic
         this.character = character;
         stat_Class500 = new BonusStat();
         stat_Class500.ExtraHealth = coefficient["increaseHp"];
+        
+    }
+
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_Class500);
     }
 

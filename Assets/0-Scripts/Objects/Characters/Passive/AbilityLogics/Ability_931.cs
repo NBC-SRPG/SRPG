@@ -15,6 +15,11 @@ public class Ability_931: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+    }
+
+    public override void OnStageStart()
+    {
         stat_931 = new BonusStat();
         stat_931.EXCritDMG = (coefficient["crtDmgIncreaseRate"]);
         stat_931.PenetrateDef = (float)(coefficient["defPenetrateRate"]) / coefficient["denominator"];

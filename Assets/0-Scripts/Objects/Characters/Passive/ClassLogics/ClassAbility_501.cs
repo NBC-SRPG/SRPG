@@ -12,6 +12,11 @@ public class ClassAbility_501 : PassiveLogic
         stat_Class501 = new BonusStat();
         stat_Class501.ExtraHealth = coefficient["increaseHp"];
         stat_Class501.EXCritRate = coefficient["increaseCrtRate"];
+        
+    }
+
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_Class501);
     }
 }

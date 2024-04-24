@@ -16,6 +16,11 @@ public class PassiveAbility_109 : PassiveLogic
         this.character = character;
         stat_009 = new BonusStat();
         stat_009.EXCritRate = coefficient["increaseCrtRate"];
+        
+    }
+
+    public override void OnStageStart()
+    {
         character.tempBonusStat.AddBonusStat(stat_009);
     }
 }

@@ -14,6 +14,12 @@ public class Ability_631: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+
+    }
+
+    public override void OnStageStart()
+    {
         stat_631.ExtraMov = coefficient["extraMovIncreasse"];
         character.tempBonusStat.AddBonusStat(stat_631);
     }

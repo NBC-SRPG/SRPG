@@ -14,12 +14,9 @@ public class ClassAbility_101 : PassiveLogic
         
     }
 
-    public override void OnRoundStart()
+    public override void OnStageStart()
     {
-        if (!character.tempBonusStat.statList.Contains(stat_Class101))
-        {
-            character.tempBonusStat.AddBonusStat(stat_Class101);
-        }
+        character.tempBonusStat.AddBonusStat(stat_Class101);
     }
 }
 

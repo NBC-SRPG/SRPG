@@ -14,10 +14,14 @@ public class Ability_921: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+    }
+
+    public override void OnStageStart()
+    {
         stat_921 = new BonusStat();
         stat_921.EnhancedDmg = (float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"];
     }
-
 
 
     public override void OnRoundStart()// 

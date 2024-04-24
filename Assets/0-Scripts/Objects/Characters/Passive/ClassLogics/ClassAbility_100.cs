@@ -12,10 +12,9 @@ public class ClassAbility_100 : PassiveLogic
         stat_Class100 = new BonusStat();
         stat_Class100.ExtraAtk = (float)(coefficient["increaseAtk"]) / coefficient["denominator"];
         stat_Class100.ReducedDmg = (float)(coefficient["reducedDmg"]) / coefficient["denominator"];
-        
     }
 
-    public override void OnRoundStart()
+    public override void OnStageStart()
     {
         character.tempBonusStat.AddBonusStat(stat_Class100);
     }
