@@ -25,7 +25,7 @@ public class Ability_421: PassiveLogic
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
     {
-        if (character.character.abilityT3.id == coefficient["abilityIdT3"]) //현재 432번 특성 "신의 축복"이 적용 중일 경우
+        if (character.character.abilityT3.id == coefficient["abilityId_T3"]) //현재 432번 특성 "신의 축복"이 적용 중일 경우
         {
             if (character.CheckEnemy(target))
             {

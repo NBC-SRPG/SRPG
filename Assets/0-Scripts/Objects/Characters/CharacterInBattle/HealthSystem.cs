@@ -59,6 +59,11 @@ public class HealthSystem : MonoBehaviour
         UpdateText();
     }
 
+    public void SetHealthSameAsTotal()
+    {
+        CurHealth = TotalHealth;
+    }
+
     public float HealthRatio
     {
         get

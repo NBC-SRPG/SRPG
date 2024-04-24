@@ -16,7 +16,7 @@ public class Ability_411: PassiveLogic
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시
     {
-        character.player.GainMana(coefficient["gainCost"]);
+        character.player.GainMana(coefficient["gainMana"]);
     }
 }
 

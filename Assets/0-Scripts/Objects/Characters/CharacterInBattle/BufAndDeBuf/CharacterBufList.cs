@@ -50,47 +50,46 @@ public class CharacterBufList
         {
             switch (key)
             {
-                case BattleKeyWords.BufKeyword.Burn:
+                case BufKeyword.Burn:
                     buf = new CharacterBuf_Burn();
                     break;
-                case BattleKeyWords.BufKeyword.Bleed:
+                case BufKeyword.Bleed:
                     buf = new CharacterBuf_Bleed();
                     break;
-                case BattleKeyWords.BufKeyword.Bind:
+                case BufKeyword.Bind:
                     buf = new CharacterBuf_Bind();
                     break;
-                case BattleKeyWords.BufKeyword.Stun:
+                case BufKeyword.Stun:
                     buf = new CharacterBuf_Stun();
                     break;
-
-                case BattleKeyWords.BufKeyword.AtkAura:
+                case BufKeyword.AtkAura:
                     buf = new CharacterBuf_AtkAura();
                     break;
-                case BattleKeyWords.BufKeyword.Herald:
+                case BufKeyword.Herald:
                     buf = new CharacterBuf_Herald();
                     break;
-                case BattleKeyWords.BufKeyword.ReceivedDgmReduce:
+                case BufKeyword.ReceivedDgmReduce:
                     buf = new CharacterBuf_ReceivedDgmReduce();
                     break;
-                case BattleKeyWords.BufKeyword.ReceivedDgmIncrease:
+                case BufKeyword.ReceivedDgmIncrease:
                     buf = new CharacterBuf_ReceivedDgmIncrease();
                     break;
-                case BattleKeyWords.BufKeyword.CrtRateIncrease:
+                case BufKeyword.CrtRateIncrease:
                     buf = new CharacterBuf_CrtRateIncrease();
                     break;
-                case BattleKeyWords.BufKeyword.HealReversal:
+                case BufKeyword.HealReversal:
                     buf = new CharacterBuf_HealReversal();
                     break;
-                case BattleKeyWords.BufKeyword.Corrosion:
+                case BufKeyword.Corrosion:
                     buf = new CharacterBuf_Corrosion();
                     break;
-                case BattleKeyWords.BufKeyword.TargetMarker:
+                case BufKeyword.TargetMarker:
                     buf = new CharacterBuf_TargetMarker();
                     break;
-                case BattleKeyWords.BufKeyword.AmethystShield:
+                case BufKeyword.AmethystShield:
                     buf = new CharacterBuf_AmethystShield();
                     break;
-                case BattleKeyWords.BufKeyword.DefReduce:
+                case BufKeyword.DefReduce:
                     buf = new CharacterBuf_DefReduce();
                     break;
 

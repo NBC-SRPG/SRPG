@@ -165,6 +165,7 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
+                Debug.Log(nameof(passive));
                 passive?.init(this);
             }
         }
