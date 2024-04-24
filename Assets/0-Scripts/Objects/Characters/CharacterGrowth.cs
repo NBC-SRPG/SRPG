@@ -25,6 +25,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public event Action OnLevelUp;
     public event Action OnAbilityT2Changed;
     public event Action OnAbilityT3Changed;
+    public event Action OnSuperiorClassChanged;
     public event Action OnWeaponChanged;
     public event Action OnArmorChanged;
 
@@ -176,6 +177,14 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
             abilityT3 = index;
             OnAbilityT3Changed?.Invoke();
         }
+        UpdateToDB();
+    }
+
+    public void SelectClass(int index)
+    {
+        superiorClass = index;
+        OnSuperiorClassChanged?.Invoke();
+
         UpdateToDB();
     }
 

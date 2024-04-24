@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Constants;
@@ -29,6 +30,7 @@ public class CharacterInfoUI : UIBase
         DefText,
         LevelText,
         ExpText,
+        ClassNameText,
         ClassDescriptionText
     }
     private enum Buttons
@@ -46,8 +48,9 @@ public class CharacterInfoUI : UIBase
         Ability3_1Button,
         Ability3_2Button,
         Class1Button,
-        Calss2_1Button,
-        Calss2_2Button,
+        Class2_1Button,
+        Class2_2Button,
+        ClassSelectButton,
         LevelUpButton,
         HomeButton
     }
@@ -247,7 +250,54 @@ public class CharacterInfoUI : UIBase
 
     private void InitClassTab()
     {
+        Utility.Id2SO<ClassSO>(character.SO.basicClass, (result) =>
+        {
+            GetImage((int)Images.Class1Image).sprite = (result as ClassSO).icon;
+            OnClickClassButton(1, 0, result as ClassSO);
+            GetButton((int)Buttons.Class1Button).onClick.AddListener(() => OnClickClassButton(1, 0, result as ClassSO));
+        });
+        Utility.Id2SO<ClassSO>(character.SO.superiorClass[0], (result) =>
+        {
+            GetImage((int)Images.Class2_1Image).sprite = (result as ClassSO).icon;
+            GetButton((int)Buttons.Class2_1Button).onClick.AddListener(() => OnClickClassButton(2, 0, result as ClassSO));
+        });
+        Utility.Id2SO<ClassSO>(character.SO.superiorClass[1], (result) =>
+        {
+            GetImage((int)Images.Class2_2Image).sprite = (result as ClassSO).icon;
+            GetButton((int)Buttons.Class2_2Button).onClick.AddListener(() => OnClickClassButton(2, 1, result as ClassSO));
+        });
 
+        ClassPathUpdate();
+
+        GetButton((int)Buttons.ClassSelectButton).gameObject.SetActive(false);
+    }
+
+    private void ClassPathUpdate()
+    {
+        // 2단계 클래스가 찍혀있다면
+        if (character.Growth.superiorClass != NONE_SELECTED)
+        {
+            GetImage((int)Images.ClassPath2).color = Color.red;
+
+            // 2-1 클래스가 찍혀있다면
+            if (character.Growth.superiorClass == 0)
+            {
+                GetImage((int)Images.ClassPath2_1).color = Color.red;
+                GetImage((int)Images.ClassPath2_2).color = Color.black;
+
+                GetImage((int)Images.Class2_1Image).transform.parent.GetComponent<Outline>().enabled = true;
+                GetImage((int)Images.Class2_2Image).transform.parent.GetComponent<Outline>().enabled = false;
+            }
+            // 2-2 클래스가 찍혀있다면
+            else
+            {
+                GetImage((int)Images.ClassPath2_1).color = Color.black;
+                GetImage((int)Images.ClassPath2_2).color = Color.red;
+
+                GetImage((int)Images.Class2_1Image).transform.parent.GetComponent<Outline>().enabled = false;
+                GetImage((int)Images.Class2_2Image).transform.parent.GetComponent<Outline>().enabled = true;
+            }
+        }
     }
 
     private void InitCharacterInfo()
@@ -371,14 +421,47 @@ public class CharacterInfoUI : UIBase
         ui.Init(character, AbilityTier, AbilityIndex);
     }
 
+    private void OnClickClassButton(int classTier, int classIndex, ClassSO classSO)
+    {
+        Debug.Log("OnClickAbilityButton");
+
+        GetText((int)Texts.ClassNameText).text = classSO.className;
+        GetText((int)Texts.ClassDescriptionText).text = classSO.description;
+
+        // 1티어 클래스는 항상 선택되어있는 기본 클래스
+        if (classTier == 1)
+        {
+            GetButton((int)Buttons.ClassSelectButton).gameObject.SetActive(false);
+        }
+        // 선택한 클래스가 현재 적용중이라면 선택 버튼 비활성화
+        else if (character.Growth.superiorClass == classIndex)
+        {
+            GetButton((int)Buttons.ClassSelectButton).gameObject.SetActive(false);
+        }
+        // 선택 가능할 때 버튼 세팅
+        else
+        {
+            GetButton((int)Buttons.ClassSelectButton).gameObject.SetActive(true);
+            GetButton((int)Buttons.ClassSelectButton).onClick.RemoveAllListeners();
+            GetButton((int)Buttons.ClassSelectButton).onClick.AddListener(() => OnClickClassSelectButton(classIndex));
+        }
+    }
+
+    private void OnClickClassSelectButton(int classIndex)
+    {
+        Debug.Log($"OnClockClassSelectButton: {classIndex}");
+
+        character.Growth.SelectClass(classIndex);
+
+        ClassPathUpdate();
+    }
+
     private void OnClickWeaponButton()
     {
         Debug.Log("OnClickWeaponButton");
 
         EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
         ui.Init(character, EquipType.Weapon);
-
-        //GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
     }
     private void OnClickArmorButton()
     {
@@ -386,8 +469,6 @@ public class CharacterInfoUI : UIBase
 
         EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
         ui.Init(character, EquipType.Armor);
-
-        //GetObject((int)GameObjects.EquipmentUpgradeUI).SetActive(false);
     }
     
     private void OnClickHomeButton()
