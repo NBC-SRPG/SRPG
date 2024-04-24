@@ -394,10 +394,6 @@ public class LevelUpUI : UIBase
         Managers.AccountData.ConsumeItems(LevelUpItem2Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text));
         Managers.AccountData.ConsumeItems(LevelUpItem3Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text));
         Managers.AccountData.ConsumeItems(LevelUpItem4Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text));
-        //Managers.AccountData.inventory[LevelUpItem1Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
-        //Managers.AccountData.inventory[LevelUpItem2Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
-        //Managers.AccountData.inventory[LevelUpItem3Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
-        //Managers.AccountData.inventory[LevelUpItem4Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
 
         GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.inventory[LevelUpItem1Id]}";
         GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";

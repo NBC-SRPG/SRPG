@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Constants;
@@ -323,8 +322,6 @@ public class CharacterInfoUI : UIBase
         }
 
         UpdateStat();
-        // TODO
-        // 장비 정보는 아직 없는 듯?
     }
 
     public void UpdateStat()

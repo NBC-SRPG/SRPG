@@ -23,10 +23,6 @@ public class AbilityInfoUI : UIBase
         AbilityCheckButton
     }
 
-    private enum GameObjects
-    {
-
-    }
     public void Init(Character character, int AbilityTier, int AbilityIndex)
     {
         this.character = character;
@@ -34,13 +30,8 @@ public class AbilityInfoUI : UIBase
         BindText(typeof(Texts));
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
-        BindObject(typeof(GameObjects));
 
         // 이미지, 설명 세팅
-        // GetImage((int)Images.AbilityIconImage).sprite = Managers.Resource.Load<Sprite>($"{AbilityId}");
-        // TODO
-        // 어빌리티Id로 어빌리티를 Get하여 어빌리티 설명 텍스트 적용
-        // GetText((int)Texts.AbilityDescriptionText).text = Ability.abilityDescription;
         if (AbilityTier == 1)
         {
             Utility.Id2SO<AbilitySO>(character.abilityT1.id, (result) =>

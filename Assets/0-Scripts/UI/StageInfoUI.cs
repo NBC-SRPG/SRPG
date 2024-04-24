@@ -1,7 +1,5 @@
 using System;
-using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class StageInfoUI : UIBase
 {
@@ -62,10 +60,11 @@ public class StageInfoUI : UIBase
         // SO에 스테이지 번호 없음
         // 매개변수로 String을 받고 여기에서 StageSO 불러오기? -> 그럼 StageEntryUI에서도 SO로드하고 여기에서도 SO를 로드하는 형태가 됨
         // SO의 이름에서 숫자 추출?
+        /*
         string pattern = @"\d+";
 
         // Regex.Matches를 사용하여 모든 숫자 찾기
-        MatchCollection matches = Regex.Matches(stage.name, pattern);
+        //MatchCollection matches = Regex.Matches(stage.name, pattern);
 
         if (matches.Count > 0)
         {
@@ -80,17 +79,19 @@ public class StageInfoUI : UIBase
             string result = string.Join("-", numbers);
             GetText((int)Texts.StageNumText).text = result;
         }
-
+        */
+        GetText((int)Texts.StageNumText).text = stage.stageNumber;
         GetText((int)Texts.StageNameText).text = $"{stage.stageName}";
-
-        // TODO
-        // 권장 레벨 SO에 없음
-        GetText((int)Texts.StageLevelText).text = "";
+        GetText((int)Texts.StageLevelText).text = $"권장레벨 {stage.recommendLevel}";
 
         // TODO
         // 목표를 달성 했는지 어떻게 알지??
-        // 목표도 SO에 없음
-        GetText((int)Texts.Goal).text = "";
+        GetText((int)Texts.Goal).text += "\n☆";
+        GetText((int)Texts.Goal).text += stage.GetExtraGoalDetail(0);
+        GetText((int)Texts.Goal).text += "\n☆";
+        GetText((int)Texts.Goal).text += stage.GetExtraGoalDetail(1);
+        GetText((int)Texts.Goal).text += "\n☆";
+        GetText((int)Texts.Goal).text += stage.GetExtraGoalDetail(2);
 
         GetButton((int)Buttons.FormationButton).onClick.AddListener(OnClickFormationButton);
         GetButton((int)Buttons.ClearDecreButton).onClick.AddListener(OnClickClearDecreButton);

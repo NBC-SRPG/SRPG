@@ -36,6 +36,5 @@ public class EquipmentUpgradeMaterialUI : UIBase
         GetText((int)Texts.EquipmentUpgradeMaterialName).text = item.itemName;
         GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"{Managers.AccountData.inventory[itemId]}/{itemCount}";
         GetImage((int)Images.EquipmentUpgradeMaterialImage).sprite = item.icon;
-
     }
 }

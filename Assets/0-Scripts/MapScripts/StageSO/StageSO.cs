@@ -82,7 +82,7 @@ public class StageSO : SerializedScriptableObject
     {
         ExtraGoalDetail detail = extraGoal[index];
         string detailString = "";
-
+        GetEnemy();
         switch (detail.type)
         {
             case ExtraGoal.Clear:
