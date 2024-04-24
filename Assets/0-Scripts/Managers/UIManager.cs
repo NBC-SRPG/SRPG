@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
+
 public class UIManager
 {
     private int order = -20;
@@ -108,6 +106,7 @@ public class UIManager
         // UI 스택에서 Pop & Destroy
         UIBase destroyUi = uiStack.Pop();
         Object.Destroy(destroyUi.gameObject);
+        order--;
     }
     // Main + Common UI만 남기고 닫기
     public void ReturnMainUI()
@@ -119,5 +118,11 @@ public class UIManager
             UIBase ui = uiStack.Pop();
             Object.Destroy(ui.gameObject);
         }
+        order = -18;
+    }
+
+    public void InitSortOrder()
+    {
+        order = -18;
     }
 }
