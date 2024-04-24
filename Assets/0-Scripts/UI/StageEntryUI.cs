@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class StageEntryUI : UIBase
 {
@@ -14,7 +13,8 @@ public class StageEntryUI : UIBase
 
     private enum Buttons
     {
-        StageClearButton
+        StageClearButton,
+        StageTitleText
     }
 
     private enum GameObjects
@@ -33,6 +33,7 @@ public class StageEntryUI : UIBase
             stageSO = (StageSO)retulst;
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
+            GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
         });
 
         InitStar(stage);
@@ -73,9 +74,18 @@ public class StageEntryUI : UIBase
             rt.sizeDelta = new Vector2(40f, 40f);
         }
     }
+    
+    private void OnClickStageTitle(StageSO stage)
+    {
+        StageInfoUI ui = Managers.UI.ShowUI<StageInfoUI>();
+        ui.Init(stage);
+    }
 
     private void OnClickStageClearButton()
     {
         Debug.Log("OnClickStageClearButton");
+
+        // TODO
+        // 스테이지 소탕 기능 추가
     }
 }

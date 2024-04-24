@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using static Constants;
 
 public class FormationUI : UIBase
@@ -110,7 +109,16 @@ public class FormationUI : UIBase
 
         Get<TMP_InputField>((int)InputFields.PartyNameInputField).onEndEdit.AddListener(ChangePartyName);
 
-        presetIndex = 0;
+
+        if (Constants.presetIndex == 0)
+        {
+            presetIndex = 0;
+        }
+        else
+        {
+            presetIndex = Constants.presetIndex;
+        }
+
         UpdateFormationToPreset(presetIndex);
     }
 
@@ -133,6 +141,7 @@ public class FormationUI : UIBase
         GetImage((int)presetImage).color = Color.green;
 
         presetIndex = index;
+        Constants.presetIndex = index;
 
         // 파티 이름 불러오기
         string partyName;
@@ -295,6 +304,13 @@ public class FormationUI : UIBase
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
+
+        StageInfoUI ui = Managers.UI.FindUI<StageInfoUI>();
+
+        if (ui != null)
+        {
+            ui.gameObject.SetActive(true);
+        }
 
         Managers.UI.CloseUI(this);
     }
