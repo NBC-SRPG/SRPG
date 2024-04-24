@@ -35,9 +35,6 @@ public class CharacterBufList
 
         CharacterBuf buf;
 
-
-
-
         // 리스트에 버프가 있는지 확인
         if(buffer == null)
         {

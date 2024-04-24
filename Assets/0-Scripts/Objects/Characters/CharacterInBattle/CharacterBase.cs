@@ -145,6 +145,7 @@ public class CharacterBase : MonoBehaviour
             PassiveLogic passive = Utility.GetAbilityBySO(so);
             if (passive != null)
             {
+                Debug.Log(so.reflection);
                 curCharacterPassive?.Add(passive);
             }
         }
@@ -165,7 +166,6 @@ public class CharacterBase : MonoBehaviour
         {
             foreach(PassiveLogic passive in curCharacterPassive)
             {
-                Debug.Log(nameof(passive));
                 passive?.init(this);
             }
         }

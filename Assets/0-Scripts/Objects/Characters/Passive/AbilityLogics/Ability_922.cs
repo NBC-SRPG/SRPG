@@ -11,10 +11,12 @@ public class Ability_922: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+        Debug.Log("922");
     }
 
     public override void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
     {
+        Debug.Log("kill");
         character.player.GainMana(coefficient["costRecovery"]);
     }
 

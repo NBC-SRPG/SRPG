@@ -21,8 +21,11 @@ public class PassiveAbility_108 : PassiveLogic
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
+
         this.character = character;
-        characterSelf.Add(character);
+
+        characterSelf = new List<CharacterBase>() { character };
+
         passiveState = coefficient["beforeResurrection"];
         stat_Passive008 = new BonusStat();
     }

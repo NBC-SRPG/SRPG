@@ -31,9 +31,9 @@ public class CharacterBuf
     public virtual void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
         this.character = character;
-        duration = _duration;
-        power = _power;
-        stack = _stack;
+        duration = 0;
+        power = 0;
+        stack = 0;
         maxStack = 99;
         IsDestroyed = false;
         Buffer = buffer;
