@@ -18,6 +18,7 @@ public class ExSkillSO : ScriptableObject
     [Header("Skill_description")]
     public string skillName;
     public string description;
+    public Sprite icon;
 
     [Header("Skill_status")]
     public Constants.SkillTargetType targetType;//스킬 사용 대상
