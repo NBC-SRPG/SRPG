@@ -56,6 +56,7 @@ public class CharacterInfoUI : UIBase
     private enum Images
     {
         IllustrationImage,
+        ElementImage,
         ExSkillImage,
         PassiveSkillImage,
         WeaponImage,
@@ -118,6 +119,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.AbilityButton).onClick.AddListener(() => ShowTab(PlayTab.Ability));
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
+        GetElementImage();
         GetImage((int)Images.WeaponImage).sprite = character.weapon.sprite;
         GetImage((int)Images.ArmorImage).sprite = character.armor.sprite;
 
@@ -379,6 +381,32 @@ public class CharacterInfoUI : UIBase
         }
     }
 
+    private void GetElementImage()
+    {
+        string path = "";
+        switch (character.SO.elementType)
+        {
+            case ElementType.Fire:
+                path = "Element_Fire";
+                break;
+            case ElementType.Water:
+                path = "Element_Water";
+                break;
+            case ElementType.Grass:
+                path = "Element_Grass";
+                break;
+            case ElementType.Bolt:
+                path = "Element_Bolt";
+                break;
+            case ElementType.Dark:
+                path = "Element_Dark";
+                break;
+            case ElementType.Light:
+                path = "Element_Light";
+                break;
+        }
+        GetImage((int)Images.ElementImage).sprite = Managers.Resource.Load<Sprite>(path);
+    }
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
