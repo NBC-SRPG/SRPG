@@ -19,7 +19,7 @@ public class Ability_621: PassiveLogic
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
         int distance = character.pathFinder.GetManhattenDistance(character.curStandingTile, enemy.curStandingTile);
-        stat_621.EnhancedDmg = ((float)coefficient["enhancedDmgRate"] / coefficient["denominator"]) *(distance);  //대상과 자신 사이의 거리를 구하고, 거리 값만큼 5% 데미지 보너스.
+        stat_621.EnhancedDmg = ((float)coefficient["IncreaseDmgRate"] / coefficient["denominator"]) *(distance);  //대상과 자신 사이의 거리를 구하고, 거리 값만큼 5% 데미지 보너스.
         character.tempBonusStat.AddBonusStat(stat_621);
     }
 
@@ -38,7 +38,7 @@ public class Ability_621: PassiveLogic
         foreach (var target in targets) //피유의 Ex스킬은 1인 타겟이므로, 한 번만 순회함.
         {
             int distance = character.pathFinder.GetManhattenDistance(character.curStandingTile, target.curStandingTile);
-            stat_621.EnhancedDmg = ((float)coefficient["enhancedDmgRate"] / coefficient["denominator"]) * (distance);  //대상과 자신 사이의 거리를 구하고, 거리 값만큼 5% 데미지 보너스.
+            stat_621.EnhancedDmg = ((float)coefficient["IncreaseDmgRate"] / coefficient["denominator"]) * (distance);  //대상과 자신 사이의 거리를 구하고, 거리 값만큼 5% 데미지 보너스.
             character.tempBonusStat.AddBonusStat(stat_621);
         }
     }

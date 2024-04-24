@@ -92,6 +92,9 @@ public class CharacterBufList
                 case BufKeyword.DefReduce:
                     buf = new CharacterBuf_DefReduce();
                     break;
+                case BufKeyword.Shield:
+                    buf = new CharacterBuf_Shield();
+                    break;
 
             }
 
@@ -123,14 +126,8 @@ public class CharacterBufList
                     }
                 
                 }
-                else if (buf.isIndependent) // 독립형 버프인 경우
-                {
-                    //그냥 새로 버프를 생성-리스트 추가. 별도 행동 안함.
-                }
-
 
                 bufList.Add(buf);
-                buf.OnAddBuf();
             }
         }
 
@@ -252,7 +249,7 @@ public class CharacterBufList
             bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
         }
 
-        while (randomBufs.Count < number)
+        while (randomBufs.Count < number && bufs.Count > 0)
         {
             int ran = UnityEngine.Random.Range(0, bufs.Count);
 
@@ -260,6 +257,7 @@ public class CharacterBufList
             if (!randomBufs.Contains(buf))
             {
                 randomBufs.Add(buf);
+                bufs.Remove(bufs[ran]);
             }
         }
 
@@ -326,7 +324,7 @@ public class CharacterBufList
             bufs = bufs.FindAll(x => x.dontDestroy == false);// 파괴 불가능한 버프 제외
         }
 
-        while (randomBufs.Count < number)
+        while (randomBufs.Count < number && bufs.Count > 0)
         {
             int ran = UnityEngine.Random.Range(0, bufs.Count);
 
@@ -334,6 +332,7 @@ public class CharacterBufList
             if (!randomBufs.Contains(buf))
             {
                 randomBufs.Add(buf);
+                bufs.Remove(bufs[ran]);
             }
         }
 
@@ -342,11 +341,21 @@ public class CharacterBufList
     
     public void RemoveBuf(CharacterBuf buf)// 버프 제거(주로 외부에서 접근)
     {
+        if(buf == null)
+        {
+            return;
+        }
+
         buf.DestoyBuf();
     }
 
     public void ReduceBufStack(CharacterBuf buf, int power)// 버프 스택 감소(주로 외부에서 접근)
     {
+        if (buf == null)
+        {
+            return;
+        }
+
         buf.duration -= power;
 
         if(buf.duration <= 0)
@@ -548,6 +557,17 @@ public class CharacterBufList
             if (buf != null && !buf.IsDestroyed)
             {
                 buf.OnTakeAttack(enemy);
+            }
+        }
+    }
+
+    public void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
+    {
+        foreach (CharacterBuf buf in bufList)
+        {
+            if (buf != null && !buf.IsDestroyed)
+            {
+                buf.AfterTakeAttacked(enemy);
             }
         }
     }

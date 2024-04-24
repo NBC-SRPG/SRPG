@@ -14,7 +14,7 @@ public class PassiveAbility_106 : PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-        if(character.character.abilityT3.id == coefficient["abilityId_T3"])
+        if(character.character.abilityT3 != null && character.character.abilityT3.id == coefficient["abilityId_T3"])
         {
             IsabilityT3_632 = true;
         }

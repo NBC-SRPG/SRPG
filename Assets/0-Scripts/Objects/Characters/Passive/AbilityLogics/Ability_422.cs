@@ -17,7 +17,7 @@ public class Ability_422: PassiveLogic
     {
         if (!character.CheckEnemy(target)) //적이 아닐 경우
         {
-            if (character.character.abilityT3.id == coefficient["abilityId_T3"]) //현재 432번 특성 "신의 축복"이 적용 중일 경우
+            if (character.character.abilityT3 != null && character.character.abilityT3.id == coefficient["abilityId_T3"]) //현재 432번 특성 "신의 축복"이 적용 중일 경우
             {
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.CrtRateIncrease, coefficient["bufDuration_2"], character, coefficient["bufCoefficients_2"]); //아군일 경우 2턴 간 치명타 확률 15%증가
             }

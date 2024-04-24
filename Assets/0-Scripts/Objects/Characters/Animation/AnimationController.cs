@@ -113,8 +113,6 @@ public class AnimationController : MonoBehaviour
 
     private void CharacterRelease() // 캐릭터 제자리로
     {
-        isSetting = false;
-
         CameraController.instance.SetCharacterCameraMove(0);
 
         backGround.gameObject.SetActive(false);
@@ -155,12 +153,27 @@ public class AnimationController : MonoBehaviour
         attackTargets.Clear();
         originPos.Clear();
 
-        while (animationAtRelease.Count > 0)
+        if (!isSetting)
         {
-            animationAtRelease.Dequeue()?.Invoke();
-        }
+            while (animationAtRelease.Count > 0)
+            {
+                animationAtRelease.Dequeue()?.Invoke();
+            }
 
-        OnCharacterReleased?.Invoke();
+            OnCharacterReleased?.Invoke();
+        }
+    }
+
+    public void ChracterReleaseOne(CharacterBase character)
+    {
+        character.transform.position = originPos[character];
+        character.transform.localScale = new Vector3(1, 1, 0);
+
+        SetCharacterLayer(character.transform, 0);
+
+        character.characterAnim.EndAnimation(character.isWalking);
+
+        attackTargets.Remove(character);
     }
 
     public void EndAimation()
@@ -422,6 +435,7 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 이동 애니메이션
     {
+        isSetting = false;
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);
@@ -460,6 +474,7 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayBackAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 튕겨 나가는 애니메이션
     {
+        isSetting = false;
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);
@@ -535,6 +550,7 @@ public class AnimationController : MonoBehaviour
         }
         else
         {
+            isSetting = false;
             CharacterRelease();
             animation?.Invoke();
             EndAimation();

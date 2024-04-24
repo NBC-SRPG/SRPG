@@ -13,7 +13,6 @@ public class Ability_911: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-        shield_911 = new ShieldStat();
         isSkill_911 = false;
     }
 
@@ -23,9 +22,11 @@ public class Ability_911: PassiveLogic
     {
         if((float)(character.health.CurHealth) / character.health.TotalHealth <= (float)(coefficient["hpRatio"]) / coefficient["denominator"] && isSkill_911== false)
         {
-            shield_911.Shield = (int)(character.health.TotalHealth * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
-            shield_911.duration = coefficient["shieldDuration"];
-            character.health.AddShield(shield_911);
+            int power = (int)(character.health.TotalHealth * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
+            int duration = coefficient["shieldDuration"];
+
+            character.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Shield, duration, character, power);
+
             isSkill_911= true;
         }
     }

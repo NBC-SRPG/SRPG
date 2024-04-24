@@ -525,12 +525,12 @@ public class BattleManager : MonoBehaviour
     }
 
     public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, 
-        AttackDamageType attackType = AttackDamageType.Skill, ElementType elmentType = ElementType.None,
-        string anim = null, bool isCrit = false)// 기타 스킬(추가타 등)
+        AttackDamageType attackType = AttackDamageType.Extra, ElementType elmentType = ElementType.None,
+        string anim = null, bool needSetting = false, bool isCrit = false)// 기타 스킬(추가타 등)
     {
         if(anim != null)
         {
-            AnimationController.instance.EnqueueExtraAnimation(skillUser, target, anim);
+            AnimationController.instance.EnqueueExtraAnimation(skillUser, target, anim, needSetting);
         }
 
         foreach (CharacterBase victim in target)

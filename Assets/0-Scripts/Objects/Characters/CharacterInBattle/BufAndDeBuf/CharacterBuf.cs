@@ -148,6 +148,11 @@ public class CharacterBuf
 
     }
 
+    public virtual void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
+    {
+
+    }
+
     public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null, 
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, 
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때

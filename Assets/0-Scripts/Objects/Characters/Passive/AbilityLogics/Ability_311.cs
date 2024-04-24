@@ -28,6 +28,7 @@ public class Ability_311: PassiveLogic
             if (ally != null && ally.SO.id == 7)
             {
                 hasCharacterWithId7 = true;
+                break;
             }
         }
 
