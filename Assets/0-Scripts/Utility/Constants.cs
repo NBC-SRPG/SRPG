@@ -255,4 +255,21 @@ public class Constants
         [TextArea(3, 5)]
         public string dialog;
     }
+
+    public enum ExtraGoal
+    {
+        Clear,
+        InnerTurn,
+        KillOver,
+        KillSomeone,
+        NoDie,
+        Empty
+    }
+
+    [System.Serializable]
+    public struct ExtraGoalDetail
+    {
+        public ExtraGoal type;
+        public int value;
+    }
 }

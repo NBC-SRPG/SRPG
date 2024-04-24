@@ -462,9 +462,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  stageName: 
+  stageName: "\uD63C\uC2E0"
+  stageNumber: 1_5
   clear: 1
   stageType: 0
+  enemiesInfo:
+  - {fileID: 11400000, guid: 1bfc29d8d234e1f479accd251dd7eca0, type: 2}
+  - {fileID: 11400000, guid: a06dd1e9a12f74b47b35cde8ab43ea02, type: 2}
+  - {fileID: 11400000, guid: 5497908fc348d404ca4320c58b4de278, type: 2}
+  - {fileID: 11400000, guid: 0f231524f7f8bfc4bbb32b89af6faa95, type: 2}
   enemies:
   - {fileID: 11400000, guid: 1bfc29d8d234e1f479accd251dd7eca0, type: 2}
   - {fileID: 11400000, guid: 5497908fc348d404ca4320c58b4de278, type: 2}
@@ -482,3 +488,10 @@ MonoBehaviour:
   infiniteEnemy: []
   spawnByRound: 0
   spawnRound: 0
+  extraGoal:
+  - type: 0
+    value: 0
+  - type: 3
+    value: 0
+  - type: 4
+    value: 0

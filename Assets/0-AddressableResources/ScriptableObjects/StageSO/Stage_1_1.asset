@@ -71,22 +71,22 @@ MonoBehaviour:
       Data: 0
     - Name: hp
       Entry: 3
-      Data: 10
+      Data: 500
     - Name: atk
       Entry: 3
-      Data: 15
+      Data: 250
     - Name: def
       Entry: 3
-      Data: 1
+      Data: 140
     - Name: mov
       Entry: 3
-      Data: 10
+      Data: 8
     - Name: atkIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: defIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: critRate
       Entry: 3
       Data: 20
@@ -95,10 +95,10 @@ MonoBehaviour:
       Data: 50
     - Name: EnhancedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: ReducedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: exSkill
       Entry: 6
       Data: 
@@ -152,22 +152,22 @@ MonoBehaviour:
       Data: 0
     - Name: hp
       Entry: 3
-      Data: 10
+      Data: 500
     - Name: atk
       Entry: 3
-      Data: 15
+      Data: 250
     - Name: def
       Entry: 3
-      Data: 1
+      Data: 140
     - Name: mov
       Entry: 3
-      Data: 10
+      Data: 8
     - Name: atkIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: defIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: critRate
       Entry: 3
       Data: 20
@@ -176,10 +176,10 @@ MonoBehaviour:
       Data: 50
     - Name: EnhancedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: ReducedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: exSkill
       Entry: 6
       Data: 
@@ -233,22 +233,22 @@ MonoBehaviour:
       Data: 0
     - Name: hp
       Entry: 3
-      Data: 10
+      Data: 500
     - Name: atk
       Entry: 3
-      Data: 15
+      Data: 250
     - Name: def
       Entry: 3
-      Data: 1
+      Data: 140
     - Name: mov
       Entry: 3
-      Data: 10
+      Data: 8
     - Name: atkIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: defIncrease
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: critRate
       Entry: 3
       Data: 20
@@ -257,10 +257,10 @@ MonoBehaviour:
       Data: 50
     - Name: EnhancedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: ReducedDmg
       Entry: 4
-      Data: 0
+      Data: 1
     - Name: exSkill
       Entry: 6
       Data: 
@@ -297,9 +297,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  stageName: 
+  stageName: "\uC870\uC6B0"
+  stageNumber: 1_1
   clear: 0
   stageType: 0
+  enemiesInfo:
+  - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   enemies:
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
   - {fileID: 11400000, guid: bcc445d3708469c45b45d1a6b6da38b6, type: 2}
@@ -315,3 +318,10 @@ MonoBehaviour:
   infiniteEnemy: []
   spawnByRound: 0
   spawnRound: 0
+  extraGoal:
+  - type: 0
+    value: 0
+  - type: 5
+    value: 0
+  - type: 5
+    value: 0
