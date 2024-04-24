@@ -12,5 +12,5 @@ public class ClassSO : PassiveSO
     [Header("Class_description")]
     public string className;        //클래스 이름
     public string description;     //클래스 설명
-
+    public Sprite icon;
 }
