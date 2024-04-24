@@ -185,6 +185,7 @@ public class StageInfoUI : UIBase
     {
         // TODO
         // 해당 스테이지 입장
+        Managers.GameManager.UpdateParty(Managers.AccountData.formationData[Constants.presetIndex]);
         BattleLoadingController.LoadBattle("BattleScene");
     }
     private void OnClickEnemyInfoButton()
