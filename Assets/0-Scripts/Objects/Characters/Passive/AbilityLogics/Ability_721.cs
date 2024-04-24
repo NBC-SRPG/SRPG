@@ -18,7 +18,7 @@ public class Ability_721: PassiveLogic
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
         shield_721.Shield = (int)(damage.damage * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
-        shield_721.duration = 1;
+        shield_721.duration = coefficient["shieldDuration"];
         character.health.AddShield(shield_721);
     }
 

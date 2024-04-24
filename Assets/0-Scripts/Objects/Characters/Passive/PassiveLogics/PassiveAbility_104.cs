@@ -55,12 +55,12 @@ public class PassiveAbility_104 : PassiveLogic
         charactersInRange.Sort((a, b) => a.health.CurHealth.CompareTo(b.health.CurHealth));
 
         // 가장 체력이 적은 캐릭터와 두 번째로 체력이 적은 캐릭터를 치유 대상 목록에 추가
-        if (charactersInRange.Count > 0)
+        if (charactersInRange.Count > coefficient["count1"])
         {
-            targetsToHeal.Add(charactersInRange[0]); // 가장 체력이 적은 캐릭터
-            if (charactersInRange.Count > 1)
+            targetsToHeal.Add(charactersInRange[coefficient["count1"]]); // 가장 체력이 적은 캐릭터
+            if (charactersInRange.Count > coefficient["count2"])
             {
-                targetsToHeal.Add(charactersInRange[1]); // 두 번째로 체력이 적은 캐릭터
+                targetsToHeal.Add(charactersInRange[coefficient["count2"]]); // 두 번째로 체력이 적은 캐릭터
             }
         }
 

@@ -20,7 +20,7 @@ public class Ability_321: PassiveLogic
     public override void OnTurnEnd()// 턴이 끝날 때
     {
         //힐량 = 잃은 체력(=최대체력에서 현재 체력을 뺀 값) * 10% ( 10 / 100 )
-        if (characterSelf.Count <= 0)
+        if (characterSelf.Count <= coefficient["constants1"])
         {
             characterSelf.Add(character);
         }

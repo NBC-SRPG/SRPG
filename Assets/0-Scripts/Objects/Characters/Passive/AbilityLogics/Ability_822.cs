@@ -16,7 +16,7 @@ public class Ability_822: PassiveLogic
 
     public override void OnTurnEnd()// 턴이 끝날 때
     {
-        character.curCharacterBufList.AddBuf(BufKeyword.AmethystShield, 1, character, 0, (int)(character.health.TotalHealth * (float)coefficient["hpRatio"]/ coefficient["denominator"]));
+        character.curCharacterBufList.AddBuf(BufKeyword.AmethystShield, coefficient["shieldDuration"], character, coefficient["shieldPower"], (int)(character.health.TotalHealth * (float)coefficient["hpRatio"]/ coefficient["denominator"]));
     }
 }
 

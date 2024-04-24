@@ -15,7 +15,7 @@ public class Ability_922: PassiveLogic
 
     public override void OnKillEnemy(CharacterBase enemy, Constants.ElementType characterAttribute = Constants.ElementType.None)// 적 처치 시
     {
-
+        character.player.GainMana(coefficient["costRecovery"]);
     }
 
 }

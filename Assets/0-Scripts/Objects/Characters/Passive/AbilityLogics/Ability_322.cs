@@ -23,8 +23,8 @@ public class Ability_322: PassiveLogic
         //일정 체력 비율 이하일 경우 그에 맞는 데미지 감소 수치 적용.
         //체력 조건이 전부 해당하지 않을 경우 이 특성으로 얻는 데미지 감소 보너스를 지운다.
         //이 메서드를 각각 "공격을 받기 이전" / "공격을 받은 후" / "데미지를 받기 이전" / "데미지를 받은 후" / "힐을 받은 후" 에 호출한다.
-        //HealthSystem에 체력 변경 메서드에 콜백을 걸면 더 간결해 질 수 있을 것 같은데, 로직을 짜기가 어렵네요.
-        //"체력이 변경 된 후" 라는 조건이 있으면 좋을 것 같습니다.
+        //HealthSystem에 체력 변경 메서드에 콜백을 걸수 있으면 더 간결해 질 수 있을 것 같습니다.
+        //또는 "체력이 변경 된 후" 라는 조건이 있으면 좋을 것 같습니다.
 
         if (healthPercentage <= coefficient["hpRatio_1"])
         {
@@ -78,32 +78,6 @@ public class Ability_322: PassiveLogic
     Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐 받은 이후에
     {
         DamageReduceInit();
-    }
-
-
-
-
-
-
-    public override void OnEndActing()// 행동이 끝난 뒤
-    {
-
-    }
-
-    public override void OnRoundEnd()
-    {
-
-    }
-
-    public override void OnTurnEnd()// 턴이 끝날 때
-    {
-
-    }
-
-
-    public override void OnUpdate()// 실시간 판정
-    {
-
     }
 }
 

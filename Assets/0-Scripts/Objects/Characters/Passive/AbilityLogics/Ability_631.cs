@@ -17,10 +17,5 @@ public class Ability_631: PassiveLogic
         stat_631.ExtraMov = coefficient["extraMovIncreasse"];
         character.tempBonusStat.AddBonusStat(stat_631);
     }
-
-    public override void OnRoundStart()// 
-    {
-
-    }
 }
 

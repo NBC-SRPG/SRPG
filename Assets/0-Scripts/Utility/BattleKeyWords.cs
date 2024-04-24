@@ -45,6 +45,7 @@ public class BattleKeyWords
         Bleed,
         AtkIncrease,
         DefIncrease,
+        DefReduce,
         Quikness,
         Bind,
         Stun,

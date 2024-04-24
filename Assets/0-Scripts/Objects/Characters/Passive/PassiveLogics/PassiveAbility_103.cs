@@ -23,8 +23,8 @@ public class PassiveAbility_103 : PassiveLogic
         } 
         else
         {
-            int randomValue = UnityEngine.Random.Range(0, 2); // 0 또는 1 반환
-            if (randomValue == 0) // 1/2 확률로 실행
+            int randomValue = UnityEngine.Random.Range(coefficient["probabilityConstant1"], coefficient["probabilityConstant2"]); // 0 또는 1 반환
+            if (randomValue == coefficient["probabilityConstant1"]) // 1/2 확률로 실행
             {
                 enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
             }
@@ -40,8 +40,8 @@ public class PassiveAbility_103 : PassiveLogic
         }
         else
         {
-            int randomValue = UnityEngine.Random.Range(0, 2); // 0 또는 1 반환
-            if (randomValue == 0) // 1/2 확률로 실행
+            int randomValue = UnityEngine.Random.Range(coefficient["probabilityConstant1"], coefficient["probabilityConstant2"]); // 0 또는 1 반환
+            if (randomValue == coefficient["probabilityConstant1"]) // 1/2 확률로 실행
             {
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
             }

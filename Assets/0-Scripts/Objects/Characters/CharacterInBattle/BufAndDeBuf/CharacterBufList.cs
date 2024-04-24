@@ -90,6 +90,9 @@ public class CharacterBufList
                 case BattleKeyWords.BufKeyword.AmethystShield:
                     buf = new CharacterBuf_AmethystShield();
                     break;
+                case BattleKeyWords.BufKeyword.DefReduce:
+                    buf = new CharacterBuf_DefReduce();
+                    break;
 
             }
 

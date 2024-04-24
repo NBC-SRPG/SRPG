@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ability_921: PassiveLogic
 {
     //"결투가"
-    //매 행동마다 첫번째 공격의 데미지가 30% 증가한다.
+    //각 행동마다 첫번째 공격의 데미지가 30% 증가한다.
     //에오스의 2-1 특성
 
     BonusStat stat_921;
