@@ -4,6 +4,7 @@ public class MainUI : UIBase
 {
     private enum Texts
     {
+        NameText,
         LevelText
     }
 
@@ -59,6 +60,8 @@ public class MainUI : UIBase
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
 
+        GetText((int)Texts.NameText).text = Managers.AccountData.playerData.playerName;
+
         // TODO
         // 선택한 캐릭터의 일러스트 표시
         // GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>(Managers.AccountData.playerData.lobbyCharacter.ToString());
@@ -77,7 +80,7 @@ public class MainUI : UIBase
     // Level 텍스트 업데이트
     private void RefreshLevel()
     {
-
+        GetText((int)Texts.LevelText).text = $"LV.{Managers.AccountData.playerData.Level}";
     }
 
     private void OnClickCharacterButton()

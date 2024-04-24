@@ -55,11 +55,6 @@ public class AccountData
     }
     public void InitPlayerData(DataSnapshot snapshot)
     {
-        // PlayerData의 변수들이 private set이라 DB에서 불러온 값 적용 불가
-        /*
-        PlayerData data = snapshot.Exists ? JsonUtility.FromJson<PlayerData>(snapshot.GetRawJsonValue()) : new PlayerData();
-        playerData = data;
-        */
         if (playerData == null)
         {
             playerData = new();
