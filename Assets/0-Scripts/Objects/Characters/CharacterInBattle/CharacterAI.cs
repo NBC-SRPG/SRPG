@@ -127,6 +127,18 @@ public class CharacterAI : CharacterBase
 
             if(targets != null && targets.Count > 0 && mana - skillCost >= 0)
             {
+                foreach (OverlayTile tile in skillScale)
+                {
+                    tile.ShowAsScale();
+                }
+
+                yield return delay;
+
+                foreach (OverlayTile tile in skillScale)
+                {
+                    tile.HideTile();
+                }
+
                 UseSkill();
                 mana -= skillCost;
             }
@@ -749,6 +761,8 @@ public class CharacterAI : CharacterBase
         List<OverlayTile> range = new List<OverlayTile>();
         List<CharacterBase> list = new List<CharacterBase>();
 
+        OverlayTile bestTile = null;
+
         range = rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, curCharacterSkill.skillData.skillRange, false);
 
         foreach(OverlayTile tile in range)
@@ -760,9 +774,16 @@ public class CharacterAI : CharacterBase
             {
                 bestList = list;
                 max = bestList.Count;
+                bestTile = tile;
             }
+        }
+
+        if (bestTile != null)
+        {
+            GetSkillScaleTile(bestTile.grid2DLocation, curCharacterSkill.skillData.skillScale);
         }
 
         return bestList;
     }
+
 }

@@ -149,6 +149,8 @@ public class Character
         superiorClass = so.superiorClass;
         weapon = so.weapon;
         armor = so.armor;
+
+        Debug.Log(SO.characterName);
     }
 
     private void CalculateStat()

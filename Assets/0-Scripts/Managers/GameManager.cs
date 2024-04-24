@@ -9,7 +9,9 @@ public class GameManager
     public GamePlayer enemy;
 
     public string stageName;
-    public StageSO thisStage; 
+    public StageSO thisStage;
+
+    public bool nowTesting;
 
     public void Init()
     {
@@ -21,6 +23,8 @@ public class GameManager
         player.prioty = 10;
 
         InitParty();
+
+        nowTesting = false;
     }
 
     public void SetEnemy(GamePlayer enemy)

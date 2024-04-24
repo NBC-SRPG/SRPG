@@ -792,11 +792,29 @@ public class BattleManager : MonoBehaviour
 
         if (Managers.GameManager.player.isWin)
         {
+            UpdateClearData();
             Ui.ShowWin();
         }
         else
         {
             Ui.ShowLose();
+        }
+    }
+
+    private void UpdateClearData()
+    {
+        if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
+        {
+            int clearStar = 0;
+            foreach (bool t in extraClear)
+            {
+                if (t)
+                {
+                    clearStar++;
+                }
+            }
+
+            Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
         }
     }
 
