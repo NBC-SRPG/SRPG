@@ -187,11 +187,7 @@ public class BattleManager : MonoBehaviour
 
         float damage = attacker.Attack - totalDefend;// 방어력 계산
 
-        Debug.Log("damage1 " + damage);
-
         damage = damage * attacker.EnhanceDMG * victim.ReduceDMG;// 데미지 증감 계산
-
-        Debug.Log("damage2 " + damage);
 
         if (CheckCrit(attacker.CritRate))// 치명타 계산
         {
@@ -201,8 +197,6 @@ public class BattleManager : MonoBehaviour
 
         damagest.attributeDamage = ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType);
         damage = (damage * damagest.attributeDamage);
-        Debug.Log("extra " + damagest.attributeDamage);
-        Debug.Log("damage3 " + damage);
 
         if (damage < 0)
         {
