@@ -18,20 +18,18 @@ public class Ability_511: PassiveLogic
         int randomValue = UnityEngine.Random.Range(coefficient["randomCons1"], coefficient["randomCons2"]); // 0 ~ 9 반환
         if (randomValue == coefficient["randomCons1"]) // 1/10 확률로 실행
         {
-            List<CharacterBase> enemyList = new List<CharacterBase>();
-            enemyList.Add(enemy);
+            List<CharacterBase> enemyList = new List<CharacterBase>() { enemy };
             int enemyHealthPercentage = (enemy.health.CurHealth * coefficient["multiplier1"]) / enemy.health.TotalHealth;
-
 
             enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character); //1턴 동안 기절 상태이상 적용
 
             if (enemyHealthPercentage <= coefficient["percentageCondition"]) //체력 50%이하이면
             {
-                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]) * coefficient["multiplier2"], enemyList); //추가 데미지 (2배)
+                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]) * coefficient["multiplier2"], enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (2배)
             }
             else
             {
-                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지 (1배)
+                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (1배)
             }
         }
 
@@ -40,15 +38,17 @@ public class Ability_511: PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
-        List<CharacterBase> enemyList = new List<CharacterBase>();
-        enemyList.Add(target);
+        List<CharacterBase> enemyList = new List<CharacterBase>() { target };
 
         int randomValue = UnityEngine.Random.Range(coefficient["randomCons1"], coefficient["randomCons2"]); // 0 ~ 9 반환
         if (randomValue == coefficient["randomCons1"]) // 1/10 확률로 실행
         {
+            Debug.Log("Extra");
             target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character); //1턴 동안 기절 상태이상 적용
+
+            BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지
         }
-        BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList); //추가 데미지
+
     }
 
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시

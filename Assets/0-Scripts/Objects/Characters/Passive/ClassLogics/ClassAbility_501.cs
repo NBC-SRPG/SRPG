@@ -18,6 +18,7 @@ public class ClassAbility_501 : PassiveLogic
     public override void OnStageStart()
     {
         character.tempBonusStat.AddBonusStat(stat_Class501);
+        character.health.SetHealthSameAsTotal();
     }
 }
 

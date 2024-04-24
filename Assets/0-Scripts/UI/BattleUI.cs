@@ -98,6 +98,7 @@ public class BattleUI : UIBase
         TargetShieldBar,
         ResultBackGround,
         ClassIcon,
+        SkillImage,
 
     }
 
@@ -513,6 +514,8 @@ public class BattleUI : UIBase
             GetObject((int)GameObjects.SkillInfo).SetActive(false);
             return;
         }
+
+        GetImage((int)Images.SkillImage).sprite = curSelectedCharacter.curCharacterSkill.skillData.icon;
 
         GetObject((int)GameObjects.SkillInfo).SetActive(true);
 

@@ -13,6 +13,8 @@ public class Ability_732: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+
+        prevManaCost = character.curCharacterSkill.skillData.cost;
     }
 
     public override void OnRoundStart()// 
@@ -23,22 +25,26 @@ public class Ability_732: PassiveLogic
     public override void OnTurnStart()// 턴 시작 시 발동
     {
         character.skillCost = character.curCharacterSkill.skillData.cost;
-        prevManaCost = character.player.manaCost;
     }
 
     public override void OnUpdate()// 실시간 판정
     {
-        if(character.player.manaCost != prevManaCost)
+        //if(character.player.manaCost != prevManaCost)
+        //{
+        //    if (character.player.manaCost < prevManaCost)
+        //    {
+        //        character.skillCost -= ((int)(prevManaCost - character.player.manaCost) / coefficient["denominator"]);
+        //        prevManaCost = character.player.manaCost;
+        //    }
+        //    else if (character.player.manaCost > prevManaCost)
+        //    {
+        //        prevManaCost = character.player.manaCost;
+        //    }
+        //}
+
+        if(character.player.UsedManaThisTurn != 0 && prevManaCost == character.skillCost)
         {
-            if (character.player.manaCost < prevManaCost)
-            {
-                character.skillCost -= ((int)(prevManaCost - character.player.manaCost) / coefficient["denominator"]);
-                prevManaCost = character.player.manaCost;
-            }
-            else if (character.player.manaCost > prevManaCost)
-            {
-                prevManaCost = character.player.manaCost;
-            }
+            character.skillCost -= (int)(character.player.UsedManaThisTurn / coefficient["denominator"]);
         }
     }
 }

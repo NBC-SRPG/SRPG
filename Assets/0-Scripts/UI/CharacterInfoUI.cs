@@ -120,8 +120,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.ClassButton).onClick.AddListener(() => ShowTab(PlayTab.Class));
 
         GetElementImage();
-        GetImage((int)Images.WeaponImage).sprite = character.weapon.sprite;
-        GetImage((int)Images.ArmorImage).sprite = character.armor.sprite;
+        UpdateEquipImage();
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.ExSkillButton).onClick.AddListener(OnClickExSkillButton);
@@ -335,6 +334,12 @@ public class CharacterInfoUI : UIBase
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
         GetText((int)Texts.DefText).text = $"{character.def}";
+    }
+
+    public void UpdateEquipImage()
+    {
+        GetImage((int)Images.WeaponImage).sprite = character.weapon.sprite;
+        GetImage((int)Images.ArmorImage).sprite = character.armor.sprite;
     }
 
     private void ShowTab(PlayTab tab)

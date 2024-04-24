@@ -136,8 +136,7 @@ public class CharacterController : MonoBehaviour
             canClick = true;
             nowPlayerTurn = true;
 
-            player.GainMana(player.manaNextTurn);
-            player.manaNextTurn = 0;
+            player.OnstartTurn();
 
             player.GainMana(10);
 
@@ -630,7 +629,7 @@ public class CharacterController : MonoBehaviour
         {
             canClick = false;
 
-            player.manaCost -= curSelectedCharacter.skillCost;
+            player.UseMana(curSelectedCharacter.skillCost);
             curSelectedCharacter.historyCurrentRound.useCostCount += curSelectedCharacter.skillCost;
 
             AnimationController.instance.onAnimationEnd += EndSkill;

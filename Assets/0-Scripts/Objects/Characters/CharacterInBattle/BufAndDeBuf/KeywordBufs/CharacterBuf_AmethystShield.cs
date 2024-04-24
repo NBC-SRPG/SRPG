@@ -15,22 +15,23 @@ public class CharacterBuf_AmethystShield : CharacterBuf //피유의 패시브 �
 
     public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer, duration, power, stack);
-        shield_Ame.Shield = stack;
-            //(int)(buffer.Defend * (((float)(buffer.character.exSkill.coefficient[0].value) + (buffer.character.Growth.exSkillLevel * buffer.character.exSkill.growthCoefficient)) / 100));
-        shield_Ame.duration = duration;
-        character.health.AddShield(shield_Ame);
+        base.Init(character, buffer, _duration, _power, _stack);
 
-        if(Buffer.character.abilityT3.id == 831)
-        {
-            character.curCharacterBufList.debufimmunity = true;
-        }
+        shield_Ame = new ShieldStat();
     }
 
     public override void OnAddBuf()
     {
         shield_Ame.Shield += stack;
-        shield_Ame.duration = duration;
+
+        //(int)(buffer.Defend * (((float)(buffer.character.exSkill.coefficient[0].value) + (buffer.character.Growth.exSkillLevel * buffer.character.exSkill.growthCoefficient)) / 100));
+
+        character.health.AddShield(shield_Ame);
+
+        if (Buffer.character.abilityT3 != null && Buffer.character.abilityT3.id == 831)
+        {
+            character.curCharacterBufList.debufimmunity = true;
+        }
     }
 
     public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
@@ -70,7 +71,7 @@ public class CharacterBuf_AmethystShield : CharacterBuf //피유의 패시브 �
     public override void OnDestroy()
     {
         //나중에 또다른 상태이상/디버프 면역 조건이 생길 때 수정이 필요
-        if (!character.health.shieldList.Contains(shield_Ame) && Buffer.character.abilityT3.id == 831)
+        if (!character.health.shieldList.Contains(shield_Ame) && Buffer.character.abilityT3 != null && Buffer.character.abilityT3.id == 831)
         {
             character.curCharacterBufList.debufimmunity = false;
         }

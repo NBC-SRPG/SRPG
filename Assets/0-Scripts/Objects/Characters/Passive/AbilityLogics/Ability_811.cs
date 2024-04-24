@@ -12,13 +12,13 @@ public class Ability_811: PassiveLogic
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-        characterSelf.Add(character);
+        characterSelf = new List<CharacterBase>() { character };
     }
 
     public override void OnAttackSuccess(CharacterBase enemy, BattleKeyWords.Damage damage)// 공격 적중 시
     {
         int healAmount = (int)(damage.damage * ((float)(coefficient["drainRate"]) / coefficient["denominator"]));
-        BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Skill);
+        BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Passive);
     }
 }
 

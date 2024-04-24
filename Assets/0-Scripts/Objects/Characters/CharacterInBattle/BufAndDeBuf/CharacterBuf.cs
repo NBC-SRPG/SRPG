@@ -31,9 +31,9 @@ public class CharacterBuf
     public virtual void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
         this.character = character;
-        duration = _duration;
-        power = _power;
-        stack = _stack;
+        duration = 0;
+        power = 0;
+        stack = 0;
         maxStack = 99;
         IsDestroyed = false;
         Buffer = buffer;
@@ -144,6 +144,11 @@ public class CharacterBuf
     }
 
     public virtual void OnTakeAttack(CharacterBase enemy)// 공격 받기 이전에
+    {
+
+    }
+
+    public virtual void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
     {
 
     }

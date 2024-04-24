@@ -49,21 +49,16 @@ public class BattleKeyWords
         Quikness,
         Bind,
         Stun,
-        ReversalHeal,
-
         AtkAura,
         Herald,
-
         ReceivedDgmReduce,
         ReceivedDgmIncrease,
-
         CrtRateIncrease,
         HealReversal,
-
         Corrosion,
         TargetMarker,
-
         AmethystShield,
+        Shield,
 
     }
 }

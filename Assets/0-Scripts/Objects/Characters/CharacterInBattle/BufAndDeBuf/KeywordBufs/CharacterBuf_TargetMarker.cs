@@ -18,7 +18,15 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
     {
         base.Init(character, buffer, duration, power, stack);
         isIndependent = true;
-        BonusStat stat_TargetMarker = new BonusStat();
+        stat_TargetMarker = new BonusStat();
+    }
+
+    public override void AfterTakeAttacked(CharacterBase enemy)
+    {
+        base.AfterTakeAttacked(enemy);
+
+        DoExtraAttack(enemy);
+
     }
 
     public override void OnTakeDamage(ref int damage, CharacterBase enemy = null,
@@ -28,7 +36,17 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
         stat_TargetMarker.EXCritRate = power;
         enemy.tempBonusStat.AddBonusStat(stat_TargetMarker);
 
-        if(Buffer.character.abilityT2.id == 622 && enemy != Buffer) //공격자가 피유가 아니고, 피유가 "지원 사격" 특성을 적용 중일 경우.
+    }
+
+    //OntakeDamage 함수는 너무 많은 경우에 발생하기 때문에 스킬과 일반공격에 피해를 입었을 때로 제한하겠습니다.
+    private void DoExtraAttack(CharacterBase enemy)
+    {
+        if (character.isDead)
+        {
+            return;
+        }
+
+        if (Buffer.character.abilityT2.id == 622 && enemy != Buffer) //공격자가 피유가 아니고, 피유가 "지원 사격" 특성을 적용 중일 경우.
         {
             int distance = character.pathFinder.GetManhattenDistance(character.curStandingTile, Buffer.curStandingTile); //피유와 이 표적 디버프를 가진 캐릭터의 거리가 6 이하일 경우
 
@@ -38,10 +56,10 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
                 List<CharacterBase> characterSelf = new List<CharacterBase>();
                 characterSelf.Add(character);
 
-                BattleManager.Instance.ExtraSkillAttack(Buffer, figure, characterSelf, BattleKeyWords.AttackDamageType.Skill); //이 표적 디버프를 가진 캐릭터를 공격.
+                //무한 공격하는 것을 방지하기 위해 패시브 데미지로 설정하겠습니다.
+                BattleManager.Instance.ExtraSkillAttack(Buffer, figure, characterSelf, BattleKeyWords.AttackDamageType.Passive, Constants.ElementType.Grass, "attack", true); //이 표적 디버프를 가진 캐릭터를 공격.
             }
         }
-
     }
 
     public override void AfterTakeDamage(int damage, CharacterBase enemy = null,
@@ -49,6 +67,11 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 받은 이후에
     {
         enemy.tempBonusStat.RemoveBonusStat(stat_TargetMarker);
+
+        if (damageType == BattleKeyWords.AttackDamageType.Skill)
+        {
+            DoExtraAttack(enemy);
+        }
     }
 
     public override void OnTurnStart()
