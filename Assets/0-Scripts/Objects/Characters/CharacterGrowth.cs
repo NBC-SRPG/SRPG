@@ -152,6 +152,19 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         return result;
     }
 
+    public void Awake()
+    {
+        if (star < 5)
+        {
+            star++;
+        }
+        else
+        {
+            limitBreak++;
+        }
+        UpdateToDB();
+    }
+
     public void UpgradeWeapon()
     {
         weapon++;

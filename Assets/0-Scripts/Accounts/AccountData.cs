@@ -354,15 +354,28 @@ public class AccountData
                 characterData.Add(id, new Character((CharacterSO)result, characterGrowth));
                 Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
 
-                // TODO : 인벤토리에 조각 0으로 추가
+                AcquireItems(id, 0);
             });
         }
         else
         {
-            // 캐릭터 조각 추가
+            int pieceCount;
+            if (characterData[id].SO.basicStar == 1) pieceCount = 1;
+            else if(characterData[id].SO.basicStar == 2) pieceCount = 5;
+            else pieceCount = 30;
+
+            AcquireItems(id, pieceCount);
         }
     }
 
+    public int GetItemQuantity(int id)
+    {
+        if(!inventory.ContainsKey(id))
+        {
+            AcquireItems(id, 0);
+        }
+        return inventory[id];
+    }
     public void AcquireItems(int id, int count)
     {
         if(inventory.TryAdd(id, count) == false)
