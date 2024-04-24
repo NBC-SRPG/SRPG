@@ -76,7 +76,6 @@ public class CharacterUI : UIBase
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
-        // 테스트 데이터
         foreach (Character character in Managers.AccountData.characterData.Values)
         {
             GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterEntryUI");

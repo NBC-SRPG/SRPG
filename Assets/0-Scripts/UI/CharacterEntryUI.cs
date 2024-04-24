@@ -99,7 +99,6 @@ public class CharacterEntryUI : UIBase
 
     private void SetStar()
     {
-        // int numberOfStars = character.characterData.defaltStar; // 별의 개수
         int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
 
@@ -145,16 +144,6 @@ public class CharacterEntryUI : UIBase
         Debug.Log("AddCharacterToFormation");
 
         FormationUI ui = Managers.UI.FindUI<FormationUI>();
-
-        /*
-        // 이미 편성에 포함되어 있으면 불가 안내 UI
-        if (isCharacterInFormation)
-        {
-            WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-            warningUi.Init("이미 편성에 포함되어 있습니다");
-            return;
-        }
-        */
 
         // 이미 편성에 포함되어 있다면 편성 해제
         if (isCharacterInFormation)
