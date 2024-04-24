@@ -20,11 +20,11 @@ public class Ability_321: PassiveLogic
     public override void OnTurnEnd()// 턴이 끝날 때
     {
         //힐량 = 잃은 체력(=최대체력에서 현재 체력을 뺀 값) * 10% ( 10 / 100 )
-        if (characterSelf.Count <= 0)
+        if (characterSelf.Count <= coefficient["constants1"])
         {
             characterSelf.Add(character);
         }
-        int healAmount = (int)((character.health.MaxHealth - character.health.CurHealth) * (coefficient["healRate"] / coefficient["denominator"])); //잃은 체력을 구한다
+        int healAmount = (int)((character.health.TotalHealth - character.health.CurHealth) * ((float)(coefficient["healRate"]) / coefficient["denominator"])); //잃은 체력을 구한다
         BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Extra);//잃은 체력의 10% 회복
         //character.TakeHealByInt(ref healAmount); 
     }

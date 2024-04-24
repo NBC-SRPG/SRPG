@@ -24,16 +24,16 @@ public class ExSkillBase
                 switch (coefficient.status)
                 {
                     case Constants.Status.Atk:
-                        damage += (int)(coefficient.value / 100f * character.Attack);
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Attack);
                         break;
                     case Constants.Status.Def:
-                        damage += (int)(coefficient.value / 100f * character.Defend);
+                        damage += (int)(( (coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Defend);
                         break;
                     case Constants.Status.Health:
-                        damage += (int)(coefficient.value / 100f * character.health.MaxHealth);
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.health.TotalHealth);
                         break;
                     case Constants.Status.Mov:
-                        damage += (int)(coefficient.value / 100f * character.Mov);
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Mov);
                         break;
                 }
             }

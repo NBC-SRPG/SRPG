@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SkillAbility_103 : ExSkillLogic
 {
+    //제네
+    //Ex스킬
+    //인접한 지정 방향 5칸에 화속성 피해를 입힌다.
 
     public override void init(CharacterBase character)// 스킬 소유자 설정
     {

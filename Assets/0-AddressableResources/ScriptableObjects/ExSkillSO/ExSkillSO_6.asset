@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skill_ID: 6
   skillName: "\uC2E0\uB85D\uC758 \uD654\uC0B4"
-  description: 
-  targetType: 0
-  cost: 0
-  coefficient: 0
-  growthCoefficient: 0
+  description: "6\uCE78 \uBC94\uC704 \uB0B4\uC758 \uB2E8\uC77C \uB300\uC0C1\uC744
+    \uC120\uD0DD\uD574 \uD53C\uC720 \uACF5\uACA9\uB825\uC758 300%  \uCD08\uC18D\uC131
+    \uD53C\uD574\uB97C \uC785\uD78C\uB2E4. "
+  targetType: 1
+  cost: 20
+  coefficient:
+  - status: 0
+    value: 300
+  growthCoefficient: 10
   onhit: 0
-  skillRange: 0
+  skillRange: 6
   scaleType: 0
   skillScale: 0
   abilityID: 106

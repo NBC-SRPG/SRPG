@@ -452,7 +452,7 @@ public class CharacterAI : CharacterBase
 
         foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, 5, false))// 5칸 이내의 아군을 찾음
         {
-            if (tile.curStandingCharater != null && !tile.curStandingCharater.CheckEnenmy(this))
+            if (tile.curStandingCharater != null && !tile.curStandingCharater.CheckEnemy(this))
             {
                 characterInRange.Add((CharacterAI)tile.curStandingCharater);
             }
@@ -537,7 +537,7 @@ public class CharacterAI : CharacterBase
 
         foreach (CharacterBase character in charactersInRange)
         {
-            if (!character.CheckEnenmy(this))// 아군 캐릭터면 스킵
+            if (!character.CheckEnemy(this))// 아군 캐릭터면 스킵
             {
                 continue;
             }
@@ -562,7 +562,7 @@ public class CharacterAI : CharacterBase
         {
             foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, leftWalkRange, true))
             {
-                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
+                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnemy(this))
                 {
                     characterInRange.Add(tile.curStandingCharater);
                 }
@@ -572,7 +572,7 @@ public class CharacterAI : CharacterBase
         {
             foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.SO.range, false))
             {
-                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
+                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnemy(this))
                 {
                     characterInRange.Add(tile.curStandingCharater);
                 }

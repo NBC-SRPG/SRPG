@@ -45,6 +45,7 @@ public class BattleKeyWords
         Bleed,
         AtkIncrease,
         DefIncrease,
+        DefReduce,
         Quikness,
         Bind,
         Stun,
@@ -55,6 +56,14 @@ public class BattleKeyWords
 
         ReceivedDgmReduce,
         ReceivedDgmIncrease,
+
+        CrtRateIncrease,
+        HealReversal,
+
+        Corrosion,
+        TargetMarker,
+
+        AmethystShield,
 
     }
 }
