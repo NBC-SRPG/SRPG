@@ -63,11 +63,11 @@ public class CharacterEntryUI : UIBase
 
         // TODO
         // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
-        // 테스트 데이터
-        GetImage((int)Images.CharacterImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
+        Character character = Managers.AccountData.characterData[characterId];
+        GetImage((int)Images.CharacterImage).sprite = character.SO.icon;
+        GetImage((int)Images.CharacterAttributeImage).sprite = character.GetElementSprite();
+
         UpdateLevel();
-        // TODO 속성 이미지 세팅
-        // TODO 캐릭터 아웃라인 속성 이미지에 맞게 세팅
 
         if (isFormation)
         {
