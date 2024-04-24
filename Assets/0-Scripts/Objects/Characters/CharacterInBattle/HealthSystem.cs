@@ -14,7 +14,7 @@ public class HealthSystem : MonoBehaviour
     private TempBonusStat tempBonus;
     private CharacterBufList characterBufList;
 
-    private List<ShieldStat> shieldList;
+    public List<ShieldStat> shieldList;
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
@@ -366,4 +366,17 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
+    public void OnRoundEnd()
+    {
+        foreach(ShieldStat shield in shieldList)
+        {
+
+            shield.duration -= 1;
+
+            if (shield.duration == 0)
+            {
+                RemoveShield(shield);
+            }
+        }
+    }
 }

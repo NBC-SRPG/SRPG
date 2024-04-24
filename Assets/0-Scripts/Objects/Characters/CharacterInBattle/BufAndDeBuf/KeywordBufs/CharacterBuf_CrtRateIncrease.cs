@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증가 디버프
+public class CharacterBuf_CrtRateIncrease : CharacterBuf
 {
-    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.ReceivedDgmIncrease;
+    public override BattleKeyWords.BufKeyword BufKeyword { get; protected set; } = BattleKeyWords.BufKeyword.CrtRateIncrease;
 
-    public override BattleKeyWords.BufType BufType { get; protected set; } = BattleKeyWords.BufType.Negative;
+    public override BattleKeyWords.BufType BufType { get; protected set; } = BattleKeyWords.BufType.Positive;
 
-    public override string Keyword { get; protected set; } = "ReceivedDgmIncrease";
+    public override string Keyword { get; protected set; } = "CrtRateIncrease";
 
     public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
@@ -20,7 +20,7 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증
     {
         return new BonusStat
         {
-            ReducedDmg = (float)(power / 100) * (-1)
+            EXCritRate = power
         };
     }
 
@@ -35,4 +35,5 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증
 
         turnCnt++;
     }
+
 }
