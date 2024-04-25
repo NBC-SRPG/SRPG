@@ -51,9 +51,9 @@ public class BattleManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Init();
-
         stage = Managers.GameManager.thisStage;
+
+        Init();
 
         Managers.Resource.Instantiate("Map/" + stage.prefabsName);
 
@@ -73,6 +73,11 @@ public class BattleManager : MonoBehaviour
 
         Managers.UI.ShowUI<BattleUI>();
         Ui = Managers.UI.FindUI<BattleUI>();
+
+        if (stage.isTutorial)
+        {
+            Managers.Resource.Instantiate("UI/BattleTutorial");
+        }
     }
 
     //플레이어가 준비되었는지 확인

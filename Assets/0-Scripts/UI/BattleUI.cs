@@ -314,6 +314,11 @@ public class BattleUI : UIBase
         GetText((int)Texts.NoMana).gameObject.SetActive(haveMana);
     }
 
+    public void HideSkillButton()
+    {
+        GetButton((int)Buttons.UseSkillButton).gameObject.SetActive(false);
+    }
+
     public void ShowManaText()
     {
         GetObject((int)GameObjects.ManaObject).SetActive(true);
@@ -423,33 +428,48 @@ public class BattleUI : UIBase
 
     public void SetGoalText()
     {
-        TextMeshProUGUI goal = (TextMeshProUGUI)GetText((int)Texts.GoalText);
-        TextMeshProUGUI remain = (TextMeshProUGUI)GetText((int)Texts.RemainText);
-
-        switch (stage.clear)
+        if (GetText((int)Texts.GoalText).gameObject.activeInHierarchy && GetText((int)Texts.RemainText).gameObject.activeInHierarchy)
         {
-            case StageClear.ClearAll:
-                goal.text = "모든 적을 섬멸해야 합니다.";
-                remain.text = "남은 적 수 : " + BattleManager.Instance.GetRemainEnemy().ToString();
-                break;
-            case StageClear.Assasinate:
-                goal.text = "대상을 처치해야 합니다.";
-                remain.text = "목표 대상 : ";
-                foreach(Character character in stage.GetTargetEnemy())
-                {
-                    remain.text += character.enemySO.characterName;
-                    remain.text += (stage.GetTargetEnemy().Count > 1 ? ", " : "");
-                }
-                break;
-            case StageClear.Run:
-                goal.text = "목표 지점까지 도달해야 합니다.";
-                remain.text = "";
-                break;
-            case StageClear.Defence:
-                goal.text = stage.defenceRound + " 라운드 동안 살아남아야 합니다.";
-                remain.text = "남은 라운드 수 : " + (stage.defenceRound - BattleManager.Instance.nowRound).ToString();
-                break;
+            TextMeshProUGUI goal = (TextMeshProUGUI)GetText((int)Texts.GoalText);
+            TextMeshProUGUI remain = (TextMeshProUGUI)GetText((int)Texts.RemainText);
+
+            switch (stage.clear)
+            {
+                case StageClear.ClearAll:
+                    goal.text = "모든 적을 섬멸해야 합니다.";
+                    remain.text = "남은 적 수 : " + BattleManager.Instance.GetRemainEnemy().ToString();
+                    break;
+                case StageClear.Assasinate:
+                    goal.text = "대상을 처치해야 합니다.";
+                    remain.text = "목표 대상 : ";
+                    foreach (Character character in stage.GetTargetEnemy())
+                    {
+                        remain.text += character.enemySO.characterName;
+                        remain.text += (stage.GetTargetEnemy().Count > 1 ? ", " : "");
+                    }
+                    break;
+                case StageClear.Run:
+                    goal.text = "목표 지점까지 도달해야 합니다.";
+                    remain.text = "";
+                    break;
+                case StageClear.Defence:
+                    goal.text = stage.defenceRound + " 라운드 동안 살아남아야 합니다.";
+                    remain.text = "남은 라운드 수 : " + (stage.defenceRound - BattleManager.Instance.nowRound).ToString();
+                    break;
+            }
         }
+    }
+
+    public void HideGoalText()
+    {
+        GetText((int)Texts.GoalText).gameObject.SetActive(false);
+        GetText((int)Texts.RemainText).gameObject.SetActive(false);
+    }
+
+    public void ShowGoalText()
+    {
+        GetText((int)Texts.GoalText).gameObject.SetActive(true);
+        GetText((int)Texts.RemainText).gameObject.SetActive(true);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
