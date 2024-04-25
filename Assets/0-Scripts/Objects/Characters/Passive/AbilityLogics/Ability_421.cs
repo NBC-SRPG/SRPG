@@ -29,11 +29,11 @@ public class Ability_421: PassiveLogic
         {
             if (character.CheckEnemy(target))
             {
-                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmIncrease, coefficient["debufDuration_2"], character, coefficient["debufCoefficients_2"]);//적일 경우 2턴 간 받는 피해 15% 증가
+                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmIncrease, coefficient["debufDuration_2"], character, coefficient["debufCoefficients_2"], coefficient["bufStack"]);//적일 경우 2턴 간 받는 피해 15% 증가
             }
             else
             {
-                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmReduce, coefficient["bufDuration_2"], character, coefficient["bufCoefficients_2"]); //아군일 경우 2턴 간 받는 피해 15% 감소
+                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.ReceivedDgmReduce, coefficient["bufDuration_2"], character, coefficient["bufCoefficients_2"], coefficient["bufStack"]); //아군일 경우 2턴 간 받는 피해 15% 감소
             }
         }
         else

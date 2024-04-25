@@ -297,14 +297,11 @@ public class CharacterBase : MonoBehaviour
         get
         {
             float reduce = 1 * character.ReducedDmg * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
-            if(reduce > 1)
-            {
-                reduce = 1;
-            }
+
 
             if(reduce < 0)
             {
-                reduce = 1f;
+                reduce = 0.1f;
             }
 
             return reduce;

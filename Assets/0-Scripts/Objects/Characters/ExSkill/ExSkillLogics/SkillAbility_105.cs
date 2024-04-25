@@ -7,7 +7,7 @@ public class SkillAbility_105 : ExSkillLogic
     //레인
     //Ex스킬
     //지정 범위 마름모꼴 13칸의 적을 공격하고 [부식] 디버프를 3회 중첩한다. (부식은 패시브에서 겁니다.)
-    //현재 스킬 계수는 200으로 설정되어있음.
+    //현재 스킬 계수는 80으로 설정되어있음.
 
     public override void init(CharacterBase character)// 스킬 소유자 설정
     {

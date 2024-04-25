@@ -57,10 +57,16 @@ public class PassiveAbility_104 : PassiveLogic
         // 가장 체력이 적은 캐릭터와 두 번째로 체력이 적은 캐릭터를 치유 대상 목록에 추가
         if (charactersInRange.Count > coefficient["count1"])
         {
-            targetsToHeal.Add(charactersInRange[coefficient["count1"]]); // 가장 체력이 적은 캐릭터
-            if (charactersInRange.Count > coefficient["count2"])
+            if (charactersInRange[coefficient["count1"]].health.CurHealth < charactersInRange[coefficient["count1"]].health.TotalHealth)
             {
-                targetsToHeal.Add(charactersInRange[coefficient["count2"]]); // 두 번째로 체력이 적은 캐릭터
+                targetsToHeal.Add(charactersInRange[coefficient["count1"]]); // 가장 체력이 적은 캐릭터
+                if (charactersInRange.Count > coefficient["count2"])
+                {
+                    if (charactersInRange[coefficient["count2"]].health.CurHealth < charactersInRange[coefficient["count2"]].health.TotalHealth)
+                    {
+                        targetsToHeal.Add(charactersInRange[coefficient["count2"]]); // 두 번째로 체력이 적은 캐릭터
+                    }
+                }
             }
         }
 
@@ -68,9 +74,9 @@ public class PassiveAbility_104 : PassiveLogic
         if (targetsToHeal.Count > 0)
         {
             // 치유 대상 목록에 저장된 캐릭터들에게 치유를 시도
-            foreach (CharacterBase character in targetsToHeal)
+            foreach (CharacterBase target in targetsToHeal)
             {
-                BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
+                    BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
             }
         }
 
