@@ -190,7 +190,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if(buf.BufType == BattleKeyWords.BufType.Positive)
             {
@@ -210,7 +210,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if (buf.BufType == BattleKeyWords.BufType.Positive)
             {
@@ -231,7 +231,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if (buf.BufType == BattleKeyWords.BufType.Positive)
             {
@@ -265,7 +265,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if (buf.BufType == BattleKeyWords.BufType.Negative)
             {
@@ -285,7 +285,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if (buf.BufType == BattleKeyWords.BufType.Negative)
             {
@@ -307,7 +307,7 @@ public class CharacterBufList
     {
         bufs.Clear();
 
-        foreach (CharacterBuf buf in bufs)
+        foreach (CharacterBuf buf in bufList)
         {
             if (buf.BufType == BattleKeyWords.BufType.Negative)
             {
