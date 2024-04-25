@@ -10,7 +10,7 @@ public class CommonUI : UIBase
 
     private enum Texts
     {
-        APText,
+        ApText,
         ApTimerText,
         GoldText,
         DiamondText
@@ -18,7 +18,7 @@ public class CommonUI : UIBase
 
     private enum Buttons
     {
-        APButton,
+        ApButton,
         GoldButton,
         DiamondButton,
         SettingButton
@@ -59,7 +59,7 @@ public class CommonUI : UIBase
         BindImage(typeof(Images));
 
         // 버튼에 클릭 이벤트 추가
-        GetButton((int)Buttons.APButton).onClick.AddListener(OnClickApButton);
+        GetButton((int)Buttons.ApButton).onClick.AddListener(OnClickApButton);
         GetButton((int)Buttons.GoldButton).onClick.AddListener(OnClickGoldButton);
         GetButton((int)Buttons.DiamondButton).onClick.AddListener(OnClickDiamondButton);
         GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
@@ -110,7 +110,7 @@ public class CommonUI : UIBase
     // Ap, Gold, Diamond UI 업데이트
     private void UpdateApUI(int newAp)
     {
-        GetText((int)Texts.APText).text = $"{newAp} / {playerData.maxAp}";
+        GetText((int)Texts.ApText).text = $"{newAp} / {playerData.maxAp}";
         //GetImage((int)Images.ApFillImage).fillAmount = (float)newAp / playerData.maxAp;
     }
     private void UpdateGoldUI(int newGold)
