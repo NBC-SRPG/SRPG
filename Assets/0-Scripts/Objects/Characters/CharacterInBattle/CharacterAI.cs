@@ -317,6 +317,17 @@ public class CharacterAI : CharacterBase
             attractTarget = nearsetCharacter;
             ChangeState(EnemyState.Chasing);// 추격 상태로 전환
         }
+        else
+        {
+            if (waiting)
+            {
+                Wait?.Invoke();
+
+                AnimationController.instance.onAnimationEnd -= EndActing;
+            }
+
+            waiting = true;
+        }
     }
 
     private void Waiting()// 대기 행동
