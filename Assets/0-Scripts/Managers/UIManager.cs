@@ -124,11 +124,11 @@ public class UIManager
             UIBase ui = uiStack.Pop();
             Object.Destroy(ui.gameObject);
         }
-        order = -18;
+        order = -20;
     }
 
     public void InitSortOrder()
     {
-        order = -18;
+        order = -20;
     }
 }

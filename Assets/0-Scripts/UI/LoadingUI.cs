@@ -41,8 +41,6 @@ public class LoadingUI : UIBase
 
     private void Init()
     {
-        Managers.UI.SetCanvas(gameObject);
-
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));
