@@ -100,7 +100,6 @@ public class CharacterInfoUI : UIBase
     private void OnDestroy()
     {
         character.Growth.OnLevelUp -= UpdateStat;
-        character.Growth.OnAwake -= UpdateLimit;
     }
 
     public void SetCharacter(Character character)
@@ -146,7 +145,6 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.LevelUpButton).onClick.AddListener(OnClickLevelUpButton);
 
         character.Growth.OnLevelUp += UpdateStat;
-        character.Growth.OnAwake += UpdateLimit;
     }
 
     private void OnClickLevelUpButton()
@@ -330,7 +328,6 @@ public class CharacterInfoUI : UIBase
         }
 
         UpdateStat();
-        UpdateLimit();
     }
 
     public void UpdateStat()
@@ -338,7 +335,7 @@ public class CharacterInfoUI : UIBase
         GetText((int)Texts.LevelText).text = $"Lv. {character.Growth.level} / {character.Growth.GetMaxLevel()}";
         GetText((int)Texts.ExpText).text = $"{character.Growth.curExp} / {character.Growth.maxExp}";
         GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
-        //UpdateLimit();
+        UpdateLimit();
 
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
