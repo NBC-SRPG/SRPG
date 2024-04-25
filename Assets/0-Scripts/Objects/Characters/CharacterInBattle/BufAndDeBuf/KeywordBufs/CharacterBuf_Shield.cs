@@ -15,16 +15,18 @@ public class CharacterBuf_Shield : CharacterBuf
     public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
         base.Init(character, buffer, _duration, _power, _stack);
-        isIndependent = true;
+
+        maxStack = 99999999;
+        dontDestroy = true;
 
         shield = new ShieldStat();
+        shield.Shield = stack;
     }
 
     public override void OnAddBuf()
     {
         base.OnAddBuf();
-
-        shield.Shield = power;
+        shield.Shield += stack;
         if (shield.Shield < 1)
         {
             shield.Shield = 1;

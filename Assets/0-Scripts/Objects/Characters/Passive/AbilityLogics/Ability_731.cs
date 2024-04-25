@@ -35,9 +35,9 @@ public class Ability_731: PassiveLogic
 
     public override void OnTurnEnd()// 턴이 끝날 때
     {
-        int ran = Random.Range(0, 2);
+        int ran = Random.Range(coefficient["randomCons1"], coefficient["randomCons2"]);
 
-        if(skillTarget != null && !skillTarget.isDead && ran == 0)
+        if(skillTarget != null && !skillTarget.isDead && ran == coefficient["randomCons1"])
         {
             int damageAmount = (int)((skillTarget.health.TotalHealth - skillTarget.health.CurHealth) * ((float)(coefficient["healthRate"]) / coefficient["denominator"])); //잃은 체력을 구한다
             BattleManager.Instance.ExtraSkillAttack(character, (int)((float)character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"])) + damageAmount, new List<CharacterBase> { skillTarget}); //추가 데미지

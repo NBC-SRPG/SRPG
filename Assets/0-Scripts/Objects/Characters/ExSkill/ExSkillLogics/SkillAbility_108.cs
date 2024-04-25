@@ -30,7 +30,7 @@ public class SkillAbility_108 : ExSkillLogic
     public override void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
     {
         //실드값 = 캐릭터 방어력 * (Ex스킬 계수 + (캐릭터 Ex스킬 레벨 * 캐릭터 Ex스킬 성장 계수)/100)
-        target[0].curCharacterBufList.AddBuf(BufKeyword.AmethystShield, 2, character, 0, (int)(character.Defend * (((float)(character.character.exSkill.coefficient[0].value) + (character.character.Growth.exSkillLevel * character.character.exSkill.growthCoefficient)) / 100)));
+        target[0].curCharacterBufList.AddBuf(BufKeyword.AmethystShield, 2, character, 0, (int)(character.Defend * (((float)(character.character.exSkill.coefficient[0].value) + (float)(character.character.Growth.exSkillLevel * character.character.exSkill.growthCoefficient)) / 100)));
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
