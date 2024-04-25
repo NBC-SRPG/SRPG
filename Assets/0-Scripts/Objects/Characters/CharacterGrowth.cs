@@ -23,6 +23,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public int armor;
 
     public event Action OnLevelUp;
+    public event Action OnAwake;
     public event Action OnAbilityT2Changed;
     public event Action OnAbilityT3Changed;
     public event Action OnSuperiorClassChanged;
@@ -162,6 +163,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
         {
             limitBreak++;
         }
+        OnAwake?.Invoke();
         UpdateToDB();
     }
 

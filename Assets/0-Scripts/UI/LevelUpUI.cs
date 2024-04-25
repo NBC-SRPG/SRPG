@@ -49,8 +49,7 @@ public class LevelUpUI : UIBase
         MaxLevelBefore,
         MaxLevelAfter,
         AwakeningPieceQuantity,
-        AwakeningGoldText,
-        AwakeningLimitText
+        AwakeningGoldText
     }
 
     private enum Images
@@ -80,7 +79,8 @@ public class LevelUpUI : UIBase
     private enum GameObjects
     {
         LevelUp,
-        Awakening
+        Awakening,
+        AwakeningLimitText
     }
 
     public void Init(Character character)
@@ -124,7 +124,6 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.LevelUpTab).onClick.AddListener(OnClickLevelUpTab);
         GetButton((int)Buttons.AwakeningTab).onClick.AddListener(OnClickAwakeningTab);
         GetObject((int)GameObjects.Awakening).SetActive(false);
-        GetText((int)Texts.AwakeningLimitText).gameObject.SetActive(false);
 
         GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
         GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
@@ -265,6 +264,7 @@ public class LevelUpUI : UIBase
 
     private void AwakeningCalc()
     {
+        GetObject((int)GameObjects.AwakeningLimitText).SetActive(false);
         AwakeningButtonActiveTrue();
         int nowStar =  character.Growth.star;
         int nowLimit = character.Growth.limitBreak;
@@ -273,8 +273,7 @@ public class LevelUpUI : UIBase
         // 풀돌일 때, 텍스트 출력
         if (nowStar+nowLimit == 9)
         {
-            GetObject((int)GameObjects.Awakening).SetActive(false);
-            GetText((int)Texts.AwakeningLimitText).gameObject.SetActive(true);
+            GetObject((int)GameObjects.AwakeningLimitText).SetActive(true);
         }
 
         GetText((int)Texts.MaxLevelBefore).text = maxLevel.ToString();
@@ -293,6 +292,8 @@ public class LevelUpUI : UIBase
 
         GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
         GetText((int)Texts.AwakeningGoldText).text = costs[1].ToString();
+
+        if (Managers.AccountData.playerData.Gold < costs[1])
 
         if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
         {
