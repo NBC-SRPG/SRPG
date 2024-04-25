@@ -45,7 +45,7 @@ public class Ability_311: PassiveLogic
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
 
-        if (enemy.curCharacterBufList.FindNegativeBufAll().Count > 0) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
+        if (enemy.curCharacterBufList.FindNegativeBufAll().Count > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
             checkExisitSis();
             if (hasCharacterWithId7)
