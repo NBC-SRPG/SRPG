@@ -18,5 +18,7 @@ public class Ability_821: PassiveLogic
         character.skillCost = character.curCharacterSkill.skillData.cost;
         character.skillCost -= coefficient["reduceCost"];
     }
+
+
 }
 

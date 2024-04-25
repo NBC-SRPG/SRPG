@@ -25,7 +25,7 @@ public class PassiveAbility_104 : PassiveLogic
     public override void OnTurnEnd()
     {
         // 힐량 = 최대 체력 * 10% ( 10 / 100 )
-        int healAmount = (int)((character.health.TotalHealth) * ((float)(coefficient["healRate"] / coefficient["denominator"])));
+        int healAmount = (int)((character.health.TotalHealth) * ((float)(coefficient["healRate"]) / coefficient["denominator"]));
 
         // 타일 범위 내의 캐릭터들을 모두 수집하여 리스트를 업데이트
         UpdateCharactersInRangeList();
@@ -41,7 +41,7 @@ public class PassiveAbility_104 : PassiveLogic
 
         foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(character)))
         {
-            if (tile.curStandingCharater != null && tile.curStandingCharater != character) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
+            if (tile.curStandingCharater != null && tile.curStandingCharater != character && !character.CheckEnemy(tile.curStandingCharater)) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
             {
                 charactersInRange.Add(tile.curStandingCharater);
             }

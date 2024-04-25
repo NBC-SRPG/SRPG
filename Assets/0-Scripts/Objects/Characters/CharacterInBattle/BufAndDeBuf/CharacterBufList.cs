@@ -108,6 +108,8 @@ public class CharacterBufList
                 if (buf.onlyOne)//한 캐릭터의 버프 리스트에서 한 번에 하나만 존재해야 하는 버프의 경우
                 {
                    
+                    /*
+
                     CharacterBuf originBuf = FindBuf(key);// 기존의 존재하던 버프를 찾아서
 
                     if (originBuf != null)
@@ -121,6 +123,7 @@ public class CharacterBufList
                             buf.DestoyBuf();
                         }
                     }
+                    */
                 
                 }
 

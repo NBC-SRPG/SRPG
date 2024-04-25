@@ -68,7 +68,7 @@ public class PassiveAbility_108 : PassiveLogic
     {
         if (passiveState == coefficient["resurrecting"])
         {
-            stat_Passive008.ExtraAtk = (float)(coefficient["increaseAtkRate"] / coefficient["denominator"]);
+            stat_Passive008.ExtraAtk = ((float)(coefficient["increaseAtkRate"]) / coefficient["denominator"]);
             stat_Passive008.ReducedDmg = -coefficient["constants2"] * (float)(coefficient["reducedDmgRate"]) / coefficient["denominator"];
             character.tempBonusStat.AddBonusStat(stat_Passive008);
 

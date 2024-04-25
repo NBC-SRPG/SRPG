@@ -39,7 +39,7 @@ public class PassiveAbility_107 : PassiveLogic
     public override void OnEndAttack(CharacterBase enemy)// 공격 종료 시
     {
         //대상의 피격 이전 체력에 50% 이상이고 피격 이후 체력이 50% 미만인 경우
-        if (enemyPrevHp >= (enemy.health.TotalHealth / (float)coefficient["divider"]) && enemy.health.CurHealth < (enemy.health.TotalHealth / (float)coefficient["divider"]) && !enemy.isDead)
+        if (enemyPrevHp >= (enemy.health.TotalHealth / (float)(coefficient["divider"])) && enemy.health.CurHealth < (enemy.health.TotalHealth / (float)(coefficient["divider"])) && !enemy.isDead)
         {
             //1턴 동안 기절 적용
             enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
@@ -71,7 +71,7 @@ public class PassiveAbility_107 : PassiveLogic
         foreach (CharacterBase target in targets)
         {
             //대상의 피격 이전 체력에 50% 이상이고 피격 이후 체력이 50% 미만인 경우
-            if (enemyPrevHp >= (target.health.TotalHealth / (float)coefficient["divider"]) && target.health.CurHealth < (target.health.TotalHealth / (float)coefficient["divider"]) && !target.isDead)
+            if (enemyPrevHp >= (target.health.TotalHealth / (float)(coefficient["divider"])) && target.health.CurHealth < (target.health.TotalHealth / (float)(coefficient["divider"])) && !target.isDead)
             {
                 //1턴 동안 기절 적용
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);

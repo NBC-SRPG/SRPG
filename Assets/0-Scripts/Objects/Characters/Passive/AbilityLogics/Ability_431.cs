@@ -28,7 +28,6 @@ public class Ability_431: PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
-
     }
 }
 

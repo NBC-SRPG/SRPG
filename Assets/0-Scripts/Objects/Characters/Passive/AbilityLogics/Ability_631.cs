@@ -9,12 +9,12 @@ public class Ability_631: PassiveLogic
     //자신의 Mov가  + 1 증가한다.
     //피유의 3-1 특성.
 
-    BonusStat stat_631 = new BonusStat(); // 보너스 스탯
+    BonusStat stat_631;// 보너스 스탯
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
-
+        stat_631  = new BonusStat();
 
     }
 

@@ -22,10 +22,10 @@ public class Ability_911: PassiveLogic
     {
         if((float)(character.health.CurHealth) / character.health.TotalHealth <= (float)(coefficient["hpRatio"]) / coefficient["denominator"] && isSkill_911== false)
         {
-            int power = (int)(character.health.TotalHealth * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
+            int shiled = (int)(character.health.TotalHealth * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
             int duration = coefficient["shieldDuration"];
 
-            character.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Shield, duration, character, power);
+            character.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Shield, duration, character, coefficient["shieldPower"], shiled);
 
             isSkill_911= true;
         }

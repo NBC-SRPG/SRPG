@@ -15,8 +15,8 @@ public class Ability_721: PassiveLogic
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시
     {
-        int power = (int)(damage.damage * ((float)coefficient["shieldRatio"] / coefficient["denominator"]));
-        character.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Shield, 1, character, power);
+        int shield = (int)(damage.damage * ((float)(coefficient["shieldRatio"]) / coefficient["denominator"]));
+        character.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Shield, coefficient["shieldDuration"], character, coefficient["shieldPower"],shield);
     }
 
     public override void OnTurnStart() 
