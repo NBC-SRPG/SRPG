@@ -42,6 +42,10 @@ public class BattleUI : UIBase
         FisrtExtraText,
         SecondExtraText,
         ThirdExtraText,
+        ClassDetailText,
+        ClassNameText,
+        AbilityDetailText,
+        AbilityNameText,
 
     }
 
@@ -67,6 +71,10 @@ public class BattleUI : UIBase
         FirstStar,
         SecondStar,
         ThirdStar,
+        AbilityInfo,
+        Ability1Select,
+        Ability2Select,
+        Ability3Select,
 
     }
 
@@ -85,6 +93,10 @@ public class BattleUI : UIBase
         //Setting,
         GiveUp,
         Resume,
+        Ability1Detail,
+        Ability2Detail,
+        Ability3Detail,
+        CloseAbility,
 
     }
     private enum Images
@@ -99,6 +111,13 @@ public class BattleUI : UIBase
         ResultBackGround,
         ClassIcon,
         SkillImage,
+        AbilityIcon1,
+        AbilityIcon2,
+        AbilityIcon3,
+        ClassDetailIcon,
+        Ability1DetailIcon,
+        Ability2DetailIcon,
+        Ability3DetailIcon,
 
     }
 
@@ -156,6 +175,11 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.SettingButton).onClick.AddListener(ShowSettingBox);
         GetButton((int)Buttons.GiveUp).onClick.AddListener(OnGiveUpButton);
         GetButton((int)Buttons.Resume).onClick.AddListener(OnResumeButton);
+        GetButton((int)Buttons.ClassInfo).onClick.AddListener(ShowClassInfo);
+        GetButton((int)Buttons.Ability1Detail).onClick.AddListener(ShowAbilityT1);
+        GetButton((int)Buttons.Ability2Detail).onClick.AddListener(ShowAbilityT2);
+        GetButton((int)Buttons.Ability3Detail).onClick.AddListener(ShowAbilityT3);
+        GetButton((int)Buttons.CloseAbility).onClick.AddListener(CloseAbility);
 
         //조이스틱 가져오기
         joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
@@ -282,6 +306,8 @@ public class BattleUI : UIBase
         GetObject((int)GameObjects.SkillInfo).SetActive(false);
 
         GetObject((int)GameObjects.ManaObject).SetActive(false);
+
+        GetObject((int)GameObjects.AbilityInfo).SetActive(false);
     }
 
     public void ShowAtCharacterSelectPhase()
@@ -583,6 +609,24 @@ public class BattleUI : UIBase
 
         GetImage((int)Images.CharacterImage).sprite = curSelectedCharacter.character.SO.icon;
 
+        GetImage((int)Images.AbilityIcon1).sprite = curSelectedCharacter.character.abilityT1.icon;
+        if(curSelectedCharacter.character.abilityT2 != null)
+        {
+            GetImage((int)Images.AbilityIcon2).sprite = curSelectedCharacter.character.abilityT2.icon;
+        }
+        else
+        {
+            GetImage((int)Images.AbilityIcon2).gameObject.SetActive(false);
+        }
+        if (curSelectedCharacter.character.abilityT3 != null)
+        {
+            GetImage((int)Images.AbilityIcon3).sprite = curSelectedCharacter.character.abilityT3.icon;
+        }
+        else
+        {
+            GetImage((int)Images.AbilityIcon3).gameObject.SetActive(false);
+        }
+
         GetText((int)Texts.AtkText).text = curSelectedCharacter.Attack.ToString();
         GetText((int)Texts.DefText).text = curSelectedCharacter.Defend.ToString();
         GetText((int)Texts.MovText).text = curSelectedCharacter.Mov.ToString();
@@ -626,6 +670,92 @@ public class BattleUI : UIBase
             }
             bufList[i].GetComponent<BufIcon>().SetBufIcon(curSelectedCharacter.curCharacterBufList.bufList[i]);
         }
+    }
+
+    public void ShowClassInfo()
+    {
+        if(curSelectedCharacter == null)
+        {
+            return;
+        }
+
+        GetObject((int)GameObjects.AbilityInfo).SetActive(true);
+        SetAbilityInfo();
+    }
+
+    private void SetAbilityInfo()
+    {
+        if (curSelectedCharacter.character.Growth.superiorClass == -1)
+        {
+            GetText((int)Texts.ClassNameText).text = curSelectedCharacter.character.basicClass.className;
+            GetText((int)Texts.ClassDetailText).text = curSelectedCharacter.character.basicClass.description;
+            GetImage((int)Images.ClassDetailIcon).sprite = curSelectedCharacter.character.basicClass.icon;
+        }
+        else
+        {
+            GetText((int)Texts.ClassNameText).text = curSelectedCharacter.character.superiorClass.className;
+            GetText((int)Texts.ClassDetailText).text = curSelectedCharacter.character.superiorClass.description;
+            GetImage((int)Images.ClassDetailIcon).sprite = curSelectedCharacter.character.superiorClass.icon;
+        }
+
+        GetImage((int)Images.Ability1DetailIcon).sprite = curSelectedCharacter.character.abilityT1.icon;
+
+        if(curSelectedCharacter.character.abilityT2 == null)
+        {
+            GetButton((int)Buttons.Ability2Detail).gameObject.SetActive(false);
+        }
+        else
+        {
+            GetButton((int)Buttons.Ability2Detail).gameObject.SetActive(true);
+            GetImage((int)Images.Ability2DetailIcon).sprite = curSelectedCharacter.character.abilityT2.icon;
+        }
+
+        if (curSelectedCharacter.character.abilityT3 == null)
+        {
+            GetButton((int)Buttons.Ability3Detail).gameObject.SetActive(false);
+        }
+        else
+        {
+            GetButton((int)Buttons.Ability3Detail).gameObject.SetActive(true);
+            GetImage((int)Images.Ability3DetailIcon).sprite = curSelectedCharacter.character.abilityT3.icon;
+        }
+
+        ShowAbilityT1();
+    }
+
+    private void ShowAbilityT1()
+    {
+        GetObject((int)GameObjects.Ability1Select).SetActive(true);
+        GetObject((int)GameObjects.Ability2Select).SetActive(false);
+        GetObject((int)GameObjects.Ability3Select).SetActive(false);
+
+        GetText((int)Texts.AbilityNameText).text = curSelectedCharacter.character.abilityT1.abilityName;
+        GetText((int)Texts.AbilityDetailText).text = curSelectedCharacter.character.abilityT1.description;
+    }
+
+    private void ShowAbilityT2()
+    {
+        GetObject((int)GameObjects.Ability1Select).SetActive(false);
+        GetObject((int)GameObjects.Ability2Select).SetActive(true);
+        GetObject((int)GameObjects.Ability3Select).SetActive(false);
+
+        GetText((int)Texts.AbilityNameText).text = curSelectedCharacter.character.abilityT2.abilityName;
+        GetText((int)Texts.AbilityDetailText).text = curSelectedCharacter.character.abilityT2.description;
+    }
+
+    private void ShowAbilityT3()
+    {
+        GetObject((int)GameObjects.Ability1Select).SetActive(false);
+        GetObject((int)GameObjects.Ability2Select).SetActive(false);
+        GetObject((int)GameObjects.Ability3Select).SetActive(true);
+
+        GetText((int)Texts.AbilityNameText).text = curSelectedCharacter.character.abilityT3.abilityName;
+        GetText((int)Texts.AbilityDetailText).text = curSelectedCharacter.character.abilityT3.description;
+    }
+
+    private void CloseAbility()
+    {
+        GetObject((int)GameObjects.AbilityInfo).SetActive(false);
     }
 
     public void ShowTargetInfo()
