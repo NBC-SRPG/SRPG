@@ -41,6 +41,12 @@ public class UIManager
     // UI 동적 생성
     public T ShowUI<T>(string name = null, Transform parent = null) where T : UIBase
     {
+        T peekUi = PeekUI<T>();
+        if (peekUi != null)
+        {
+            return peekUi; // 이미 활성화된 UI가 있으면 그것을 반환
+        }
+
         // 이름이 없다면 타입을 이름으로 사용
         if (string.IsNullOrEmpty(name))
         {
