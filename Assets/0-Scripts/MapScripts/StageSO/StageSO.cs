@@ -13,6 +13,7 @@ public class StageSO : SerializedScriptableObject
     public StageType stageType;
     public List<EnemySO> enemiesInfo;
     public int recommendLevel;
+    public bool isTutorial = false;
 
     [Header("Enemy")]
     public List<EnemySO> enemies;
