@@ -76,6 +76,9 @@ public class GachaUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
 
+        if (Managers.AccountData.GetItemQuantity(GACHA_TICKET) == 0) GetButton((int)Buttons.GachaWithTicketButton).gameObject.SetActive(false);
+        if (Managers.AccountData.GetItemQuantity(GACHA_TICKET_10) == 0) GetButton((int)Buttons.Gacha10WithTicketButton).gameObject.SetActive(false);
+
         // TODO
         // 가챠 배너 클릭시 해당 가챠로 전환하는 OnClickBanner() 구현
         // curGacha의 SO 데이터를 사용해 GachaInfoUI 초기화
@@ -103,7 +106,7 @@ public class GachaUI : UIBase
             ui.Init("다이아가 부족합니다.");
             return;
         }
-        ShowResult(Draw(curGacha.tableId));
+        ShowResult(Draw10Times(curGacha.tableId));
     }
 
     private void OnClickGachaWithTicketButton()
@@ -115,7 +118,7 @@ public class GachaUI : UIBase
     private void OnClickGacha10WithTicketButton()
     {
         Managers.AccountData.ConsumeItems(GACHA_TICKET_10, 1);
-        ShowResult(Draw(curGacha.tableId));
+        ShowResult(Draw10Times(curGacha.tableId));
     }
 
     private void OnClickPercentageInfoButton()
@@ -162,11 +165,12 @@ public class GachaUI : UIBase
             }
         });
         yield return new WaitUntil(() => count == 0);
+        curGacha = curGachaList[0];
     }
     private IEnumerator GetTableFromDB()
     {
         long count = -1;    // count가 0이 되면 모든 데이터 로드 완료
-        Managers.DB.Read(Managers.DB.reference.Child("DataTables"), (snapshot) =>
+        Managers.DB.Read(Managers.DB.reference.Child("GachaTables"), (snapshot) =>
         {
             count = snapshot.ChildrenCount;
             foreach (DataSnapshot data in snapshot.Children)
@@ -175,6 +179,11 @@ public class GachaUI : UIBase
                 foreach(var exp in data.Children)
                 {
                     table.Add(int.Parse(exp.Key), float.Parse(exp.Value.ToString()));
+                }
+
+                foreach (var item in table)
+                {
+                    Debug.Log(item.Value.ToString());
                 }
                 tables.Add(int.Parse(data.Key), table);
                 count--;
@@ -200,13 +209,14 @@ public class GachaUI : UIBase
     private int GetRandomCharacterFromTable(Dictionary<int, float> table)
     {
         double chance = Random.Range(0.0f, 100.0f); // [0.0, 100.0]
+        Debug.Log(chance);
 
         int result = 0;
         double current = 0.0;
         foreach (var pair in table)
         {
             result = pair.Key;
-            current += pair.Value;
+            current += (double)pair.Value;
             if (chance < current)
             {
                 break;
@@ -256,6 +266,10 @@ public class GachaUI : UIBase
     private void ShowResult(List<int> result)
     {
         // TODO: 전달받은 리스트로 가차 결과창(GachaResultUI) 보여주기
+        foreach (int i in result)
+        {
+            Debug.Log(i);
+        }
     }
 
 
