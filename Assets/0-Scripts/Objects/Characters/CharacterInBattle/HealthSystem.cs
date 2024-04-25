@@ -190,9 +190,9 @@ public class HealthSystem : MonoBehaviour
     {
         CurHealth += n;
 
-        if (CurHealth > MaxHealth)
+        if (CurHealth > TotalHealth)
         {
-            CurHealth = MaxHealth;
+            CurHealth = TotalHealth;
         }
 
         if (CurHealth < 0)
