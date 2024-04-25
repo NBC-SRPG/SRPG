@@ -9,9 +9,15 @@ public class TutorialController : MonoBehaviour
     private TutorialBase currentTutorial;
     private int index = -1;
 
+    private BattleUI Ui;
+
     private void Start()
     {
         SetNextTutorial();
+
+        Ui = Managers.UI.FindUI<BattleUI>();
+
+        Ui.HideGoalText();
     }
 
     private void Update()
@@ -22,7 +28,7 @@ public class TutorialController : MonoBehaviour
         }
     }
 
-    private void SetNextTutorial()
+    public void SetNextTutorial()
     {
         if(currentTutorial != null)
         {
@@ -44,5 +50,7 @@ public class TutorialController : MonoBehaviour
     private void CompletedAllTutorial()
     {
         currentTutorial = null;
+
+        Ui.ShowGoalText();
     }
 }
