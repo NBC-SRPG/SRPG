@@ -14,7 +14,7 @@ public class Database
     public DatabaseReference reference = null;
     public DatabaseReference userDB = null;
     private string uid;
-    private const int dataCount = 8;
+    private const int dataCount = 7;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
 
@@ -141,11 +141,6 @@ public class Database
         //    Managers.AccountData.InitVersionData(data);
         //    UpdateLoadingProgress(1.0f / dataCount);
         //});
-        yield return Load(userDB.Child("gachaPoint"), data =>
-        {
-            Managers.AccountData.InitGachaPoint(data);
-            UpdateLoadingProgress(1.0f / dataCount);
-        });
         yield return Load(userDB.Child("missionData"), data =>
         {
             Managers.AccountData.InitMissionData(data);
@@ -155,7 +150,8 @@ public class Database
 
     private void DataTableLoad()
     {
-        Read(reference.Child("DataTables"), (snapshot) => {
+        Read(reference.Child("DataTables"), (snapshot) =>
+        {
             foreach (DataSnapshot data in snapshot.Children)
             {
                 Dictionary<int, int> table = new();
