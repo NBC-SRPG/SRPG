@@ -27,6 +27,7 @@ public class CharacterInfoUI : UIBase
         HpText,
         AtkText,
         DefText,
+        MovText,
         LevelText,
         ExpText,
         ClassNameText,
@@ -63,23 +64,24 @@ public class CharacterInfoUI : UIBase
         ArmorImage,
         AbilityInfoImage,
         ExpFrontImage,
-        AbilityPath2,
-        AbilityPath2_1,
-        AbilityPath2_2,
-        AbilityPath3,
-        AbilityPath3_1,
-        AbilityPath3_2,
         Ability1Image,
         Ability2_1Image,
         Ability2_2Image,
         Ability3_1Image,
         Ability3_2Image,
+        Ability2_1Select,
+        Ability2_2Select,
+        Ability3_1Select,
+        Ability3_2Select,
         Class1Image,
         Class2_1Image,
         Class2_2Image,
         ClassPath2,
         ClassPath2_1,
-        ClassPath2_2
+        ClassPath2_10,
+        ClassPath2_2,
+        ClassPath2_20,
+        Limit_1
     }
     private enum GameObjects
     {
@@ -87,7 +89,12 @@ public class CharacterInfoUI : UIBase
         AbilityTab,
         ClassTab,
         PassiveSkillInfoUI,
-        Star
+        Star,
+        LimitBreak,
+        Limit_1,
+        Limit_2,
+        Limit_3,
+        Limit_4
     }
 
     private void OnDestroy()
@@ -153,11 +160,11 @@ public class CharacterInfoUI : UIBase
     {
         GetText((int)Texts.ExSkillText).text = $"{character.exSkill.skillName}"; // 뒤에 레벨도 붙어야 함
         GetText((int)Texts.ExSkillDescriptionText).text = $"{character.exSkill.description}";
-        GetImage((int)Images.ExSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.exSkill.skill_ID}");
+        GetImage((int)Images.ExSkillImage).sprite = character.exSkill.icon;
 
         GetText((int)Texts.PassiveSkillText).text = $"{character.passiveSkill.passiveName}"; // 뒤에 레벨도 붙어야 함
         GetText((int)Texts.PassiveSkillDescriptionText).text = $"{character.passiveSkill.description}";
-        GetImage((int)Images.PassiveSkillImage).sprite = Managers.Resource.Load<Sprite>($"{character.passiveSkill.id}");
+        GetImage((int)Images.PassiveSkillImage).sprite = character.passiveSkill.icon;
     }
 
     private void InitAbilityTab()
@@ -190,33 +197,35 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.Ability2_2Button).onClick.AddListener(() => OnClickAbilityButton(2, 1));
         GetButton((int)Buttons.Ability3_1Button).onClick.AddListener(() => OnClickAbilityButton(3, 0));
         GetButton((int)Buttons.Ability3_2Button).onClick.AddListener(() => OnClickAbilityButton(3, 1));
-        
+
+
         AbilityPathUpdate();
     }
 
-    // 특성 패스 & 아웃라인 세팅
+    // 아웃라인 세팅
     public void AbilityPathUpdate()
     {
+        GetImage((int)Images.Ability2_1Select).gameObject.SetActive(false);
+        GetImage((int)Images.Ability2_2Select).gameObject.SetActive(false);
+        GetImage((int)Images.Ability3_1Select).gameObject.SetActive(false);
+        GetImage((int)Images.Ability3_2Select).gameObject.SetActive(false);
+
         // 2단계 특성이 찍혀있다면
         if (character.Growth.abilityT2 != NONE_SELECTED)
         {
-            GetImage((int)Images.AbilityPath2).color = Color.red;
-
             // 2-1 특성이 찍혀있다면
             if (character.Growth.abilityT2 == 0)
             {
-                GetImage((int)Images.AbilityPath2_1).color = Color.red;
-                GetImage((int)Images.AbilityPath2_2).color = Color.black;
-
+                GetImage((int)Images.Ability2_1Select).gameObject.SetActive(true);
+                GetImage((int)Images.Ability2_2Select).gameObject.SetActive(false);
                 GetImage((int)Images.Ability2_1Image).transform.parent.GetComponent<Outline>().enabled = true;
                 GetImage((int)Images.Ability2_2Image).transform.parent.GetComponent<Outline>().enabled = false;
             }
             // 2-2 특성이 찍혀있다면
             else
             {
-                GetImage((int)Images.AbilityPath2_1).color = Color.black;
-                GetImage((int)Images.AbilityPath2_2).color = Color.red;
-
+                GetImage((int)Images.Ability2_1Select).gameObject.SetActive(false);
+                GetImage((int)Images.Ability2_2Select).gameObject.SetActive(true);
                 GetImage((int)Images.Ability2_1Image).transform.parent.GetComponent<Outline>().enabled = false;
                 GetImage((int)Images.Ability2_2Image).transform.parent.GetComponent<Outline>().enabled = true;
             }
@@ -225,23 +234,19 @@ public class CharacterInfoUI : UIBase
         // 3번째 특성 찍었을 때
         if (character.Growth.abilityT3 != NONE_SELECTED)
         {
-            GetImage((int)Images.AbilityPath3).color = Color.red;
-
             // 3-1 특성
             if (character.Growth.abilityT3 == 0)
             {
-                GetImage((int)Images.AbilityPath3_1).color = Color.red;
-                GetImage((int)Images.AbilityPath3_2).color = Color.black;
-
+                GetImage((int)Images.Ability3_1Select).gameObject.SetActive(true);
+                GetImage((int)Images.Ability3_2Select).gameObject.SetActive(false);
                 GetImage((int)Images.Ability3_1Image).transform.parent.GetComponent<Outline>().enabled = true;
                 GetImage((int)Images.Ability3_2Image).transform.parent.GetComponent<Outline>().enabled = false;
             }
             // 3-2 특성
             else
             {
-                GetImage((int)Images.AbilityPath3_1).color = Color.black;
-                GetImage((int)Images.AbilityPath3_2).color = Color.red;
-
+                GetImage((int)Images.Ability3_1Select).gameObject.SetActive(false);
+                GetImage((int)Images.Ability3_2Select).gameObject.SetActive(true);
                 GetImage((int)Images.Ability3_1Image).transform.parent.GetComponent<Outline>().enabled = false;
                 GetImage((int)Images.Ability3_2Image).transform.parent.GetComponent<Outline>().enabled = true;
             }
@@ -330,10 +335,38 @@ public class CharacterInfoUI : UIBase
         GetText((int)Texts.LevelText).text = $"Lv. {character.Growth.level} / {character.Growth.GetMaxLevel()}";
         GetText((int)Texts.ExpText).text = $"{character.Growth.curExp} / {character.Growth.maxExp}";
         GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
+        UpdateLimit();
 
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
         GetText((int)Texts.DefText).text = $"{character.def}";
+        GetText((int)Texts.MovText).text = $"{character.mov}";
+    }
+
+    public void UpdateLimit()
+    {
+        GetObject((int)GameObjects.LimitBreak).SetActive(false);
+        if (character.Growth.star == 5)
+        {
+            GetObject((int)GameObjects.LimitBreak).SetActive(true);
+            switch (character.Growth.limitBreak)
+            {
+                case 0:
+                    GetObject((int)GameObjects.Limit_1).SetActive(false);
+                    break;
+                case 1:
+                    GetObject((int)GameObjects.Limit_2).SetActive(false);
+                    break;
+                case 2:
+                    GetObject((int)GameObjects.Limit_3).SetActive(false);
+                    break;
+                case 3:
+                    GetObject((int)GameObjects.Limit_4).SetActive(false);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public void UpdateEquipImage()
