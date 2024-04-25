@@ -14,7 +14,7 @@ public class Database
     public DatabaseReference reference = null;
     public DatabaseReference userDB = null;
     private string uid;
-    private const int dataCount = 8;
+    private const int dataCount = 7;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
 
