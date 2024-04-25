@@ -33,6 +33,16 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
     {
+        if (character.isDead)
+        {
+            return;
+        }
+        if(damageType == BattleKeyWords.AttackDamageType.Buf)
+        {
+            return;
+        }
+
+
         stat_TargetMarker.EXCritRate = power;
         enemy.tempBonusStat.AddBonusStat(stat_TargetMarker);
 
