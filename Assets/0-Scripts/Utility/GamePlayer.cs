@@ -1,3 +1,4 @@
+using GooglePlayGames.BasicApi;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class GamePlayer
 
     public int manaCost;
     public int manaNextTurn;
+    public int UsedManaThisTurn { get; private set; }
 
     public Character[] party = new Character[5];
 
@@ -36,6 +38,24 @@ public class GamePlayer
         {
             manaCost = 300;
         }
+    }
+
+    public void UseMana(int n)
+    {
+        manaCost -= n;
+        if(manaCost < 0)
+        {
+            manaCost = 0;
+        }
+
+        UsedManaThisTurn += n;
+    }
+
+    public void OnstartTurn()
+    {
+        GainMana(manaNextTurn);
+        manaNextTurn = 0;
+        UsedManaThisTurn = 0;
     }
 
     public void GainManaNextTurn(int n)

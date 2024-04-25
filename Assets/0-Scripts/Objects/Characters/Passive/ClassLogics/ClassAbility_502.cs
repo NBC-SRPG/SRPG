@@ -17,6 +17,7 @@ public class ClassAbility_502 : PassiveLogic
     public override void OnStageStart()
     {
         character.tempBonusStat.AddBonusStat(stat_Class502);
+        character.health.SetHealthSameAsTotal();
     }
 
     public override void OnSkillHealSuccess(CharacterBase target, BattleKeyWords.Damage heal)// 스킬로 체력 회복 시

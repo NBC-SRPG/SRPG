@@ -12,7 +12,6 @@ public class SkillAbility_107 : ExSkillLogic
     //이동 불가능한 칸(적/아군/장애물이 있는 칸)을 선택한 경우, 스킬 시전 불가.
 
     List<CharacterBase> enemyInRange; //범위 내의 적을 저장할 리스트
-    List<CharacterBase> exSkillTarget;
 
     public override void init(CharacterBase character)// 스킬 소유자 설정
     {
@@ -22,7 +21,12 @@ public class SkillAbility_107 : ExSkillLogic
 
     public override void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
     {
-
+        if (target.Count > 0)
+        {
+            // 적 캐릭터의 리스트를 체력을 기준으로 내림차순으로 정렬, 체력이 가장 많은 적을 저장.
+            character.targets = new List<CharacterBase> { target.OrderByDescending(enemy => enemy.health.CurHealth).FirstOrDefault() };
+            character.characterAnim.SetTarget(target.OrderByDescending(enemy => enemy.health.CurHealth).FirstOrDefault());
+        }
     }
 
     public override void UseSkill(List<CharacterBase> target)// 스킬 실제 사용
@@ -30,20 +34,7 @@ public class SkillAbility_107 : ExSkillLogic
         //스킬 시전 칸으로 이동
         character.MoveTileAndPosition(character.skillScale[0]);
 
-        //주변에 있는 적의 캐릭터를 리스트에 저장.
-        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, 1, false).FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(character)))
-        {
-            enemyInRange.Add(tile.curStandingCharater);
-
-            if (enemyInRange.Count > 0)
-            {
-                // 적 캐릭터의 리스트를 체력을 기준으로 내림차순으로 정렬, 체력이 가장 많은 적을 저장.
-                exSkillTarget.Add(enemyInRange.OrderByDescending(enemy => enemy.health.CurHealth).FirstOrDefault());
-
-                //데미지 가하기
-                BattleManager.Instance.EXSkillAttack(character, exSkillTarget);
-            }
-        }
+        BattleManager.Instance.EXSkillAttack(character, character.targets);
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시

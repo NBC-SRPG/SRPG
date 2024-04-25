@@ -59,6 +59,11 @@ public class HealthSystem : MonoBehaviour
         UpdateText();
     }
 
+    public void SetHealthSameAsTotal()
+    {
+        CurHealth = TotalHealth;
+    }
+
     public float HealthRatio
     {
         get
@@ -209,10 +214,6 @@ public class HealthSystem : MonoBehaviour
 
         characterAnim.ShowDamage();
 
-        if (CurHealth <= 0)
-        {
-            DieAnimation?.Invoke();
-        }
     }
 
     public void HealHealthBar(Damage n)// 체력 회복함
@@ -276,6 +277,10 @@ public class HealthSystem : MonoBehaviour
             healthBar.fillAmount = HealthRatio;
         }
 
+        if (healthBar.fillAmount == 0)
+        {
+            DieAnimation?.Invoke();
+        }
     }
 
     public void UpdateText()
@@ -362,21 +367,9 @@ public class HealthSystem : MonoBehaviour
         }
         else
         {
+            Debug.Log("noShiled");
             return;
         }
     }
 
-    public void OnRoundEnd()
-    {
-        foreach(ShieldStat shield in shieldList)
-        {
-
-            shield.duration -= 1;
-
-            if (shield.duration == 0)
-            {
-                RemoveShield(shield);
-            }
-        }
-    }
 }

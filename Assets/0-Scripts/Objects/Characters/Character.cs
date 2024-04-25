@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 public class Character
 {
     public CharacterSO SO;
@@ -216,5 +217,13 @@ public class Character
         int previewDef = SO.def + SO.defPerLv * Growth.level + newWeapon.def + newArmor.def;
 
         return (previewHp, previewAtk, previewDef);
+    }
+
+    public Sprite GetElementSprite()
+    {
+        string elementName = "Element_" + SO.elementType.ToString();
+        Sprite elementSprite = Managers.Resource.Load<Sprite>(elementName);
+
+        return elementSprite;
     }
 }

@@ -13,7 +13,6 @@ public class AccountData
     public Dictionary<int, List<string>> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
-    public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
     public Dictionary<int, Mission> ongoingMissions { get; set; } = new(); // 진행중인 미션들
@@ -75,8 +74,8 @@ public class AccountData
                 Convert.ToInt32(snapshot.Child("maxExp").Value),
                 snapshot.Child("birthday").Value as string,
                 //snapshot.Child("favoriteCharacter").Value as int[],
-                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value)
-                //Convert.ToInt32(snapshot.Child("characterIcon").Value)
+                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value),
+                Convert.ToInt32(snapshot.Child("gachaPoint").Value)
             );
         }
         else
@@ -95,7 +94,8 @@ public class AccountData
                 0,
                 8,
                 "",
-                3
+                3,
+                0
             );
             Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
         }
@@ -173,11 +173,7 @@ public class AccountData
             versionData.curEvents.Add((string)curEvent.Value);
         }
     }
-    public void InitGachaPoint(DataSnapshot snapshot)
-    {
-        int data = snapshot.Exists ? Convert.ToInt32(snapshot.Value) : 0;
-        gachaPoint = data;
-    }
+
     // TODO
     // 메일을 받았을 때 이벤트를 걸어서 업데이트 하는걸로 변경
     public void InitMailBox(DataSnapshot snapshot)
@@ -344,7 +340,7 @@ public class AccountData
         Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
     }
 
-    public void AcquireCharacter(int id)
+    public void AcquireCharacter(int id, bool isPickUp)
     {
         if(!characterData.ContainsKey(id))
         {
@@ -359,10 +355,19 @@ public class AccountData
         }
         else
         {
-            int pieceCount;
-            if (characterData[id].SO.basicStar == 1) pieceCount = 1;
-            else if(characterData[id].SO.basicStar == 2) pieceCount = 5;
-            else pieceCount = 30;
+            int pieceCount = 0;
+            switch(characterData[id].SO.basicStar)
+            {
+                case 1:
+                    pieceCount = 1;
+                    break;
+                case 2:
+                    pieceCount = 5;
+                    break;
+                case 3:
+                    pieceCount = isPickUp ? 100 : 30;
+                    break;
+            }
 
             AcquireItems(id, pieceCount);
         }
@@ -443,4 +448,5 @@ public class AccountData
         }
         Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
     }
+
 }

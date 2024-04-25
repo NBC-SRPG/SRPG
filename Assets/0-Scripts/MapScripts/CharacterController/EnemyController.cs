@@ -70,7 +70,6 @@ public class EnemyController : MonoBehaviour
             }
 
             CharacterAI character = Instantiate(chaPrefabs, transform);
-            Debug.Log(charac.SO.characterName);
             character.InitCharacter(charac, player);
 
             characterList.Add(character);

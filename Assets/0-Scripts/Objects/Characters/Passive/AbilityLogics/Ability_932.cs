@@ -29,8 +29,10 @@ public class Ability_932: PassiveLogic
         if (target[0].isDead)
         {
             character.canActing = true;
+            character.didWalk = false;
+            character.didAttack = false;
             character.canMoveSkil = true;
-            character.canSkill = true;
+            character.ActivateSkill();
         }
     }
 

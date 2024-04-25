@@ -245,6 +245,7 @@ public class EquipmentUpgradeUI : UIBase
         if (ui != null)
         {
             ui.UpdateStat();
+            ui.UpdateEquipImage();
         }
         Managers.UI.CloseUI(this);
     }

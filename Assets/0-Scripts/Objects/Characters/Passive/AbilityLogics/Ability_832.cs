@@ -21,7 +21,6 @@ public class Ability_832: PassiveLogic
     public override void OnEnemyPassesMe(CharacterBase enemy)// 적군이 이 캐릭터 위를 지나갔을 때 발동
     { 
         AnimationController.instance.EnqueueblockAnimation(enemy, character);
-        character.CounterAttack(enemy);
 
         enemy.BlockMoving();
     }

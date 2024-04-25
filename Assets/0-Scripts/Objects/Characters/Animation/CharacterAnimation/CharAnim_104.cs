@@ -105,7 +105,7 @@ public class CharAnim_104 : CharAnimBase
         {
             AttackEnemy(target);
             target.characterAnim.ShakeCharacter();
-            Damage();
+            target.characterAnim.ShowDamage();
         }
     }
 

@@ -128,6 +128,10 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Attack);
     }
 
+    public void SetTarget(CharacterBase targetCharacter)
+    {
+        this.targetCharacter = targetCharacter;
+    }
 
     public virtual void PlaySkillAnimation(List<CharacterBase> targets)
     {

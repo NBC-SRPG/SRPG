@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using static BattleKeyWords;
 
 public class Ability_332: PassiveLogic
 {
@@ -20,12 +18,14 @@ public class Ability_332: PassiveLogic
 
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-        int positiveBuffCount = enemy.curCharacterBufList.bufList.Count(buf => buf.BufType == BattleKeyWords.BufType.Positive);
+        List<CharacterBuf> buf = new List<CharacterBuf>();
 
-        //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
-        if (positiveBuffCount > 0)
+        buf = enemy.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true);
+
+        if (buf.Count > 0)
         {
-            enemy.curCharacterBufList.RemoveBuf(enemy.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+            //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
+            enemy.curCharacterBufList.RemoveBuf(buf[coefficient["constants1"]]);
         }
     }
 
@@ -36,15 +36,17 @@ public class Ability_332: PassiveLogic
 
     public override void OnUseSkill(List<CharacterBase> targets)// 스킬 사용 시
     {
+        List<CharacterBuf> buf = new List<CharacterBuf>();
+
         //대상들이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
         foreach (CharacterBase target in targets)
         {
-            int positiveBuffCount = target.curCharacterBufList.bufList.Count(buf => buf.BufType == BattleKeyWords.BufType.Positive);
+            buf = target.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true);
 
-            //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
-            if (positiveBuffCount > 0)
+            if (buf.Count > 0)
             {
-                target.curCharacterBufList.RemoveBuf(target.curCharacterBufList.FindPositiveBufRandom(coefficient["eraseDebufCount"], true)[coefficient["constants1"]]);
+                //대상이 가진 이로운 버프 중 파괴 가능한 버프를 무작위 하나 파괴한다.
+                target.curCharacterBufList.RemoveBuf(buf[coefficient["constants1"]]);
             }
         }
     }

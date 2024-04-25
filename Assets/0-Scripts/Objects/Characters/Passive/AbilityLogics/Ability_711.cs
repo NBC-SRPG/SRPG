@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 
@@ -20,23 +21,41 @@ public class Ability_711: PassiveLogic
     {
         this.character = character;
 
-
-    }
-    public override void OnStageStart()
-    {
-        checkExisistGene();
+        checkExisistSis();
     }
 
-    private void checkExisistGene() //배틀 중인 캐릭터 중 아군 캐릭터에 제네가 있는지 확인하는 메서드
+    public override void OnRoundStart()
     {
+
+    }
+
+    private void checkExisistSis() //배틀 중인 캐릭터 중 아군 캐릭터에 시스가 있는지 확인하는 메서드
+    {
+        //hasCharacterWithId1 = BattleManager.Instance.charactersInBattle.Any(characterBase =>
+        //{
+        //    if (characterBase.character.SO.id == )
+        //    {
+        //        // ID가 1인 캐릭터를 찾았으니 아군인지 적인지 확인
+        //        if (!characterBase.CheckEnemy(character))
+        //        {
+        //            // 아군이라면 true를 반환합니다.
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //});
+
         hasCharacterWithId1 = false;
-        foreach (Character ally in character.player.party)// 플레이어의 파티에 제네가 있을 경우를 체크하도록 변경
+
+        foreach (Character character in character.player.party)
         {
-            if (ally != null && ally.SO.id == coefficient["constants1"])
+            if(character.SO.id == coefficient["constants1"])
             {
                 hasCharacterWithId1 = true;
+                break;
             }
         }
+
     }
 
 
@@ -45,15 +64,13 @@ public class Ability_711: PassiveLogic
     {
         if (enemy.curCharacterBufList.FindNegativeBufAll().Count > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
-            checkExisistGene();
-
             if (hasCharacterWithId1)
             {
-                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"] * coefficient["multiply"];  //파티에 제네가 있으면 계수 2배
+                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]) * coefficient["multiply"];  //파티에 제네가 있으면 계수 2배
             }
             else
             {
-                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"];
+                stat_711.EnhancedDmg = (float)coefficient["enhancedDmgRate"] / coefficient["denominator"];
             }
             character.tempBonusStat.AddBonusStat(stat_711);
         }
@@ -74,15 +91,14 @@ public class Ability_711: PassiveLogic
 
         if (bufCount > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
-            checkExisistGene();
 
             if (hasCharacterWithId1)
             {
-                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"] * coefficient["multiply"]; //파티에 제네가 있으면 계수 2배
+                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]) * coefficient["multiply"]; //파티에 제네가 있으면 계수 2배
             }
             else
             {
-                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"];
+                stat_711.EnhancedDmg = (float)(coefficient["enhancedDmgRate"] / coefficient["denominator"]);
             }
             character.tempBonusStat.AddBonusStat(stat_711);
 

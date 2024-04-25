@@ -21,7 +21,18 @@ public class CharAnim_107 : CharAnimBase
 
         base.PlaySkillAnimation(targets);
 
-        targetCharacter = targetList[0];
+        if (targetCharacter == null)
+        {
+            targetCharacter = targetList[0];
+        }
+
+        foreach (CharacterBase target in targets)
+        {
+            if ((target != targetCharacter))
+            {
+                AnimationController.instance.ChracterReleaseOne(target);
+            }
+        }
     }
 
     public void BackStep()
@@ -90,4 +101,5 @@ public class CharAnim_107 : CharAnimBase
 
         CameraController.instance.ShakeCamera(0.5f, 3f, 0.5f);
     }
+
 }

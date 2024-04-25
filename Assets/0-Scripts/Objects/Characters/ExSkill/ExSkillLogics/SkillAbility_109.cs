@@ -58,7 +58,10 @@ public class SkillAbility_109 : ExSkillLogic
 
     public override void OnUpdate()// 실시간 판정
     {
-        if (character.skillScale[0].curStandingCharater.CheckEnemy(character) && character.rangeFinder.GetBackOfCharacter(character, character.skillScale[0].curStandingCharater) == null)
+        if (character.skillScale.Count > 0 && character.skillScale[0].curStandingCharater.CheckEnemy(character) &&
+            character.rangeFinder.GetBackOfCharacter(character, character.skillScale[0].curStandingCharater) != null &&
+            character.rangeFinder.GetBackOfCharacter(character, character.skillScale[0].curStandingCharater).canClick &&
+            character.rangeFinder.GetBackOfCharacter(character, character.skillScale[0].curStandingCharater).CheckCanMove())
         {
             character.ActivateSkill();
         }

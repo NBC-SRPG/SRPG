@@ -96,7 +96,9 @@ public class BattleUI : UIBase
         TargetImage,
         TargetHealthBar,
         TargetShieldBar,
-        ResultBackGround
+        ResultBackGround,
+        ClassIcon,
+        SkillImage,
 
     }
 
@@ -513,6 +515,8 @@ public class BattleUI : UIBase
             return;
         }
 
+        GetImage((int)Images.SkillImage).sprite = curSelectedCharacter.curCharacterSkill.skillData.icon;
+
         GetObject((int)GameObjects.SkillInfo).SetActive(true);
 
         GetText((int)Texts.SkillNameText).text = curSelectedCharacter.curCharacterSkill.skillData.skillName;
@@ -575,6 +579,15 @@ public class BattleUI : UIBase
             GetText((int)Texts.TypeText).text = "근거리";
 
             GetObject((int)GameObjects.RangeObject).SetActive(false);
+        }
+
+        if (curSelectedCharacter.character.Growth.superiorClass == -1)
+        {
+            GetImage((int)Images.ClassIcon).sprite = curSelectedCharacter.character.basicClass.icon;
+        }
+        else
+        {
+            GetImage((int)Images.ClassIcon).sprite = curSelectedCharacter.character.superiorClass.icon;
         }
 
         GetText((int)Texts.HealthText).text = curSelectedCharacter.health.CurHealth.ToString() +

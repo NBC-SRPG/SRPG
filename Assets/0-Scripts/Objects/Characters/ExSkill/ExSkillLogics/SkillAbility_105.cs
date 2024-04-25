@@ -21,7 +21,9 @@ public class SkillAbility_105 : ExSkillLogic
 
     public override void UseSkill(List<CharacterBase> targets)// 스킬 실제 사용
     {
-          BattleManager.Instance.EXSkillAttack(character, targets);
+        BattleManager.Instance.EXSkillAttack(character, targets);// 첫 타는 스킬 패시브 발동
+        BattleManager.Instance.ExtraSkillAttack(character, character.curCharacterSkill.SkillFigure, targets, BattleKeyWords.AttackDamageType.None);// 나머지는 스킬 패시브 발동 안되는 데미지
+        BattleManager.Instance.ExtraSkillAttack(character, character.curCharacterSkill.SkillFigure, targets, BattleKeyWords.AttackDamageType.None);
     }
 
     public override void OnSkillAttackSuccess(CharacterBase target, BattleKeyWords.Damage damage)// 스킬 적중 시

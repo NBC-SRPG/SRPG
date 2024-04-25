@@ -41,7 +41,7 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool hasAnimationBeforDIe = false;
     private bool onDiePassive = false;
 
-    [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
+    public List<OverlayTile> skillScale = new List<OverlayTile>();
     public List<OverlayTile> movePath = new List<OverlayTile>();
     private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
@@ -145,6 +145,7 @@ public class CharacterBase : MonoBehaviour
             PassiveLogic passive = Utility.GetAbilityBySO(so);
             if (passive != null)
             {
+                Debug.Log(so.reflection);
                 curCharacterPassive?.Add(passive);
             }
         }
@@ -316,13 +317,13 @@ public class CharacterBase : MonoBehaviour
     // Update
     private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
     {
- 
         foreach(PassiveLogic passive in curCharacterPassive)
         {
                 passive?.OnUpdate();
         }
         curCharacterSkill.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
+        
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -580,7 +581,6 @@ public class CharacterBase : MonoBehaviour
             passive?.OnRoundEnd();
         }
         curCharacterBufList?.OnRoundEnd();
-        health?.OnRoundEnd();
     }
 
     private void CheckingActing()// 행동 가능 횟수 확인
@@ -631,6 +631,7 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.AfterTakeAttacked(enemy);
         }
+        curCharacterBufList.AfterTakeAttacked(enemy);
     }
 
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격

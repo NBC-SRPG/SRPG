@@ -19,7 +19,7 @@ public class PassiveAbility_107 : PassiveLogic
 
     public override void OnStageStart()
     {
-        if (character.character.abilityT2.id == coefficient["abilityId_T2"])
+        if (character.character.abilityT2 != null && character.character.abilityT2.id == coefficient["abilityId_T2"])
         {
             stat_107 = new BonusStat();
             character.tempBonusStat.AddBonusStat(stat_107);
@@ -45,7 +45,7 @@ public class PassiveAbility_107 : PassiveLogic
             enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
 
             //적에게 기절을 거는 데 성공 && 특성 722 "연계공격" 적용 중일 경우
-            if(enemy.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2.id == coefficient["abilityId_T2"])
+            if(enemy.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2 != null && character.character.abilityT2.id == coefficient["abilityId_T2"])
             {
                 //stat_107에 0.1을 더한다.
                 stat_107.ExtraAtk += (float)(coefficient["atkIncreaseRatio"]) / coefficient["denominator"]; 
@@ -77,7 +77,7 @@ public class PassiveAbility_107 : PassiveLogic
                 target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Stun, coefficient["debufDuration"], character);
 
                 //적에게 기절을 거는 데 성공 && 특성 722 "연계공격" 적용 중일 경우
-                if (target.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2.id == coefficient["abilityId_T2"])
+                if (target.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.Stun, character) != null && character.character.abilityT2 != null && character.character.abilityT2.id == coefficient["abilityId_T2"])
                 {
                     //stat_107에 0.1을 더한다.
                     stat_107.ExtraAtk += (float)(coefficient["atkIncreaseRatio"]) / coefficient["denominator"];

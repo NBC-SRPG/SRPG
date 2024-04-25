@@ -17,6 +17,7 @@ public class ClassAbility_500 : PassiveLogic
     public override void OnStageStart()
     {
         character.tempBonusStat.AddBonusStat(stat_Class500);
+        character.health.SetHealthSameAsTotal();
     }
 
     public override void OnTurnStart()// 턴 시작 시 발동
