@@ -42,9 +42,10 @@ public class Ability_311: PassiveLogic
     }
 
 
+
     public override void OnStartAttack(CharacterBase enemy)// 공격 시작 시
     {
-
+        Debug.Log("디버프 갯수:" + enemy.curCharacterBufList.FindNegativeBufAll().Count);
         if (enemy.curCharacterBufList.FindNegativeBufAll().Count > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
             checkExisitSis();
@@ -55,6 +56,7 @@ public class Ability_311: PassiveLogic
             else
             {
                 stat_311.EnhancedDmg = ((float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"]);
+                Debug.Log("스탯 적용됨 +15%");
             }
             character.tempBonusStat.AddBonusStat(stat_311);
 
@@ -79,6 +81,8 @@ public class Ability_311: PassiveLogic
             bufCount += target.curCharacterBufList.FindNegativeBufAll().Count;
         }
 
+        Debug.Log("디버프 갯수:" +  bufCount);
+
         if (bufCount > coefficient["defaltBufCount"]) //대상이 보유한 디버프 효과의 갯수가 1개 이상이면, 보너스 스탯(주는 피해+15%) 획득
         {
             checkExisitSis();
@@ -89,6 +93,7 @@ public class Ability_311: PassiveLogic
             else
             {
                 stat_311.EnhancedDmg = ((float)(coefficient["enhancedDmgRate"]) / coefficient["denominator"]);
+
             }
             character.tempBonusStat.AddBonusStat(stat_311);
 
