@@ -307,7 +307,7 @@ public class CharacterInfoUI : UIBase
 
         int numberOfStars = character.Growth.star; // 별의 개수
         float starWidth = 100f; // 별 이미지의 너비
-        float spacing = 10f; // 별 사이의 간격
+        float spacing = 0f; // 별 사이의 간격
 
         // 별 이미지들의 총 너비 계산
         float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
