@@ -302,23 +302,6 @@ public class CharacterInfoUI : UIBase
         GetImage((int)Images.IllustrationImage).sprite = character.SO.standing;
         GetText((int)Texts.NameText).text = character.SO.characterName;
 
-        int numberOfStars = character.Growth.star; // 별의 개수
-        float starWidth = 100f; // 별 이미지의 너비
-        float spacing = 0f; // 별 사이의 간격
-
-        // 별 이미지들의 총 너비 계산
-        float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
-
-        // 첫 번째 별 이미지의 시작 위치 계산
-        float startX = -(totalWidth / 2) + (starWidth / 2);
-
-        for (int i = 0; i < numberOfStars; i++)
-        {
-            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.Star).transform);
-            RectTransform rt = star.GetComponent<RectTransform>();
-            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
-        }
-
         UpdateStat();
     }
 
@@ -331,6 +314,29 @@ public class CharacterInfoUI : UIBase
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
         GetText((int)Texts.DefText).text = $"{character.def}";
+
+        int numberOfStars = character.Growth.star; // 별의 개수
+        float starWidth = 100f; // 별 이미지의 너비
+        float spacing = 0f; // 별 사이의 간격
+
+        // 별 이미지들의 총 너비 계산
+        float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
+
+        // 첫 번째 별 이미지의 시작 위치 계산
+        float startX = -(totalWidth / 2) + (starWidth / 2);
+
+        // 기존에 생성된 별들 제거
+        foreach (Transform child in GetObject((int)GameObjects.Star).transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < numberOfStars; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.Star).transform);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
     }
 
     public void UpdateEquipImage()
@@ -416,22 +422,6 @@ public class CharacterInfoUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
-    private void OnClickExSkillLevelUpButton()
-    {
-        Debug.Log("OnClickExSkillLevelUpButton");
-
-        // TODO
-        // 버튼 클릭 효과음
-        // 스킬 레벨 업
-        // 정보 저장
-        // 스킬 LV 텍스트 & 설명 업데이트
-    }
-
-    // TODO
-    // EX, 고유 스킬의 정보창은 CharacterInfo Init에서 초기화 -> 변하지 않음
-    // 특성 정보창은 클릭 시 초기화 -> 특성 5가지 클릭 시 매번 바뀜
-    // 초기화 전 마지막 클릭 한 특성 정보를 들고 있다가 같으면 아무것도 하지 않고 return
-    // 팝업창은 SetActive로 관리하고 있으나 추후 필요 시 기존과 같이 동적 관리
     private void OnClickExSkillButton()
     {
         Debug.Log("OnClickExSkillButton");

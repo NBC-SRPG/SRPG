@@ -33,11 +33,11 @@ public class GachaResultUI : UIBase
             GameObject go = Managers.Resource.Instantiate(Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterImage"),
                 GetObject((int)GameObjects.Content).transform);
 
-            go.GetComponent<Image>().sprite = Managers.AccountData.characterData[gachaResult].SO.icon;
+            Utility.Id2SO<CharacterSO>(gachaResult, (result) =>
+            {
+                go.GetComponent<Image>().sprite = (result as CharacterSO).icon;
+            });
         }
-
-        // TODO
-        // 전달받은 캐릭터 리스트 획득 처리
     }
 
     private void OnClickCheckButton()

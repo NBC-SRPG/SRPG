@@ -43,11 +43,13 @@ public class CharacterEntryUI : UIBase
     {
         Init();
         Managers.AccountData.characterData[characterId].Growth.OnLevelUp += UpdateLevel;
+        Managers.AccountData.characterData[characterId].Growth.OnLevelUp += SetStar;
     }
 
     private void OnDestroy()
     {
         Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= UpdateLevel;
+        Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= SetStar;
     }
 
     private void Init()
@@ -101,6 +103,12 @@ public class CharacterEntryUI : UIBase
     {
         int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
+
+        // 기존에 생성된 별들 제거
+        foreach (Transform child in GetObject((int)GameObjects.Star).transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         for (int i = 0; i < numberOfStars; i++)
         {
