@@ -807,7 +807,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-        private void UpdateClearData()
+    private void UpdateClearData()
     {
         if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
         {

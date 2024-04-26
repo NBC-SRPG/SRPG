@@ -55,7 +55,7 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
             return;
         }
 
-        if (Buffer.character.abilityT2.id == 622 && enemy != Buffer) //공격자가 피유가 아니고, 피유가 "지원 사격" 특성을 적용 중일 경우.
+        if (Buffer.character.abilityT2 != null && Buffer.character.abilityT2.id == 622 && enemy != Buffer) //공격자가 피유가 아니고, 피유가 "지원 사격" 특성을 적용 중일 경우.
         {
             int distance = character.pathFinder.GetManhattenDistance(character.curStandingTile, Buffer.curStandingTile); //피유와 이 표적 디버프를 가진 캐릭터의 거리가 6 이하일 경우
 
