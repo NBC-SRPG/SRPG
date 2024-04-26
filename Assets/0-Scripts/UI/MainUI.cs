@@ -61,9 +61,9 @@ public class MainUI : UIBase
 
         GetText((int)Texts.NameText).text = Managers.AccountData.playerData.playerName;
 
-        // TODO
+
         // 선택한 캐릭터의 일러스트 표시
-        // GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>(Managers.AccountData.playerData.lobbyCharacter.ToString());
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
 
         RefreshUI();
 

@@ -299,7 +299,7 @@ public class CharacterInfoUI : UIBase
 
     private void InitCharacterInfo()
     {
-        GetImage((int)Images.IllustrationImage).sprite = character.SO.standing;
+        GetImage((int)Images.IllustrationImage).sprite = character.SO.standingImage;
         GetText((int)Texts.NameText).text = character.SO.characterName;
 
         UpdateStat();

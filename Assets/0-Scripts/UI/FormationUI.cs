@@ -191,7 +191,7 @@ public class FormationUI : UIBase
             GetObject((int)characterData).gameObject.SetActive(true);
 
             Character character = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
-            Sprite characterSprite = character.SO.standing;
+            Sprite characterSprite = character.SO.illustration;
             GetImage((int)formationImageEnum).sprite = characterSprite;
 
             // 속성 이미지 변경
