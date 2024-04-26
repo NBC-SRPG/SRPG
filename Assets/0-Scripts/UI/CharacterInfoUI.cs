@@ -27,7 +27,6 @@ public class CharacterInfoUI : UIBase
         HpText,
         AtkText,
         DefText,
-        MovText,
         LevelText,
         ExpText,
         ClassNameText,
@@ -80,8 +79,7 @@ public class CharacterInfoUI : UIBase
         ClassPath2_1,
         ClassPath2_10,
         ClassPath2_2,
-        ClassPath2_20,
-        Limit_1
+        ClassPath2_20
     }
     private enum GameObjects
     {
@@ -89,12 +87,7 @@ public class CharacterInfoUI : UIBase
         AbilityTab,
         ClassTab,
         PassiveSkillInfoUI,
-        Star,
-        LimitBreak,
-        Limit_1,
-        Limit_2,
-        Limit_3,
-        Limit_4
+        Star
     }
 
     private void OnDestroy()
@@ -335,38 +328,10 @@ public class CharacterInfoUI : UIBase
         GetText((int)Texts.LevelText).text = $"Lv. {character.Growth.level} / {character.Growth.GetMaxLevel()}";
         GetText((int)Texts.ExpText).text = $"{character.Growth.curExp} / {character.Growth.maxExp}";
         GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
-        UpdateLimit();
 
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
         GetText((int)Texts.DefText).text = $"{character.def}";
-        GetText((int)Texts.MovText).text = $"{character.mov}";
-    }
-
-    public void UpdateLimit()
-    {
-        GetObject((int)GameObjects.LimitBreak).SetActive(false);
-        if (character.Growth.star == 5)
-        {
-            GetObject((int)GameObjects.LimitBreak).SetActive(true);
-            switch (character.Growth.limitBreak)
-            {
-                case 0:
-                    GetObject((int)GameObjects.Limit_1).SetActive(false);
-                    break;
-                case 1:
-                    GetObject((int)GameObjects.Limit_2).SetActive(false);
-                    break;
-                case 2:
-                    GetObject((int)GameObjects.Limit_3).SetActive(false);
-                    break;
-                case 3:
-                    GetObject((int)GameObjects.Limit_4).SetActive(false);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     public void UpdateEquipImage()

@@ -17,7 +17,6 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
     public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
         base.Init(character, buffer, duration, power, stack);
-        isIndependent = true;
         stat_TargetMarker = new BonusStat();
     }
 
@@ -43,7 +42,7 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
         }
 
 
-        stat_TargetMarker.EXCritRate = power;
+        stat_TargetMarker.EXCritRate = stack;
         enemy.tempBonusStat.AddBonusStat(stat_TargetMarker);
 
     }

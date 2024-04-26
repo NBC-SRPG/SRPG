@@ -8,11 +8,18 @@ public class Ability_322: PassiveLogic
     //자신의 체력이 50%, 30%,10% 이하일 때 자신에게 받는 피해 감소 보너스 스탯을 부여한다.
     //제네의 2-2 특성.
 
-    BonusStat stat_322 = new BonusStat(); // 보너스 스탯
+    BonusStat stat_322;// 보너스 스탯
 
     public override void init(CharacterBase character)// 패시브 소유자 설정
     {
         this.character = character;
+        stat_322 = new BonusStat();
+    }
+
+    public override void OnStageStart()
+    {
+        base.OnStageStart();
+        character.tempBonusStat.AddBonusStat(stat_322);
     }
 
     private void DamageReduceInit()
@@ -28,22 +35,19 @@ public class Ability_322: PassiveLogic
 
         if (healthPercentage <= coefficient["hpRatio_1"])
         {
-            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_1"]) / coefficient["denominator"];
-            character.tempBonusStat.AddBonusStat(stat_322);
+            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_1"]) / coefficient["denominator"];  
         }
         else if (healthPercentage <= coefficient["hpRatio_2"])
         {
             stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_2"]) / coefficient["denominator"];
-            character.tempBonusStat.AddBonusStat(stat_322);
         }
         else if (healthPercentage <= coefficient["hpRatio_3"])
         {
             stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_3"]) / coefficient["denominator"];
-            character.tempBonusStat.AddBonusStat(stat_322);
         }
         else
         {
-            character.tempBonusStat.RemoveBonusStat(stat_322);
+            stat_322.ReducedDmg = (float)(coefficient["reducedDmgRate_4"]);
         }
     }
 
