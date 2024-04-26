@@ -126,7 +126,7 @@ public class PlayerData
         if (playerName.Length <= 8)
         {
             this.playerName = playerName;
-            Managers.DB.Write<string>(Managers.DB.userDB.Child("playerData").Child("playerrName"), playerName);
+            Managers.DB.Write<string>(Managers.DB.userDB.Child("playerData").Child("playerName"), playerName);
             return true; // 글자 수 제한 조건을 만족하면 true 반환
         }
         else
