@@ -20,7 +20,7 @@ public class CharacterBuf_ReceivedDgmReduce : CharacterBuf
     {
         return new BonusStat
         {
-            ReducedDmg = (float)(power / 100)
+            ReducedDmg = (float)power / 100
         };
     }
 

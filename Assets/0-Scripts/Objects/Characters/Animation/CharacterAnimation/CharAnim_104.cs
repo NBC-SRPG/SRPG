@@ -71,7 +71,7 @@ public class CharAnim_104 : CharAnimBase
 
         foreach (CharacterBase target in targetList)
         {
-            if (target.characterAnim.GetDamageFigure() < 0)
+            if (target.curCharacterBufList.FindBuf(BattleKeyWords.BufKeyword.HealReversal) != null)
             {
                 hitTargets.Add(target);
             }

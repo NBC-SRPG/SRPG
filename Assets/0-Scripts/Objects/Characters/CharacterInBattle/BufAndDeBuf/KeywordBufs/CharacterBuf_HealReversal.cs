@@ -20,13 +20,9 @@ public class CharacterBuf_HealReversal : CharacterBuf
     {
         base.OnTurnStart();
 
-        if (turnCnt > 0)
-        {
-            DecreaseDuration(1);
-        }
-
-        turnCnt++;
+        DecreaseDuration(1);
     }
+
     public override void OnTakeHeal(ref int damage, CharacterBase enemy = null,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 힐을 받을 때

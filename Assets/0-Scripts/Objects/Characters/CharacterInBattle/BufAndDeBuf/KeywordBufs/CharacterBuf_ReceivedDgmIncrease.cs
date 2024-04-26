@@ -20,7 +20,7 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증
     {
         return new BonusStat
         {
-            ReducedDmg = (float)(power / 100) * (-1)
+            ReducedDmg = ((float)power / 100) * (-1)
         };
     }
 
