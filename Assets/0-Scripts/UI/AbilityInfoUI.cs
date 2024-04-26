@@ -8,7 +8,8 @@ public class AbilityInfoUI : UIBase
 
     private enum Texts
     {
-        AbilityDescriptionText
+        AbilityDescriptionText,
+        AbilityNameText
     }
 
     private enum Images
@@ -20,7 +21,8 @@ public class AbilityInfoUI : UIBase
     {
         AbilityApplyButton,
         AbilityCancelButton,
-        AbilityCheckButton
+        AbilityCheckButton,
+        CloseButton
     }
 
     public void Init(Character character, int AbilityTier, int AbilityIndex)
@@ -36,6 +38,7 @@ public class AbilityInfoUI : UIBase
         {
             Utility.Id2SO<AbilitySO>(character.abilityT1.id, (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택한 특성이면 아웃라인 켜기
@@ -46,6 +49,7 @@ public class AbilityInfoUI : UIBase
         {
             Utility.Id2SO<AbilitySO>(character.SO.abilityT2[AbilityIndex], (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
@@ -69,6 +73,7 @@ public class AbilityInfoUI : UIBase
         {
             Utility.Id2SO<AbilitySO>(character.SO.abilityT3[AbilityIndex], (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
@@ -89,7 +94,7 @@ public class AbilityInfoUI : UIBase
             });
         }
 
-
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCloseButton);
         GetButton((int)Buttons.AbilityApplyButton).onClick.AddListener(() => OnClickAbilityApplyButton(AbilityTier, AbilityIndex));
         GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
         GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
@@ -154,6 +159,11 @@ public class AbilityInfoUI : UIBase
     {
         Debug.Log("OnClickAbilityCancelButton");
 
+        Managers.UI.CloseUI(this);
+    }
+
+    private void OnClickCloseButton()
+    {
         Managers.UI.CloseUI(this);
     }
 }
