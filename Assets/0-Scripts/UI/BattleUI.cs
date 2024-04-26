@@ -330,6 +330,11 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.UseSkillButton).gameObject.SetActive(canActing);
     }
 
+    public void SetDidUseSkill(bool canSkill)
+    {
+        GetButton((int)Buttons.UseSkillButton).interactable = canSkill;
+    }
+
     public void SetCanUseSkill(bool canSkill)
     {
         GetButton((int)Buttons.SkillConFirmButton).interactable = canSkill;
