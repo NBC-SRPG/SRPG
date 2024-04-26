@@ -8,6 +8,7 @@ public class PlayerData
     public event Action<int> OnDiamondChanged;
     public event Action<int> OnGoldChanged;
     public event Action<int> OnApChanged;
+    public event Action<int> OnGachaPointChanged;
 
     public string uId { get; private set; } // UID
     public string playerName { get; private set; } // 닉네임
@@ -255,12 +256,14 @@ public class PlayerData
     public void AddGachaPoint(int amount)
     {
         gachaPoint += amount;
+        OnGachaPointChanged?.Invoke(gachaPoint);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("gachaPoint"), gachaPoint);
     }
 
     public void ReduceGachaPoint(int amount)
     {
         gachaPoint -= amount;
+        OnGachaPointChanged?.Invoke(gachaPoint);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("gachaPoint"), gachaPoint);
     }
 

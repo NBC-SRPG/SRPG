@@ -15,7 +15,7 @@ public class GachaUI : UIBase
     private const int GACHA_TICKET_10 = 90001;
     
     private Dictionary<int, Dictionary<int, float>> tables = new Dictionary<int, Dictionary<int, float>>();
-    private List<GachaSO> curGachaList = new(); // 현재 진행중인 가챠리스트. 0번은 항상 통상
+    public List<GachaSO> curGachaList { get; } = new(); // 현재 진행중인 가챠리스트. 0번은 항상 통상
     private GachaSO curGacha;
 
 
@@ -58,6 +58,11 @@ public class GachaUI : UIBase
         Init();
     }
 
+    private void OnDestroy()
+    {
+        Managers.AccountData.playerData.OnGachaPointChanged -= UpdateGachaPoint;
+    }
+
     private void Init()
     {
         BindText(typeof(Texts));
@@ -67,6 +72,8 @@ public class GachaUI : UIBase
 
         StartCoroutine(SetGachaInfo());
         StartCoroutine(GetTableFromDB());
+
+        GetText((int)Texts.GachaPoint).text = Managers.AccountData.playerData.gachaPoint.ToString();
 
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
         GetButton((int)Buttons.Gacha10Button).onClick.AddListener(OnClickGacha10Button);
@@ -82,16 +89,7 @@ public class GachaUI : UIBase
         if (Managers.AccountData.GetItemQuantity(GACHA_TICKET) == 0) GetButton((int)Buttons.GachaWithTicketButton).gameObject.SetActive(false);
         if (Managers.AccountData.GetItemQuantity(GACHA_TICKET_10) == 0) GetButton((int)Buttons.Gacha10WithTicketButton).gameObject.SetActive(false);
 
-        // TODO
-
-        // 가챠 배너 클릭시 해당 가챠로 전환하는 OnClickBanner() 구현
-        // -> BannerUI를 만들고 해당 스크립트 내에 OnClickBannerButton() 구현하였음
-        // -> OnClickBannerButton() 클릭 시 GachaUI의 UpdateGachaInfoUI() 실행하며 해당 가챠로 전환
-
-        // curGacha의 SO 데이터를 사용해 GachaInfoUI 초기화
-        // 캐릭터 이름(pickUpcharacterName) / 남은 기간(startDate.AddDays(expiration) - DateTime.Now) / 캐릭터 일러스트(gachaImage)
-
-        // GachaWithTicketButton, Gacha10WithTicketButton은 Managers.AccountData.inventory[GACHA_TICKET(_10)]이 1이상일 경우에만 setActice(true)
+        Managers.AccountData.playerData.OnGachaPointChanged += UpdateGachaPoint;
     }
 
     // 클릭한 배너에 맞게 가챠 정보 세팅
@@ -119,12 +117,13 @@ public class GachaUI : UIBase
             //GetText((int)Texts.GachaInfo).text = "10연차 시 ★2 이상의 캐릭터 100% 계약";
             GetText((int)Texts.EndDate).text = $"남은 기간\n{gachaSO.GetRemainingTimeText()}";
 
-            // TODO
-            // 계약 포인트 업데이트는 한정 계약을 뽑았을 때로 이동
-            // GetText((int)Texts.GachaPoint).text = Managers.AccountData.playerData.gachaPoint.ToString();
-
             GetImage((int)Images.GachaImage).sprite = gachaSO.gachaImage;
         }
+    }
+
+    private void UpdateGachaPoint(int gachaPoint)
+    {
+        GetText((int)Texts.GachaPoint).text = gachaPoint.ToString();
     }
 
     private void OnClickGachaButton()
@@ -173,13 +172,9 @@ public class GachaUI : UIBase
 
     private void OnClickPointExchangeButton()
     {
-        // TODO: 포인트로 천장 교환 팝업 열기
-    }
+        // 포인트로 천장 교환 팝업 열기
 
-    private void OnClickGachaBanner()
-    {
-        // TODO: 해당하는 가챠로 전환
-        // curGacha에 해당하는 SO 넣어주기
+        Managers.UI.ShowUI<PointExchangeUI>();
     }
 
     private void OnClickBackButton()
@@ -320,10 +315,8 @@ public class GachaUI : UIBase
 
     private void ShowResult(List<int> result)
     {
-        // TODO: 전달받은 리스트로 가차 결과창(GachaResultUI) 보여주기
-        foreach (int i in result)
-        {
-            Debug.Log(i);
-        }
+        // 전달받은 리스트로 가차 결과창(GachaResultUI) 보여주기
+        GachaResultUI GachaResultUI = Managers.UI.ShowUI<GachaResultUI>();
+        GachaResultUI.Init(result);
     }
 }

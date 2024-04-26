@@ -239,6 +239,8 @@ public static class Constants
     public const int AbilityTier2UnlockLevel = 50;
     public const int AbilityTier3UnlockLevel = 70;
 
+    public const int GachaPoint = 100;
+
     [System.Serializable]
     public struct Dialog
     {
