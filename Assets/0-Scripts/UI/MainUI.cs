@@ -118,6 +118,9 @@ public class MainUI : UIBase
     private void OnClickShopButton()
     {
         Debug.Log("OnClickShopButton");
+        Managers.AccountData.playerData.AddGold(10000000);
+        Managers.AccountData.playerData.AddDiamond(10000);
+        Managers.AccountData.playerData.AddAP(50);
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ShopUI>();
