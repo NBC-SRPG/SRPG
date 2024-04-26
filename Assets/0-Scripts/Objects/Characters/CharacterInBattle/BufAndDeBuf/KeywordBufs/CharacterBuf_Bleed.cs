@@ -28,7 +28,7 @@ public class CharacterBuf_Bleed : CharacterBuf
         }
 
         stack = stack/2; //그리고 스택이 절반으로 줄어든다.
-        if (stack <= 0)
+        if (stack == 0)
         {
             DestoyBuf(); //스택이 0이 되면 출혈 제거.
         }

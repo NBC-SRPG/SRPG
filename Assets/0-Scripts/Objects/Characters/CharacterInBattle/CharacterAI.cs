@@ -729,6 +729,11 @@ public class CharacterAI : CharacterBase
             nearestTile = FindNearestTile(kiteRange, curStandingTile);
         }
 
+        if(nearestTile == null)
+        {
+            return new List<OverlayTile>();
+        }
+
         List<OverlayTile> list = pathFinder.FindPath(curStandingTile, nearestTile);
 
         leftWalk -= list.Count;

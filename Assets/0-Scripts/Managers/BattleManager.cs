@@ -795,8 +795,10 @@ public class BattleManager : MonoBehaviour
         Lose?.Invoke(player);
         gameEnd = true;
 
+        CheckExtraGoal();
         if (Managers.GameManager.player.isWin)
         {
+            UpdateClearData();
             Ui.ShowWin();
         }
         else
