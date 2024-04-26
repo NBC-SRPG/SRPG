@@ -378,6 +378,7 @@ public class CharacterController : MonoBehaviour
             }
         }
 
+        Ui.SetDidUseSkill(curSelectedCharacter.canSkill);
     }
 
     private void OnClickMoveAndAttack()

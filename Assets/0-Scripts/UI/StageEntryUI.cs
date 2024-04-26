@@ -34,9 +34,9 @@ public class StageEntryUI : UIBase
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
             GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
-        });
 
-        InitStar(stage);
+            InitStar(stageSO.stageNumber);
+        });
 
         GetText((int)Texts.StageNumText).text = stage;
 
