@@ -1,0 +1,742 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5104db9220e705a4799f65839745547b, type: 3}
+  m_Name: Stage_1_3
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+    - {fileID: 11400000, guid: f684a1d582be1044184a5871eb8103ac, type: 2}
+    - {fileID: 11400000, guid: 145a9182e38532f42b7cd787973528aa, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: enemyAtWave
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: characterList
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[Character, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 8
+    - Name: 
+      Entry: 7
+      Data: 3|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 4|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 0
+    - Name: hp
+      Entry: 3
+      Data: 5600
+    - Name: atk
+      Entry: 3
+      Data: 1600
+    - Name: def
+      Entry: 3
+      Data: 1400
+    - Name: mov
+      Entry: 3
+      Data: 8
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 6|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 0
+    - Name: hp
+      Entry: 3
+      Data: 5600
+    - Name: atk
+      Entry: 3
+      Data: 1600
+    - Name: def
+      Entry: 3
+      Data: 1400
+    - Name: mov
+      Entry: 3
+      Data: 8
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 8|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 1
+    - Name: hp
+      Entry: 3
+      Data: 5200
+    - Name: atk
+      Entry: 3
+      Data: 1800
+    - Name: def
+      Entry: 3
+      Data: 1120
+    - Name: mov
+      Entry: 3
+      Data: 5
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 10|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 0
+    - Name: hp
+      Entry: 3
+      Data: 5600
+    - Name: atk
+      Entry: 3
+      Data: 1600
+    - Name: def
+      Entry: 3
+      Data: 1400
+    - Name: mov
+      Entry: 3
+      Data: 8
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 12|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 1
+    - Name: hp
+      Entry: 3
+      Data: 5200
+    - Name: atk
+      Entry: 3
+      Data: 1800
+    - Name: def
+      Entry: 3
+      Data: 1120
+    - Name: mov
+      Entry: 3
+      Data: 5
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 14|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 1
+    - Name: hp
+      Entry: 3
+      Data: 5200
+    - Name: atk
+      Entry: 3
+      Data: 1800
+    - Name: def
+      Entry: 3
+      Data: 1120
+    - Name: mov
+      Entry: 3
+      Data: 5
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 15|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 16|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 0
+    - Name: hp
+      Entry: 3
+      Data: 5600
+    - Name: atk
+      Entry: 3
+      Data: 1600
+    - Name: def
+      Entry: 3
+      Data: 1400
+    - Name: mov
+      Entry: 3
+      Data: 8
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 18|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
+      Data: 2
+    - Name: hp
+      Entry: 3
+      Data: 10000
+    - Name: atk
+      Entry: 3
+      Data: 2800
+    - Name: def
+      Entry: 3
+      Data: 3000
+    - Name: mov
+      Entry: 3
+      Data: 12
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  stageName: "\uD3EC\uC704"
+  stageNumber: 1-3
+  clear: 1
+  stageType: 0
+  enemiesInfo:
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: f684a1d582be1044184a5871eb8103ac, type: 2}
+  - {fileID: 11400000, guid: 145a9182e38532f42b7cd787973528aa, type: 2}
+  recommendLevel: 40
+  enemies:
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: f684a1d582be1044184a5871eb8103ac, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: f684a1d582be1044184a5871eb8103ac, type: 2}
+  - {fileID: 11400000, guid: f684a1d582be1044184a5871eb8103ac, type: 2}
+  - {fileID: 11400000, guid: df0956a0b42121646bb411eb9dbc3ec4, type: 2}
+  - {fileID: 11400000, guid: 145a9182e38532f42b7cd787973528aa, type: 2}
+  spawnType: 0
+  chaseAtStart: 0
+  prefabsName: Main1-3
+  waveNumber: 1
+  defenceRound: 0
+  targetGrid: []
+  targetEnemy: 07000000
+  infiniteWave: -1
+  infiniteEnemy: []
+  spawnByRound: 0
+  spawnRound: 0
+  extraGoal:
+  - type: 0
+    value: 0
+  - type: 1
+    value: 15
+  - type: 4
+    value: 0

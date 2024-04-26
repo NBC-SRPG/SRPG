@@ -63,6 +63,9 @@ public class ProfileUI : UIBase
         Get<TMP_InputField>((int)InputFields.NicknameInputField).text = $"{Managers.AccountData.playerData.playerName}";
         Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = $"{Managers.AccountData.playerData.birthday}";
         Get<TMP_InputField>((int)InputFields.ComentInputField).text = $"{Managers.AccountData.playerData.playerComment}";
+
+        GetImage((int)Images.CharacterProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
     }
 
     private void OnClickEditNicknameButton()

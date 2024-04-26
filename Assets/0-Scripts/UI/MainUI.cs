@@ -4,6 +4,7 @@ public class MainUI : UIBase
 {
     private enum Texts
     {
+        NameText,
         LevelText
     }
 
@@ -39,7 +40,6 @@ public class MainUI : UIBase
 
     public void Init()
     {
-        Managers.UI.SetCanvas(gameObject);
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
@@ -59,9 +59,11 @@ public class MainUI : UIBase
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
 
-        // TODO
+        GetText((int)Texts.NameText).text = Managers.AccountData.playerData.playerName;
+
+
         // 선택한 캐릭터의 일러스트 표시
-        // GetImage((int)Images.IllustrationImage).sprite = Managers.Resource.Load<Sprite>(Managers.AccountData.playerData.lobbyCharacter.ToString());
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
 
         RefreshUI();
 
@@ -77,7 +79,7 @@ public class MainUI : UIBase
     // Level 텍스트 업데이트
     private void RefreshLevel()
     {
-
+        GetText((int)Texts.LevelText).text = $"LV.{Managers.AccountData.playerData.Level}";
     }
 
     private void OnClickCharacterButton()

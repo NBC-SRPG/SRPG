@@ -14,7 +14,7 @@ public class HealthSystem : MonoBehaviour
     private TempBonusStat tempBonus;
     private CharacterBufList characterBufList;
 
-    private List<ShieldStat> shieldList;
+    public List<ShieldStat> shieldList;
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
@@ -57,6 +57,11 @@ public class HealthSystem : MonoBehaviour
 
         healthBar.fillAmount = HealthRatio;
         UpdateText();
+    }
+
+    public void SetHealthSameAsTotal()
+    {
+        CurHealth = TotalHealth;
     }
 
     public float HealthRatio
@@ -185,9 +190,9 @@ public class HealthSystem : MonoBehaviour
     {
         CurHealth += n;
 
-        if (CurHealth > MaxHealth)
+        if (CurHealth > TotalHealth)
         {
-            CurHealth = MaxHealth;
+            CurHealth = TotalHealth;
         }
 
         if (CurHealth < 0)
@@ -209,10 +214,6 @@ public class HealthSystem : MonoBehaviour
 
         characterAnim.ShowDamage();
 
-        if (CurHealth <= 0)
-        {
-            DieAnimation?.Invoke();
-        }
     }
 
     public void HealHealthBar(Damage n)// 체력 회복함
@@ -276,6 +277,10 @@ public class HealthSystem : MonoBehaviour
             healthBar.fillAmount = HealthRatio;
         }
 
+        if (healthBar.fillAmount == 0)
+        {
+            DieAnimation?.Invoke();
+        }
     }
 
     public void UpdateText()
@@ -362,6 +367,7 @@ public class HealthSystem : MonoBehaviour
         }
         else
         {
+            Debug.Log("noShiled");
             return;
         }
     }

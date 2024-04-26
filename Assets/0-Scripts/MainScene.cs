@@ -11,6 +11,7 @@ public class MainScene : MonoBehaviour
     {
         Managers.UI.ShowUI<MainUI>();
         Managers.UI.ShowUI<CommonUI>();
+        Managers.UI.InitSortOrder();
         Debug.Log("MainSceneInit");
     }
 }

@@ -41,7 +41,7 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool hasAnimationBeforDIe = false;
     private bool onDiePassive = false;
 
-    [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
+    public List<OverlayTile> skillScale = new List<OverlayTile>();
     public List<OverlayTile> movePath = new List<OverlayTile>();
     private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
@@ -75,6 +75,8 @@ public class CharacterBase : MonoBehaviour
 
         characterAnim.FlipCharacterDirection(direction);
         characterAnim.Activate();
+
+        OnStageStart();
     }
 
     public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
@@ -151,6 +153,9 @@ public class CharacterBase : MonoBehaviour
     //스킬 및 패시브 시전자 설정
     private void SetSkillOwner()
     {
+        curCharacterBufList = new CharacterBufList(this);
+        tempBonusStat = new TempBonusStat();
+
         if (curCharacterSkill != null)
         {
             curCharacterSkill.Init(this);
@@ -164,8 +169,6 @@ public class CharacterBase : MonoBehaviour
             }
         }
 
-        curCharacterBufList = new CharacterBufList(this);
-        tempBonusStat = new TempBonusStat();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -294,14 +297,10 @@ public class CharacterBase : MonoBehaviour
         get
         {
             float reduce = 1 * character.ReducedDmg * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
-            if(reduce > 1)
-            {
-                reduce = 1;
-            }
 
-            if(reduce < 0)
+            if (reduce < 0)
             {
-                reduce = 1f;
+                reduce = 0.1f;
             }
 
             return reduce;
@@ -319,6 +318,7 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterSkill.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
+        
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -416,6 +416,14 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 유틸 관련
+    public void OnStageStart()// 스테이지 시작 시 발동
+    {
+        foreach (PassiveLogic passive in curCharacterPassive)
+        {
+            passive?.OnStageStart();
+        }
+    }
+
     public void OnRoundStart()
     {
         historyPrevRound = new CharacterHistory(historyCurrentRound);
@@ -427,7 +435,6 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterBufList?.OnRoundStart();
 
-        tempBonusStat.ClearAllStat();
     }
 
     public virtual void OnStartPlayerTurn()// 턴 시작 시
@@ -558,6 +565,8 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTurnEnd();
         }
         curCharacterBufList?.OnTurnEnd();
+
+        
     }
 
     public void OnRoundEnd()// 턴이 끝날 때
@@ -590,7 +599,7 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public bool CheckEnenmy(CharacterBase target)// 적인지 확인
+    public bool CheckEnemy(CharacterBase target)// 적인지 확인
     {
         if(target.playerId != playerId)
         {
@@ -617,6 +626,7 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.AfterTakeAttacked(enemy);
         }
+        curCharacterBufList.AfterTakeAttacked(enemy);
     }
 
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
@@ -701,7 +711,7 @@ public class CharacterBase : MonoBehaviour
     {
         List<OverlayTile> temp = new List<OverlayTile>();
 
-        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
 
         foreach (OverlayTile scale in temp)
         {
@@ -842,10 +852,10 @@ public class CharacterBase : MonoBehaviour
                 targets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);
@@ -873,10 +883,10 @@ public class CharacterBase : MonoBehaviour
                 tempTargets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);

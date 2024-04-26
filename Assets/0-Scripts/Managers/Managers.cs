@@ -17,9 +17,6 @@ public class Managers : MonoBehaviour
     private static AccountData s_accountData = new AccountData();
     public static AccountData AccountData { get { Init(); return s_accountData; } }
 
-    private static GachaManager s_gachamanager = new GachaManager();
-    public static GachaManager GachaManager { get { Init(); return s_gachamanager; } }
-
     private static GameManager s_gameManager = new GameManager();
     public static GameManager GameManager { get { Init(); return s_gameManager; } }
 
@@ -63,7 +60,6 @@ public class Managers : MonoBehaviour
             resourceManager.Init();
             soundManager.Init();
             uiManager.Init();
-            s_gachamanager.Init();
             missionManager.Init();
             s_gameManager.Init();
 

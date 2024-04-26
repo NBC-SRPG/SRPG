@@ -9,7 +9,9 @@ public class GameManager
     public GamePlayer enemy;
 
     public string stageName;
-    public StageSO thisStage; 
+    public StageSO thisStage;
+
+    public bool nowTesting;
 
     public void Init()
     {
@@ -21,6 +23,8 @@ public class GameManager
         player.prioty = 10;
 
         InitParty();
+
+        nowTesting = false;
     }
 
     public void SetEnemy(GamePlayer enemy)
@@ -39,25 +43,42 @@ public class GameManager
 
         for(int i = 0; i < formation.characterId.Length; i++)
         {
-            if(Managers.AccountData.characterData[formation.characterId[i]] == null)
+            Character character;
+
+            if(!Managers.AccountData.characterData.TryGetValue(formation.characterId[i], out character))
             {
                 continue;
             }
 
-            player.party[i] = Managers.AccountData.characterData[formation.characterId[i]];
+            player.party[i] = character;
         }
 
     }
 
-    public void UpdatePartyCharacter(FormationData formationData, int index)
+    public void UpdateParty(FormationData formation)
+    {
+        for (int i = 0; i < formation.characterId.Length; i++)
+        {
+            Character character;
+
+            if (!Managers.AccountData.characterData.TryGetValue(formation.characterId[i], out character))
+            {
+                continue;
+            }
+
+            UpdatePartyCharacter(formation, character, i);
+        }
+    }
+
+    public void UpdatePartyCharacter(FormationData formationData, Character character, int index)
     {
         //파티에 이미 캐릭터가 있는지 확인
-        int exist = Array.IndexOf(Managers.GameManager.player.party, Managers.AccountData.characterData[formationData.characterId[index]]);
+        int exist = Array.IndexOf(Managers.GameManager.player.party, character);
 
         if (exist > -1)//있다면 해당 자리를 null로
         {
             player.party[exist] = null;
         }
-        player.party[index] = Managers.AccountData.characterData[formationData.characterId[index]];
+        player.party[index] = character;
     }
 }

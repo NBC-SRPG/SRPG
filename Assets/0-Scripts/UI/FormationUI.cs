@@ -1,7 +1,6 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using static Constants;
 
 public class FormationUI : UIBase
@@ -65,7 +64,12 @@ public class FormationUI : UIBase
         FormationStar2,
         FormationStar3,
         FormationStar4,
-        FormationStar5
+        FormationStar5,
+        CharacterData1,
+        CharacterData2,
+        CharacterData3,
+        CharacterData4,
+        CharacterData5,
     }
     private void Start()
     {
@@ -105,7 +109,16 @@ public class FormationUI : UIBase
 
         Get<TMP_InputField>((int)InputFields.PartyNameInputField).onEndEdit.AddListener(ChangePartyName);
 
-        presetIndex = 0;
+
+        if (Constants.presetIndex == 0)
+        {
+            presetIndex = 0;
+        }
+        else
+        {
+            presetIndex = Constants.presetIndex;
+        }
+
         UpdateFormationToPreset(presetIndex);
     }
 
@@ -128,6 +141,7 @@ public class FormationUI : UIBase
         GetImage((int)presetImage).color = Color.green;
 
         presetIndex = index;
+        Constants.presetIndex = index;
 
         // 파티 이름 불러오기
         string partyName;
@@ -158,6 +172,8 @@ public class FormationUI : UIBase
 
         formation.partyName = partyName;
         Managers.AccountData.formationData[presetIndex] = formation;
+
+        Managers.GameManager.UpdateParty(Managers.AccountData.formationData[presetIndex]);
     }
 
     // 편성의 index에 해당하는 부분 업데이트
@@ -171,14 +187,15 @@ public class FormationUI : UIBase
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
         if (Managers.AccountData.formationData.ContainsKey(presetIndex) && Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
         {
-            Sprite characterSprite = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].SO.standing;
+            GameObjects characterData = (GameObjects)Enum.Parse(typeof(GameObjects), $"CharacterData{index + 1}");
+            GetObject((int)characterData).gameObject.SetActive(true);
+
+            Character character = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
+            Sprite characterSprite = character.SO.illustration;
             GetImage((int)formationImageEnum).sprite = characterSprite;
-            // TODO
-            // 아웃라인 활성화 및 색상 설정
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = true;
-            // GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().effectColor = Color.red;
+
             // 속성 이미지 변경
-            GetImage((int)formationAttributeImageEnum).color = Color.red;
+            GetImage((int)formationAttributeImageEnum).sprite = character.GetElementSprite();
 
             // 캐릭터 레벨 설정
             int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.level;
@@ -187,6 +204,13 @@ public class FormationUI : UIBase
             // 별 개수 꺼내오기 및 설정
             int numberOfStars = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.star; // 테스트 데이터, 실제 값으로 교체 필요
             float starWidth = 50f; // 별 이미지의 너비
+
+            for (int i = GetObject((int)formationStarEnum).transform.childCount - 1; i >= 0; i--)
+            {
+                GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
+                Destroy(child);
+            }
+
             for (int starIndex = 0; starIndex < numberOfStars; starIndex++)
             {
                 GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)formationStarEnum).transform);
@@ -198,21 +222,16 @@ public class FormationUI : UIBase
                 rt.anchoredPosition = new Vector2(starIndex * starWidth, 0);
             }
 
-            //파티에 이미 캐릭터가 있는지 확인
-            int exist = Array.IndexOf(Managers.GameManager.player.party, Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
-
-            if(exist > -1)//있다면 해당 자리를 null로
-            {
-                Managers.GameManager.player.party[exist] = null;
-            }
-            Managers.GameManager.player.party[index] = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
         }
         // 없다면(0이라면) 빈칸으로 밀어버리기
         else
         {
+            GameObjects characterData = (GameObjects)Enum.Parse(typeof(GameObjects), $"CharacterData{index + 1}");
+            GetObject((int)characterData).gameObject.SetActive(false);
+            
+            /*
             GetImage((int)formationImageEnum).sprite = null;
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = false;
-            GetImage((int)formationAttributeImageEnum).color = Color.white;
+            GetImage((int)formationAttributeImageEnum).sprite = null;
             GetText((int)formationLevelTextEnum).text = "";
 
             for (int i = GetObject((int)formationStarEnum).transform.childCount - 1; i >= 0; i--)
@@ -220,8 +239,9 @@ public class FormationUI : UIBase
                 GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
                 Destroy(child);
             }
-
+            */
             Managers.GameManager.player.party[index] = null;
+            
         }
     }
 
@@ -290,6 +310,13 @@ public class FormationUI : UIBase
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
+
+        StageInfoUI ui = Managers.UI.FindUI<StageInfoUI>();
+
+        if (ui != null)
+        {
+            ui.gameObject.SetActive(true);
+        }
 
         Managers.UI.CloseUI(this);
     }

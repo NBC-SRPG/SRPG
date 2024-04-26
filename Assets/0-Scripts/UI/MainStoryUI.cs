@@ -7,6 +7,7 @@ public class MainStoryUI : UIBase
 {
     private enum Buttons
     {
+        BackButton,
         Chapter1Button
     }
 
@@ -21,7 +22,13 @@ public class MainStoryUI : UIBase
 
         BindButton(typeof(Buttons));
 
+        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.Chapter1Button).onClick.AddListener(() => OnClickChapterButton(1));
+    }
+
+    private void OnClickBackButton()
+    {
+        Managers.UI.CloseUI(this);
     }
 
     private void OnClickChapterButton(int chapter)

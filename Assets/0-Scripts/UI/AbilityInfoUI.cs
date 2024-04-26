@@ -8,7 +8,8 @@ public class AbilityInfoUI : UIBase
 
     private enum Texts
     {
-        AbilityDescriptionText
+        AbilityDescriptionText,
+        AbilityNameText
     }
 
     private enum Images
@@ -20,13 +21,11 @@ public class AbilityInfoUI : UIBase
     {
         AbilityApplyButton,
         AbilityCancelButton,
-        AbilityCheckButton
+        AbilityCheckButton,
+        CloseButton,
+        BackImage
     }
 
-    private enum GameObjects
-    {
-
-    }
     public void Init(Character character, int AbilityTier, int AbilityIndex)
     {
         this.character = character;
@@ -34,17 +33,13 @@ public class AbilityInfoUI : UIBase
         BindText(typeof(Texts));
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
-        BindObject(typeof(GameObjects));
 
         // 이미지, 설명 세팅
-        // GetImage((int)Images.AbilityIconImage).sprite = Managers.Resource.Load<Sprite>($"{AbilityId}");
-        // TODO
-        // 어빌리티Id로 어빌리티를 Get하여 어빌리티 설명 텍스트 적용
-        // GetText((int)Texts.AbilityDescriptionText).text = Ability.abilityDescription;
         if (AbilityTier == 1)
         {
             Utility.Id2SO<AbilitySO>(character.abilityT1.id, (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택한 특성이면 아웃라인 켜기
@@ -55,6 +50,7 @@ public class AbilityInfoUI : UIBase
         {
             Utility.Id2SO<AbilitySO>(character.SO.abilityT2[AbilityIndex], (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
@@ -78,6 +74,7 @@ public class AbilityInfoUI : UIBase
         {
             Utility.Id2SO<AbilitySO>(character.SO.abilityT3[AbilityIndex], (result) =>
             {
+                GetText((int)Texts.AbilityNameText).text = (result as AbilitySO).abilityName;
                 GetText((int)Texts.AbilityDescriptionText).text = (result as AbilitySO).description;
                 GetImage((int)Images.AbilityIconImage).sprite = (result as AbilitySO).icon;
                 // 선택 가능한지 체크
@@ -99,9 +96,12 @@ public class AbilityInfoUI : UIBase
         }
 
 
+
         GetButton((int)Buttons.AbilityApplyButton).onClick.AddListener(() => OnClickAbilityApplyButton(AbilityTier, AbilityIndex));
-        GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
-        GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
+        GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
 
 
         // 버튼들 모두 비활성화 상태
@@ -159,10 +159,8 @@ public class AbilityInfoUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
-    private void OnClickAbilityCancelButton()
+    private void CloseUI()
     {
-        Debug.Log("OnClickAbilityCancelButton");
-
         Managers.UI.CloseUI(this);
     }
 }

@@ -43,11 +43,13 @@ public class CharacterEntryUI : UIBase
     {
         Init();
         Managers.AccountData.characterData[characterId].Growth.OnLevelUp += UpdateLevel;
+        Managers.AccountData.characterData[characterId].Growth.OnLevelUp += SetStar;
     }
 
     private void OnDestroy()
     {
         Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= UpdateLevel;
+        Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= SetStar;
     }
 
     private void Init()
@@ -63,11 +65,11 @@ public class CharacterEntryUI : UIBase
 
         // TODO
         // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
-        // 테스트 데이터
-        GetImage((int)Images.CharacterImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
+        Character character = Managers.AccountData.characterData[characterId];
+        GetImage((int)Images.CharacterImage).sprite = character.SO.icon;
+        GetImage((int)Images.CharacterAttributeImage).sprite = character.GetElementSprite();
+
         UpdateLevel();
-        // TODO 속성 이미지 세팅
-        // TODO 캐릭터 아웃라인 속성 이미지에 맞게 세팅
 
         if (isFormation)
         {
@@ -99,9 +101,14 @@ public class CharacterEntryUI : UIBase
 
     private void SetStar()
     {
-        // int numberOfStars = character.characterData.defaltStar; // 별의 개수
         int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
+
+        // 기존에 생성된 별들 제거
+        foreach (Transform child in GetObject((int)GameObjects.Star).transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         for (int i = 0; i < numberOfStars; i++)
         {
@@ -145,16 +152,6 @@ public class CharacterEntryUI : UIBase
         Debug.Log("AddCharacterToFormation");
 
         FormationUI ui = Managers.UI.FindUI<FormationUI>();
-
-        /*
-        // 이미 편성에 포함되어 있으면 불가 안내 UI
-        if (isCharacterInFormation)
-        {
-            WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-            warningUi.Init("이미 편성에 포함되어 있습니다");
-            return;
-        }
-        */
 
         // 이미 편성에 포함되어 있다면 편성 해제
         if (isCharacterInFormation)

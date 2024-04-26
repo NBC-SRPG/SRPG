@@ -14,8 +14,13 @@ public class CharacterBuf
 
     public virtual string Keyword {  get; protected set; }
 
-    public int stack;// 스택
-    public int power;// 위력
+    public string Description { get; protected set; }
+    public string BufName { get; protected set; }
+
+    public int duration;//지속 턴 수 (또는 적용 횟수)
+    public int power;//위력 (또는 버프 수치)
+    public int stack;//중첩 횟수
+    public int maxStack; //최대 중첩 가능 횟수
 
     protected int turnCnt = 0;// 내 다음 턴 까지 지속되야 할 때
 
@@ -23,13 +28,16 @@ public class CharacterBuf
 
     public bool dontDestroy = false;// 외부 효과로 파괴되지 않는 경우
     public bool isPermanent = false;// 영구 지속 효과라면
-    public bool cantStack = false;// 중첩 불가 버프라면(같은 버프를 받을 때, 효과가 갱신됨)
+    public bool isIndependent = false; // 지속시간이 갱신되지 않으며 따로 돌아야하는 독립 버프의 경우 (예시: 치명타 확률 증가 등) (이 속성은 power가 각 개체마다 달라지는 타입의 버프라면 모두 true로 적용되야함.)
+    public bool onlyOne = false;// 한 번에 한 개만 존재해야 하는 버프라면 (예시: 치유 감소)
 
-    public virtual void Init(CharacterBase character, CharacterBase buffer)
+    public virtual void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
         this.character = character;
-        stack = 0;
+        duration = 0;
         power = 0;
+        stack = 0;
+        maxStack = 99;
         IsDestroyed = false;
         Buffer = buffer;
     }
@@ -44,16 +52,16 @@ public class CharacterBuf
         return null;
     }
 
-    public virtual void DecreaseStack(int n)
+    public virtual void DecreaseDuration(int n) //지속 턴 감소
     {
         if(n < 1)
         {
             n = 1;
         }
 
-        stack -= n;
+        duration -= n;
 
-        if (stack == 0)
+        if (duration == 0)
         {
             DestoyBuf();
         }
@@ -67,6 +75,7 @@ public class CharacterBuf
     public void DestoyBuf()
     {
         stack = 0;
+        duration = 0;
         IsDestroyed = true;
 
         OnDestroy();
@@ -142,6 +151,11 @@ public class CharacterBuf
 
     }
 
+    public virtual void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
+    {
+
+    }
+
     public virtual void OnTakeDamage(ref int damage, CharacterBase enemy = null, 
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None, 
         Constants.ElementType characterAttribute = Constants.ElementType.None)// 데미지를 입을 때
@@ -198,5 +212,15 @@ public class CharacterBuf
     public virtual void OnUpdate()// 실시간 판정
     {
 
+    }
+
+    public virtual string GetName()
+    {
+        return BufName;
+    }
+
+    public virtual string GetDescription()
+    {
+        return Description;
     }
 }

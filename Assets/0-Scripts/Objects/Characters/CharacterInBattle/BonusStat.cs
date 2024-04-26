@@ -33,5 +33,4 @@ public class BonusStat
 public class ShieldStat
 {
     public int Shield { get; set; }
-
 }

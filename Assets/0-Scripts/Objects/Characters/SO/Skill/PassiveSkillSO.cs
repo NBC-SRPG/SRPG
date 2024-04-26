@@ -11,5 +11,6 @@ public class PassiveSkillSO : PassiveSO
     [Header("Description")]
     public string passiveName;
     public string description;
+    public Sprite icon;
 
 }

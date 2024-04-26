@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TempBonusStat
 {
-    private List<BonusStat> statList;
+    public List<BonusStat> statList;
 
     public TempBonusStat()
     {

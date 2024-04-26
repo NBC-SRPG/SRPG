@@ -35,8 +35,6 @@ public class EquipmentUpgradeMaterialUI : UIBase
 
         GetText((int)Texts.EquipmentUpgradeMaterialName).text = item.itemName;
         GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"{Managers.AccountData.inventory[itemId]}/{itemCount}";
-
-        // TODO
-        // 이미지 초기화
+        GetImage((int)Images.EquipmentUpgradeMaterialImage).sprite = item.icon;
     }
 }

@@ -1,6 +1,4 @@
 using System;
-using Unity.VisualScripting;
-using UnityEngine;
 using static Constants;
 
 public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭터 객체의 개인적인 고유 데이터만을 저장하는 클래스.
@@ -23,8 +21,10 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public int armor;
 
     public event Action OnLevelUp;
+    public event Action OnAwake;
     public event Action OnAbilityT2Changed;
     public event Action OnAbilityT3Changed;
+    public event Action OnSuperiorClassChanged;
     public event Action OnWeaponChanged;
     public event Action OnArmorChanged;
 
@@ -106,7 +106,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     // Constants의 경험치테이블을 참조해 특정 level에서의 최대 경험치를 반환
     private int GetMaxExp(int level)
     {
-        return 10;
+        return Constants.dataTables["characterExpTable"][level];
     }
 
     // CalcExp를 바탕으로 레벨업 진행
@@ -140,15 +140,30 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
                 result[1] = 0;
                 exp -= expRequired;
             }
+
+            if(result[0] >= GetMaxLevel())
+            {
+                result[0] = GetMaxLevel();
+                result[1] = 0;
+                break;
+            }
         }
-        
-        if(result[0] >= GetMaxLevel())
+        return result;
+    }
+
+    public void Awake()
+    {
+        if (star < 5)
         {
-            result[0] = GetMaxLevel();
-            result[1] = 0;
+            star++;
+        }
+        else
+        {
+            limitBreak++;
         }
 
-        return result;
+        OnAwake?.Invoke();
+        UpdateToDB();
     }
 
     public void UpgradeWeapon()
@@ -176,6 +191,14 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
             abilityT3 = index;
             OnAbilityT3Changed?.Invoke();
         }
+        UpdateToDB();
+    }
+
+    public void SelectClass(int index)
+    {
+        superiorClass = index;
+        OnSuperiorClassChanged?.Invoke();
+
         UpdateToDB();
     }
 

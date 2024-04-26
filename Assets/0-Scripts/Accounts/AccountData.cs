@@ -13,7 +13,6 @@ public class AccountData
     public Dictionary<int, List<string>> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
-    public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
     public Dictionary<int, Mission> ongoingMissions { get; set; } = new(); // 진행중인 미션들
@@ -55,11 +54,6 @@ public class AccountData
     }
     public void InitPlayerData(DataSnapshot snapshot)
     {
-        // PlayerData의 변수들이 private set이라 DB에서 불러온 값 적용 불가
-        /*
-        PlayerData data = snapshot.Exists ? JsonUtility.FromJson<PlayerData>(snapshot.GetRawJsonValue()) : new PlayerData();
-        playerData = data;
-        */
         if (playerData == null)
         {
             playerData = new();
@@ -80,8 +74,8 @@ public class AccountData
                 Convert.ToInt32(snapshot.Child("maxExp").Value),
                 snapshot.Child("birthday").Value as string,
                 //snapshot.Child("favoriteCharacter").Value as int[],
-                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value)
-                //Convert.ToInt32(snapshot.Child("characterIcon").Value)
+                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value),
+                Convert.ToInt32(snapshot.Child("gachaPoint").Value)
             );
         }
         else
@@ -100,7 +94,8 @@ public class AccountData
                 0,
                 8,
                 "",
-                3
+                3,
+                0
             );
             Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
         }
@@ -178,11 +173,7 @@ public class AccountData
             versionData.curEvents.Add((string)curEvent.Value);
         }
     }
-    public void InitGachaPoint(DataSnapshot snapshot)
-    {
-        int data = snapshot.Exists ? Convert.ToInt32(snapshot.Value) : 0;
-        gachaPoint = data;
-    }
+
     // TODO
     // 메일을 받았을 때 이벤트를 걸어서 업데이트 하는걸로 변경
     public void InitMailBox(DataSnapshot snapshot)
@@ -349,7 +340,7 @@ public class AccountData
         Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
     }
 
-    public void AcquireCharacter(int id)
+    public void AcquireCharacter(int id, bool isPickUp)
     {
         if(!characterData.ContainsKey(id))
         {
@@ -359,15 +350,37 @@ public class AccountData
                 characterData.Add(id, new Character((CharacterSO)result, characterGrowth));
                 Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
 
-                // TODO : 인벤토리에 조각 0으로 추가
+                AcquireItems(id, 0);
             });
         }
         else
         {
-            // 캐릭터 조각 추가
+            int pieceCount = 0;
+            switch(characterData[id].SO.basicStar)
+            {
+                case 1:
+                    pieceCount = 1;
+                    break;
+                case 2:
+                    pieceCount = 5;
+                    break;
+                case 3:
+                    pieceCount = isPickUp ? 100 : 30;
+                    break;
+            }
+
+            AcquireItems(id, pieceCount);
         }
     }
 
+    public int GetItemQuantity(int id)
+    {
+        if(!inventory.ContainsKey(id))
+        {
+            AcquireItems(id, 0);
+        }
+        return inventory[id];
+    }
     public void AcquireItems(int id, int count)
     {
         if(inventory.TryAdd(id, count) == false)
@@ -422,4 +435,18 @@ public class AccountData
 
         Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
     }
+
+    public void UpdateClearData(string stage, int achievement)
+    {
+        if(stageClearData.TryAdd(stage, achievement) == false)
+        {
+            if (stageClearData[stage] == 3) // 이미 3별이라면 추가로 값을 변동하지 않음
+            {
+                return;
+            }
+            stageClearData[stage] = achievement;
+        }
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
+    }
+
 }

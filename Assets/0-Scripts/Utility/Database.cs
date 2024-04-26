@@ -69,10 +69,10 @@ public class Database
                 userDB.Child("friendData").ValueChanged += FriendDataValueChange;
                 userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
                 isInited = true;
+                DataTableLoad();
             }
         });
         
-
         //userDB = reference.Child("users").Child(uid);
 
         // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
@@ -105,32 +105,32 @@ public class Database
     public IEnumerator DataLoad
     ()
     {
-        yield return Read(userDB.Child("stageClearData"), data =>
+        yield return Load(userDB.Child("stageClearData"), data =>
         {
             Managers.AccountData.InitStageClearData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("characterData"), data =>
+        yield return Load(userDB.Child("characterData"), data =>
         {
             Managers.AccountData.InitCharacterData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("playerData"), data =>
+        yield return Load(userDB.Child("playerData"), data =>
         {
             Managers.AccountData.InitPlayerData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("inventory"), data =>
+        yield return Load(userDB.Child("inventory"), data =>
         {
             Managers.AccountData.InitInventoryData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("friendData"), data =>
+        yield return Load(userDB.Child("friendData"), data =>
         {
             Managers.AccountData.InitFriendData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
-        yield return Read(userDB.Child("formationData"), data =>
+        yield return Load(userDB.Child("formationData"), data =>
         {
             Managers.AccountData.InitFormationData(data);
             UpdateLoadingProgress(1.0f / dataCount);
@@ -140,21 +140,34 @@ public class Database
         //    Managers.AccountData.InitVersionData(data);
         //    UpdateLoadingProgress(1.0f / dataCount);
         //});
-        yield return Read(userDB.Child("gachaPoint"), data =>
-        {
-            Managers.AccountData.InitGachaPoint(data);
-            UpdateLoadingProgress(1.0f / dataCount);
-        });
-        yield return Read(userDB.Child("missionData"), data =>
+        yield return Load(userDB.Child("missionData"), data =>
         {
             Managers.AccountData.InitMissionData(data);
             UpdateLoadingProgress(1.0f / dataCount);
         });
     }
 
+    private void DataTableLoad()
+    {
+        Read(reference.Child("DataTables"), (snapshot) =>
+        {
+            foreach (DataSnapshot data in snapshot.Children)
+            {
+                Dictionary<int, int> table = new();
+                foreach(var exp in data.Children)
+                {
+                    table.Add(int.Parse(exp.Key), int.Parse(exp.Value.ToString()));
+                }
+                Constants.dataTables.Add(data.Key, table);
+            }
+            // TODO: 이중반복 구조가 마음에 안듦... JSON 역직렬화로 바꾸고 싶은데 값이 안들어옴
+            // Constants.dataTables = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<int, int>>>(snapshot.GetRawJsonValue());
+        });
+    }
+
     private IEnumerator FriendDataUpdate()
     {
-        yield return Read(userDB.Child("friendData"), data =>
+        yield return Load(userDB.Child("friendData"), data =>
         {
             Managers.AccountData.InitFriendData(data);
         });
@@ -162,7 +175,7 @@ public class Database
 
     public IEnumerator MailLoad()
     {
-        yield return Read(userDB.Child("mailBox"), data =>
+        yield return Load(userDB.Child("mailBox"), data =>
         {
             Managers.AccountData.InitMailBox(data);
         });
@@ -225,7 +238,7 @@ public class Database
     /// </summary>
     /// <param name="path"> 경로 </param>
     /// <param name="action"> callback 함수 </param>
-    public IEnumerator Read(DatabaseReference path, Func action)
+    public IEnumerator Load(DatabaseReference path, Func action)
     {
         // 스냅샷 생성
         DataSnapshot snapshot = null;
@@ -248,6 +261,31 @@ public class Database
             action(snapshot);
         }
     }
+
+    // 코루틴에 사용할 Load()와 단독으로 사용할 Read()분리
+    public void Read(DatabaseReference path, Func action)
+    {
+        // 스냅샷 생성
+        DataSnapshot snapshot = null;
+        path.GetValueAsync().ContinueWithOnMainThread(task => {
+            if  (task.IsFaulted)
+            {
+                Debug.LogError("GetValueAsync encountered an error: " + task.Exception);
+                //return;
+            }
+            // 데이터 읽기 성공
+            else if (task.IsCompleted)
+            {
+                // 스냅샷에 데이터 저장
+                snapshot = task.Result;
+                Debug.Log($"{path} 데이터 레코드 갯수 : {snapshot.ChildrenCount}");
+                // Callback 함수 실행
+                action(snapshot);
+            }
+        });
+    }
+
+    
 
     /// <summary>
     /// 
@@ -280,7 +318,7 @@ public class Database
 
     private void ReadTest()
     {
-        Read(userDB.Child("characterData"), LogRead);
+        Load(userDB.Child("characterData"), LogRead);
     }
 
 

@@ -127,6 +127,18 @@ public class CharacterAI : CharacterBase
 
             if(targets != null && targets.Count > 0 && mana - skillCost >= 0)
             {
+                foreach (OverlayTile tile in skillScale)
+                {
+                    tile.ShowAsScale();
+                }
+
+                yield return delay;
+
+                foreach (OverlayTile tile in skillScale)
+                {
+                    tile.HideTile();
+                }
+
                 UseSkill();
                 mana -= skillCost;
             }
@@ -305,6 +317,17 @@ public class CharacterAI : CharacterBase
             attractTarget = nearsetCharacter;
             ChangeState(EnemyState.Chasing);// 추격 상태로 전환
         }
+        else
+        {
+            if (waiting)
+            {
+                Wait?.Invoke();
+
+                AnimationController.instance.onAnimationEnd -= EndActing;
+            }
+
+            waiting = true;
+        }
     }
 
     private void Waiting()// 대기 행동
@@ -440,7 +463,7 @@ public class CharacterAI : CharacterBase
 
         foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, 5, false))// 5칸 이내의 아군을 찾음
         {
-            if (tile.curStandingCharater != null && !tile.curStandingCharater.CheckEnenmy(this))
+            if (tile.curStandingCharater != null && !tile.curStandingCharater.CheckEnemy(this))
             {
                 characterInRange.Add((CharacterAI)tile.curStandingCharater);
             }
@@ -525,7 +548,7 @@ public class CharacterAI : CharacterBase
 
         foreach (CharacterBase character in charactersInRange)
         {
-            if (!character.CheckEnenmy(this))// 아군 캐릭터면 스킵
+            if (!character.CheckEnemy(this))// 아군 캐릭터면 스킵
             {
                 continue;
             }
@@ -550,7 +573,7 @@ public class CharacterAI : CharacterBase
         {
             foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, leftWalkRange, true))
             {
-                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
+                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnemy(this))
                 {
                     characterInRange.Add(tile.curStandingCharater);
                 }
@@ -560,7 +583,7 @@ public class CharacterAI : CharacterBase
         {
             foreach (OverlayTile tile in rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, character.SO.range, false))
             {
-                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnenmy(this))
+                if (tile.curStandingCharater != null && tile.curStandingCharater.CheckEnemy(this))
                 {
                     characterInRange.Add(tile.curStandingCharater);
                 }
@@ -667,6 +690,8 @@ public class CharacterAI : CharacterBase
     {
         int leftWalk = leftWalkRange + 1;
 
+        int outRange = 1;
+
         List<OverlayTile> kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range, false);// 목표 대상으로 부터 공격 사거리가 닿는 부분
         List<OverlayTile> range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - 1, false);
 
@@ -674,13 +699,39 @@ public class CharacterAI : CharacterBase
 
         kiteRange = kiteRange.FindAll(x => x.canClick);// 이동 가능한 타일 선택
 
+        while(kiteRange.Count == 0)// 끝사거리가 이동 가능한 타일이 없다면
+        {
+            kiteRange = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - outRange, false);// 범위를 줄여가며 탐색
+            range = rangeFinder.GetTilesInRange(attractTarget.curStandingTile.grid2DLocation, character.SO.range - outRange - 1, false);
+
+            kiteRange = kiteRange.Except(range).ToList();// 끝 사거리만 가져옴
+
+            kiteRange = kiteRange.FindAll(x => x.canClick);// 이동 가능한 타일 선택
+
+            outRange++;
+            if(character.SO.range - outRange <= 0)
+            {
+                break;
+            }
+        }
+
+        if(kiteRange.Count == 0)//그래도 없다면
+        {
+            return new List<OverlayTile>(); // 움직이지 않도록 설정
+        }
+
         OverlayTile nearestTile = FindNearestTile(kiteRange, curStandingTile);// 그 중에서 가장 가까운 타일 찾기
 
-        while(nearestTile.curStandingCharater != null)
+        while(nearestTile != null && nearestTile.curStandingCharater != null)
         {
             kiteRange.Remove(nearestTile);
 
             nearestTile = FindNearestTile(kiteRange, curStandingTile);
+        }
+
+        if(nearestTile == null)
+        {
+            return new List<OverlayTile>();
         }
 
         List<OverlayTile> list = pathFinder.FindPath(curStandingTile, nearestTile);
@@ -749,6 +800,8 @@ public class CharacterAI : CharacterBase
         List<OverlayTile> range = new List<OverlayTile>();
         List<CharacterBase> list = new List<CharacterBase>();
 
+        OverlayTile bestTile = null;
+
         range = rangeFinder.GetTilesInRange(curStandingTile.grid2DLocation, curCharacterSkill.skillData.skillRange, false);
 
         foreach(OverlayTile tile in range)
@@ -760,9 +813,16 @@ public class CharacterAI : CharacterBase
             {
                 bestList = list;
                 max = bestList.Count;
+                bestTile = tile;
             }
+        }
+
+        if (bestTile != null)
+        {
+            GetSkillScaleTile(bestTile.grid2DLocation, curCharacterSkill.skillData.skillScale);
         }
 
         return bestList;
     }
+
 }

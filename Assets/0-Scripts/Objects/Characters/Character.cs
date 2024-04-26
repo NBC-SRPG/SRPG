@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 public class Character
 {
     public CharacterSO SO;
@@ -86,9 +87,9 @@ public class Character
         if (Growth.superiorClass !=-1)
         {
             Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
-        {
-            superiorClass = (ClassSO)result;
-        });
+            {
+                superiorClass = (ClassSO)result;
+            });
         }
 
         // 장비 초기화
@@ -103,6 +104,7 @@ public class Character
         Growth.OnLevelUp += CalculateStat;
         Growth.OnAbilityT2Changed += LoadAbilityT2;
         Growth.OnAbilityT3Changed += LoadAbilityT3;
+        Growth.OnSuperiorClassChanged += LoadSuperiorClass;
         Growth.OnWeaponChanged += LoadWeapon;
         Growth.OnArmorChanged += LoadArmor;
     }
@@ -179,6 +181,17 @@ public class Character
         }
     }
 
+    private void LoadSuperiorClass()
+    {
+        if (Growth.superiorClass != -1)
+        {
+            Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
+            {
+                superiorClass = (ClassSO)result;
+            });
+        }
+    }
+
     private void LoadWeapon()
     {
         Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
@@ -204,5 +217,13 @@ public class Character
         int previewDef = SO.def + SO.defPerLv * Growth.level + newWeapon.def + newArmor.def;
 
         return (previewHp, previewAtk, previewDef);
+    }
+
+    public Sprite GetElementSprite()
+    {
+        string elementName = "Element_" + SO.elementType.ToString();
+        Sprite elementSprite = Managers.Resource.Load<Sprite>(elementName);
+
+        return elementSprite;
     }
 }

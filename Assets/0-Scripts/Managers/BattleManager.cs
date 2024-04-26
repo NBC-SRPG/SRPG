@@ -9,6 +9,8 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 using GooglePlayGames.BasicApi;
 using static Constants;
 using static BattleKeyWords;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEditor.Experimental.GraphView;
 
 public class BattleManager : MonoBehaviour
 {
@@ -37,6 +39,8 @@ public class BattleManager : MonoBehaviour
 
     public StageSO stage;
 
+    public bool[] extraClear;
+
     private void Awake()
     {
         if (Instance == null)
@@ -48,11 +52,13 @@ public class BattleManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        Init();
-
         stage = Managers.GameManager.thisStage;
 
+        Init();
+
         Managers.Resource.Instantiate("Map/" + stage.prefabsName);
+
+        extraClear = new bool[3];
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -68,6 +74,11 @@ public class BattleManager : MonoBehaviour
 
         Managers.UI.ShowUI<BattleUI>();
         Ui = Managers.UI.FindUI<BattleUI>();
+
+        if (stage.isTutorial)
+        {
+            Managers.Resource.Instantiate("UI/BattleTutorial");
+        }
     }
 
     //플레이어가 준비되었는지 확인
@@ -182,11 +193,7 @@ public class BattleManager : MonoBehaviour
 
         float damage = attacker.Attack - totalDefend;// 방어력 계산
 
-        Debug.Log("damage1 " + damage);
-
         damage = damage * attacker.EnhanceDMG * victim.ReduceDMG;// 데미지 증감 계산
-
-        Debug.Log("damage2 " + damage);
 
         if (CheckCrit(attacker.CritRate))// 치명타 계산
         {
@@ -196,8 +203,6 @@ public class BattleManager : MonoBehaviour
 
         damagest.attributeDamage = ExtraDmgbyAttribute(attacker.character.SO.elementType, victim.character.SO.elementType);
         damage = (damage * damagest.attributeDamage);
-        Debug.Log("extra " + damagest.attributeDamage);
-        Debug.Log("damage3 " + damage);
 
         if (damage < 0)
         {
@@ -248,15 +253,20 @@ public class BattleManager : MonoBehaviour
     private Damage CheckSkillHealDamage(CharacterBase skillUser, int figure)
     {
         Damage damagest = new Damage();
+        float damage = figure;
 
-        int damage = figure;
+        if (CheckCrit(skillUser.CritRate))// 치명타 계산
+        {
+            damagest.isCriticalHit = true;
+            damage = damage * skillUser.CritDMG;
+        }
 
         if (damage < 0)
         {
             damage = 0;
         }
 
-        damagest.damage = damage;
+        damagest.damage = (int)damage;
         damagest.attackType = BattleKeyWords.AttackDamageType.Skill;
 
         return damagest;
@@ -377,7 +387,7 @@ public class BattleManager : MonoBehaviour
     // 서버에 올라가면 어떻게 될지 모르겠음
     public void OnPassCharacter(CharacterBase curCharacter, CharacterBase standingCharacter)
     {
-        if (!curCharacter.CheckEnenmy(standingCharacter))// 아군 위를 지나갔을 때
+        if (!curCharacter.CheckEnemy(standingCharacter))// 아군 위를 지나갔을 때
         {
             curCharacter.OnPassAlly(standingCharacter);
             standingCharacter.OnAllyPassedMe(curCharacter);
@@ -526,12 +536,12 @@ public class BattleManager : MonoBehaviour
     }
 
     public void ExtraSkillAttack(CharacterBase skillUser, int figure, List<CharacterBase> target, 
-        AttackDamageType attackType = AttackDamageType.Skill, ElementType elmentType = ElementType.None,
-        string anim = null, bool isCrit = false)// 기타 스킬(추가타 등)
+        AttackDamageType attackType = AttackDamageType.Extra, ElementType elmentType = ElementType.None,
+        string anim = null, bool needSetting = false, bool isCrit = false)// 기타 스킬(추가타 등)
     {
         if(anim != null)
         {
-            AnimationController.instance.EnqueueExtraAnimation(skillUser, target, anim);
+            AnimationController.instance.EnqueueExtraAnimation(skillUser, target, anim, needSetting);
         }
 
         foreach (CharacterBase victim in target)
@@ -692,6 +702,7 @@ public class BattleManager : MonoBehaviour
 
     public void CheckWin(CharacterBase dieChracter = null, OverlayTile location = null)
     {
+        CheckExtraGoal();
         PVEWin(dieChracter, location);
     }
 
@@ -748,11 +759,71 @@ public class BattleManager : MonoBehaviour
 
     }
 
+    public void CheckExtraGoal()
+    {
+        int index = 0;
+        foreach(ExtraGoalDetail extra in stage.extraGoal)
+        {
+            switch(extra.type)
+            {
+                case ExtraGoal.Clear:
+                    extraClear[index] = CheckClear();
+                    break;
+                case ExtraGoal.InnerTurn:
+                    extraClear[index] = CheckInnerTurn(extra.value);
+                    break;
+                case ExtraGoal.KillOver:
+                    extraClear[index] = CheckKillOver(extra.value);
+                    break;
+                case ExtraGoal.KillSomeone:
+                    extraClear[index] = CheckKillSomeone(extra.value);
+                    break;
+                case ExtraGoal.NoDie:
+                    extraClear[index] = CheckAllAlive();
+                    break;
+                case ExtraGoal.Empty:
+                    extraClear[index] = true;
+                    break;
+            }
+
+            index++;
+        }
+    }
+
     private void EndGame(string player)
     {
         Lose?.Invoke(player);
         gameEnd = true;
+
+        CheckExtraGoal();
+        if (Managers.GameManager.player.isWin)
+        {
+            UpdateClearData();
+            Ui.ShowWin();
+        }
+        else
+        {
+            Ui.ShowLose();
+        }
     }
+
+    private void UpdateClearData()
+    {
+        if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
+        {
+            int clearStar = 0;
+            foreach (bool t in extraClear)
+            {
+                if (t)
+                {
+                    clearStar++;
+                }
+            }
+
+            Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+        }
+    }
+
 
 
     public void SpawnCharacters(List<CharacterBase> characterList, GamePlayer player)
@@ -808,7 +879,7 @@ public class BattleManager : MonoBehaviour
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
-    //조건 판단 함수
+    //승리 조건 판단 함수
 
     public void GiveUpStage()
     {
@@ -903,5 +974,79 @@ public class BattleManager : MonoBehaviour
         {
             EndGame("enemy");
         }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //부가 목표 조건 판단 함수
+
+    public bool CheckClear()
+    {
+        if (Managers.GameManager.player.isWin)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckInnerTurn(int value)
+    {
+        if(nowRound <= value)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckKillOver(int value)
+    {
+        int numbers = 0;
+        foreach (CharacterBase character in charactersAsTeam["enemy"])
+        {
+            if (character.isDead)
+            {
+                numbers++;
+            }
+        }
+
+        if(numbers >= value)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckKillSomeone(int value)
+    {
+        foreach (CharacterBase character in charactersAsTeam["enemy"])
+        {
+            if (character.character == stage.GetTargetByInt(value) && character.isDead)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool CheckAllAlive()
+    {
+        foreach (CharacterBase character in charactersAsTeam[Managers.GameManager.player.playerId])
+        {
+            if (character.isDead)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

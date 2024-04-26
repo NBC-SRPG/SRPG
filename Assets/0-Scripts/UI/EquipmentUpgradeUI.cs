@@ -146,8 +146,8 @@ public class EquipmentUpgradeUI : UIBase
 
     private void SetImageValues()
     {
-        // TODO
-        // 이미지 초기화
+        GetImage((int)Images.EquipmentBeforeImage).sprite = currentEquip.sprite;
+        GetImage((int)Images.EquipmentAfterImage).sprite = nextEquip.sprite;
     }
 
     private void UpdateMaterialList()
@@ -245,6 +245,7 @@ public class EquipmentUpgradeUI : UIBase
         if (ui != null)
         {
             ui.UpdateStat();
+            ui.UpdateEquipImage();
         }
         Managers.UI.CloseUI(this);
     }

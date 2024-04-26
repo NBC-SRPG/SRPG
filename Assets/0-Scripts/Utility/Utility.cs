@@ -66,7 +66,7 @@ public static class Utility
     public static void Stage2SO<T>(string id, Callback<ScriptableObject> callback) where T : ScriptableObject
     {
         // 어드레서블 경로
-        string path = "Stage/Stage" + "_" + id + ".asset";
+        string path = "StageSO/Stage" + "_" + id + ".asset";
 
         var op = Addressables.LoadAssetAsync<T>(path);
         op.Completed += (handler) =>

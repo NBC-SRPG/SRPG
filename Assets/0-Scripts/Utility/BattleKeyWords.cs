@@ -45,16 +45,20 @@ public class BattleKeyWords
         Bleed,
         AtkIncrease,
         DefIncrease,
+        DefReduce,
         Quikness,
         Bind,
         Stun,
-        ReversalHeal,
-
         AtkAura,
         Herald,
-
         ReceivedDgmReduce,
         ReceivedDgmIncrease,
+        CrtRateIncrease,
+        HealReversal,
+        Corrosion,
+        TargetMarker,
+        AmethystShield,
+        Shield,
 
     }
 }

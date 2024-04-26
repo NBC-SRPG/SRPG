@@ -12,9 +12,9 @@ public class CharacterBuf_Herald : CharacterBuf
 
     ShieldStat shield;
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
 
         shield = new ShieldStat();
     }
@@ -48,7 +48,7 @@ public class CharacterBuf_Herald : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
 
         turnCnt++;

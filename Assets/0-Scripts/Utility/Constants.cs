@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Constants
+public static class Constants
 {
-
-    public static Dictionary<int, int> characterExpTable = new Dictionary<int, int>();
+    public static Dictionary<string, Dictionary<int, int>> dataTables = new();
 
     public enum Sound
     {
@@ -67,15 +66,6 @@ public class Constants
         AllExceptME //피아 미식별 대신 자신은 제외
     }
 
-
-    public enum PlayerCons
-    {
-        DefaltLevel = 100,
-        DefaltMaxExp = 100,
-        MaxLevel = 90,
-        DefaltMaxAp = 160
-    }
-    
 
 
     public enum UIEvent
@@ -229,6 +219,10 @@ public class Constants
         GrowthFarming
     }
 
+    public static int presetIndex = 0;
+
+    public const int DEFAULT_AP = 20;
+    public const int MAX_LEVEL = 90;
     public const int MaxDiamond = 999999;
     public const int MaxGold = 999999;
 
@@ -245,6 +239,8 @@ public class Constants
     public const int AbilityTier2UnlockLevel = 50;
     public const int AbilityTier3UnlockLevel = 70;
 
+    public const int GachaPoint = 100;
+
     [System.Serializable]
     public struct Dialog
     {
@@ -253,4 +249,23 @@ public class Constants
         [TextArea(3, 5)]
         public string dialog;
     }
+
+    public enum ExtraGoal
+    {
+        Clear,
+        InnerTurn,
+        KillOver,
+        KillSomeone,
+        NoDie,
+        Empty
+    }
+
+    [System.Serializable]
+    public struct ExtraGoalDetail
+    {
+        public ExtraGoal type;
+        public int value;
+    }
+
+
 }

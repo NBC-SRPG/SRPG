@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
+
 public class UIManager
 {
     private int order = -20;
@@ -43,6 +41,12 @@ public class UIManager
     // UI 동적 생성
     public T ShowUI<T>(string name = null, Transform parent = null) where T : UIBase
     {
+        T peekUi = PeekUI<T>();
+        if (peekUi != null)
+        {
+            return peekUi; // 이미 활성화된 UI가 있으면 그것을 반환
+        }
+
         // 이름이 없다면 타입을 이름으로 사용
         if (string.IsNullOrEmpty(name))
         {
@@ -108,6 +112,14 @@ public class UIManager
         // UI 스택에서 Pop & Destroy
         UIBase destroyUi = uiStack.Pop();
         Object.Destroy(destroyUi.gameObject);
+
+        Canvas canvas = closeUi.GetComponent<Canvas>();
+
+        // SetCanvas가 된 UI를 닫을 때는 order 되돌리기
+        if (canvas.sortingOrder < 0)
+        {
+            order--;
+        }
     }
     // Main + Common UI만 남기고 닫기
     public void ReturnMainUI()
@@ -119,5 +131,11 @@ public class UIManager
             UIBase ui = uiStack.Pop();
             Object.Destroy(ui.gameObject);
         }
+        order = -20;
+    }
+
+    public void InitSortOrder()
+    {
+        order = -20;
     }
 }

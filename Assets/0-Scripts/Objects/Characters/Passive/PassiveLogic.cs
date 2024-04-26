@@ -14,6 +14,11 @@ public class PassiveLogic
         this.character = character;
     }
 
+    public virtual void OnStageStart()
+    {
+
+    }
+
     public virtual void OnRoundStart()// 
     {
 

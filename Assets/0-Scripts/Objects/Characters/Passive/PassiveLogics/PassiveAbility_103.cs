@@ -19,14 +19,14 @@ public class PassiveAbility_103 : PassiveLogic
     {
         if (character.character.abilityT3 != null && character.character.abilityT3.id == coefficient["abilityId_T3"]) //현재 331번 특성 "불타버려!!"가 적용 중일 경우, 확정으로 화상을 부여한다.
         {
-            enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2); //2턴 동안 화상 상태이상 적용
+            enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
         } 
         else
         {
-            int randomValue = UnityEngine.Random.Range(0, 2); // 0 또는 1 반환
-            if (randomValue == 0) // 1/2 확률로 실행
+            int randomValue = UnityEngine.Random.Range(coefficient["probabilityConstant3"], coefficient["probabilityConstant2"]); // 0 ~ 2 반환
+            if (randomValue == coefficient["probabilityConstant1"]) // 1/2 확률로 실행
             {
-                enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2); //2턴 동안 화상 상태이상 적용
+                enemy.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
             }
         }
     }
@@ -36,14 +36,14 @@ public class PassiveAbility_103 : PassiveLogic
     {
         if (character.character.abilityT3 != null && character.character.abilityT3.id == coefficient["abilityId_T3"]) //현재 331번 특성 "불타버려!!"가 적용 중일 경우, 확정으로 화상을 부여한다.
         {
-            target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2); //2턴 동안 화상 상태이상 적용
+            target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
         }
         else
         {
-            int randomValue = UnityEngine.Random.Range(0, 2); // 0 또는 1 반환
-            if (randomValue == 0) // 1/2 확률로 실행
+            int randomValue = UnityEngine.Random.Range(coefficient["probabilityConstant3"], coefficient["probabilityConstant2"]); // 0 ~ 2 반환
+            if (randomValue == coefficient["probabilityConstant1"]) // 1/2 확률로 실행
             {
-                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, 2); //2턴 동안 화상 상태이상 적용
+                target.curCharacterBufList.AddBuf(BattleKeyWords.BufKeyword.Burn, coefficient["debufDuration"], character); //2턴 동안 화상 상태이상 적용
             }
         }
     }

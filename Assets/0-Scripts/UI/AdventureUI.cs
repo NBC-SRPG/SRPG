@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class AdventureUI : UIBase
 {
@@ -35,16 +34,14 @@ public class AdventureUI : UIBase
     private void OnClickSpecialButtonButton()
     {
         Debug.Log("OnClickSpecialButtonButton");
+
+        Managers.UI.ShowUI<SpecialUI>();
     }
     private void OnClickMainStoryButton()
     {
         Debug.Log("OnClickMainStoryButton");
 
         Managers.UI.ShowUI<MainStoryUI>();
-        //----------------------------------------------
-        //임시로 테스트씬으로 넘기기
-        // SceneManager.LoadScene("SCY_AITest");
-        //----------------------------------------------
     }
     private void OnClickBackButton()
     {

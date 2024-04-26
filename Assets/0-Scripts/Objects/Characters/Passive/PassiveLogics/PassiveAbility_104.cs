@@ -25,7 +25,7 @@ public class PassiveAbility_104 : PassiveLogic
     public override void OnTurnEnd()
     {
         // 힐량 = 최대 체력 * 10% ( 10 / 100 )
-        int healAmount = (int)((character.health.MaxHealth) * (coefficient["healRate"] / coefficient["denominator"]));
+        int healAmount = (int)((character.health.TotalHealth) * ((float)(coefficient["healRate"]) / coefficient["denominator"]));
 
         // 타일 범위 내의 캐릭터들을 모두 수집하여 리스트를 업데이트
         UpdateCharactersInRangeList();
@@ -39,9 +39,9 @@ public class PassiveAbility_104 : PassiveLogic
     {
         charactersInRange.Clear(); // 리스트를 비우고 다시 채움
 
-        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(character)))
+        foreach (OverlayTile tile in character.rangeFinder.GetTilesInRange(character.curStandingTile.grid2DLocation, coefficient["range"], false).FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(character)))
         {
-            if (tile.curStandingCharater != null && tile.curStandingCharater != character) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
+            if (tile.curStandingCharater != null && tile.curStandingCharater != character && !character.CheckEnemy(tile.curStandingCharater)) // 자기 자신은 대상에서 제외하고, 범위 내의 적을 제외한 모든 캐릭터 베이스를 리스트에 저장
             {
                 charactersInRange.Add(tile.curStandingCharater);
             }
@@ -55,12 +55,18 @@ public class PassiveAbility_104 : PassiveLogic
         charactersInRange.Sort((a, b) => a.health.CurHealth.CompareTo(b.health.CurHealth));
 
         // 가장 체력이 적은 캐릭터와 두 번째로 체력이 적은 캐릭터를 치유 대상 목록에 추가
-        if (charactersInRange.Count > 0)
+        if (charactersInRange.Count > coefficient["count1"])
         {
-            targetsToHeal.Add(charactersInRange[0]); // 가장 체력이 적은 캐릭터
-            if (charactersInRange.Count > 1)
+            if (charactersInRange[coefficient["count1"]].health.CurHealth < charactersInRange[coefficient["count1"]].health.TotalHealth)
             {
-                targetsToHeal.Add(charactersInRange[1]); // 두 번째로 체력이 적은 캐릭터
+                targetsToHeal.Add(charactersInRange[coefficient["count1"]]); // 가장 체력이 적은 캐릭터
+                if (charactersInRange.Count > coefficient["count2"])
+                {
+                    if (charactersInRange[coefficient["count2"]].health.CurHealth < charactersInRange[coefficient["count2"]].health.TotalHealth)
+                    {
+                        targetsToHeal.Add(charactersInRange[coefficient["count2"]]); // 두 번째로 체력이 적은 캐릭터
+                    }
+                }
             }
         }
 
@@ -68,9 +74,9 @@ public class PassiveAbility_104 : PassiveLogic
         if (targetsToHeal.Count > 0)
         {
             // 치유 대상 목록에 저장된 캐릭터들에게 치유를 시도
-            foreach (CharacterBase character in targetsToHeal)
+            foreach (CharacterBase target in targetsToHeal)
             {
-                BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
+                    BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
             }
         }
 

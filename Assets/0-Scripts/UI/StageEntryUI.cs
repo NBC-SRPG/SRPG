@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class StageEntryUI : UIBase
 {
@@ -14,7 +13,8 @@ public class StageEntryUI : UIBase
 
     private enum Buttons
     {
-        StageClearButton
+        StageClearButton,
+        StageTitleText
     }
 
     private enum GameObjects
@@ -33,20 +33,21 @@ public class StageEntryUI : UIBase
             stageSO = (StageSO)retulst;
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
+            GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
+
+            InitStar(stageSO.stageNumber);
+
+            if (numberOfStars != 3)
+            {
+                GetButton((int)Buttons.StageClearButton).gameObject.SetActive(false);
+            }
+            else
+            {
+                GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
+            }
         });
 
-        InitStar(stage);
-
         GetText((int)Texts.StageNumText).text = stage;
-
-        if (numberOfStars != 3)
-        {
-            GetButton((int)Buttons.StageClearButton).gameObject.SetActive(false);
-        }
-        else
-        {
-            GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
-        }
     }
 
     private void InitStar(string stage)
@@ -73,9 +74,18 @@ public class StageEntryUI : UIBase
             rt.sizeDelta = new Vector2(40f, 40f);
         }
     }
+    
+    private void OnClickStageTitle(StageSO stage)
+    {
+        StageInfoUI ui = Managers.UI.ShowUI<StageInfoUI>();
+        ui.Init(stage);
+    }
 
     private void OnClickStageClearButton()
     {
         Debug.Log("OnClickStageClearButton");
+
+        // TODO
+        // 스테이지 소탕 기능 추가
     }
 }

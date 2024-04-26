@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -44,7 +45,11 @@ public class LevelUpUI : UIBase
         HpAfter,
         AtkAfter,
         DefAfter,
-        LevelUpGoldText
+        LevelUpGoldText,
+        MaxLevelBefore,
+        MaxLevelAfter,
+        AwakeningPieceQuantity,
+        AwakeningGoldText,
     }
 
     private enum Images
@@ -54,7 +59,8 @@ public class LevelUpUI : UIBase
         LevelUpItemImage_1,
         LevelUpItemImage_2,
         LevelUpItemImage_3,
-        LevelUpItemImage_4
+        LevelUpItemImage_4,
+        AwakeningPieceImage
     }
 
     private enum Buttons
@@ -64,12 +70,17 @@ public class LevelUpUI : UIBase
         LevelUpItemButton_2,
         LevelUpItemButton_3,
         LevelUpItemButton_4,
-        LevelUpButton
+        LevelUpButton,
+        LevelUpTab,
+        AwakeningTab,
+        AwakeningButton
     }
 
     private enum GameObjects
     {
-
+        LevelUp,
+        Awakening,
+        AwakeningLimitText
     }
 
     public void Init(Character character)
@@ -110,6 +121,11 @@ public class LevelUpUI : UIBase
         GetText((int)Texts.AtkAfter).gameObject.SetActive(false);
         GetText((int)Texts.DefAfter).gameObject.SetActive(false);
 
+        GetButton((int)Buttons.LevelUpTab).onClick.AddListener(OnClickLevelUpTab);
+        GetButton((int)Buttons.AwakeningTab).onClick.AddListener(OnClickAwakeningTab);
+        GetObject((int)GameObjects.Awakening).SetActive(false);
+        GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(false);
+
         GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
         GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
         GetButton((int)Buttons.LevelUpItemButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2));
@@ -120,6 +136,19 @@ public class LevelUpUI : UIBase
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
         LevelUpCalc();
         LevelUpButtonActiveFalse();
+
+        AwakeningCalc();
+    }
+
+    private void OnClickLevelUpTab()
+    {
+        GetObject((int)GameObjects.LevelUp).SetActive(true);
+        GetObject((int)GameObjects.Awakening).SetActive(false);
+    }
+    private void OnClickAwakeningTab()
+    {
+        GetObject((int)GameObjects.LevelUp).SetActive(false);
+        GetObject((int)GameObjects.Awakening).SetActive(true);
     }
 
     private void OnClickLevelUpUICloseButton()
@@ -233,6 +262,116 @@ public class LevelUpUI : UIBase
             }
         }
     }
+
+    private void AwakeningCalc()
+    {
+        AwakeningButtonActiveTrue();
+        int nowStar =  character.Growth.star;
+        int nowLimit = character.Growth.limitBreak;
+        int maxLevel = character.Growth.GetMaxLevel();
+
+        // 풀돌일 때, 텍스트 출력
+        if (nowStar+nowLimit == 9)
+        {
+            GetObject((int)GameObjects.Awakening).SetActive(false);
+            GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(true);
+        }
+
+        GetText((int)Texts.MaxLevelBefore).text = maxLevel.ToString();
+        GetText((int)Texts.MaxLevelAfter).text = (nowStar == 5 ? maxLevel+5 : maxLevel+10).ToString();
+
+        // TODO: 성급별 변경점 
+        // GetText((int)Texts.AwakeningChangeText).text = "70레벨에 특성 개방";
+
+        // TODO: 성급별 별, 한계돌파 이미지 변경
+
+        Utility.Id2SO<ItemSO>(character.SO.id, (result) =>
+        {
+            GetImage((int)Images.AwakeningPieceImage).sprite = (result as ItemSO).icon;
+        });
+        int[] costs = GetCost(nowStar+nowLimit);
+
+        GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+        GetText((int)Texts.AwakeningGoldText).text = costs[1].ToString();
+
+        if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
+        {
+            AwakeningButtonActiveFalse();
+        }
+    }
+
+    private void OnClickAwakeningButton()
+    {
+        int[] costs = GetCost(character.Growth.star + character.Growth.limitBreak);
+        Managers.AccountData.ConsumeItems(character.SO.id, costs[0]);
+        Managers.AccountData.playerData.ReduceGold(costs[1]);
+        Managers.AccountData.characterData[character.SO.id].Growth.Awake();
+        AwakeningCalc();
+    }
+
+    private int[] GetCost(int Awakening)
+    {
+        int[] costs = { 0, 0 };
+        switch(Awakening)
+        {
+            case 1:
+                costs[0] = 30;
+                costs[1] = 10000;
+                break;
+            case 2:
+                costs[0] = 80;
+                costs[1] = 40000;
+                break;
+            case 3:
+                costs[0] = 100;
+                costs[1] = 200000;
+                break;
+            case 4:
+                costs[0] = 120;
+                costs[1] = 1000000;
+                break;
+            case 5:
+                costs[0] = 100;
+                costs[1] = 1500000;
+                break;
+            case 6:
+                costs[0] = 100;
+                costs[1] = 1500000;
+                break;
+            case 7:
+                costs[0] = 100;
+                costs[1] = 1500000;
+                break;
+            case 8:
+                costs[0] = 100;
+                costs[1] = 1500000;
+                break;
+            default:
+                costs[0] = 0;
+                costs[1] = 0;
+                break;
+        }
+        return costs;
+    }
+
+    private void AwakeningButtonActiveFalse()
+    {
+        GetButton((int)Buttons.AwakeningButton).onClick.RemoveAllListeners();
+        GetButton((int)Buttons.AwakeningButton).enabled = false;
+        Color newColor = GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color;
+        newColor.a = 0.5f;
+        GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color = newColor;
+    }
+    private void AwakeningButtonActiveTrue()
+    {
+        GetButton((int)Buttons.AwakeningButton).onClick.RemoveAllListeners();
+        GetButton((int)Buttons.AwakeningButton).onClick.AddListener(OnClickAwakeningButton);
+        GetButton((int)Buttons.AwakeningButton).enabled = true;
+        Color newColor = GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color;
+        newColor.a = 1f;
+        GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color = newColor;
+    }
+
     // 0.02초마다 아이템 1개씩 추가
     private IEnumerator LevelUpItem(int itemNum)
     {
@@ -394,10 +533,6 @@ public class LevelUpUI : UIBase
         Managers.AccountData.ConsumeItems(LevelUpItem2Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text));
         Managers.AccountData.ConsumeItems(LevelUpItem3Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text));
         Managers.AccountData.ConsumeItems(LevelUpItem4Id, int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text));
-        //Managers.AccountData.inventory[LevelUpItem1Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
-        //Managers.AccountData.inventory[LevelUpItem2Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
-        //Managers.AccountData.inventory[LevelUpItem3Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
-        //Managers.AccountData.inventory[LevelUpItem4Id] -= int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
 
         GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.inventory[LevelUpItem1Id]}";
         GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";
