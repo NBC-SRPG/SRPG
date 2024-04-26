@@ -30,7 +30,8 @@ public class CharacterInfoUI : UIBase
         LevelText,
         ExpText,
         ClassNameText,
-        ClassDescriptionText
+        ClassDescriptionText,
+        MovText
     }
     private enum Buttons
     {
@@ -87,7 +88,12 @@ public class CharacterInfoUI : UIBase
         SkillTab,
         AbilityTab,
         ClassTab,
-        Star
+        Star,
+        LimitBreak,
+        Limit_1,
+        Limit_2,
+        Limit_3,
+        Limit_4
     }
 
     private void OnDestroy()
@@ -137,6 +143,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.LevelUpButton).onClick.AddListener(OnClickLevelUpButton);
 
         character.Growth.OnLevelUp += UpdateStat;
+        character.Growth.OnAwake += UpdateStat;
     }
 
     private void OnClickLevelUpButton()
@@ -280,7 +287,9 @@ public class CharacterInfoUI : UIBase
             if (character.Growth.superiorClass == 0)
             {
                 GetImage((int)Images.ClassPath2_1).color = Color.red;
+                GetImage((int)Images.ClassPath2_10).color = Color.red;
                 GetImage((int)Images.ClassPath2_2).color = Color.black;
+                GetImage((int)Images.ClassPath2_20).color = Color.black;
 
                 GetImage((int)Images.Class2_1Image).transform.parent.GetComponent<Outline>().enabled = true;
                 GetImage((int)Images.Class2_2Image).transform.parent.GetComponent<Outline>().enabled = false;
@@ -289,7 +298,9 @@ public class CharacterInfoUI : UIBase
             else
             {
                 GetImage((int)Images.ClassPath2_1).color = Color.black;
+                GetImage((int)Images.ClassPath2_10).color = Color.black;
                 GetImage((int)Images.ClassPath2_2).color = Color.red;
+                GetImage((int)Images.ClassPath2_20).color = Color.red;
 
                 GetImage((int)Images.Class2_1Image).transform.parent.GetComponent<Outline>().enabled = false;
                 GetImage((int)Images.Class2_2Image).transform.parent.GetComponent<Outline>().enabled = true;
@@ -307,13 +318,16 @@ public class CharacterInfoUI : UIBase
 
     public void UpdateStat()
     {
+        UpdateLimit();
         GetText((int)Texts.LevelText).text = $"Lv. {character.Growth.level} / {character.Growth.GetMaxLevel()}";
         GetText((int)Texts.ExpText).text = $"{character.Growth.curExp} / {character.Growth.maxExp}";
         GetImage((int)Images.ExpFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
+        
 
         GetText((int)Texts.HpText).text = $"{character.hp}";
         GetText((int)Texts.AtkText).text = $"{character.atk}";
         GetText((int)Texts.DefText).text = $"{character.def}";
+        GetText((int)Texts.MovText).text = $"{character.mov}";
 
         int numberOfStars = character.Growth.star; // 별의 개수
         float starWidth = 100f; // 별 이미지의 너비
@@ -336,6 +350,40 @@ public class CharacterInfoUI : UIBase
             GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.Star).transform);
             RectTransform rt = star.GetComponent<RectTransform>();
             rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+    }
+
+    private void UpdateLimit()
+    {
+        GetObject((int)GameObjects.LimitBreak).SetActive(true);
+        GetObject((int)GameObjects.Limit_1).SetActive(true);
+        GetObject((int)GameObjects.Limit_2).SetActive(true);
+        GetObject((int)GameObjects.Limit_3).SetActive(true);
+        GetObject((int)GameObjects.Limit_4).SetActive(true);
+
+        if (character.Growth.star != 5)
+        {
+            GetObject((int)GameObjects.LimitBreak).SetActive(false);
+        }
+        else
+        {
+            switch (character.Growth.limitBreak)
+            {
+                case 0:
+                    GetObject((int)GameObjects.Limit_1).SetActive(false);
+                    break;
+                case 1:
+                    GetObject((int)GameObjects.Limit_2).SetActive(false);
+                    break;
+                case 2:
+                    GetObject((int)GameObjects.Limit_3).SetActive(false);
+                    break;
+                case 3:
+                    GetObject((int)GameObjects.Limit_4).SetActive(false);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -450,7 +498,7 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnClickAbilityButton");
 
-        //GetText((int)Texts.ClassNameText).text = classSO.className;
+        GetText((int)Texts.ClassNameText).text = classSO.className;
         GetText((int)Texts.ClassDescriptionText).text = classSO.description;
 
         // 1티어 클래스는 항상 선택되어있는 기본 클래스

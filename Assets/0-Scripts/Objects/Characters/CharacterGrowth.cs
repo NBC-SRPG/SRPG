@@ -21,6 +21,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     public int armor;
 
     public event Action OnLevelUp;
+    public event Action OnAwake;
     public event Action OnAbilityT2Changed;
     public event Action OnAbilityT3Changed;
     public event Action OnSuperiorClassChanged;
@@ -161,11 +162,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
             limitBreak++;
         }
 
-        // TODO
-        // 별이 변할 때도 캐릭터 정보의 스탯을 업데이트 해주어야함
-        // OnLevelUp 대신 다른 이름으로 바꾸어야 할 것 같음
-        // or 별이 변할 때는 별과 MAXLevel만 바뀌는 함수를 만들어서 연결
-        OnLevelUp?.Invoke();
+        OnAwake?.Invoke();
         UpdateToDB();
     }
 
