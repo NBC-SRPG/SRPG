@@ -10,6 +10,7 @@ using GooglePlayGames.BasicApi;
 using static Constants;
 using static BattleKeyWords;
 using static UnityEngine.Rendering.DebugUI;
+using UnityEditor.Experimental.GraphView;
 
 public class BattleManager : MonoBehaviour
 {
@@ -252,15 +253,20 @@ public class BattleManager : MonoBehaviour
     private Damage CheckSkillHealDamage(CharacterBase skillUser, int figure)
     {
         Damage damagest = new Damage();
+        float damage = figure;
 
-        int damage = figure;
+        if (CheckCrit(skillUser.CritRate))// 치명타 계산
+        {
+            damagest.isCriticalHit = true;
+            damage = damage * skillUser.CritDMG;
+        }
 
         if (damage < 0)
         {
             damage = 0;
         }
 
-        damagest.damage = damage;
+        damagest.damage = (int)damage;
         damagest.attackType = BattleKeyWords.AttackDamageType.Skill;
 
         return damagest;

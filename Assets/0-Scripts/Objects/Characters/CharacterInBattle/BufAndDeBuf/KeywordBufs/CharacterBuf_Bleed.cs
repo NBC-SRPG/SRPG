@@ -34,10 +34,4 @@ public class CharacterBuf_Bleed : CharacterBuf
         }
     }
 
-    public override void OnTurnEnd() //턴의 끝에 지속 시간이 1 감소한다.
-    {
-        base.OnTurnEnd();
-
-        DecreaseDuration(1);
-    }
 }
