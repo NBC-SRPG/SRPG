@@ -15,7 +15,7 @@ public class Database
     public DatabaseReference reference = null;
     public DatabaseReference userDB = null;
     private string uid;
-    private const int dataCount = 8;
+    private const int dataCount = 7;
     public bool isInited = false;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
@@ -39,40 +39,32 @@ public class Database
         // 데이터베이스의 RootReference를 가리킴
         reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-        reference.Child("UIDs").Child(user.UserId).GetValueAsync().ContinueWithOnMainThread(task => 
+
+        Read(reference.Child("UIDs").Child(user.UserId), (snapshot) =>
         {
-            if  (task.IsFaulted)
+            if (snapshot.Value == null)
             {
-                Debug.LogError("GetValueAsync encountered an error: " + task.Exception);
-                //return;
+                // 신규 계정생성
+                string newUID = reference.Child("users").Push().Key;
+                Write<string>(reference.Child("UIDs").Child(user.UserId), newUID);
+                uid = newUID;
             }
-            // 데이터 읽기 성공
-            else if (task.IsCompleted)
+            else
             {
-                DataSnapshot snapshot = task.Result;
-                if (snapshot.Value == null)
-                {
-                    // 신규 계정생성
-                    string newUID = reference.Child("users").Push().Key;
-                    Write<string>(reference.Child("UIDs").Child(user.UserId), newUID);
-                    uid = newUID;
-                }
-                else
-                {
-                    uid = snapshot.Value.ToString();
-                }
-
-                userDB = reference.Child("users").Child(uid);
-                Debug.Log(userDB.ToString());
-
-                // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
-                userDB.Child("friendData").ValueChanged += FriendDataValueChange;
-                userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
-                isInited = true;
-                DataTableLoad();
+                uid = snapshot.Value.ToString();
             }
+
+            userDB = reference.Child("users").Child(uid);
+            Debug.Log(userDB.ToString());
+
+            // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
+            userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+            userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+            isInited = true;
+            DataTableLoad();
         });
-        
+
+
         //userDB = reference.Child("users").Child(uid);
 
         // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
