@@ -50,7 +50,6 @@ public class LevelUpUI : UIBase
         MaxLevelAfter,
         AwakeningPieceQuantity,
         AwakeningGoldText,
-        AwakeningLimitText
     }
 
     private enum Images
@@ -80,7 +79,8 @@ public class LevelUpUI : UIBase
     private enum GameObjects
     {
         LevelUp,
-        Awakening
+        Awakening,
+        AwakeningLimitText
     }
 
     public void Init(Character character)
@@ -124,7 +124,7 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.LevelUpTab).onClick.AddListener(OnClickLevelUpTab);
         GetButton((int)Buttons.AwakeningTab).onClick.AddListener(OnClickAwakeningTab);
         GetObject((int)GameObjects.Awakening).SetActive(false);
-        GetText((int)Texts.AwakeningLimitText).gameObject.SetActive(false);
+        GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(false);
 
         GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
         GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
@@ -274,7 +274,7 @@ public class LevelUpUI : UIBase
         if (nowStar+nowLimit == 9)
         {
             GetObject((int)GameObjects.Awakening).SetActive(false);
-            GetText((int)Texts.AwakeningLimitText).gameObject.SetActive(true);
+            GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(true);
         }
 
         GetText((int)Texts.MaxLevelBefore).text = maxLevel.ToString();
