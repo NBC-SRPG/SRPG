@@ -112,7 +112,13 @@ public class UIManager
         // UI 스택에서 Pop & Destroy
         UIBase destroyUi = uiStack.Pop();
         Object.Destroy(destroyUi.gameObject);
-        order--;
+
+        Canvas canvas = closeUi.GetComponent<Canvas>();
+
+        if (canvas.sortingOrder < 0)
+        {
+            order--;
+        }
     }
     // Main + Common UI만 남기고 닫기
     public void ReturnMainUI()

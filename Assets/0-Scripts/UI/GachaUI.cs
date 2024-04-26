@@ -271,6 +271,4 @@ public class GachaUI : UIBase
             Debug.Log(i);
         }
     }
-
-
 }

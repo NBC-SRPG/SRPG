@@ -18,7 +18,7 @@ public class CharacterInfoUI : UIBase
     }
     private enum Texts
     {
-        //NameText,
+        NameText,
         ExSkillText,
         ExSkillDescriptionText,
         PassiveSkillText,
@@ -301,7 +301,7 @@ public class CharacterInfoUI : UIBase
     private void InitCharacterInfo()
     {
         GetImage((int)Images.IllustrationImage).sprite = character.SO.standing;
-        //GetText((int)Texts.NameText).text = $"{character.SO.characterName}";
+        GetText((int)Texts.NameText).text = character.SO.characterName;
 
         int numberOfStars = character.Growth.star; // 별의 개수
         float starWidth = 100f; // 별 이미지의 너비
