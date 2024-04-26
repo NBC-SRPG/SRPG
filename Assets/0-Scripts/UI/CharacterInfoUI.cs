@@ -475,7 +475,7 @@ public class CharacterInfoUI : UIBase
         Debug.Log("OnClickExSkillButton");
 
         ExSkillInfoUI ui = Managers.UI.ShowUI<ExSkillInfoUI>();
-        ui.Init(character.SO.id);
+        ui.Init(character);
     }
 
     private void OnClickPassiveSkillButton()

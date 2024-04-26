@@ -1,7 +1,7 @@
 using UnityEngine;
 public class ExSkillInfoUI : UIBase
 {
-    public int characterId;
+    public Character character;
     private enum Texts
     {
         ExSkillNameText,
@@ -12,7 +12,13 @@ public class ExSkillInfoUI : UIBase
     private enum Buttons
     {
         BackImage,
-        ExSkillLevelUpButton
+        ExSkillLevelUpButton,
+        CloseButton
+    }
+
+    private enum Images
+    {
+        ExSkillRange
     }
 
     private void OnDestroy()
@@ -20,24 +26,25 @@ public class ExSkillInfoUI : UIBase
         //Managers.AccountData.characterData[characterId].characterGrowth.OnExSkillLevelChanged -= UpdateDescription;
     }
 
-    public void Init(int characterId)
+    public void Init(Character character)
     {
-        this.characterId = characterId;
-        string exSkillDescription = Managers.AccountData.characterData[characterId].exSkill.description;
+        this.character = character;
 
         //Managers.AccountData.characterData[characterId].characterGrowth.OnExSkillLevelChanged += UpdateDescription;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        GetText((int)Texts.ExSkillNameText).text = $"Ex 스킬 / {Managers.AccountData.characterData[characterId].exSkill.skillName}";
-        GetText((int)Texts.ExSkillLevelText).text = $"Lv. {Managers.AccountData.characterData[characterId].Growth.exSkillLevel}";
-        GetText((int)Texts.ExSkilCostText).text = $"코스트: {Managers.AccountData.characterData[characterId].exSkill.cost}";
+        GetText((int)Texts.ExSkillNameText).text = $"{character.exSkill.skillName} / Lv.{character.Growth.exSkillLevel}";
+        GetText((int)Texts.ExSkillDescriptionText).text = character.exSkill.description;
+        GetText((int)Texts.ExSkilCostText).text = $"코스트: {character.exSkill.cost}";
+        GetImage((int)Images.ExSkillRange).sprite = character.exSkill.icon;
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
-        GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
+        //GetButton((int)Buttons.ExSkillLevelUpButton).onClick.AddListener(OnClickExSkillLevelUpButton);
 
-        UpdateDescription(Managers.AccountData.characterData[characterId].exSkill.description);
+        //UpdateDescription(Managers.AccountData.characterData[characterId].exSkill.description);
     }
     private void UpdateDescription(string newDescription)
     {
@@ -62,7 +69,7 @@ public class ExSkillInfoUI : UIBase
         // Ap, 골드, 다이아에 했던 것 처럼 이벤트 걸기
         // 스킬 레벨이 변경 되면 스킬 설명 업데이트 하기
 
-        Managers.AccountData.characterData[characterId].Growth.exSkillLevel++;
+        character.Growth.exSkillLevel++;
     }
     private void CloseUI()
     {
