@@ -36,18 +36,18 @@ public class StageEntryUI : UIBase
             GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
 
             InitStar(stageSO.stageNumber);
+
+            if (numberOfStars != 3)
+            {
+                GetButton((int)Buttons.StageClearButton).gameObject.SetActive(false);
+            }
+            else
+            {
+                GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
+            }
         });
 
         GetText((int)Texts.StageNumText).text = stage;
-
-        if (numberOfStars != 3)
-        {
-            GetButton((int)Buttons.StageClearButton).gameObject.SetActive(false);
-        }
-        else
-        {
-            GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
-        }
     }
 
     private void InitStar(string stage)

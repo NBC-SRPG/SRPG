@@ -42,4 +42,18 @@ public class CharacterBuf_Bind : CharacterBuf
             DecreaseDuration(1);
         }
     }
+
+    public override string GetName()
+    {
+        BufName = "속박";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 캐릭터의 이동거리가 0이 됩니다.";
+
+        return base.GetDescription();
+    }
 }

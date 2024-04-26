@@ -34,4 +34,18 @@ public class CharacterBuf_Bleed : CharacterBuf
         }
     }
 
+    public override string GetName()
+    {
+        BufName = "출혈";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"행동 한 이후에 {power}의 피해를 {stack} 중첩만큼 반복해서 입습니다.\r\n 피해를 입은 이후 중첩이 절반으로 감소합니다.";
+
+        return base.GetDescription();
+    }
+
 }

@@ -36,4 +36,17 @@ public class CharacterBuf_DefReduce : CharacterBuf
         turnCnt++;
     }
 
+    public override string GetName()
+    {
+        BufName = "방어력 감소";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 방어력이 {power}% 만큼 감소합니다.";
+
+        return base.GetDescription();
+    }
 }

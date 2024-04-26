@@ -56,4 +56,18 @@ public class CharacterBuf_Corrosion : CharacterBuf
         base.OnTurnEnd();
         DecreaseDuration(1);
     }
+
+    public override string GetName()
+    {
+        BufName = "부식";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 최대체력의 2%만큼의 피해를 {stack} 중첩만큼 반복해서 입습니다.";
+
+        return base.GetDescription();
+    }
 }

@@ -56,8 +56,6 @@ public class BattleUI : UIBase
         SelectCharacterInfo,
         TargetCharacterInfo,
         RangeObject,
-        BufList,
-        TargetBufList,
         GameResult,
         Win,
         Lose,
@@ -75,6 +73,8 @@ public class BattleUI : UIBase
         Ability1Select,
         Ability2Select,
         Ability3Select,
+        BufListObject,
+        BufListContent,
 
     }
 
@@ -97,6 +97,9 @@ public class BattleUI : UIBase
         Ability2Detail,
         Ability3Detail,
         CloseAbility,
+        BufList,
+        TargetBufList,
+        CloseBufList,
 
     }
     private enum Images
@@ -137,8 +140,11 @@ public class BattleUI : UIBase
     [HideInInspector] public DamageTextPool textPool;
 
     [SerializeField] private GameObject buf;
+    [SerializeField] private GameObject bufDetail;
+
     private List<GameObject> bufList;
     private List<GameObject> targetBufList;
+    private List<GameObject> bufDetailList;
 
     private StageSO stage;
 
@@ -181,6 +187,10 @@ public class BattleUI : UIBase
         GetButton((int)Buttons.Ability3Detail).onClick.AddListener(ShowAbilityT3);
         GetButton((int)Buttons.CloseAbility).onClick.AddListener(CloseAbility);
 
+        GetButton((int)Buttons.BufList).onClick.AddListener(ShowBufList);
+        GetButton((int)Buttons.TargetBufList).onClick.AddListener(ShowTargetBufList);
+        GetButton((int)Buttons.CloseBufList).onClick.AddListener(CloseBufList);
+
         //조이스틱 가져오기
         joyStick = GetImage((int)Images.JoyStick).GetComponent<VirtualJoyStick>();
 
@@ -191,17 +201,25 @@ public class BattleUI : UIBase
 
         bufList = new List<GameObject> ();
         targetBufList = new List<GameObject> ();
+        bufDetailList = new List<GameObject> ();
 
-        for(int i = 0; i < 30; i++)
+        for (int i = 0; i < 30; i++)
         {
-            GameObject obj = Instantiate(buf, GetObject((int)GameObjects.BufList).transform);
+            GameObject obj = Instantiate(bufDetail, GetObject((int)GameObjects.BufListContent).transform);
+            bufDetailList.Add(obj);
+            obj.SetActive(false);
+        }
+
+        for (int i = 0; i < 30; i++)
+        {
+            GameObject obj = Instantiate(buf, GetButton((int)Buttons.BufList).transform);
             bufList.Add(obj);
             obj.SetActive(false);
         }
 
         for (int i = 0; i < 8; i++)
         {
-            GameObject obj = Instantiate(buf, GetObject((int)GameObjects.TargetBufList).transform);
+            GameObject obj = Instantiate(buf, GetButton((int)Buttons.TargetBufList).transform);
             targetBufList.Add(obj);
             obj.SetActive(false);
         }
@@ -308,6 +326,8 @@ public class BattleUI : UIBase
         GetObject((int)GameObjects.ManaObject).SetActive(false);
 
         GetObject((int)GameObjects.AbilityInfo).SetActive(false);
+
+        GetObject((int)GameObjects.BufListObject).SetActive(false);
     }
 
     public void ShowAtCharacterSelectPhase()
@@ -795,6 +815,41 @@ public class BattleUI : UIBase
             }
             targetBufList[i].GetComponent<BufIcon>().SetBufIcon(curTargetCharacter.curCharacterBufList.bufList[i]);
         }
+    }
+
+    public void ShowBufList()
+    {
+        GetObject((int)GameObjects.BufListObject).SetActive(true);
+
+        for (int i = 0; i < bufDetailList.Count; i++)
+        {
+            if (curSelectedCharacter.curCharacterBufList.bufList.Count < i + 1)
+            {
+                bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(null);
+                continue;
+            }
+            bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(curSelectedCharacter.curCharacterBufList.bufList[i]);
+        }
+    }
+
+    public void ShowTargetBufList()
+    {
+        GetObject((int)GameObjects.BufListObject).SetActive(true);
+
+        for (int i = 0; i < bufDetailList.Count; i++)
+        {
+            if (curTargetCharacter.curCharacterBufList.bufList.Count < i + 1)
+            {
+                bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(null);
+                continue;
+            }
+            bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(curTargetCharacter.curCharacterBufList.bufList[i]);
+        }
+    }
+
+    public void CloseBufList()
+    {
+        GetObject((int)GameObjects.BufListObject).SetActive(false);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

@@ -7,12 +7,18 @@ using UnityEngine.UI;
 public class BufIcon : MonoBehaviour
 {
     [SerializeField] private Image bufIcon;
+
+    [SerializeField] private GameObject positive;
+    [SerializeField] private GameObject negative;
+
+    [Header("icon")]
     [SerializeField] private TextMeshProUGUI stack;
     [SerializeField] private TextMeshProUGUI power;
     [SerializeField] private TextMeshProUGUI duration;
 
-    [SerializeField] private GameObject positive;
-    [SerializeField] private GameObject negative;
+    [Header("detail")]
+    [SerializeField] private TextMeshProUGUI bufName;
+    [SerializeField] private TextMeshProUGUI descriptrion;
 
     public void SetBufIcon(CharacterBuf buf)
     {
@@ -55,6 +61,33 @@ public class BufIcon : MonoBehaviour
         {
             duration.gameObject.SetActive(false);
         }
+
+        if (buf.BufType == BattleKeyWords.BufType.Positive)
+        {
+            positive.SetActive(true);
+            negative.SetActive(false);
+        }
+        else
+        {
+            positive.SetActive(false);
+            negative.SetActive(true);
+        }
+    }
+
+    public void SetBufDetail(CharacterBuf buf)
+    {
+        if (buf == null || buf.IsDestroyed)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
+        gameObject.SetActive(true);
+
+        bufIcon.sprite = Managers.Resource.Load<Sprite>("BufIcon/" + buf.Keyword);
+
+        bufName.text = buf.GetName();
+        descriptrion.text = buf.GetDescription();
 
         if (buf.BufType == BattleKeyWords.BufType.Positive)
         {

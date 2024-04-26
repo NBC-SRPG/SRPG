@@ -35,4 +35,18 @@ public class CharacterBuf_Burn : CharacterBuf
 
         DecreaseDuration(1);
     }
+
+    public override string GetName()
+    {
+        BufName = "화상";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 최대 체력의 4%의 해당하는 피해를 {stack} 중첩 만큼 반복해서 입습니다.";
+
+        return base.GetDescription();
+    }
 }

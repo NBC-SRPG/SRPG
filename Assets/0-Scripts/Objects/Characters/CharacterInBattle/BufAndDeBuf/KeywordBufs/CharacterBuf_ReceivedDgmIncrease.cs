@@ -35,4 +35,18 @@ public class CharacterBuf_ReceivedDgmIncrease : CharacterBuf //받는 피해 증
 
         turnCnt++;
     }
+
+    public override string GetName()
+    {
+        BufName = "받는 피해 증가";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 받는 피해가 {power}% 만큼 증가합니다.";
+
+        return base.GetDescription();
+    }
 }

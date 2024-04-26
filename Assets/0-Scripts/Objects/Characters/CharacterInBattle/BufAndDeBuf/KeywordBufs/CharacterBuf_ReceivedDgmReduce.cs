@@ -36,4 +36,17 @@ public class CharacterBuf_ReceivedDgmReduce : CharacterBuf
         turnCnt++;
     }
 
+    public override string GetName()
+    {
+        BufName = "받는 피해 감소";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 받는 피해가 {power}% 만큼 감소합니다.";
+
+        return base.GetDescription();
+    }
 }

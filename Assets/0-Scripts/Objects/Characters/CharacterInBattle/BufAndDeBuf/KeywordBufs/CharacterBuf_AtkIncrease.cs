@@ -36,4 +36,18 @@ public class CharacterBuf_AtkIncrease : CharacterBuf
         turnCnt++;
     }
 
+    public override string GetName()
+    {
+        BufName = "공격력 증가";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 공격력이 {power}% 상승 합니다.";
+
+        return base.GetDescription();
+    }
+
 }

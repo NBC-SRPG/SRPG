@@ -36,4 +36,17 @@ public class CharacterBuf_CrtRateIncrease : CharacterBuf
         turnCnt++;
     }
 
+    public override string GetName()
+    {
+        BufName = "치명타 확률 증가";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 치명타 확률이 {power}% 만큼 증가합니다.";
+
+        return base.GetDescription();
+    }
 }

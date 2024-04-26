@@ -86,4 +86,18 @@ public class CharacterBuf_AmethystShield : CharacterBuf //아메가 부여하는
             character.health.RemoveShield(shield_Ame);
         }
     }
+
+    public override string GetName()
+    {
+        BufName = "자수정 방패";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, {stack} 만큼의 피해를 흡수합니다.";
+
+        return base.GetDescription();
+    }
 }

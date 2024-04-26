@@ -14,6 +14,9 @@ public class CharacterBuf
 
     public virtual string Keyword {  get; protected set; }
 
+    public string Description { get; protected set; }
+    public string BufName { get; protected set; }
+
     public int duration;//지속 턴 수 (또는 적용 횟수)
     public int power;//위력 (또는 버프 수치)
     public int stack;//중첩 횟수
@@ -209,5 +212,15 @@ public class CharacterBuf
     public virtual void OnUpdate()// 실시간 판정
     {
 
+    }
+
+    public virtual string GetName()
+    {
+        return BufName;
+    }
+
+    public virtual string GetDescription()
+    {
+        return Description;
     }
 }

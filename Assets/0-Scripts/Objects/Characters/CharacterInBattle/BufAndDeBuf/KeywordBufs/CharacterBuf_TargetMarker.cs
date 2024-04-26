@@ -94,4 +94,18 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
 
         turnCnt++;
     }
+
+    public override string GetName()
+    {
+        BufName = "표적";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 해당 캐릭터를 공격하는 적의 치명타 확률이 {stack}만큼 증가합니다.";
+
+        return base.GetDescription();
+    }
 }

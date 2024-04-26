@@ -50,4 +50,18 @@ public class CharacterBuf_Stun : CharacterBuf
 
         character.characterAnim.EndAnimation(character.isWalking);
     }
+
+    public override string GetName()
+    {
+        BufName = "기절";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 행동할 수 없습니다.";
+
+        return base.GetDescription();
+    }
 }

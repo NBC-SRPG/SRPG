@@ -29,4 +29,18 @@ public class CharacterBuf_HealReversal : CharacterBuf
     {
         damage = (damage * (-1)); //힐량을 데미지로 반전
     }
+
+    public override string GetName()
+    {
+        BufName = "회복 반전";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 체력 회복스킬을 받을 때, 대신 피해를 입습니다.";
+
+        return base.GetDescription();
+    }
 }
