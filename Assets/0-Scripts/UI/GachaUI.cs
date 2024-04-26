@@ -25,6 +25,7 @@ public class GachaUI : UIBase
         GachaInfo,
         GachaPoint,
         EndDate,
+        PickUpCharacterName,
         GachaCountText,
         Gacha10CountText
     }
@@ -42,11 +43,13 @@ public class GachaUI : UIBase
     private enum Images
     {
         GachaImage,
-
     }
 
     private enum GameObjects
     {
+        Content,
+        PickUpInfo,
+        GachaPointUI
         // Star : 모든 픽업은 3성이라 고정 이미지 사용
     }
 
@@ -80,11 +83,48 @@ public class GachaUI : UIBase
         if (Managers.AccountData.GetItemQuantity(GACHA_TICKET_10) == 0) GetButton((int)Buttons.Gacha10WithTicketButton).gameObject.SetActive(false);
 
         // TODO
+
         // 가챠 배너 클릭시 해당 가챠로 전환하는 OnClickBanner() 구현
+        // -> BannerUI를 만들고 해당 스크립트 내에 OnClickBannerButton() 구현하였음
+        // -> OnClickBannerButton() 클릭 시 GachaUI의 UpdateGachaInfoUI() 실행하며 해당 가챠로 전환
+
         // curGacha의 SO 데이터를 사용해 GachaInfoUI 초기화
         // 캐릭터 이름(pickUpcharacterName) / 남은 기간(startDate.AddDays(expiration) - DateTime.Now) / 캐릭터 일러스트(gachaImage)
 
         // GachaWithTicketButton, Gacha10WithTicketButton은 Managers.AccountData.inventory[GACHA_TICKET(_10)]이 1이상일 경우에만 setActice(true)
+    }
+
+    // 클릭한 배너에 맞게 가챠 정보 세팅
+    public void UpdateGachaInfoUI(GachaSO gachaSO)
+    {
+        curGacha = gachaSO;
+
+        if (gachaSO.gachaType == Constants.GachaType.Common)
+        {
+            GetObject((int)GameObjects.PickUpInfo).SetActive(false);
+            GetObject((int)GameObjects.GachaPointUI).SetActive(false);
+
+            GetText((int)Texts.GachaName).text = "통상 계약";
+            //GetText((int)Texts.GachaInfo).text = "10연차 시 ★2 이상의 캐릭터 100% 계약";
+
+            GetImage((int)Images.GachaImage).sprite = gachaSO.gachaImage;
+        }
+        else
+        {
+            GetObject((int)GameObjects.PickUpInfo).SetActive(true);
+            GetObject((int)GameObjects.GachaPointUI).SetActive(true);
+
+            GetText((int)Texts.GachaName).text = "픽업 계약";
+            GetText((int)Texts.PickUpCharacterName).text = gachaSO.pickUpcharacterName;
+            //GetText((int)Texts.GachaInfo).text = "10연차 시 ★2 이상의 캐릭터 100% 계약";
+            GetText((int)Texts.EndDate).text = $"남은 기간\n{gachaSO.GetRemainingTimeText()}";
+
+            // TODO
+            // 계약 포인트 업데이트는 한정 계약을 뽑았을 때로 이동
+            // GetText((int)Texts.GachaPoint).text = Managers.AccountData.playerData.gachaPoint.ToString();
+
+            GetImage((int)Images.GachaImage).sprite = gachaSO.gachaImage;
+        }
     }
 
     private void OnClickGachaButton()
@@ -157,6 +197,11 @@ public class GachaUI : UIBase
             count = snapshot.ChildrenCount;
             foreach (var gachaInfo in snapshot.Children)
             {
+                // TODO
+                // 비동기라 curGachaList에 들어가는 순서가 보장되지 않을 것 같음
+                // 0번째가 항상 통상이 되리라는 보장이 없음
+                // 딕셔너리로 변경??
+                // curGachaList가 여기에서만 쓰인다면 삭제 후 Id2SO 콜백 안에서 BannerUI 생성이 더 좋아보임
                 Utility.Id2SO<GachaSO>(int.Parse(gachaInfo.Value.ToString()), (result) =>
                 {
                     curGachaList.Add(result as GachaSO);
@@ -165,7 +210,17 @@ public class GachaUI : UIBase
             }
         });
         yield return new WaitUntil(() => count == 0);
-        curGacha = curGachaList[0];
+        //curGacha = curGachaList[0];
+        UpdateGachaInfoUI(curGachaList[0]);
+
+        // 가챠 배너 생성
+        foreach (GachaSO curGachaSO in curGachaList)
+        {
+            GameObject go = Managers.Resource.Instantiate(Managers.Resource.Load<GameObject>("Prefabs/UI/BannerUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<BannerUI>().Init(curGachaSO);
+        }
     }
     private IEnumerator GetTableFromDB()
     {

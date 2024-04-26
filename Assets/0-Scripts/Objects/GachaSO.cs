@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "GachaData", fileName = "GachaSO_")]
@@ -19,4 +18,14 @@ public class GachaSO : ScriptableObject
         return startDate.AddDays(expiration) > DateTime.Now ? false : true;
     }
 
+    public string GetRemainingTimeText()
+    {
+        if (!isExpired())
+        {
+            TimeSpan remainingTime = startDate.AddDays(expiration) - DateTime.Now;
+            return string.Format($"{remainingTime.Days}일 {remainingTime.Hours}시간 {remainingTime.Minutes}분");
+        }
+
+        return "";
+    }
 }

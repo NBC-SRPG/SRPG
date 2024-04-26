@@ -115,6 +115,7 @@ public class UIManager
 
         Canvas canvas = closeUi.GetComponent<Canvas>();
 
+        // SetCanvas가 된 UI를 닫을 때는 order 되돌리기
         if (canvas.sortingOrder < 0)
         {
             order--;
