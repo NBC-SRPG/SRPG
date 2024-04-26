@@ -22,7 +22,8 @@ public class AbilityInfoUI : UIBase
         AbilityApplyButton,
         AbilityCancelButton,
         AbilityCheckButton,
-        CloseButton
+        CloseButton,
+        BackImage
     }
 
     public void Init(Character character, int AbilityTier, int AbilityIndex)
@@ -94,10 +95,13 @@ public class AbilityInfoUI : UIBase
             });
         }
 
-        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCloseButton);
+
+
         GetButton((int)Buttons.AbilityApplyButton).onClick.AddListener(() => OnClickAbilityApplyButton(AbilityTier, AbilityIndex));
-        GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(OnClickAbilityCancelButton);
-        GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(OnClickAbilityCancelButton);
+        GetButton((int)Buttons.AbilityCancelButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.AbilityCheckButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
 
 
         // 버튼들 모두 비활성화 상태
@@ -155,14 +159,7 @@ public class AbilityInfoUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
-    private void OnClickAbilityCancelButton()
-    {
-        Debug.Log("OnClickAbilityCancelButton");
-
-        Managers.UI.CloseUI(this);
-    }
-
-    private void OnClickCloseButton()
+    private void CloseUI()
     {
         Managers.UI.CloseUI(this);
     }

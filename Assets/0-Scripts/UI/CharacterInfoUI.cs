@@ -39,6 +39,7 @@ public class CharacterInfoUI : UIBase
         ClassButton,
         BackButton,
         ExSkillButton,
+        PassiveSkillButton,
         WeaponButton,
         ArmorButton,
         Ability1Button,
@@ -86,7 +87,6 @@ public class CharacterInfoUI : UIBase
         SkillTab,
         AbilityTab,
         ClassTab,
-        PassiveSkillInfoUI,
         Star
     }
 
@@ -111,8 +111,6 @@ public class CharacterInfoUI : UIBase
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        // 스킬, 특성, 장비강화 팝업 UI 비활성화 상태로 두기
-        GetObject((int)GameObjects.PassiveSkillInfoUI).SetActive(false);
 
         // 스킬, 특성, 클래스 탭 보여주기
         GetButton((int)Buttons.SkillButton).onClick.AddListener(() => ShowTab(PlayTab.Skill));
@@ -124,6 +122,7 @@ public class CharacterInfoUI : UIBase
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetButton((int)Buttons.ExSkillButton).onClick.AddListener(OnClickExSkillButton);
+        GetButton((int)Buttons.PassiveSkillButton).onClick.AddListener(OnClickPassiveSkillButton);
         GetButton((int)Buttons.WeaponButton).onClick.AddListener(OnClickWeaponButton);
         GetButton((int)Buttons.ArmorButton).onClick.AddListener(OnClickArmorButton);
         GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
@@ -438,6 +437,14 @@ public class CharacterInfoUI : UIBase
         Debug.Log("OnClickExSkillButton");
 
         ExSkillInfoUI ui = Managers.UI.ShowUI<ExSkillInfoUI>();
+        ui.Init(character.SO.id);
+    }
+
+    private void OnClickPassiveSkillButton()
+    {
+        Debug.Log("OnClickPassiveSkillButton");
+
+        PassiveSkillInfoUI ui = Managers.UI.ShowUI<PassiveSkillInfoUI>();
         ui.Init(character.SO.id);
     }
 
