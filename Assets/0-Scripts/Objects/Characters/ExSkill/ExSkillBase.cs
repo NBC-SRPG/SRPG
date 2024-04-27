@@ -72,6 +72,12 @@ public class ExSkillBase
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {
+        if(skillData == null)
+        {
+            Debug.Log("skilldata null");
+            return;
+        }
+
         Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
 
         if (skillAbillityType == null)
