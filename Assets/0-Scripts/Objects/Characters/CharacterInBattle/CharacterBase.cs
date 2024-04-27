@@ -326,7 +326,7 @@ public class CharacterBase : MonoBehaviour
         {
             Debug.Log("Skill null");
         }
-        if (curCharacterSkill.skillAbility == null)
+        if (curCharacterSkill?.skillAbility == null)
         {
             Debug.Log("Skill ability null");
         }
