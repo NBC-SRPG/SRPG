@@ -85,6 +85,11 @@ public class ExSkillBase
 
     private void InitSkillRange()//스킬 범위 생성자
     {
+        if (skillData == null)
+        {
+            return;
+        }
+
         Constants.SkillScaleType scaletype = skillData.scaleType;
         int scale = skillData.skillScale;
 
