@@ -340,37 +340,38 @@ public class AccountData
         Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
     }
 
-    public void AcquireCharacter(int id, bool isPickUp)
+    public void AcquireCharacter(int id, bool isPickUp = false)
     {
         if(!characterData.ContainsKey(id))
         {
             Utility.Id2SO<CharacterSO>(id, (result) =>
             {
                 CharacterGrowth characterGrowth = new CharacterGrowth((CharacterSO)result);
-                characterData.Add(id, new Character((CharacterSO)result, characterGrowth));
-                Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
-
-                AcquireItems(id, 0);
+                if (characterData.TryAdd(id, new Character((CharacterSO)result, characterGrowth)))
+                {
+                    Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
+                    AcquireItems(id, 0);
+                    return;
+                }
             });
         }
-        else
-        {
-            int pieceCount = 0;
-            switch(characterData[id].SO.basicStar)
-            {
-                case 1:
-                    pieceCount = 1;
-                    break;
-                case 2:
-                    pieceCount = 5;
-                    break;
-                case 3:
-                    pieceCount = isPickUp ? 100 : 30;
-                    break;
-            }
 
-            AcquireItems(id, pieceCount);
+        // 이미 보유중인 캐릭터라면 조각 획득
+        int pieceCount = 0;
+        switch(characterData[id].SO.basicStar)
+        {
+            case 1:
+                pieceCount = 1;
+                break;
+            case 2:
+                pieceCount = 5;
+                break;
+            case 3:
+                pieceCount = isPickUp ? 100 : 30;
+                break;
         }
+        AcquireItems(id, pieceCount);
+
     }
 
     public int GetItemQuantity(int id)

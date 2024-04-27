@@ -24,6 +24,7 @@ public class DownloadUI : UIBase
 
     private enum Buttons
     {
+        Background,
         DownloadButton,
         CloseButton
     }
@@ -32,11 +33,6 @@ public class DownloadUI : UIBase
     {
         PopUp
     }
-
-
-    [Header("Label")] // 다운로드받을 애셋들의 라벨
-    //public AssetLabelReference defaultLabel;
-    //public AssetLabelReference matLabel;
 
     // 다운받을 애셋들의 파일 크기
     private long _patchSize;
@@ -59,9 +55,8 @@ public class DownloadUI : UIBase
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
 
-        GetObject((int)GameObjects.PopUp).SetActive(false);
-
         GetButton((int)Buttons.DownloadButton).onClick.AddListener(OnClickDownloadButton);
+        GetObject((int)GameObjects.PopUp).SetActive(false);
         GetText((int)Texts.StatusText).gameObject.SetActive(false);
 
 
@@ -70,11 +65,23 @@ public class DownloadUI : UIBase
 
     }
 
+    public void OnClickDownloadButton()
+    {
+        GetObject((int)GameObjects.PopUp).SetActive(false);
+        StartCoroutine(PatchFiles());
+    }
+    private void OnClickBackground()
+    {
+        Debug.Log("OnClickBg");
+        Managers.UI.ShowUI<LoadingUI>();
+    }
+
     // 어드레서블을 초기화해주는 코루틴
     private IEnumerator InitAddressable()
     {
         var init = Addressables.InitializeAsync();
         yield return init;
+        Debug.Log("Addressable Inited");
     }
 
     // 업데이트할 파일을 체크하는 코루틴
@@ -83,7 +90,6 @@ public class DownloadUI : UIBase
     private IEnumerator CheckUpdateFiles()
     {
         var labels = new List<string>() { "SO", "Image" };
-
         _patchSize = default;
 
         foreach (var label in labels)
@@ -91,6 +97,7 @@ public class DownloadUI : UIBase
             var handle = Addressables.GetDownloadSizeAsync(label);
             yield return handle;
             _patchSize += handle.Result;
+            Debug.Log($"patch size : {_patchSize}");
 
             if (_patchSize > Decimal.Zero)
             {
@@ -99,17 +106,13 @@ public class DownloadUI : UIBase
             }
             else
             {
+                Debug.Log("No file to patch");
                 yield return new WaitForSeconds(2f);
                 Managers.UI.ShowUI<LoadingUI>();
             }
         }
     }
 
-    public void OnClickDownloadButton()
-    {
-        GetObject((int)GameObjects.PopUp).SetActive(false);
-        StartCoroutine(PatchFiles());
-    }
 
     // 새 파일에 대한 패치를 실시하는 코루틴
     // 각 라벨에 대해 다운로드 여부를 파악한 후 다운로드할 파일이 있으면 다운로드 코루틴 시작
@@ -117,8 +120,6 @@ public class DownloadUI : UIBase
     private IEnumerator PatchFiles()
     {
         var labels = new List<string>() { "SO", "Image" };
-
-        _patchSize = default;
 
         foreach (var label in labels)
         {
@@ -157,6 +158,7 @@ public class DownloadUI : UIBase
     private IEnumerator CheckDownloadStatus()
     {
         var total = 0f;
+        GetText((int)Texts.StatusText).gameObject.SetActive(true);
         GetText((int)Texts.DownloadPercent).text = "0 %";
 
         while (true)
@@ -164,12 +166,15 @@ public class DownloadUI : UIBase
             total += _patchMap.Sum(tmp => tmp.Value);
 
             var perValue = total / _patchSize;
-            GetImage((int)Images.ProgressBar).fillAmount += perValue;
+            GetImage((int)Images.ProgressBar).fillAmount = perValue;
             GetText((int)Texts.DownloadPercent).text = string.Format("{0:##.##}", perValue * 100) + " %";
 
             if (total.Equals(_patchSize))
             {
+                Debug.Log("patch Done");
+                GetText((int)Texts.StatusText).text = "Download Complete!";
                 Managers.UI.ShowUI<LoadingUI>();
+                //GetButton((int)Buttons.Background).onClick.AddListener(OnClickBackground);
                 break;
             }
 

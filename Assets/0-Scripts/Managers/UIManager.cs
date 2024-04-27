@@ -36,6 +36,7 @@ public class UIManager
         {
             canvas.sortingOrder = 0;
         }
+        Debug.Log("SetCanvas Complete");
     }
 
     // UI 동적 생성
