@@ -319,34 +319,12 @@ public class CharacterBase : MonoBehaviour
     // Update
     private void Update()// 실시간 판정을 위한 Update함수 (예/ 적 뒤에 공간이 있는지 확인, 캐릭터 주위로 버프 등)
     {
-        if(curCharacterPassive == null)
-        {
-            Debug.Log("passive list null");
-        }
-
         foreach(PassiveLogic passive in curCharacterPassive)
         {
                 passive?.OnUpdate();
         }
-
-        if(curCharacterSkill == null)
-        {
-            Debug.Log("Skill null");
-        }
-        if (curCharacterSkill?.skillAbility == null)
-        {
-            Debug.Log("Skill ability null");
-        }
-
         curCharacterSkill?.skillAbility?.OnUpdate();
-
-        if(curCharacterBufList == null)
-        {
-            Debug.Log("Buflist null");
-        }
-
         curCharacterBufList.OnUpdate();
-        
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

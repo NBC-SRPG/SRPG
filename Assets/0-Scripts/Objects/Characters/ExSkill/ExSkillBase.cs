@@ -74,7 +74,6 @@ public class ExSkillBase
     {
         if(skillData == null)
         {
-            Debug.Log("skilldata null");
             return;
         }
 
