@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static Constants;
 
 public class MissionDB
@@ -9,6 +11,23 @@ public class MissionDB
     public MissionDB()
     {
         List<MissionSO> entities = new();
+
+
+        Addressables.LoadAssetsAsync<MissionSO>("0-AddressableResources/ScriptableObjects/MissionSO/", null).Completed += OnMissionsLoaded;
+
+        void OnMissionsLoaded(AsyncOperationHandle<IList<MissionSO>> loading)
+        {
+            if (loading.Status == AsyncOperationStatus.Succeeded)
+            {
+                entities.AddRange(loading.Result);
+            }
+            else
+            {
+                Debug.LogError("미션 로드 실패");
+            }
+        }
+
+        /*
 
         // TODO
         // DB에서 미션 데이터 가져오기
@@ -55,6 +74,8 @@ public class MissionDB
         missionData2.gold = 5000;
         missionData2.diamond = 700;
         entities.Add(missionData2);
+
+        */
 
         if (entities == null || entities.Count <= 0)
         {
