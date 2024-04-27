@@ -323,9 +323,8 @@ public class CharacterBase : MonoBehaviour
         {
                 passive?.OnUpdate();
         }
-        curCharacterSkill.skillAbility?.OnUpdate();
+        curCharacterSkill?.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
-        
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
