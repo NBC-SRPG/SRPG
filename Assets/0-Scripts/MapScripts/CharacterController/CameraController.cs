@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
@@ -32,8 +33,14 @@ public class CameraController : MonoBehaviour
     private CinemachineFramingTransposer battleGroupComposer;
     private CinemachineBasicMultiChannelPerlin noise;
 
+    private CinemachineConfiner2D mainConfinder;
+
     [HideInInspector] public bool canMove;
     [HideInInspector] public float moveSpeed;
+
+    private Vector2 lastTouchPosition;
+    private bool dragMove;
+    private Vector2 moveDelta;
 
     private BattleUI Ui;
 
@@ -48,6 +55,8 @@ public class CameraController : MonoBehaviour
             Destroy(gameObject);
         }
 
+        dragMove = false;
+
     }
 
     private void Start()
@@ -59,9 +68,11 @@ public class CameraController : MonoBehaviour
         characterComposer = followingCharacterCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         characterGroupComposer = followingCharacterGroupCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
 
+        mainConfinder = mainCamera.GetComponent<CinemachineConfiner2D>();
+
         if (MapManager.instance != null && MapManager.instance.cameraArea != null)
         {
-            mainCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
+            mainConfinder.m_BoundingShape2D = MapManager.instance.cameraArea;
             followingCharacterCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
             followingTileCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
             followingCharacterGroupCamera.GetComponent<CinemachineConfiner2D>().m_BoundingShape2D = MapManager.instance.cameraArea;
@@ -115,6 +126,24 @@ public class CameraController : MonoBehaviour
         {
             battleTargetGroup.transform.position = Vector3.zero;
         }
+
+        if(mainCamera.transform.position.x < mainConfinder.m_BoundingShape2D.bounds.min.x ) 
+        {
+            mainCamera.transform.position = new Vector3(mainConfinder.m_BoundingShape2D.bounds.min.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
+        }
+        else if(mainCamera.transform.position.x > mainConfinder.m_BoundingShape2D.bounds.max.x)
+        {
+            mainCamera.transform.position = new Vector3(mainConfinder.m_BoundingShape2D.bounds.max.x, mainCamera.transform.position.y, mainCamera.transform.position.z);
+        }
+
+        if (mainCamera.transform.position.y < mainConfinder.m_BoundingShape2D.bounds.min.y)
+        {
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainConfinder.m_BoundingShape2D.bounds.min.y, mainCamera.transform.position.z);
+        }
+        else if (mainCamera.transform.position.y > mainConfinder.m_BoundingShape2D.bounds.max.y)
+        {
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainConfinder.m_BoundingShape2D.bounds.max.y, mainCamera.transform.position.z);
+        }
     }
 
 
@@ -127,6 +156,8 @@ public class CameraController : MonoBehaviour
         {
             mainCamera.transform.position += new Vector3(x, y, 0) * (moveSpeed * Time.deltaTime);
         }
+
+        CameraMoveWithTouch();
 
         if (Input.mouseScrollDelta.y > 0)
         {
@@ -146,6 +177,42 @@ public class CameraController : MonoBehaviour
         if (mainCamera.m_Lens.OrthographicSize > 12)
         {
             mainCamera.m_Lens.OrthographicSize = 12;
+        }
+    }
+
+    private void CameraMoveWithTouch()
+    {
+        if(Input.touchCount == 1 && EventSystem.current.IsPointerOverGameObject() == false)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if(touch.phase == TouchPhase.Began )
+            {
+                ResetCamera();
+                dragMove = true;
+                lastTouchPosition = touch.position;
+            }
+            else if(touch.phase == TouchPhase.Moved )
+            {
+                moveDelta = Camera.main.ScreenToWorldPoint(lastTouchPosition) - Camera.main.ScreenToWorldPoint(touch.position);
+
+                Vector2 move = moveDelta * (moveSpeed * 0.1f);
+
+                if (mainCamera.transform.position.x >= mainConfinder.m_BoundingShape2D.bounds.min.x && mainCamera.transform.position.x <= mainConfinder.m_BoundingShape2D.bounds.max.x &&
+                    mainCamera.transform.position.y >= mainConfinder.m_BoundingShape2D.bounds.min.y && mainCamera.transform.position.y <= mainConfinder.m_BoundingShape2D.bounds.max.y)
+                {
+                    mainCamera.transform.position += new Vector3(move.x, move.y, 0);
+                }
+
+                lastTouchPosition = touch.position;
+            }
+
+            if(touch.phase == TouchPhase.Ended)
+            {
+                dragMove = false;
+            }
+
+
         }
     }
 
