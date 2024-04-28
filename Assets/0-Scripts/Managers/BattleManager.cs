@@ -816,6 +816,7 @@ public class BattleManager : MonoBehaviour
         if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
         {
             int clearStar = 0;
+            int alreadyClear = 0;
             foreach (bool t in extraClear)
             {
                 if (t)
@@ -824,7 +825,28 @@ public class BattleManager : MonoBehaviour
                 }
             }
 
-            Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+            if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out alreadyClear))
+            {
+                if(clearStar > alreadyClear)
+                {
+                    Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+
+                    if (clearStar > 3)// 모든 서브 요소 클리어
+                    {
+                        //다이아 획득
+                    }
+                }
+            }
+            else
+            {
+                if(clearStar > 3)// 모든 서브 요소 클리어
+                {
+                    //다이아 획득
+                }
+
+                Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+            }
+
         }
     }
 
