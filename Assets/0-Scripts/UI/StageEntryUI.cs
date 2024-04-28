@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using static Constants;
 public class StageEntryUI : UIBase
 {
     private StageSO stageSO;
@@ -85,7 +85,24 @@ public class StageEntryUI : UIBase
     {
         Debug.Log("OnClickStageClearButton");
 
-        // TODO
-        // 스테이지 소탕 기능 추가
+        // AP 감소
+        Managers.AccountData.playerData.ReduceAP(ConsumeAp);
+        // 보상 획득
+        if (stageSO.exp > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stageSO.exp);
+        }
+
+        if (stageSO.gold > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stageSO.gold);
+        }
+
+        foreach (var reward in stageSO.rewards)
+        {
+            Managers.AccountData.AcquireItems(reward.Key, reward.Value);
+        }
+
+        Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
     }
 }

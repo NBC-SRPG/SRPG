@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-
+using static Constants;
 public class StageInfoUI : UIBase
 {
     private bool isInit = false;
@@ -109,7 +109,7 @@ public class StageInfoUI : UIBase
         for (int i = 0; i < 5; i++)
         {
             Images partyImageEnum = (Images)Enum.Parse(typeof(Images), $"Party{i + 1}Image");
-            int characterId = Managers.AccountData.formationData[Constants.presetIndex].characterId[i];
+            int characterId = Managers.AccountData.formationData[presetIndex].characterId[i];
 
             if (characterId == 0)
             {
@@ -166,7 +166,7 @@ public class StageInfoUI : UIBase
         
         // TODO
         // 한 판당 소모 AP는 어디에??
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
     private void OnClickClearIncreButton()
     {
@@ -177,21 +177,59 @@ public class StageInfoUI : UIBase
 
         stageClearCount++;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
 
     private void OnClickClearMaxButton()
     {
-        int maxCount = Managers.AccountData.playerData.Ap / 5;
+        int maxCount = Managers.AccountData.playerData.Ap / ConsumeAp;
 
         stageClearCount = maxCount;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
     private void OnClickClearButton()
     {
-        // TODO
-        // 소탕
+        if (stageClearCount == 0)
+        {
+            return;
+        }
+
+        if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out int starNum))
+        {
+            if (starNum < 3)
+            {
+                Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+
+                return;
+            }
+        }
+        else
+        {
+            Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+            
+            return;
+        }
+
+        // AP 감소
+        Managers.AccountData.playerData.ReduceAP(stageClearCount * ConsumeAp);
+        // 보상 획득
+        if (stage.exp > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stage.exp);
+        }
+
+        if (stage.gold > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stage.gold);
+        }
+
+        foreach (var reward in stage.rewards)
+        {
+            Managers.AccountData.AcquireItems(reward.Key, reward.Value);
+        }
+
+        Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
     }
 
     private void OnClickFormationButton()
