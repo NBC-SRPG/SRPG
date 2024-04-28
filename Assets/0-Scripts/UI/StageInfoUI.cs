@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class StageInfoUI : UIBase
 {
     private bool isInit = false;
     private int stageClearCount = 0;
+    private StageSO stage;
 
     private enum Texts
     {
@@ -59,6 +58,8 @@ public class StageInfoUI : UIBase
             return;
         }
 
+        this.stage = stage;
+
         BindText(typeof(Texts));
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
@@ -96,7 +97,7 @@ public class StageInfoUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
         InitImage();
-        InitReward(stage);
+        InitReward();
 
         isInit = true;
 
@@ -121,7 +122,7 @@ public class StageInfoUI : UIBase
         }
     }
 
-    private void InitReward(StageSO stage)
+    private void InitReward()
     {
         if (stage.exp > 0)
         {
@@ -216,8 +217,8 @@ public class StageInfoUI : UIBase
     }
     private void OnClickEnemyInfoButton()
     {
-        // TODO
         // 적 정보UI 생성
+        Managers.UI.ShowUI<EnemyInfoUI>().Init(stage);
     }
 
     private void OnClickBackButton()
