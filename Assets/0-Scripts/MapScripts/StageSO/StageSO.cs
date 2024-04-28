@@ -45,6 +45,11 @@ public class StageSO : SerializedScriptableObject
     [Header("ExtraGoal")]
     public ExtraGoalDetail[] extraGoal = new ExtraGoalDetail[3];
 
+    [Header("Reward")]
+    public int exp;
+    public int gold;
+    public Dictionary<int, int> rewards = new();
+
     [HideInInspector] public List<Character> characterList;
 
     public List<Character> GetEnemy()
