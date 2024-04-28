@@ -58,7 +58,7 @@ public class MissionEntryUI : UIBase
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
-        missionData = TestDatabase.Mission.Get(missionId);
+        missionData = Managers.Mission.missionDB.Get(missionId);
 
         GetText((int)Texts.MissionNameText).text = missionData.name;
         GetText((int)Texts.MissionDescriptionText).text = missionData.missionDescription;
@@ -219,7 +219,7 @@ public class MissionEntryUI : UIBase
 
     private void NextMissionStart()
     {
-        foreach (var nextMission in TestDatabase.Mission.Get(missionId).nextMissions)
+        foreach (var nextMission in Managers.Mission.missionDB.Get(missionId).nextMissions)
         {
             Managers.Mission.MissionStart(nextMission);
         }

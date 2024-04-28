@@ -1,8 +1,6 @@
-using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using UnityEngine;
 using static Constants;
 
@@ -12,6 +10,7 @@ public class MissionManager
     public event Action<int, int> OnMissionUpdateCallback; // TODO : 업데이트 콜백에서 미션 저장
     public event Action<int> OnMissionCompleteCallback;
     public event Action<int> OnMissionReceiveCallback;
+    public MissionDB missionDB { get; set; }
 
     // 구독중인 미션들
     private Dictionary<MissionType, List<MissionSO>> subscribeMissions = new();
@@ -21,18 +20,16 @@ public class MissionManager
     // 마지막 주간 미션 초기화 날짜
     private DateTime lastWeeklyReset;
 
-
-
     public void Init()
     {
-
+        missionDB = new();
     }
 
     public void SubscribeMission(int missionId)
     {
         Debug.Log("SubscribeMission " + missionId);
 
-        var missionData = TestDatabase.Mission.Get(missionId);
+        var missionData = missionDB.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
         {
@@ -46,7 +43,7 @@ public class MissionManager
     {
         Debug.Log("UnsubscribeQuest " + missionId);
 
-        var missionData = TestDatabase.Mission.Get(missionId);
+        var missionData = missionDB.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
         {
@@ -111,7 +108,7 @@ public class MissionManager
             return;
         }
 
-        var missiontData = TestDatabase.Mission.Get(missionId);
+        var missiontData = missionDB.Get(missionId);
 
         int currentCount = Managers.AccountData.ongoingMissions[missionId].Update(amount);
 
@@ -173,7 +170,7 @@ public class MissionManager
             List<int> completeMissionsList = new();
             foreach (var mission in Managers.AccountData.completeMissions)
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
                 {
                     completeMissionsList.Add(mission);
                 }
@@ -182,7 +179,7 @@ public class MissionManager
             foreach (var mission in completeMissionsList)
             {
                 // 완료 미션 중 일일 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
                 {
                     Managers.AccountData.completeMissions.Remove(mission);
 
@@ -193,7 +190,7 @@ public class MissionManager
             List<int> receiveMissionsList = new();
             foreach (var mission in Managers.AccountData.receiveMissions)
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
                 {
                     receiveMissionsList.Add(mission);
                 }
@@ -201,7 +198,7 @@ public class MissionManager
             foreach (var mission in receiveMissionsList)
             {
                 // 수령한 미션 중 일일 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
                 {
                     Managers.AccountData.receiveMissions.Remove(mission);
 
@@ -233,7 +230,7 @@ public class MissionManager
             List<int> completeMissionsList = new();
             foreach (var mission in Managers.AccountData.completeMissions)
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
                 {
                     completeMissionsList.Add(mission);
                 }
@@ -242,7 +239,7 @@ public class MissionManager
             foreach (var mission in completeMissionsList)
             {
                 // 완료 미션 중 주간 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
                 {
                     Managers.AccountData.completeMissions.Remove(mission);
 
@@ -253,7 +250,7 @@ public class MissionManager
             List<int> receiveMissionsList = new();
             foreach (var mission in Managers.AccountData.receiveMissions)
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
                 {
                     receiveMissionsList.Add(mission);
                 }
@@ -261,7 +258,7 @@ public class MissionManager
             foreach (var mission in receiveMissionsList)
             {
                 // 수령한 미션 중 주간 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
                 {
                     Managers.AccountData.receiveMissions.Remove(mission);
 

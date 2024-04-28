@@ -19,7 +19,7 @@ public class RewardGetUI : UIBase
     {
         this.missionId = missionId;
 
-        MissionSO missionData = TestDatabase.Mission.Get(missionId);
+        MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));

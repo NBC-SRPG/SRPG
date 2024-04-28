@@ -186,7 +186,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Daily )
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Daily )
             {
                 continue;
             }
@@ -201,7 +201,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Daily)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Daily)
             {
                 continue;
             }
@@ -216,7 +216,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Daily)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Daily)
             {
                 continue;
             }
@@ -238,7 +238,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -253,7 +253,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -268,7 +268,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -290,7 +290,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -305,7 +305,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -320,7 +320,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -342,7 +342,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -357,7 +357,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -372,7 +372,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -487,7 +487,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -518,7 +518,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -549,7 +549,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -580,7 +580,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -611,7 +611,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionSO missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -711,7 +711,7 @@ public class MissionUI : UIBase
 
                 foreach (Transform child in GetObject((int)GameObjects.WholeContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -721,7 +721,7 @@ public class MissionUI : UIBase
             case PlayTab.Daily:
                 foreach (Transform child in GetObject((int)GameObjects.DailyContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -731,7 +731,7 @@ public class MissionUI : UIBase
             case PlayTab.Weekly:
                 foreach (Transform child in GetObject((int)GameObjects.WeeklyContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -741,7 +741,7 @@ public class MissionUI : UIBase
             case PlayTab.Achievement:
                 foreach (Transform child in GetObject((int)GameObjects.AchievementContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -751,7 +751,7 @@ public class MissionUI : UIBase
             case PlayTab.Beginner:
                 foreach (Transform child in GetObject((int)GameObjects.BeginnerContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
