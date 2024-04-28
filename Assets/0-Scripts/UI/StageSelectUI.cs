@@ -67,7 +67,6 @@ public class StageSelectUI : UIBase
         GetText((int)Texts.StageStarText).text = $"{numberOfStars} / 15";
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
     }
 
     private void OnClickBackButton()

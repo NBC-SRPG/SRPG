@@ -54,4 +54,13 @@ public class CharacterSO : ScriptableObject
 
     [Header("Animator")]
     public string animatorName;
+
+
+    public Sprite GetElementSprite()
+    {
+        string elementName = "Element_" + elementType.ToString();
+        Sprite elementSprite = Managers.Resource.Load<Sprite>(elementName);
+
+        return elementSprite;
+    }
 }

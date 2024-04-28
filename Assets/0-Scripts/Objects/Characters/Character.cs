@@ -219,11 +219,5 @@ public class Character
         return (previewHp, previewAtk, previewDef);
     }
 
-    public Sprite GetElementSprite()
-    {
-        string elementName = "Element_" + SO.elementType.ToString();
-        Sprite elementSprite = Managers.Resource.Load<Sprite>(elementName);
 
-        return elementSprite;
-    }
 }

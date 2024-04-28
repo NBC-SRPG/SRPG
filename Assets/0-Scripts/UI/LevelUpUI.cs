@@ -50,6 +50,7 @@ public class LevelUpUI : UIBase
         MaxLevelAfter,
         AwakeningPieceQuantity,
         AwakeningGoldText,
+        ExpText,
     }
 
     private enum Images
@@ -65,7 +66,7 @@ public class LevelUpUI : UIBase
 
     private enum Buttons
     {
-        LevelUpUICloseButton,
+        CloseButton,
         LevelUpItemButton_1,
         LevelUpItemButton_2,
         LevelUpItemButton_3,
@@ -126,7 +127,7 @@ public class LevelUpUI : UIBase
         GetObject((int)GameObjects.Awakening).SetActive(false);
         GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(false);
 
-        GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
         GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
         GetButton((int)Buttons.LevelUpItemButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2));
         GetButton((int)Buttons.LevelUpItemButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3));
@@ -134,6 +135,7 @@ public class LevelUpUI : UIBase
 
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
+        GetText((int)Texts.ExpText).text = $"{character.Growth.curExp}/{character.Growth.maxExp}";
         LevelUpCalc();
         LevelUpButtonActiveFalse();
 
@@ -442,12 +444,14 @@ public class LevelUpUI : UIBase
         if (character.Growth.level == result[0])
         {
             GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.maxExp}";
         }
         // 레벨업을 했을 때
         else
         {
             GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(false);
             GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.maxExp}";
             GetText((int)Texts.LevelAfter).gameObject.SetActive(true);
             GetText((int)Texts.HpAfter).gameObject.SetActive(true);
             GetText((int)Texts.AtkAfter).gameObject.SetActive(true);

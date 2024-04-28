@@ -30,13 +30,10 @@ public class GachaResultUI : UIBase
 
         foreach (int gachaResult in gachaResultList)
         {
-            GameObject go = Managers.Resource.Instantiate(Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterImage"),
-                GetObject((int)GameObjects.Content).transform);
+            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/GachaEntryUI");
+            go.GetComponent<GachaEntryUI>().characterId = gachaResult;
+            Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
 
-            Utility.Id2SO<CharacterSO>(gachaResult, (result) =>
-            {
-                go.GetComponent<Image>().sprite = (result as CharacterSO).icon;
-            });
         }
     }
 

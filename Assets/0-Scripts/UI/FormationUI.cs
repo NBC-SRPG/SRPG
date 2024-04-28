@@ -195,7 +195,7 @@ public class FormationUI : UIBase
             GetImage((int)formationImageEnum).sprite = characterSprite;
 
             // 속성 이미지 변경
-            GetImage((int)formationAttributeImageEnum).sprite = character.GetElementSprite();
+            GetImage((int)formationAttributeImageEnum).sprite = character.SO.GetElementSprite();
 
             // 캐릭터 레벨 설정
             int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.level;
