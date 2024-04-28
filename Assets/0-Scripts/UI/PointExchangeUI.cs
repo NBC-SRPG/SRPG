@@ -7,6 +7,11 @@ public class PointExchangeUI : UIBase
         PointText
     }
 
+    private enum Buttons
+    {
+        BackImage
+    }
+
     private enum GameObjects
     {
         Content
@@ -24,9 +29,11 @@ public class PointExchangeUI : UIBase
     private void Init()
     {
         BindText(typeof(Texts));
+        BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
         GetText((int)Texts.PointText).text = Managers.AccountData.playerData.gachaPoint.ToString();
+        GetButton((int)Buttons.BackImage).onClick.AddListener(OnClickCloseButton);
 
         foreach (GachaSO gachaSO in Managers.UI.FindUI<GachaUI>().curGachaList)
         {
@@ -42,5 +49,10 @@ public class PointExchangeUI : UIBase
     private void UpdateGachaPoint(int gachaPoint)
     {
         GetText((int)Texts.PointText).text = gachaPoint.ToString();
+    }
+
+    private void OnClickCloseButton()
+    {
+        Managers.UI.CloseUI(this);
     }
 }
