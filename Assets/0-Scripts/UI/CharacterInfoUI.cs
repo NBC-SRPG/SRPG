@@ -494,7 +494,7 @@ public class CharacterInfoUI : UIBase
 
     private void OnClickClassButton(int classTier, int classIndex, ClassSO classSO)
     {
-        Debug.Log("OnClickAbilityButton");
+        Debug.Log("OnClickClassButton");
 
         GetText((int)Texts.ClassNameText).text = classSO.className;
         GetText((int)Texts.ClassDescriptionText).text = classSO.description;
