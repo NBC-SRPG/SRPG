@@ -448,5 +448,4 @@ public class AccountData
         }
         Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
     }
-
 }
