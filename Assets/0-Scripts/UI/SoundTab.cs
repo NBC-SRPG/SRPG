@@ -58,7 +58,7 @@ public class SoundTab : UIBase
     {
         Debug.Log("SetEffectVolume");
 
-        Managers.Sound.SetSoundVolume(Constants.Sound.Effect, volume);
+        Managers.Sound.SetSoundVolume(Constants.Sound.UI, volume);
     }
     private void MuteMasterVolume(bool mute)
     {
@@ -78,6 +78,6 @@ public class SoundTab : UIBase
     {
         Debug.Log("MuteEffectVolume");
 
-        Managers.Sound.MuteSoundVolume(Constants.Sound.Effect, mute);
+        Managers.Sound.MuteSoundVolume(Constants.Sound.UI, mute);
     }
 }

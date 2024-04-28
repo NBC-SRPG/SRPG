@@ -8,7 +8,8 @@ public static class Constants
     public enum Sound
     {
         Bgm,
-        Effect,
+        UI,     // UI작동시 사용할 효과음(Resources)
+        Effect,     // 전투시 사용할 효과음(Addressable)
         Max,
     }
 

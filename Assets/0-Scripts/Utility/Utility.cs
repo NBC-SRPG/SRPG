@@ -26,10 +26,13 @@ public static class Utility
         };
     }
 
-    public static Character GetCharacter(int id)
+    public static AudioClip GetAudioClip(string path)
     {
-        return Managers.AccountData.characterData[id];
+        AudioClip audioClip = Addressables.LoadAssetAsync<AudioClip>(path).WaitForCompletion();
+
+        return audioClip;
     }
+
 
     //taskAsync
 
