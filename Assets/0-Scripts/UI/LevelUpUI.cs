@@ -443,15 +443,15 @@ public class LevelUpUI : UIBase
         // 현재 레벨과 경험치를 먹인 레벨이 같을 때
         if (character.Growth.level == result[0])
         {
-            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
-            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.maxExp}";
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.GetMaxExp(result[0]);
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.GetMaxExp(result[0])}";
         }
         // 레벨업을 했을 때
         else
         {
             GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(false);
-            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
-            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.maxExp}";
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.GetMaxExp(result[0]);
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.GetMaxExp(result[0])}";
             GetText((int)Texts.LevelAfter).gameObject.SetActive(true);
             GetText((int)Texts.HpAfter).gameObject.SetActive(true);
             GetText((int)Texts.AtkAfter).gameObject.SetActive(true);

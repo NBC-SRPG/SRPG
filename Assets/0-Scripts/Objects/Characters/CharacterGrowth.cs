@@ -104,7 +104,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     }
 
     // Constants의 경험치테이블을 참조해 특정 level에서의 최대 경험치를 반환
-    private int GetMaxExp(int level)
+    public int GetMaxExp(int level)
     {
         return Constants.dataTables["characterExpTable"][level];
     }
