@@ -34,7 +34,7 @@ public class StageInfoUI : UIBase
         ClearButton,
         EnterButton,
         EnemyInfoButton,
-        BackButton
+        CloseButton
     }
 
     private enum GameObjects
@@ -94,7 +94,7 @@ public class StageInfoUI : UIBase
         GetButton((int)Buttons.ClearButton).onClick.AddListener(OnClickClearButton);
         GetButton((int)Buttons.EnterButton).onClick.AddListener(OnClickEnterButton);
         GetButton((int)Buttons.EnemyInfoButton).onClick.AddListener(OnClickEnemyInfoButton);
-        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
 
         InitImage();
         InitReward();
@@ -259,7 +259,7 @@ public class StageInfoUI : UIBase
         Managers.UI.ShowUI<EnemyInfoUI>().Init(stage);
     }
 
-    private void OnClickBackButton()
+    private void CloseUI()
     {
         Managers.UI.CloseUI(this);
     }
