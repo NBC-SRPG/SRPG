@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-
+using static Constants;
 public class StageInfoUI : UIBase
 {
     private bool isInit = false;
     private int stageClearCount = 0;
+    private StageSO stage;
 
     private enum Texts
     {
@@ -35,7 +34,7 @@ public class StageInfoUI : UIBase
         ClearButton,
         EnterButton,
         EnemyInfoButton,
-        BackButton
+        CloseButton
     }
 
     private enum GameObjects
@@ -58,6 +57,8 @@ public class StageInfoUI : UIBase
         {
             return;
         }
+
+        this.stage = stage;
 
         BindText(typeof(Texts));
         BindImage(typeof(Images));
@@ -93,10 +94,10 @@ public class StageInfoUI : UIBase
         GetButton((int)Buttons.ClearButton).onClick.AddListener(OnClickClearButton);
         GetButton((int)Buttons.EnterButton).onClick.AddListener(OnClickEnterButton);
         GetButton((int)Buttons.EnemyInfoButton).onClick.AddListener(OnClickEnemyInfoButton);
-        GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
 
         InitImage();
-        InitReward(stage);
+        InitReward();
 
         isInit = true;
 
@@ -108,7 +109,7 @@ public class StageInfoUI : UIBase
         for (int i = 0; i < 5; i++)
         {
             Images partyImageEnum = (Images)Enum.Parse(typeof(Images), $"Party{i + 1}Image");
-            int characterId = Managers.AccountData.formationData[Constants.presetIndex].characterId[i];
+            int characterId = Managers.AccountData.formationData[presetIndex].characterId[i];
 
             if (characterId == 0)
             {
@@ -121,7 +122,7 @@ public class StageInfoUI : UIBase
         }
     }
 
-    private void InitReward(StageSO stage)
+    private void InitReward()
     {
         if (stage.exp > 0)
         {
@@ -165,7 +166,7 @@ public class StageInfoUI : UIBase
         
         // TODO
         // 한 판당 소모 AP는 어디에??
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
     private void OnClickClearIncreButton()
     {
@@ -176,21 +177,59 @@ public class StageInfoUI : UIBase
 
         stageClearCount++;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
 
     private void OnClickClearMaxButton()
     {
-        int maxCount = Managers.AccountData.playerData.Ap / 5;
+        int maxCount = Managers.AccountData.playerData.Ap / ConsumeAp;
 
         stageClearCount = maxCount;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * 5}";
+        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
     }
     private void OnClickClearButton()
     {
-        // TODO
-        // 소탕
+        if (stageClearCount == 0)
+        {
+            return;
+        }
+
+        if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out int starNum))
+        {
+            if (starNum < 3)
+            {
+                Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+
+                return;
+            }
+        }
+        else
+        {
+            Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+            
+            return;
+        }
+
+        // AP 감소
+        Managers.AccountData.playerData.ReduceAP(stageClearCount * ConsumeAp);
+        // 보상 획득
+        if (stage.exp > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stage.exp);
+        }
+
+        if (stage.gold > 0)
+        {
+            Managers.AccountData.playerData.AddExp(stage.gold);
+        }
+
+        foreach (var reward in stage.rewards)
+        {
+            Managers.AccountData.AcquireItems(reward.Key, reward.Value);
+        }
+
+        Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
     }
 
     private void OnClickFormationButton()
@@ -216,11 +255,11 @@ public class StageInfoUI : UIBase
     }
     private void OnClickEnemyInfoButton()
     {
-        // TODO
         // 적 정보UI 생성
+        Managers.UI.ShowUI<EnemyInfoUI>().Init(stage);
     }
 
-    private void OnClickBackButton()
+    private void CloseUI()
     {
         Managers.UI.CloseUI(this);
     }

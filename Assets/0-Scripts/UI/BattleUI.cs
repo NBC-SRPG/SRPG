@@ -936,10 +936,13 @@ public class BattleUI : UIBase
 
         obj.gameObject.SetActive(true);
 
-        obj.transform.position = new Vector2(transform.position.x, transform.position.y + 2.5f);
+        obj.transform.SetParent(transform);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.position += new Vector3(0, 3.5f, 0);
+        obj.layer = transform.gameObject.layer;
 
         text.gameObject.layer = transform.gameObject.layer;
-        obj.transform.localScale = transform.localScale.magnitude > 2f ?  transform.localScale / 2.5f : obj.transform.localScale;
+        obj.transform.localScale = transform.localScale.magnitude > 2f ?  transform.localScale / 10f : obj.transform.localScale;
 
         return text;
     }
@@ -976,6 +979,11 @@ public class BattleUI : UIBase
         }
     }
 
+    public void ResetTextTransform(Transform transform)
+    {
+        transform.SetParent(textPool.transform);
+        transform.gameObject.layer = 0;
+    }
 
     public void ShowCounterText(Transform transform)
     {

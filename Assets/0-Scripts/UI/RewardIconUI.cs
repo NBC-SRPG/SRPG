@@ -29,4 +29,9 @@ public class RewardIconUI : UIBase
         GetText((int)Texts.RewardText).text = rewardText;
         GetImage((int)Images.RewardImage).sprite = imageSprite;
     }
+
+    public void SetSpriteSize(Vector2 newVec)
+    {
+        GetImage((int)Images.RewardImage).GetComponent<RectTransform>().sizeDelta = newVec;
+    }
 }

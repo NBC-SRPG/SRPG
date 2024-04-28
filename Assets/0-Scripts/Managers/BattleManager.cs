@@ -35,6 +35,11 @@ public class BattleManager : MonoBehaviour
 
     public bool[] extraClear;
 
+    private int goldRewards;
+    private int diamondReswards;
+    private int expRewards;
+    private Dictionary<int, int> itemRewards;
+
     private void Awake()
     {
         if (Instance == null)
@@ -53,6 +58,10 @@ public class BattleManager : MonoBehaviour
         Managers.Resource.Instantiate("Map/" + stage.prefabsName);
 
         extraClear = new bool[3];
+
+        goldRewards = stage.gold;
+        expRewards = stage.exp;
+        itemRewards = new Dictionary<int, int>();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -793,6 +802,7 @@ public class BattleManager : MonoBehaviour
         if (Managers.GameManager.player.isWin)
         {
             UpdateClearData();
+            GetReward();
             Ui.ShowWin();
         }
         else
@@ -806,6 +816,7 @@ public class BattleManager : MonoBehaviour
         if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
         {
             int clearStar = 0;
+            int alreadyClear = 0;
             foreach (bool t in extraClear)
             {
                 if (t)
@@ -814,11 +825,48 @@ public class BattleManager : MonoBehaviour
                 }
             }
 
-            Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+            if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out alreadyClear))
+            {
+                if(clearStar > alreadyClear)
+                {
+                    Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+
+                    if (clearStar > 3)// 모든 서브 요소 클리어
+                    {
+                        //다이아 획득
+                    }
+                }
+            }
+            else
+            {
+                if(clearStar > 3)// 모든 서브 요소 클리어
+                {
+                    //다이아 획득
+                }
+
+                Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+            }
+
         }
     }
 
+    private void GetReward()
+    {
+        if (!Managers.GameManager.nowTesting)// 테스트하고 있을 땐 클리어 데이터 저장 안함
+        {
+            Managers.AccountData.playerData.AddGold(goldRewards);
+            Managers.AccountData.playerData.AddExp(expRewards);
 
+            foreach (KeyValuePair<int, int> item in itemRewards)
+            {
+
+                Managers.AccountData.AcquireItems(item.Key, item.Value);
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //소환 함수들
 
     public void SpawnCharacters(List<CharacterBase> characterList, GamePlayer player)
     {

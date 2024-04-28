@@ -53,7 +53,6 @@ public class CharacterInfoUI : UIBase
         Class2_2Button,
         ClassSelectButton,
         LevelUpButton,
-        HomeButton
     }
     private enum Images
     {
@@ -131,7 +130,6 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.PassiveSkillButton).onClick.AddListener(OnClickPassiveSkillButton);
         GetButton((int)Buttons.WeaponButton).onClick.AddListener(OnClickWeaponButton);
         GetButton((int)Buttons.ArmorButton).onClick.AddListener(OnClickArmorButton);
-        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
 
         ShowTab(PlayTab.Skill);
 

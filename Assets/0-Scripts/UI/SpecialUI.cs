@@ -6,8 +6,7 @@ public class SpecialUI : UIBase
         EquipmentUpgradeMaterialButton,
         CharacterUpgradeMaterialButton,
         CharacterLimitBreakMaterialButton,
-        BackButton,
-        HomeButton
+        BackButton
     }
 
     private void Start()
@@ -26,7 +25,6 @@ public class SpecialUI : UIBase
         GetButton((int)Buttons.CharacterUpgradeMaterialButton).onClick.AddListener(OnClickCharacterUpgradeMaterialButton);
         GetButton((int)Buttons.CharacterLimitBreakMaterialButton).onClick.AddListener(OnClickCharacterLimitBreakMaterialButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
     }
 
     private void OnClickGoldSupplyButton()
