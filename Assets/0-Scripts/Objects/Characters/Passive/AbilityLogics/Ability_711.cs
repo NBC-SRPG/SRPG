@@ -13,7 +13,7 @@ public class Ability_711: PassiveLogic
     //시스의 1 특성
 
 
-    BonusStat stat_711 = new BonusStat(); // 보너스 스탯
+    BonusStat stat_711; // 보너스 스탯
     bool hasCharacterWithId1; //파티에 "제네"가 있는지 체크해서 bool 값을 저장하는 필드.
 
 
@@ -21,15 +21,21 @@ public class Ability_711: PassiveLogic
     {
         this.character = character;
 
+        
+    }
+
+    public override void OnStageStart()
+    {
+        BonusStat stat_711 = new BonusStat();
         checkExisistSis();
     }
 
     public override void OnRoundStart()
     {
-
+        checkExisistSis();
     }
 
-    private void checkExisistSis() //배틀 중인 캐릭터 중 아군 캐릭터에 시스가 있는지 확인하는 메서드
+    private void checkExisistSis() //배틀 중인 캐릭터 중 아군 캐릭터에 제네가 있는지 확인하는 메서드
     {
         //hasCharacterWithId1 = BattleManager.Instance.charactersInBattle.Any(characterBase =>
         //{
@@ -47,14 +53,14 @@ public class Ability_711: PassiveLogic
 
         hasCharacterWithId1 = false;
 
-        foreach (Character character in character.player.party)
-        {
-            if(character.SO.id == coefficient["constants1"])
+            foreach (Character ally in character.player.party)
             {
-                hasCharacterWithId1 = true;
-                break;
+                if (ally != null && ally.SO.id == coefficient["constants1"])
+                {
+                    hasCharacterWithId1 = true;
+                    break;
+                }
             }
-        }
 
     }
 
