@@ -27,17 +27,17 @@ public class RewardGetUI : UIBase
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
 
         // 경험치 보상 아이콘 생성
-        CreateRewardIcon(missionData.exp, TestExpImage);
+        CreateRewardIcon(missionData.exp, TestExpImage.ToString());
         // ap 보상 아이콘 생성
-        CreateRewardIcon(missionData.ap, TestApImage);
+        CreateRewardIcon(missionData.ap, TestApImage.ToString());
         // 골드 보상 아이콘 생성
-        CreateRewardIcon(missionData.gold, TestGoldImage);
+        CreateRewardIcon(missionData.gold, TestGoldImage.ToString());
         // 다이아 보상 아이콘 생성
-        CreateRewardIcon(missionData.diamond, TestDiamondImage);
+        CreateRewardIcon(missionData.diamond, TestDiamondImage.ToString());
         // 아이템 리워드 아이콘 생성
         foreach (var itemReward in missionData.rewards)
         {
-            CreateRewardIcon(itemReward.Key, itemReward.Value);
+            CreateRewardIcon(itemReward.Key, itemReward.Value.ToString());
         }
     }
 
@@ -49,17 +49,17 @@ public class RewardGetUI : UIBase
 
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
 
-        CreateRewardIcon(totalExp, TestExpImage);
-        CreateRewardIcon(totalAp, TestApImage);
-        CreateRewardIcon(totalGold, TestGoldImage);
-        CreateRewardIcon(totalDiamond, TestDiamondImage);
+        CreateRewardIcon(totalExp, TestExpImage.ToString());
+        CreateRewardIcon(totalAp, TestApImage.ToString());
+        CreateRewardIcon(totalGold, TestGoldImage.ToString());
+        CreateRewardIcon(totalDiamond, TestDiamondImage.ToString());
 
         foreach (var itemReward in itemRewards)
         {
-            CreateRewardIcon(itemReward.Value, itemReward.Key);
+            CreateRewardIcon(itemReward.Value, itemReward.Key.ToString());
         }
     }
-    private void CreateRewardIcon(int reward, int rewardImage)
+    private void CreateRewardIcon(int reward, string rewardId)
     {
         if (reward <= 0)
         {
@@ -70,7 +70,7 @@ public class RewardGetUI : UIBase
             Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
             GetObject((int)GameObjects.Content).transform);
 
-        go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardImage);
+        go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardId);
     }
 
     private void OnClickCheckButton()

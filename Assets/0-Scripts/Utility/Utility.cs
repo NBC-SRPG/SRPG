@@ -75,5 +75,4 @@ public static class Utility
             callback(handler.Result);
         };
     }
-
 }
