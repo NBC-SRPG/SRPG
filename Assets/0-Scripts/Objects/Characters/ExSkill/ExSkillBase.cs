@@ -72,6 +72,11 @@ public class ExSkillBase
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {
+        if(skillData == null)
+        {
+            return;
+        }
+
         Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
 
         if (skillAbillityType == null)
@@ -85,6 +90,11 @@ public class ExSkillBase
 
     private void InitSkillRange()//스킬 범위 생성자
     {
+        if (skillData == null)
+        {
+            return;
+        }
+
         Constants.SkillScaleType scaletype = skillData.scaleType;
         int scale = skillData.skillScale;
 

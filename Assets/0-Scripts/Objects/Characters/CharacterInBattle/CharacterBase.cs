@@ -98,7 +98,14 @@ public class CharacterBase : MonoBehaviour
         SetSkillOwner();
 
         leftWalkRange = Mov;
-        skillCost = curCharacterSkill.skillData.cost;
+        if (curCharacterSkill != null  && curCharacterSkill.skillData != null)
+        {
+            skillCost = curCharacterSkill.skillData.cost;
+        }
+        else
+        {
+            skillCost = 0;
+        }
 
         isDead = false;
         isWalking = false;
@@ -316,9 +323,8 @@ public class CharacterBase : MonoBehaviour
         {
                 passive?.OnUpdate();
         }
-        curCharacterSkill.skillAbility?.OnUpdate();
+        curCharacterSkill?.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
-        
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

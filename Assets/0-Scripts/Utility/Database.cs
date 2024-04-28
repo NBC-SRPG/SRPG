@@ -7,6 +7,8 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class Database
 {
@@ -103,8 +105,7 @@ public class Database
         //Managers.AccountData.InitMailBox(args.Snapshot);
     }
 
-    public IEnumerator DataLoad
-    ()
+    public IEnumerator DataLoad()
     {
         yield return Load(userDB.Child("stageClearData"), data =>
         {

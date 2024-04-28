@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -11,92 +12,49 @@ public class MissionDB
     public MissionDB()
     {
         List<MissionSO> entities = new();
-
-
-        Addressables.LoadAssetsAsync<MissionSO>("0-AddressableResources/ScriptableObjects/MissionSO/", null).Completed += OnMissionsLoaded;
-
-        void OnMissionsLoaded(AsyncOperationHandle<IList<MissionSO>> loading)
+        
+        Addressables.LoadAssetsAsync<MissionSO>("Mission", mission =>
         {
-            if (loading.Status == AsyncOperationStatus.Succeeded)
+            if (mission != null)
             {
-                entities.AddRange(loading.Result);
+                entities.Add(mission);
+            }
+        }).Completed += handle =>
+        {
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                Debug.Log("모든 미션 SO가 성공적으로 로드되었습니다.");
+
+                Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
+
+                if (entities == null || entities.Count <= 0)
+                {
+                    return;
+                }
+
+                var entityCount = entities.Count;
+
+                for (int i = 0; i < entityCount; i++)
+                {
+                    var mission = entities[i];
+
+                    if (missionDic.ContainsKey(mission.missionId))
+                    {
+                        missionDic[mission.missionId] = mission;
+                        Debug.Log(mission.missionId);
+                    }
+                    else
+                    {
+                        missionDic.Add(mission.missionId, mission);
+                        Debug.Log(mission.missionId);
+                    }
+                }
             }
             else
             {
-                Debug.LogError("미션 로드 실패");
+                Debug.LogError("미션 SO 로드 실패: " + handle.OperationException);
             }
-        }
-
-        /*
-
-        // TODO
-        // DB에서 미션 데이터 가져오기
-        // 테스트 데이터
-        MissionSO missionData = ScriptableObject.CreateInstance<MissionSO>();
-        missionData.missionId = 90001000;
-        missionData.missionName = "테스트 미션 1";
-        missionData.missionDescription = "테스트 미션 1입니다. 80001000 아이템 1개 얻기";
-        missionData.missionType = MissionType.GetItem;
-        missionData.missionCategory = MissionCategory.Daily;
-        missionData.target = 80001000;
-        missionData.count = 1;
-        missionData.exp = 100;
-        missionData.ap = 0;
-        missionData.gold = 1000;
-        missionData.diamond = 100;
-        entities.Add(missionData);
-
-        MissionSO missionData1 = ScriptableObject.CreateInstance<MissionSO>();
-        missionData1.missionId = 90001001;
-        missionData1.missionName = "테스트 미션 2";
-        missionData1.missionDescription = "테스트 미션 2입니다. 70001000 몬스터 10마리 잡기";
-        missionData1.missionType = MissionType.KillMonster;
-        missionData1.missionCategory = MissionCategory.Weekly;
-        missionData1.target = 70001000;
-        missionData1.count = 10;
-        missionData1.exp = 1000;
-        missionData1.ap = 5;
-        missionData1.gold = 2000;
-        missionData1.diamond = 300;
-        missionData1.nextMissions.Add(90001002);
-        entities.Add(missionData1);
-
-        MissionSO missionData2 = ScriptableObject.CreateInstance<MissionSO>();
-        missionData2.missionId = 90001002;
-        missionData2.missionName = "테스트 미션 3";
-        missionData2.missionDescription = "테스트 미션 3입니다. 80001001 아이템 5개 사용";
-        missionData2.missionType = MissionType.UseItem;
-        missionData2.missionCategory = MissionCategory.Achievement;
-        missionData2.target = 80001001;
-        missionData2.count = 5;
-        missionData2.exp = 5000;
-        missionData2.ap = 100;
-        missionData2.gold = 5000;
-        missionData2.diamond = 700;
-        entities.Add(missionData2);
-
-        */
-
-        if (entities == null || entities.Count <= 0)
-        {
-            return;
-        }
-            
-        var entityCount = entities.Count;
-
-        for (int i = 0; i < entityCount; i++)
-        {
-            var mission = entities[i];
-
-            if (missionDic.ContainsKey(mission.missionId))
-            {
-                missionDic[mission.missionId] = mission;
-            }
-            else
-            {
-                missionDic.Add(mission.missionId, mission);
-            }
-        }
+        };
     }
 
     public MissionSO Get(int missionId)

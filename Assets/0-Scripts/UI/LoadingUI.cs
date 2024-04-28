@@ -1,11 +1,10 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadingUI : UIBase
 {
     private bool isDataLoaded = false;
+    public bool isMissionLoaded = false;
 
     private enum Texts
     {
@@ -33,7 +32,7 @@ public class LoadingUI : UIBase
 
     private void Update()
     {
-        if (isDataLoaded && Input.GetMouseButtonDown(0))
+        if (isDataLoaded && isMissionLoaded && Input.GetMouseButtonDown(0))
         {
             SceneManager.LoadScene("MainScene");
         }

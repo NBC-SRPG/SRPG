@@ -284,7 +284,7 @@ public class AccountData
             {
                 // 데이터의 키(미션Id)로 미션 시작, 진행 정도는 완료 미션이기 때문에 해당 미션의 count를 그대로 적용
                 MainThreadExecutor.ExecuteInMainThread(() => {
-                    Managers.Mission.MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count);
+                    Managers.Mission.MissionStart(int.Parse(mission.Key), Managers.Mission.missionDB.Get(int.Parse(mission.Key)).count);
                     // 바로 클리어 처리
                     Managers.Mission.MissionClear(int.Parse(mission.Key));
 
