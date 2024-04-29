@@ -19,7 +19,7 @@ public class DownloadUI : UIBase
 
     private enum Images
     {
-        ProgressBar
+        Fill
     }
 
     private enum Buttons
@@ -89,7 +89,7 @@ public class DownloadUI : UIBase
     // 아니면 로딩 씬을 거쳐 샘플신을 로드하게끔 실행
     private IEnumerator CheckUpdateFiles()
     {
-        var labels = new List<string>() { "SO", "Image" };
+        var labels = new List<string>() { "SO", "Image", "Sound" };
         _patchSize = default;
 
         foreach (var label in labels)
@@ -119,7 +119,7 @@ public class DownloadUI : UIBase
     // 직후 다운로드 상태 코루틴 시작
     private IEnumerator PatchFiles()
     {
-        var labels = new List<string>() { "SO", "Image" };
+        var labels = new List<string>() { "SO", "Image", "Sound" };
 
         foreach (var label in labels)
         {
@@ -146,6 +146,7 @@ public class DownloadUI : UIBase
         while (!handle.IsDone)
         {
             _patchMap[label] = handle.GetDownloadStatus().DownloadedBytes;
+            Debug.Log(_patchMap[label]);
             yield return new WaitForEndOfFrame();
         }
 
@@ -166,7 +167,7 @@ public class DownloadUI : UIBase
             total += _patchMap.Sum(tmp => tmp.Value);
 
             var perValue = total / _patchSize;
-            GetImage((int)Images.ProgressBar).fillAmount = perValue;
+            GetImage((int)Images.Fill).fillAmount = perValue;
             GetText((int)Texts.DownloadPercent).text = string.Format("{0:##.##}", perValue * 100) + " %";
 
             if (total.Equals(_patchSize))

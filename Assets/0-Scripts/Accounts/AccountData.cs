@@ -342,16 +342,14 @@ public class AccountData
     {
         if(!characterData.ContainsKey(id))
         {
-            Utility.Id2SO<CharacterSO>(id, (result) =>
+            CharacterSO characterSO = Utility.Id2SOWait<CharacterSO>(id);
+            CharacterGrowth characterGrowth = new CharacterGrowth(characterSO);
+            if (characterData.TryAdd(id, new Character(characterSO, characterGrowth)))
             {
-                CharacterGrowth characterGrowth = new CharacterGrowth((CharacterSO)result);
-                if (characterData.TryAdd(id, new Character((CharacterSO)result, characterGrowth)))
-                {
-                    Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
-                    AcquireItems(id, 0);
-                    return;
-                }
-            });
+                Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
+                AcquireItems(id, 0);
+                return;
+            }
         }
 
         // 이미 보유중인 캐릭터라면 조각 획득
