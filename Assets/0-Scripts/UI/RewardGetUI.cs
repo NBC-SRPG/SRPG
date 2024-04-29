@@ -10,7 +10,9 @@ public class RewardGetUI : UIBase
 
     private enum Buttons
     {
-        CheckButton
+        BackImage,
+        CheckButton,
+        CloseButton
     }
     
     private enum GameObjects
@@ -25,7 +27,9 @@ public class RewardGetUI : UIBase
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
+        GetButton((int)Buttons.BackImage).onClick.AddListener(OnClickCheckButton);
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCheckButton);
 
         // 경험치 보상 아이콘 생성
         CreateRewardIcon(missionData.exp, "Exp");
@@ -38,7 +42,7 @@ public class RewardGetUI : UIBase
         // 아이템 리워드 아이콘 생성
         foreach (var itemReward in missionData.rewards)
         {
-            CreateRewardIcon(itemReward.Key, itemReward.Value.ToString());
+            CreateRewardIcon(itemReward.Value, itemReward.Key.ToString());
         }
     }
 
@@ -49,7 +53,9 @@ public class RewardGetUI : UIBase
         BindObject(typeof(GameObjects));
 
         GetText((int)Texts.TitleText).text = "소탕 완료";
+        GetButton((int)Buttons.BackImage).onClick.AddListener(OnClickCheckButton);
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCheckButton);
 
         // 경험치 보상 아이콘 생성
         CreateRewardIcon(stage.exp * clearCount, "Exp");
@@ -71,7 +77,9 @@ public class RewardGetUI : UIBase
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
+        GetButton((int)Buttons.BackImage).onClick.AddListener(OnClickCheckButton);
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickCheckButton);
 
         CreateRewardIcon(totalExp, "Exp");
         CreateRewardIcon(totalAp, "AP");

@@ -103,8 +103,6 @@ public class MissionEntryUI : UIBase
                 GetObject((int)GameObjects.RewardContent).transform);
             Utility.Id2SO<ItemSO>(item.Key, (result) =>
             {
-                Debug.Log(item.Key);
-                Debug.Log((result as ItemSO).itemName);
                 go.GetComponent<RewardIconUI>().Init(item.Value.ToString(), (result as ItemSO).icon);
             });
 
