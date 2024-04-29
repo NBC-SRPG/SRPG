@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class CharAnim_EnemyBase : CharAnimBase
 {
+    private string soundPath;
+
     protected override void LoadParticles()
     {
         base.LoadParticles();
@@ -18,6 +20,20 @@ public class CharAnim_EnemyBase : CharAnimBase
         KnockBackEnemy(targetCharacter, 10);
 
         targetCharacter.characterAnim.ShakeCharacter();
+    }
+
+    public void PlayAttackSound(string character)
+    {
+        soundPath = "Sounds/Effects/Monster/Attack_" + character + ".mp3";
+
+        Managers.Sound.Play(Constants.Sound.Effect, soundPath);
+    }
+
+    public void PlaySkillSound(string character)
+    {
+        soundPath = "Sounds/Effects/Monster/ExSkill_" + character + ".mp3";
+
+        Managers.Sound.Play(Constants.Sound.Effect, soundPath);
     }
 
     public void SkillTiming()
@@ -51,8 +67,6 @@ public class CharAnim_EnemyBase : CharAnimBase
         FlipCharacter(moveTarget, false);
 
         StartCoroutine(MoveToTarget(moveTarget, 200f));
-
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_3/Attack_03.mp3");
     }
 
     public void MoveToLastPosition()
