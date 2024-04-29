@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,10 +17,6 @@ public class SoundManager
     private bool masterMute = false;
     // BGM, Effect 음소거 상태인지 체크
     private Dictionary<Constants.Sound, bool> soundMutes = new Dictionary<Constants.Sound, bool>();
-
-    private AudioClip intro;
-    private AudioClip loop;
-
     public void Init()
     {
         if (soundRoot == null)
@@ -230,52 +225,5 @@ public class SoundManager
         audioClip = Utility.GetAudioClip(path);
         _audioClips.Add(path, audioClip);
         return audioClip;
-    }
-
-    public IEnumerator PlayBattleBGM(string path)
-    {
-        intro = Managers.Resource.Load<AudioClip>($"Sounds/{path}" + "_intro");
-        loop = Managers.Resource.Load<AudioClip>($"Sounds/{path}" + "_loop");
-
-        AudioSource audioSource = audioSources[(int)Constants.Sound.Bgm];
-
-        // 없으면 false
-        if (intro == null || loop == null)
-        {
-            yield break;
-        }
-
-        // 재생하고 있는 오디오가 있다면 중지
-        if (audioSource.isPlaying)
-        {
-            audioSource.Stop();
-        }
-
-        // Load한 clip 적용
-        audioSource.clip = intro;
-        audioSource.loop = false;
-        // 재생
-        audioSource.Play();
-
-        float time = 0;
-
-        while (time < audioSource.clip.length)
-        {
-            time += Time.deltaTime;
-            yield return null;
-        }
-
-        audioSource.clip = loop;
-        audioSource.loop = true;
-        audioSource.Play();
-    }
-
-    public void BattleBGMStop()
-    {
-        Stop(Constants.Sound.Bgm);
-
-        audioSources[(int)Constants.Sound.Bgm].loop = true;
-        intro = null;
-        loop = null;
     }
 }
