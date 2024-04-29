@@ -44,11 +44,17 @@ public class CharacterBuf_Corrosion : CharacterBuf
             damage = 1;
         }
 
+        damage = damage * stack;
+        character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf, Constants.ElementType.Water);
+        //현재 반복문을 돌려서 데미지를 여러차례 주는게 의미가 없으므로 그냥 stack * damage로 로직을 수정했습니다.
+        //코루틴을 돌려서 틱뎀을 구현해보는것도 생각했는데 characterBuf가 monobehavier를 상속을 안해서 일단 보류했습니다.
 
+        /*
         for (int i = 0; i < stack; i++)
         {
             character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf, Constants.ElementType.Water);
         }
+        */
 
         Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Corrosion");
     }
