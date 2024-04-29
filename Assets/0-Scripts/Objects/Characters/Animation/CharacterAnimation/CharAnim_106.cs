@@ -25,6 +25,7 @@ public class CharAnim_106 : CharAnimBase
         CameraController.instance.ResetBattleGroup();
         CameraController.instance.AddBattleTargetGroup(particles.cameraTransform["BowUp"], 0);
 
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_6/ExSkill_06.mp3");
     }
 
     public override void PlayAttackAnimation(CharacterBase targetCharacter)
@@ -32,6 +33,8 @@ public class CharAnim_106 : CharAnimBase
         SetRangePosition(targetCharacter, GetDirectionOfCharacter(), 20);
 
         base.PlayAttackAnimation(targetCharacter);
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_6/Attack_06.mp3");
     }
 
     public void SetSkilPosition()

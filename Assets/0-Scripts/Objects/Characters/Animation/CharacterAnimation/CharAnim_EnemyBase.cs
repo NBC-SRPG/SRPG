@@ -51,6 +51,8 @@ public class CharAnim_EnemyBase : CharAnimBase
         FlipCharacter(moveTarget, false);
 
         StartCoroutine(MoveToTarget(moveTarget, 200f));
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_3/Attack_03.mp3");
     }
 
     public void MoveToLastPosition()
@@ -64,5 +66,6 @@ public class CharAnim_EnemyBase : CharAnimBase
         FlipCharacter(moveTarget, false);
 
         StartCoroutine(MoveToTargetByLerp(moveTarget, 0.25f));
+
     }
 }

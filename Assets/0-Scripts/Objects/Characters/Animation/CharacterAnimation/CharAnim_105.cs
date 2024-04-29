@@ -60,6 +60,8 @@ public class CharAnim_105 : CharAnimBase
                 AttackEnemy(targets);
 
                 targets.characterAnim.ShakeCharacter();
+
+                Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Common/Hit.mp3");
             }
             DamageAll();
 
@@ -84,5 +86,15 @@ public class CharAnim_105 : CharAnimBase
         particles.PlayParticle("Spark");
         targetCharacter.characterAnim.ShakeCharacter();
         Damage();
+    }
+
+    public void PlayAttackSound()
+    {
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/Attack_05.mp3");
+    }
+
+    public void PlaySkillSound()
+    {
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/ExSkill_05.mp3");
     }
 }

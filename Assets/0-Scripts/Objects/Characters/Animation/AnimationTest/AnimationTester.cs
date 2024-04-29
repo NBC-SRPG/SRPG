@@ -28,8 +28,9 @@ public class AnimationTester : MonoBehaviour
 
     public void OnCounterButton()
     {
-        AnimationController.instance.EnqueueAttackAnimation(targetCharacter, testCharacter);
-        AnimationController.instance.EnqueueCounterAttackAnimation(testCharacter, targetCharacter);
+        //AnimationController.instance.EnqueueAttackAnimation(targetCharacter, testCharacter);
+        //AnimationController.instance.EnqueueCounterAttackAnimation(testCharacter, targetCharacter);
+        AnimationController.instance.EnqueueblockAnimation(targetCharacter, testCharacter);
 
         AnimationController.instance.StartAnimationQueue();
     }

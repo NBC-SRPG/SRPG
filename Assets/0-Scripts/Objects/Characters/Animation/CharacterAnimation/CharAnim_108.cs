@@ -37,6 +37,16 @@ public class CharAnim_108 : CharAnimBase
         Damage();
     }
 
+    public void PlayAttackSound()
+    {
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Attack_08.mp3");
+    }
+
+    public void PlayCounterSound()
+    {
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Ability_832.mp3");
+    }
+
     public override void PlaySkillAnimation(List<CharacterBase> targets)
     {
         base.PlaySkillAnimation(targets);
@@ -50,6 +60,8 @@ public class CharAnim_108 : CharAnimBase
         }
 
         particles.ChangeParent("Shield", targetCharacter.transform);
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/ExSkill_08.mp3");
     }
 
     public void HandUp()
@@ -69,6 +81,8 @@ public class CharAnim_108 : CharAnimBase
         targetCharacter.transform.position = new Vector3(particles.cameraTransform["GrabPoint"].position.x, targetCharacter.transform.position.y, targetCharacter.transform.position.z);
 
         particles.PlayParticle("Grab");
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Ability_832.mp3");
     }
 
     public void Catch()
