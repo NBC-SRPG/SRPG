@@ -617,6 +617,18 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
+    public bool CheckEnemyAsId(GamePlayer player)// 적인지 확인
+    {
+        if (player.playerId != playerId)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //---------------------------------------------------------------------------
     // 일반 공격 관련
 
