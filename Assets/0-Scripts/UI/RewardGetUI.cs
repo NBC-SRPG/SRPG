@@ -3,7 +3,11 @@ using UnityEngine;
 
 public class RewardGetUI : UIBase
 {
-    private int missionId;
+    private enum Texts
+    {
+        TitleText
+    }
+
     private enum Buttons
     {
         CheckButton
@@ -16,8 +20,6 @@ public class RewardGetUI : UIBase
 
     public void Init(int missionId)
     {
-        this.missionId = missionId;
-
         MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
         BindButton(typeof(Buttons));
@@ -37,6 +39,29 @@ public class RewardGetUI : UIBase
         foreach (var itemReward in missionData.rewards)
         {
             CreateRewardIcon(itemReward.Key, itemReward.Value.ToString());
+        }
+    }
+
+    public void Init(StageSO stage, int clearCount)
+    {
+        BindText(typeof(Texts));
+        BindButton(typeof(Buttons));
+        BindObject(typeof(GameObjects));
+
+        GetText((int)Texts.TitleText).text = "소탕 완료";
+        GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
+
+        // 경험치 보상 아이콘 생성
+        CreateRewardIcon(stage.exp * clearCount, "Exp");
+        // 골드 보상 아이콘 생성
+        CreateRewardIcon(stage.gold * clearCount, "Gold");
+        // 아이템 리워드 아이콘 생성
+        foreach (var itemReward in stage.rewards)
+        {
+            Utility.Id2SO<ItemSO>(itemReward.Key, (result) =>
+            {
+                CreateRewardIcon(itemReward.Value * clearCount, (result as ItemSO).icon);
+            });
         }
     }
 
@@ -70,6 +95,20 @@ public class RewardGetUI : UIBase
             GetObject((int)GameObjects.Content).transform);
 
         go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardId);
+    }
+
+    private void CreateRewardIcon(int reward, Sprite rewardSprite)
+    {
+        if (reward <= 0)
+        {
+            return;
+        }
+
+        GameObject go = Managers.Resource.Instantiate(
+            Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+            GetObject((int)GameObjects.Content).transform);
+
+        go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardSprite);
     }
 
     private void OnClickCheckButton()
