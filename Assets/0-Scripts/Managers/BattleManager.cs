@@ -859,7 +859,6 @@ public class BattleManager : MonoBehaviour
 
             foreach (KeyValuePair<int, int> item in itemRewards)
             {
-
                 Managers.AccountData.AcquireItems(item.Key, item.Value);
             }
         }

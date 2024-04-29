@@ -78,6 +78,8 @@ public class BattleUI : UIBase
         Ability3Select,
         BufListObject,
         BufListContent,
+        RewardObject,
+        RewardContent,
 
     }
 
@@ -905,13 +907,13 @@ public class BattleUI : UIBase
 
     private IEnumerator Result(bool win)
     {
-        Managers.Sound.Stop(Sound.Bgm);
-
         yield return new WaitWhile(() => AnimationController.instance.CheckAnimation() || AnimationController.instance.IsWalkingAnimation());
 
         yield return new WaitForSeconds(0.5f);
 
         GetObject((int)GameObjects.GameResult).SetActive(true);
+
+        Managers.Sound.Stop(Sound.Bgm);
 
         float time = 0f;
         while(time <= 0.25f)
@@ -966,6 +968,8 @@ public class BattleUI : UIBase
                 yield return wait;
             }
 
+            InitWithMultipleRewards(stage.exp, 0, stage.gold, 0, stage.rewards);
+            yield return wait;
         }
         else
         {
@@ -980,6 +984,54 @@ public class BattleUI : UIBase
     {
         Managers.GameManager.player.ResetPlayer();
         SceneManager.LoadScene("MainScene");
+    }
+
+    public void InitWithMultipleRewards(int totalExp, int totalAp, int totalGold, int totalDiamond, Dictionary<int, int> itemRewards)
+    {
+        if(totalExp > 0)
+        {
+            Debug.Log("exp");
+            CreateRewardIcon(totalExp, "Exp");
+        }
+
+        if (totalAp > 0)
+        {
+            CreateRewardIcon(totalAp, "AP");
+        }
+
+        if (totalGold > 0)
+        {
+            Debug.Log("gold");
+            CreateRewardIcon(totalGold, "Gold");
+        }
+
+        if (totalDiamond > 0)
+        {
+            CreateRewardIcon(totalDiamond, "Daimond");
+        }
+
+        if (itemRewards != null && itemRewards.Count > 0)
+        {
+            Debug.Log("items");
+            foreach (var itemReward in itemRewards)
+            {
+                CreateRewardIcon(itemReward.Value, itemReward.Key.ToString());
+            }
+        }
+    }
+
+    private void CreateRewardIcon(int reward, string rewardId)
+    {
+        if (reward <= 0)
+        {
+            return;
+        }
+
+        GameObject go = Managers.Resource.Instantiate(
+            Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+            GetObject((int)GameObjects.RewardContent).transform);
+
+        go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardId);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
