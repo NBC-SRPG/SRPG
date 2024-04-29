@@ -17,50 +17,21 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 372e182594d096841b571fd1a696142c
   m_SerializeEntries:
-  - m_GUID: 494282541dd014e4d809712bbf75b40b
-    m_Address: CharacterSO
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SO
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b13b2ffa4b169d547a4945f3478fb53c
-    m_Address: ClassSO
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SO
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bd7e033dbd9029d47a41b83a5a473648
-    m_Address: EquipSO
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SO
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 53ae864d8082087468bea9b548f886b5
-    m_Address: AbilitySO
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SO
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8fa6e442015f4f14e8b42dd9337168ae
-    m_Address: ExSkillSO
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SO
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5a2ed16ce54cd4443a5b8cb18e37eafd
     m_Address: PassiveSkillSO
     m_ReadOnly: 0
     m_SerializedLabels:
     - SO
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0ff9681a38294da439125cbba6cafb88
-    m_Address: ItemSO
+  - m_GUID: d9a064f90e1ee044ab2ee8a4a62bbd99
+    m_Address: MissionSO
     m_ReadOnly: 0
     m_SerializedLabels:
     - SO
+    - Mission
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 37de513534db6ed4b919e6080d836577
-    m_Address: StageSO
+  - m_GUID: 0ff9681a38294da439125cbba6cafb88
+    m_Address: ItemSO
     m_ReadOnly: 0
     m_SerializedLabels:
     - SO
@@ -71,16 +42,53 @@ MonoBehaviour:
     m_SerializedLabels:
     - SO
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d9a064f90e1ee044ab2ee8a4a62bbd99
-    m_Address: MissionSO
+  - m_GUID: 8fa6e442015f4f14e8b42dd9337168ae
+    m_Address: ExSkillSO
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Mission
+    - SO
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5af5a4f00d19ac346816faa3d6cf8cf0
-    m_Address: Sounds
+  - m_GUID: bd7e033dbd9029d47a41b83a5a473648
+    m_Address: EquipSO
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b6d0fafde17208f439f65d78b0984573
+    m_Address: Enemy
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b13b2ffa4b169d547a4945f3478fb53c
+    m_Address: ClassSO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 494282541dd014e4d809712bbf75b40b
+    m_Address: CharacterSO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6a373da353d8784dafa9dad825c87e7
+    m_Address: ChapterSO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 37de513534db6ed4b919e6080d836577
+    m_Address: StageSO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53ae864d8082087468bea9b548f886b5
+    m_Address: AbilitySO
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SO
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: bda3c0043bc3eee4ab56ac0b5f3dfc2f, type: 2}

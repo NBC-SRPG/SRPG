@@ -228,10 +228,6 @@ public static class Constants
     public const int MaxGold = 99999999;
 
     public const int NONE_SELECTED = -1;
-    public const int TestApImage = 60001000;
-    public const int TestExpImage = 60001001;
-    public const int TestGoldImage = 60001002;
-    public const int TestDiamondImage = 60001003;
 
     public const int FriendTabs = 0;
     public const int ApplyingTabs = 1;

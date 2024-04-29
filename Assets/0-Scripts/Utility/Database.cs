@@ -7,9 +7,6 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-
 public class Database
 {
     private FirebaseUser user;

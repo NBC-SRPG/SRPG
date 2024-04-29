@@ -825,11 +825,11 @@ public class BattleManager : MonoBehaviour
                 }
             }
 
-            if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out alreadyClear))
+            if (Managers.AccountData.stageClearData.TryGetValue(stage.stageId, out alreadyClear))
             {
                 if(clearStar > alreadyClear)
                 {
-                    Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+                    Managers.AccountData.UpdateStageClearData(stage.stageId, clearStar);
 
                     if (clearStar > 3)// 모든 서브 요소 클리어
                     {
@@ -844,7 +844,7 @@ public class BattleManager : MonoBehaviour
                     //다이아 획득
                 }
 
-                Managers.AccountData.UpdateStageClearData(stage.stageNumber, clearStar);
+                Managers.AccountData.UpdateStageClearData(stage.stageId, clearStar);
             }
 
         }

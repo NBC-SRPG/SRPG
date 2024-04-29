@@ -169,118 +169,150 @@ public class MissionManager
     // 0시 이후 첫 접속 시 일일 미션 초기화 해주기
     public void DailyMissionInit()
     {
-        Debug.Log($"DailyMissionInit: last - {lastDailyReset.Date}");
-        // 현재 시간 가져오기
-        DateTime now = DateTime.Now;
+        DateTime now;
 
-        // TODO
-        // DB에서 마지막 초기화 시간 가져와서 비교하기
-        if (now.Date > lastDailyReset.Date)
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData/lastDailyReset"), snapshot =>
         {
-            // 일일 미션 초기화 로직
-            List<int> completeMissionsList = new();
-            foreach (var mission in Managers.AccountData.completeMissions)
+            // DB에서 마지막 초기화 시간 가져와서 비교하기
+            if (snapshot.Exists && DateTime.TryParse(snapshot.Value.ToString(), out lastDailyReset))
             {
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                now = DateTime.Now;
+
+                Debug.Log($"DailyMissionInit: last - {lastDailyReset.Date}");
+
+                if (now.Date > lastDailyReset.Date)
                 {
-                    completeMissionsList.Add(mission);
+                    // 일일 미션 초기화 로직
+                    List<int> completeMissionsList = new();
+                    foreach (var mission in Managers.AccountData.completeMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            completeMissionsList.Add(mission);
+                        }
+                    }
+
+                    foreach (var mission in completeMissionsList)
+                    {
+                        // 완료 미션 중 일일 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            Managers.AccountData.completeMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    List<int> receiveMissionsList = new();
+                    foreach (var mission in Managers.AccountData.receiveMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            receiveMissionsList.Add(mission);
+                        }
+                    }
+                    foreach (var mission in receiveMissionsList)
+                    {
+                        // 수령한 미션 중 일일 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            Managers.AccountData.receiveMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    // 마지막 초기화 시간 업데이트
+                    lastDailyReset = now;
+                    // DB에 마지막 초기화 시간 저장
+                    Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastDailyReset"), lastDailyReset.ToString());
+                    // 미션 시작 이벤트
+                    OnMissionStartCallback?.Invoke(0);
                 }
             }
-
-            foreach (var mission in completeMissionsList)
+            else
             {
-                // 완료 미션 중 일일 미션인 경우
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    Managers.AccountData.completeMissions.Remove(mission);
+                Debug.Log("lastDailyReset");
+                lastDailyReset = DateTime.Now;
+                Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastDailyReset"), lastDailyReset.ToString());
 
-                    MissionStart(mission);
-                }
+                return;
             }
-
-            List<int> receiveMissionsList = new();
-            foreach (var mission in Managers.AccountData.receiveMissions)
-            {
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    receiveMissionsList.Add(mission);
-                }
-            }
-            foreach (var mission in receiveMissionsList)
-            {
-                // 수령한 미션 중 일일 미션인 경우
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    Managers.AccountData.receiveMissions.Remove(mission);
-
-                    MissionStart(mission);
-                }
-            }
-
-            // 마지막 초기화 시간 업데이트
-            lastDailyReset = now;
-            // TODO
-            // DB에 마지막 초기화 시간 저장
-
-            // 미션 시작 이벤트
-            OnMissionStartCallback?.Invoke(0);
-        }
+        });
     }
 
     // 월요일 0시 이후 첫 접속 시 주간 미션 초기화 해주기
     public void WeeklyMissionInit()
     {
-        // 현재 시간을 가져오기
-        DateTime now = DateTime.Now;
+        DateTime now;
 
-        // 현재 요일이 월요일이고, 마지막 초기화한 주가 현재 주와 다른 경우
-        if (now.DayOfWeek == DayOfWeek.Monday && GetWeekOfYear(now) != GetWeekOfYear(lastWeeklyReset))
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), snapshot =>
         {
-            // 주간 미션 초기화 로직
-            List<int> completeMissionsList = new();
-            foreach (var mission in Managers.AccountData.completeMissions)
+            // DB에서 마지막 초기화 시간 가져와서 비교하기
+            if (snapshot.Exists && DateTime.TryParse(snapshot.Value.ToString(), out lastWeeklyReset))
             {
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                now = DateTime.Now;
+
+                // 현재 요일이 월요일이고, 마지막 초기화한 주가 현재 주와 다른 경우
+                if (now.DayOfWeek == DayOfWeek.Monday && GetWeekOfYear(now) != GetWeekOfYear(lastWeeklyReset))
                 {
-                    completeMissionsList.Add(mission);
+                    Debug.Log($"WeeklyMissionInit: last - {lastWeeklyReset.Date}");
+
+                    // 주간 미션 초기화 로직
+                    List<int> completeMissionsList = new();
+                    foreach (var mission in Managers.AccountData.completeMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            completeMissionsList.Add(mission);
+                        }
+                    }
+
+                    foreach (var mission in completeMissionsList)
+                    {
+                        // 완료 미션 중 주간 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            Managers.AccountData.completeMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    List<int> receiveMissionsList = new();
+                    foreach (var mission in Managers.AccountData.receiveMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            receiveMissionsList.Add(mission);
+                        }
+                    }
+                    foreach (var mission in receiveMissionsList)
+                    {
+                        // 수령한 미션 중 주간 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            Managers.AccountData.receiveMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    // 마지막 초기화 날짜 업데이트
+                    lastWeeklyReset = now;
+
+                    // DB에 마지막 초기화 시간 저장
+                    Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), lastWeeklyReset.ToString());
                 }
             }
-
-            foreach (var mission in completeMissionsList)
+            else
             {
-                // 완료 미션 중 주간 미션인 경우
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    Managers.AccountData.completeMissions.Remove(mission);
+                lastWeeklyReset = DateTime.Now;
+                Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), lastWeeklyReset.ToString());
 
-                    MissionStart(mission);
-                }
+                return;
             }
-
-            List<int> receiveMissionsList = new();
-            foreach (var mission in Managers.AccountData.receiveMissions)
-            {
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    receiveMissionsList.Add(mission);
-                }
-            }
-            foreach (var mission in receiveMissionsList)
-            {
-                // 수령한 미션 중 주간 미션인 경우
-                if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    Managers.AccountData.receiveMissions.Remove(mission);
-
-                    MissionStart(mission);
-                }
-            }
-
-            // 마지막 초기화 날짜 업데이트
-            lastWeeklyReset = now;
-            // TODO
-            // DB에 마지막 초기화 시간 저장
-        }
+        });
     }
 
     // 현재 날짜가 속한 주의 번호를 반환하는 메서드

@@ -21,12 +21,11 @@ public class Ability_711: PassiveLogic
     {
         this.character = character;
 
-        
+        stat_711 = new BonusStat();
     }
 
     public override void OnStageStart()
     {
-        BonusStat stat_711 = new BonusStat();
         checkExisistSis();
     }
 
