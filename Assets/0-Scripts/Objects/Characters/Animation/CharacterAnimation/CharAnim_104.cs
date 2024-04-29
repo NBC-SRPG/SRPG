@@ -63,14 +63,14 @@ public class CharAnim_104 : CharAnimBase
 
         SetSkilPosition();
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_4/ExSkill_04.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_4/ExSkill_04.mp3");
     }
 
     public override void PlayAttackAnimation(CharacterBase targetCharacter)
     {
         base.PlayAttackAnimation(targetCharacter);
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_4/Attack_04.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_4/Attack_04.mp3");
     }
 
     public void SetSkilPosition()

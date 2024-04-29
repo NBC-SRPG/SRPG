@@ -78,7 +78,7 @@ public class PassiveAbility_108 : PassiveLogic
             BattleManager.Instance.ExtraSkillHeal(character, healAmount, characterSelf, BattleKeyWords.AttackDamageType.Skill);
             passiveState = coefficient["afterResurrection"];
 
-            Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Passive_08.mp3");
+            Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_8/Passive_08.mp3");
         }
 
     }

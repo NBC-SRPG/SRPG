@@ -36,7 +36,7 @@ public class Ability_511: PassiveLogic
                 BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (1배)
             }
 
-            Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/Ability_511.mp3");
+            Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/Ability_511.mp3");
         }
 
     }
@@ -62,7 +62,7 @@ public class Ability_511: PassiveLogic
                 BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (1배)
             }
 
-            Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/Ability_511.mp3");
+            Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/Ability_511.mp3");
         }
     }
 

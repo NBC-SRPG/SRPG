@@ -34,14 +34,14 @@ public class CharAnim_107 : CharAnimBase
             }
         }
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_7/ExSkill_07.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_7/ExSkill_07.mp3");
     }
 
     public override void PlayAttackAnimation(CharacterBase targetCharacter)
     {
         base.PlayAttackAnimation(targetCharacter);
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_7/Attack_07.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_7/Attack_07.mp3");
     }
 
     public void BackStep()
