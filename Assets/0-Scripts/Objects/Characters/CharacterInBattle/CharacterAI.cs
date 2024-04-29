@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static BattleKeyWords;
+using static Constants;
 
 public class CharacterAI : CharacterBase
 {
@@ -60,6 +61,13 @@ public class CharacterAI : CharacterBase
             attractTarget = enemy;
             ChangeState(EnemyState.Chasing);
         }
+    }
+
+    public override void OnDie()
+    {
+        base.OnDie();
+
+        Managers.Mission.NotifyMission(MissionType.KillMonster, character.enemySO.id, 1);
     }
 
     protected override void OnDisable()

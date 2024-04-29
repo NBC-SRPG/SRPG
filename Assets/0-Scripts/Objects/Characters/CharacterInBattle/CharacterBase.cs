@@ -1023,7 +1023,7 @@ public class CharacterBase : MonoBehaviour
         OnDie();
     }
 
-    public void OnDie()// 사망 시
+    public virtual void OnDie()// 사망 시
     {
         if (!onDiePassive)
         {
