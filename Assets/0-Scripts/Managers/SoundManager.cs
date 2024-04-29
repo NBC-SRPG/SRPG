@@ -93,7 +93,7 @@ public class SoundManager
             audioSource.Play();
             return true;
         }
-        else if (type == Constants.Sound.UI)
+        else if (type == Constants.Sound.UI || type == Constants.Sound.EffectBySource)
         {
             // 효과음은 캐싱 적용 
             AudioClip audioClip = GetAudioClip($"Sounds/{path}");

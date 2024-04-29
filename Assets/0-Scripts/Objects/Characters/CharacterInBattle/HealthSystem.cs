@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static BattleKeyWords;
+using static Constants;
 
 public class HealthSystem : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] private Image backHealBar;
     [SerializeField] private Image shieldBar;
     [SerializeField] private TextMeshPro healthText;
+
+    private bool takeDmgByHeal = false;
 
     public int MaxHealth { get; set; }
     public int CurHealth { get; set; }
@@ -151,8 +154,9 @@ public class HealthSystem : MonoBehaviour
 
     public void HealHealth(Damage n)// 실제 체력 회복
     {
-        if (n.damage < 0)
+        if (n.damage < 0 || characterBufList.FindBuf(BufKeyword.HealReversal) != null)
         {
+            takeDmgByHeal = true;
             TakeDamage(n);
             return;
         }
@@ -214,6 +218,11 @@ public class HealthSystem : MonoBehaviour
 
         characterAnim.ShowDamage();
 
+        if (takeDmgByHeal)
+        {
+            Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Healedreversal");
+            takeDmgByHeal = false;
+        }
     }
 
     public void HealHealthBar(Damage n)// 체력 회복함
@@ -228,6 +237,8 @@ public class HealthSystem : MonoBehaviour
         }
 
         characterAnim.ShowDamage();
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Healed");
     }
 
     public void ChangeHealthBar()
