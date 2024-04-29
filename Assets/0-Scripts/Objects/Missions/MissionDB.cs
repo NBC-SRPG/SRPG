@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using static Constants;
 
 public class MissionDB
 {
@@ -24,8 +22,6 @@ public class MissionDB
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 Debug.Log("모든 미션 SO가 성공적으로 로드되었습니다.");
-
-                Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
 
                 if (entities == null || entities.Count <= 0)
                 {

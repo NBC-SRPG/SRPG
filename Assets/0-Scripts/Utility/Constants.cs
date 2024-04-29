@@ -224,8 +224,8 @@ public static class Constants
 
     public const int DEFAULT_AP = 20;
     public const int MAX_LEVEL = 90;
-    public const int MaxDiamond = 999999;
-    public const int MaxGold = 999999;
+    public const int MaxDiamond = 99999999;
+    public const int MaxGold = 99999999;
 
     public const int NONE_SELECTED = -1;
     public const int TestApImage = 60001000;
