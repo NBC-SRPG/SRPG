@@ -74,7 +74,11 @@ public class LevelUpUI : UIBase
         LevelUpButton,
         LevelUpTab,
         AwakeningTab,
-        AwakeningButton
+        AwakeningButton,
+        ItemReduceButton_1,
+        ItemReduceButton_2,
+        ItemReduceButton_3,
+        ItemReduceButton_4
     }
 
     private enum GameObjects
@@ -133,6 +137,10 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.LevelUpItemButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3));
         GetButton((int)Buttons.LevelUpItemButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4));
 
+        GetButton((int)Buttons.ItemReduceButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1, false));
+        GetButton((int)Buttons.ItemReduceButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2, false));
+        GetButton((int)Buttons.ItemReduceButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3, false));
+        GetButton((int)Buttons.ItemReduceButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4, false));
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
         GetText((int)Texts.ExpText).text = $"{character.Growth.curExp}/{character.Growth.maxExp}";
@@ -158,7 +166,7 @@ public class LevelUpUI : UIBase
         Managers.UI.CloseUI(this);
     }
     // 아이템 1회 클릭
-    private void OnClickLevelUpItemButton(int itemNum)
+    private void OnClickLevelUpItemButton(int itemNum, bool up = true)
     {
         // 이미 맥스레벨
         if (character.Growth.level >= character.Growth.GetMaxLevel())
@@ -186,7 +194,20 @@ public class LevelUpUI : UIBase
                 {
                     break;
                 }
-                curNum++;
+
+                if (up)
+                {
+                    curNum++;
+                }
+                else
+                {
+                    curNum--;
+                    if(curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber1).text = curNum.ToString();
                 break;
             case 2:
@@ -195,7 +216,20 @@ public class LevelUpUI : UIBase
                 {
                     break;
                 }
-                curNum++;
+
+                if (up)
+                {
+                    curNum++;
+                }
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber2).text = curNum.ToString();
                 break;
             case 3:
@@ -204,7 +238,20 @@ public class LevelUpUI : UIBase
                 {
                     break;
                 }
-                curNum++;
+
+                if (up)
+                {
+                    curNum++;
+                }
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber3).text = curNum.ToString();
                 break;
             case 4:
@@ -213,7 +260,20 @@ public class LevelUpUI : UIBase
                 {
                     break;
                 }
-                curNum++;
+
+                if (up)
+                {
+                    curNum++;
+                }
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber4).text = curNum.ToString();
                 break;
         }
