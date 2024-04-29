@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class CharacterBuf_Stun : CharacterBuf
 {
@@ -32,6 +33,8 @@ public class CharacterBuf_Stun : CharacterBuf
         character.characterAnim.Animator.SetBool(character.characterAnim.Hit, true);
 
         turnCnt++;
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Stun(Electric)");
     }
 
     public override void OnRoundEnd()

@@ -64,6 +64,8 @@ public class TestCharCreater : MonoBehaviour
 
         Managers.GameManager.nowTesting = true;
 
+        Managers.GameManager.player.playerId = "test";
+
         dialog = Managers.UI.ShowUI<DialogUI>();
     }
 
@@ -85,9 +87,9 @@ public class TestCharCreater : MonoBehaviour
 
     private void Update()
     {
-        if (dialog.nowShowDialog)
-        {
-            dialog.UpdateDialog();
-        }
+        //if (dialog.nowShowDialog)
+        //{
+        //    dialog.UpdateDialog();
+        //}
     }
 }

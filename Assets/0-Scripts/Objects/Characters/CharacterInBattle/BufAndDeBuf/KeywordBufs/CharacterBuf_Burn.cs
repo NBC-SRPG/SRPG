@@ -34,6 +34,8 @@ public class CharacterBuf_Burn : CharacterBuf
         }
 
         DecreaseDuration(1);
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Burn");
     }
 
     public override string GetName()
