@@ -503,6 +503,7 @@ public class LevelUpUI : UIBase
         // 현재 레벨과 경험치를 먹인 레벨이 같을 때
         if (character.Growth.level == result[0])
         {
+            GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(true);
             GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.GetMaxExp(result[0]);
             GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.GetMaxExp(result[0])}";
         }
