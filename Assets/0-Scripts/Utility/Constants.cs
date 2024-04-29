@@ -188,7 +188,8 @@ public static class Constants
         GetItem, // 아이템 획득
         UseItem, // 아이템 사용
         KillMonster, // 몬스터 처치
-        Login // 로그인
+        Login, // 로그인
+        StageClear // 스테이지 클리어
     }
     public enum MissionState
     {

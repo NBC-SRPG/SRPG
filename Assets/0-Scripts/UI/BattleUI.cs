@@ -939,6 +939,7 @@ public class BattleUI : UIBase
                 }
             }
 
+            Managers.Mission.NotifyMission(MissionType.StageClear, stage.stageId, i);
             if (i == 3)
             {
                 Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Stage_Clear(Perfect)");
@@ -1015,11 +1016,13 @@ public class BattleUI : UIBase
             Debug.Log("items");
             foreach (var itemReward in itemRewards)
             {
-                CreateRewardIcon(itemReward.Value, itemReward.Key.ToString());
+                Utility.Id2SO<ItemSO>(itemReward.Key, (result) =>
+                {
+                    CreateRewardIcon(itemReward.Value, (result as ItemSO).icon);
+                });
             }
         }
     }
-
     private void CreateRewardIcon(int reward, string rewardId)
     {
         if (reward <= 0)
@@ -1032,6 +1035,20 @@ public class BattleUI : UIBase
             GetObject((int)GameObjects.RewardContent).transform);
 
         go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardId);
+    }
+
+    private void CreateRewardIcon(int reward, Sprite rewardSprite)
+    {
+        if (reward <= 0)
+        {
+            return;
+        }
+
+        GameObject go = Managers.Resource.Instantiate(
+            Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+            GetObject((int)GameObjects.RewardContent).transform);
+
+        go.GetComponent<RewardIconUI>().Init(reward.ToString(), rewardSprite);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

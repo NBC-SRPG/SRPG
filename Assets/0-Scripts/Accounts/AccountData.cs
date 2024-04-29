@@ -322,6 +322,7 @@ public class AccountData
                 Managers.Mission.MissionStart(90003026);
                 Managers.Mission.MissionStart(90003029);
                 Managers.Mission.MissionStart(90004000);
+                Managers.Mission.MissionStart(90005001);
             }
             Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
         }

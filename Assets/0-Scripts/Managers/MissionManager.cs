@@ -7,7 +7,7 @@ using static Constants;
 public class MissionManager
 {
     public event Action<int> OnMissionStartCallback;
-    public event Action<int, int> OnMissionUpdateCallback; // TODO : 업데이트 콜백에서 미션 저장
+    public event Action<int, int> OnMissionUpdateCallback;
     public event Action<int> OnMissionCompleteCallback;
     public event Action<int> OnMissionReceiveCallback;
     public MissionDB missionDB { get; set; }
@@ -59,12 +59,22 @@ public class MissionManager
         {
             return;
         }
-            
         var filteredMissions = subscribeMissions[type];
         var targetMissions = filteredMissions.FindAll(q => q.target == target);
-        foreach (var mission in targetMissions)
+
+        if (type == MissionType.StageClear)
         {
-            MissionUpdate(mission.missionId, count);
+            foreach (var mission in targetMissions)
+            {
+                StageStarMissionUpdate(mission.missionId, count);
+            }
+        }
+        else
+        {
+            foreach (var mission in targetMissions)
+            {
+                MissionUpdate(mission.missionId, count);
+            }
         }
     }
 
@@ -124,6 +134,27 @@ public class MissionManager
         SaveOngoingMission(missionId);
     }
 
+    public void StageStarMissionUpdate(int missionId, int amount)
+    {
+        Debug.Log($"MissionId: {missionId} amount: {amount}");
+        if (Managers.AccountData.ongoingMissions.ContainsKey(missionId) == false)
+        {
+            return;
+        }
+
+        var missiontData = missionDB.Get(missionId);
+
+        int currentCount = Managers.AccountData.ongoingMissions[missionId].StarUpdate(amount);
+
+        OnMissionUpdateCallback?.Invoke(missionId, amount);
+
+        if (currentCount >= missiontData.count)
+        {
+            MissionClear(missionId);
+        }
+
+        SaveOngoingMission(missionId);
+    }
 
     public void MissionClear(int missionId)
     {
