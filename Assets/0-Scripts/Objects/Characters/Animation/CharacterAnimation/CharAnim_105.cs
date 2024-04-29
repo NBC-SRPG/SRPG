@@ -61,7 +61,7 @@ public class CharAnim_105 : CharAnimBase
 
                 targets.characterAnim.ShakeCharacter();
 
-                Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Common/Hit.mp3");
+                Managers.Sound.Play(Constants.Sound.Effect, "Effects/Common/Hit.mp3");
             }
             DamageAll();
 
@@ -90,11 +90,11 @@ public class CharAnim_105 : CharAnimBase
 
     public void PlayAttackSound()
     {
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/Attack_05.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/Attack_05.mp3");
     }
 
     public void PlaySkillSound()
     {
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_5/ExSkill_05.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/ExSkill_05.mp3");
     }
 }

@@ -80,7 +80,9 @@ public class CharacterInfoUI : UIBase
         ClassPath2_1,
         ClassPath2_10,
         ClassPath2_2,
-        ClassPath2_20
+        ClassPath2_20,
+        Class2_1Lock,
+        Class2_2Lock
     }
     private enum GameObjects
     {
@@ -141,6 +143,7 @@ public class CharacterInfoUI : UIBase
         GetButton((int)Buttons.LevelUpButton).onClick.AddListener(OnClickLevelUpButton);
 
         character.Growth.OnLevelUp += UpdateStat;
+        character.Growth.OnLevelUp += InitClassTab;
         character.Growth.OnAwake += UpdateStat;
     }
 
@@ -271,7 +274,13 @@ public class CharacterInfoUI : UIBase
 
         ClassPathUpdate();
 
+        if (character.Growth.level >= 60)
+        {
+            GetImage((int)Images.Class2_1Lock).gameObject.SetActive(false);
+            GetImage((int)Images.Class2_2Lock).gameObject.SetActive(false);
+        }
         GetButton((int)Buttons.ClassSelectButton).gameObject.SetActive(false);
+        
     }
 
     private void ClassPathUpdate()

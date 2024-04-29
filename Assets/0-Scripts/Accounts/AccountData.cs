@@ -104,6 +104,8 @@ public class AccountData
             );
             Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
         }
+
+        Managers.GameManager.player.playerId = playerData.uId;
     }
     public void InitInventoryData(DataSnapshot snapshot)
     {

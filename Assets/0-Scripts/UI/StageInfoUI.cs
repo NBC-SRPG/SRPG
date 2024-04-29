@@ -229,7 +229,9 @@ public class StageInfoUI : UIBase
             Managers.AccountData.AcquireItems(reward.Key, reward.Value);
         }
 
-        Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
+        // Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
+
+        Managers.UI.ShowUI<RewardGetUI>().Init(stage, stageClearCount);
     }
 
     private void OnClickFormationButton()

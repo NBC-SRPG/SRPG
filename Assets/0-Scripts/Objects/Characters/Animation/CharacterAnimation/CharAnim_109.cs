@@ -23,12 +23,12 @@ public class CharAnim_109 : CharAnimBase
 
         targetCharacter = targetList.Last();
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_9/ExSkill_09.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_9/ExSkill_09.mp3");
     }
 
     public void PlayAttackSound()
     {
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_9/Attack_09.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_9/Attack_09.mp3");
     }
 
     public void MoveToPosition()

@@ -36,17 +36,17 @@ public class CharAnim_108 : CharAnimBase
         targetCharacter.characterAnim.ShakeCharacter();
         Damage();
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Common/Hit.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Common/Hit.mp3");
     }
 
     public void PlayAttackSound()
     {
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Attack_08.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_8/Attack_08.mp3");
     }
 
     public void PlayCounterSound()
     {
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Ability_832.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_8/Ability_832.mp3");
     }
 
     public override void PlaySkillAnimation(List<CharacterBase> targets)
@@ -63,7 +63,7 @@ public class CharAnim_108 : CharAnimBase
 
         particles.ChangeParent("Shield", targetCharacter.transform);
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/ExSkill_08.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_8/ExSkill_08.mp3");
     }
 
     public void HandUp()
@@ -84,7 +84,7 @@ public class CharAnim_108 : CharAnimBase
 
         particles.PlayParticle("Grab");
 
-        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_8/Ability_832.mp3");
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_8/Ability_832.mp3");
     }
 
     public void Catch()
