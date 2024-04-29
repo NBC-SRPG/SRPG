@@ -161,8 +161,6 @@ public class LoadingUI : UIBase
             Debug.LogFormat("User signed in successfully: {0} ({1})",user.DisplayName, user.UserId);
             Debug.Log("Sucess");
 
-            GetButton((int)Buttons.GoogleLogInButton).gameObject.SetActive(true);
-
             StartCoroutine(LoadData());
         });
     }
