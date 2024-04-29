@@ -16,7 +16,7 @@ public class GameManager
         enemy = new GamePlayer();
 
         //player.playerId = Managers.AccountData.playerData.uId;
-        player.playerId = "test";
+        //player.playerId = "test";
         player.prioty = 10;
 
         InitParty();

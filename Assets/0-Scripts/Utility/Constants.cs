@@ -10,6 +10,7 @@ public static class Constants
         Bgm,
         UI,     // UI작동시 사용할 효과음(Resources)
         Effect,     // 전투시 사용할 효과음(Addressable)
+        EffectBySource, // resource에서 가져오는 효과음(Resources)
         Max,
     }
 

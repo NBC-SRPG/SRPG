@@ -49,6 +49,8 @@ public class CharacterBuf_Corrosion : CharacterBuf
         {
             character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf, Constants.ElementType.Water);
         }
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Corrosion");
     }
 
     public override void OnTurnEnd()
