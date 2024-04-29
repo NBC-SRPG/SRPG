@@ -22,14 +22,14 @@ public class CharAnim_EnemyBase : CharAnimBase
 
     public void PlayAttackSound(string character)
     {
-        soundPath = "Sounds/Effects/Monster/Attack_" + character + ".mp3";
+        soundPath = "Effects/Monster/Attack_" + character + ".mp3";
 
         Managers.Sound.Play(Constants.Sound.Effect, soundPath);
     }
 
     public void PlaySkillSound(string character)
     {
-        soundPath = "Sounds/Effects/Monster/ExSkill_" + character + ".mp3";
+        soundPath = "Effects/Monster/ExSkill_" + character + ".mp3";
 
         Managers.Sound.Play(Constants.Sound.Effect, soundPath);
     }
