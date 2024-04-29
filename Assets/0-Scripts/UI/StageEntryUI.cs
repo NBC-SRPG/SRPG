@@ -22,20 +22,21 @@ public class StageEntryUI : UIBase
         StageStar
     }
 
-    public void Init(string stage)
+    public void Init(int stageId)
     {
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
-        Utility.Stage2SO<StageSO>(stage, (retulst) =>
+        Utility.Id2SO<StageSO>(stageId, (result) =>
         {
-            stageSO = (StageSO)retulst;
+            stageSO = (StageSO)result;
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
+            GetText((int)Texts.StageNumText).text = stageSO.stageNumber;
             GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
 
-            InitStar(stageSO.stageNumber);
+            InitStar(stageSO.stageId);
 
             if (numberOfStars != 3)
             {
@@ -46,13 +47,11 @@ public class StageEntryUI : UIBase
                 GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
             }
         });
-
-        GetText((int)Texts.StageNumText).text = stage;
     }
 
-    private void InitStar(string stage)
+    private void InitStar(int stageId)
     {
-        if (!Managers.AccountData.stageClearData.TryGetValue(stage, out numberOfStars))
+        if (!Managers.AccountData.stageClearData.TryGetValue(stageId, out numberOfStars))
         {
             numberOfStars = 0; // 키가 없을 때의 기본 값
         }

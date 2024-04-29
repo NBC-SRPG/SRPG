@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5104db9220e705a4799f65839745547b, type: 3}
-  m_Name: Stage_1_4
+  m_Name: StageSO_1000104
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -41,9 +41,17 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: characterList
+    - Name: rewards
       Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[Character, Assembly-CSharp]], mscorlib
+      Data: 2|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 3|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 12
       Data: 0
@@ -53,6 +61,19 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: characterList
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Character, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  stageId: 1000104
   stageName: "\uC808\uBCBD"
   stageNumber: 1-4
   clear: 3
@@ -63,6 +84,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5497908fc348d404ca4320c58b4de278, type: 2}
   - {fileID: 11400000, guid: 0f231524f7f8bfc4bbb32b89af6faa95, type: 2}
   recommendLevel: 60
+  isTutorial: 0
   enemies: []
   spawnType: 1
   chaseAtStart: 1
@@ -89,3 +111,5 @@ MonoBehaviour:
     value: 10
   - type: 4
     value: 0
+  exp: 0
+  gold: 0

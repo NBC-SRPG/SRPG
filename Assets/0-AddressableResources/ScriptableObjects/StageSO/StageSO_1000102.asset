@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5104db9220e705a4799f65839745547b, type: 3}
-  m_Name: Stage_1_2
+  m_Name: StageSO_1000102
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -44,93 +44,32 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: rewards
+      Entry: 7
+      Data: 2|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 3|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: characterList
       Entry: 7
-      Data: 2|System.Collections.Generic.List`1[[Character, Assembly-CSharp]], mscorlib
+      Data: 4|System.Collections.Generic.List`1[[Character, Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
       Data: 7
-    - Name: 
-      Entry: 7
-      Data: 3|Character, Assembly-CSharp
-    - Name: SO
-      Entry: 6
-      Data: 
-    - Name: Growth
-      Entry: 7
-      Data: 4|CharacterGrowth, Assembly-CSharp
-    - Name: weapon
-      Entry: 3
-      Data: 0
-    - Name: armor
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: enemySO
-      Entry: 10
-      Data: 0
-    - Name: hp
-      Entry: 3
-      Data: 2800
-    - Name: atk
-      Entry: 3
-      Data: 800
-    - Name: def
-      Entry: 3
-      Data: 600
-    - Name: mov
-      Entry: 3
-      Data: 8
-    - Name: atkIncrease
-      Entry: 4
-      Data: 1
-    - Name: defIncrease
-      Entry: 4
-      Data: 1
-    - Name: critRate
-      Entry: 3
-      Data: 20
-    - Name: critDmg
-      Entry: 3
-      Data: 50
-    - Name: EnhancedDmg
-      Entry: 4
-      Data: 1
-    - Name: ReducedDmg
-      Entry: 4
-      Data: 1
-    - Name: exSkill
-      Entry: 6
-      Data: 
-    - Name: passiveSkill
-      Entry: 6
-      Data: 
-    - Name: abilityT1
-      Entry: 6
-      Data: 
-    - Name: abilityT2
-      Entry: 6
-      Data: 
-    - Name: abilityT3
-      Entry: 6
-      Data: 
-    - Name: basicClass
-      Entry: 6
-      Data: 
-    - Name: superiorClass
-      Entry: 6
-      Data: 
-    - Name: weapon
-      Entry: 6
-      Data: 
-    - Name: armor
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 7
       Data: 5|Character, Assembly-CSharp
@@ -313,19 +252,19 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: hp
       Entry: 3
-      Data: 2600
+      Data: 2800
     - Name: atk
       Entry: 3
-      Data: 900
+      Data: 800
     - Name: def
       Entry: 3
-      Data: 560
+      Data: 600
     - Name: mov
       Entry: 3
-      Data: 5
+      Data: 8
     - Name: atkIncrease
       Entry: 4
       Data: 1
@@ -556,6 +495,87 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
+      Data: 1
+    - Name: hp
+      Entry: 3
+      Data: 2600
+    - Name: atk
+      Entry: 3
+      Data: 900
+    - Name: def
+      Entry: 3
+      Data: 560
+    - Name: mov
+      Entry: 3
+      Data: 5
+    - Name: atkIncrease
+      Entry: 4
+      Data: 1
+    - Name: defIncrease
+      Entry: 4
+      Data: 1
+    - Name: critRate
+      Entry: 3
+      Data: 20
+    - Name: critDmg
+      Entry: 3
+      Data: 50
+    - Name: EnhancedDmg
+      Entry: 4
+      Data: 1
+    - Name: ReducedDmg
+      Entry: 4
+      Data: 1
+    - Name: exSkill
+      Entry: 6
+      Data: 
+    - Name: passiveSkill
+      Entry: 6
+      Data: 
+    - Name: abilityT1
+      Entry: 6
+      Data: 
+    - Name: abilityT2
+      Entry: 6
+      Data: 
+    - Name: abilityT3
+      Entry: 6
+      Data: 
+    - Name: basicClass
+      Entry: 6
+      Data: 
+    - Name: superiorClass
+      Entry: 6
+      Data: 
+    - Name: weapon
+      Entry: 6
+      Data: 
+    - Name: armor
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|Character, Assembly-CSharp
+    - Name: SO
+      Entry: 6
+      Data: 
+    - Name: Growth
+      Entry: 7
+      Data: 18|CharacterGrowth, Assembly-CSharp
+    - Name: weapon
+      Entry: 3
+      Data: 0
+    - Name: armor
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: enemySO
+      Entry: 10
       Data: 2
     - Name: hp
       Entry: 3
@@ -623,6 +643,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  stageId: 1000102
   stageName: "\uB3CC\uD30C"
   stageNumber: 1-2
   clear: 2
@@ -632,6 +653,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
   - {fileID: 11400000, guid: ee1fc30c53460cf4baf4d162721e9bd8, type: 2}
   recommendLevel: 20
+  isTutorial: 0
   enemies:
   - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
   - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
@@ -661,3 +683,5 @@ MonoBehaviour:
     value: 12
   - type: 3
     value: 6
+  exp: 0
+  gold: 0
