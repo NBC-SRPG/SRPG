@@ -24,10 +24,7 @@ public class CharacterExchangeEntryUI : UIBase
         BindImage(typeof(Images));
         BindButton(typeof(Buttons));
 
-        Utility.Id2SO<CharacterSO>(gachaSO.id, (result) =>
-        {
-            GetImage((int)Images.CharacterImage).sprite = (result as CharacterSO).icon;
-        });
+        GetImage((int)Images.CharacterImage).sprite = Utility.Id2SOWait<CharacterSO>(gachaSO.id).icon;
         GetText((int)Texts.CharacterNameText).text = gachaSO.pickUpcharacterName;
         GetButton((int)Buttons.ExchangeButton).onClick.AddListener(() => OnClickExchangeButton(gachaSO));
     }
