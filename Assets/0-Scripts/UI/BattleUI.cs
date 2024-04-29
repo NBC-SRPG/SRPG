@@ -237,6 +237,7 @@ public class BattleUI : UIBase
     private void OnClickCancel()
     {
         OnClickCancelButton?.Invoke();
+        CancelSound();
     }
 
     private void OnClickTurnEnd()
@@ -247,26 +248,36 @@ public class BattleUI : UIBase
     private void OnClickMoveAndAttack()
     {
         OnClickMoveAndAttackButton?.Invoke();
+        ClickSound();
     }
 
     private void OnClickUseSkill()
     {
         OnClickUseSkillButton?.Invoke();
+        ClickSound();
     }
 
     private void OnClickMove()
     {
         OnClickMoveButton?.Invoke();
+
+        if (curSelectedCharacter != null && curSelectedCharacter.character.SO.attackMethod == AttackMethod.Melee)
+        {
+            ConfirmSound();
+        }
+        MoveSound();
     }
 
     private void OnClickAttack()
     {
         OnClickAttackButton?.Invoke();
+        ConfirmSound();
     }
 
     private void OnClickSkillConfirm()
     {
         OnClickSkillConFirmButton?.Invoke();
+        ConfirmSound();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -474,6 +485,7 @@ public class BattleUI : UIBase
     private IEnumerator ShowNowTurn()
     {
         GetObject((int)GameObjects.TurnObject).SetActive(true);
+        TurnSound();
 
         yield return new WaitForSeconds(1f);
 
@@ -531,6 +543,7 @@ public class BattleUI : UIBase
 
     private void ShowSettingBox()
     {
+        ClickSound();
         if (GetObject((int)GameObjects.SettingObject).activeInHierarchy)
         {
             GetObject((int)GameObjects.SettingObject).SetActive(false);
@@ -568,12 +581,14 @@ public class BattleUI : UIBase
 
     private void OnGiveUpButton()
     {
+        ClickSound();
         GetObject((int)GameObjects.SettingObject).SetActive(false);
         BattleManager.Instance.GiveUpStage();
     }
 
     private void OnResumeButton()
     {
+        ClickSound();
         GetObject((int)GameObjects.SettingObject).SetActive(false);
     } 
 
@@ -709,6 +724,7 @@ public class BattleUI : UIBase
 
         GetObject((int)GameObjects.AbilityInfo).SetActive(true);
         SetAbilityInfo();
+        ClickSound();
     }
 
     private void SetAbilityInfo()
@@ -846,6 +862,8 @@ public class BattleUI : UIBase
             }
             bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(curSelectedCharacter.curCharacterBufList.bufList[i]);
         }
+
+        ClickSound();
     }
 
     public void ShowTargetBufList()
@@ -861,6 +879,8 @@ public class BattleUI : UIBase
             }
             bufDetailList[i].GetComponent<BufIcon>().SetBufDetail(curTargetCharacter.curCharacterBufList.bufList[i]);
         }
+
+        ClickSound();
     }
 
     public void CloseBufList()
@@ -904,6 +924,24 @@ public class BattleUI : UIBase
         {
             GetObject((int)GameObjects.Win).SetActive(true);
 
+            int i = 0;
+            foreach(bool clear in BattleManager.Instance.extraClear)
+            {
+                if (clear)
+                {
+                    i++;
+                }
+            }
+
+            if (i == 3)
+            {
+                Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Stage_Clear(Perfect)");
+            }
+            else
+            {
+                Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Stage_Clear");
+            }
+
             yield return wait;
 
             if (BattleManager.Instance.extraClear[0])
@@ -928,6 +966,7 @@ public class BattleUI : UIBase
         else
         {
             GetObject((int)GameObjects.Lose).SetActive(true);
+            Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Stage_Fail");
         }
         GetButton((int)Buttons.NextButton).gameObject.SetActive(true);
 
@@ -1013,5 +1052,33 @@ public class BattleUI : UIBase
         TextMeshPro text = ShowText(transform);
 
         text.text = "가로막힘";
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------------
+    //효과음
+
+    private void ClickSound()
+    {
+        Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Click");
+    }
+
+    private void CancelSound()
+    {
+        Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Cancel");
+    }
+
+    private void TurnSound()
+    {
+        Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/TurnStart");
+    }
+
+    private void MoveSound()
+    {
+        Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Move");
+    }
+
+    private void ConfirmSound()
+    {
+        Managers.Sound.Play(Sound.EffectBySource, "SE/BattleUI/Confirm");
     }
 }
