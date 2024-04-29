@@ -1,3 +1,5 @@
+using Firebase.Database;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -99,6 +101,8 @@ public class MissionManager
         SubscribeMission(missionId);
 
         OnMissionStartCallback?.Invoke(missionId);
+
+        SaveOngoingMission(missionId);
     }
 
     public void MissionUpdate(int missionId, int amount)
@@ -118,6 +122,8 @@ public class MissionManager
         {
             MissionClear(missionId);
         }
+
+        SaveOngoingMission(missionId);
     }
 
 
@@ -134,6 +140,9 @@ public class MissionManager
         Managers.AccountData.completeMissions.Add(missionId);
 
         OnMissionCompleteCallback?.Invoke(missionId);
+
+        SaveOngoingMission(missionId);
+        SaveCompleteMission(missionId);
     }
 
     public void MissionReceive(int missionId)
@@ -147,6 +156,8 @@ public class MissionManager
         Managers.AccountData.receiveMissions.Add(missionId);
 
         OnMissionReceiveCallback?.Invoke(missionId);
+
+        SaveReceiveMission(missionId);
     }
 
     public bool IsClear(int id)
@@ -154,7 +165,7 @@ public class MissionManager
         return Managers.AccountData.completeMissions.Contains(id);
     }
 
-    // TODO
+
     // 0시 이후 첫 접속 시 일일 미션 초기화 해주기
     public void DailyMissionInit()
     {
@@ -216,7 +227,6 @@ public class MissionManager
         }
     }
 
-    // TODO
     // 월요일 0시 이후 첫 접속 시 주간 미션 초기화 해주기
     public void WeeklyMissionInit()
     {
@@ -280,5 +290,27 @@ public class MissionManager
         // date가 포함된 주 가져오기
         int weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         return weekNum;
+    }
+
+    private void SaveOngoingMission(int missionId)
+    {
+        if (Managers.AccountData.ongoingMissions.TryGetValue(missionId, out Mission mission))
+        {
+            Managers.DB.Write<int>(Managers.DB.userDB.Child("missionData/ongoingMissionsData").Child(missionId.ToString()), mission.MissionProgress);
+        }
+        else
+        {
+            Managers.DB.Delete(Managers.DB.userDB.Child("missionData/ongoingMissionsData").Child(missionId.ToString()));
+        }
+    }
+
+    private void SaveCompleteMission(int missionId)
+    {
+        Managers.DB.Write<bool>(Managers.DB.userDB.Child("missionData/completeMissionsData").Child(missionId.ToString()), false);
+    }
+
+    private void SaveReceiveMission(int missionId)
+    {
+        Managers.DB.Write<bool>(Managers.DB.userDB.Child("missionData/completeMissionsData").Child(missionId.ToString()), true);
     }
 }
