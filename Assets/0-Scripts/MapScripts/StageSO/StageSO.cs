@@ -10,6 +10,7 @@ public class StageSO : SerializedScriptableObject
     public int stageId;
     public string stageName;
     public string stageNumber;
+    public int apUsage;
     public StageClear clear;
     public StageType stageType;
     public List<EnemySO> enemiesInfo;

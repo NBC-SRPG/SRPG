@@ -26,6 +26,7 @@ public class SignUpUI : UIBase
     {
         Managers.AccountData.AcquireCharacter(3);
         Managers.AccountData.SetFormationCharacter(0,0,3);
+        createSupportMail();
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
@@ -74,6 +75,22 @@ public class SignUpUI : UIBase
         Managers.GameManager.UpdateParty(Managers.AccountData.formationData[0]);
         Managers.GameManager.thisStage = Utility.Id2SOWait<StageSO>(1000101);
         BattleLoadingController.LoadBattle("BattleScene");
+    }
+
+    private void createSupportMail()
+    {
+        MailSO mail = new MailSO();
+        mail.key = "BetaSupport";
+        mail.title = "베타테스터를 위한 선물";
+        mail.rewards = new();
+        mail.ap = 0;
+        mail.gold = 10000000;
+        mail.diamond = 1000000;
+        mail.dateSent = DateTime.Now;
+        mail.expiration = 30;
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("mailBox").Child(mail.key), mail);
+
     }
 
 }
