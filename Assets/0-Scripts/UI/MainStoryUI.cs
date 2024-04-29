@@ -23,7 +23,7 @@ public class MainStoryUI : UIBase
         BindButton(typeof(Buttons));
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.Chapter1Button).onClick.AddListener(() => OnClickChapterButton(1));
+        GetButton((int)Buttons.Chapter1Button).onClick.AddListener(() => OnClickChapterButton(1000100));
     }
 
     private void OnClickBackButton()

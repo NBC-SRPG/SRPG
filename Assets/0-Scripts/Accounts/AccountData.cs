@@ -7,7 +7,7 @@ using static Constants;
 
 public class AccountData
 {
-    public Dictionary<string, int> stageClearData { get; set; }
+    public Dictionary<int, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
     public Dictionary<int, int> inventory { get; set; }
@@ -31,8 +31,12 @@ public class AccountData
     #region Init
     public void InitStageClearData(DataSnapshot snapshot)
     {
-        Dictionary<string, int> data = snapshot.Exists ? JsonConvert.DeserializeObject<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
-        stageClearData = data;
+        stageClearData = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            stageClearData.Add(Convert.ToInt32(childSnapshot.Key), Convert.ToInt32(childSnapshot.Value));
+        }
     }
     public void InitCharacterData(DataSnapshot snapshot)
     {
@@ -322,13 +326,13 @@ public class AccountData
     }
     #endregion
 
-    public void UpdateStageClearData(string stageName, int achievement)
+    public void UpdateStageClearData(int stageId, int achievement)
     {
-        if(stageClearData.TryAdd(stageName, achievement) == false)
+        if(stageClearData.TryAdd(stageId, achievement) == false)
         {
-            stageClearData[stageName] = achievement;
+            stageClearData[stageId] = achievement;
         }
-        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageId.ToString()), achievement);
     }
 
     public void AcquireCharacter(int id, bool isPickUp)
@@ -429,16 +433,4 @@ public class AccountData
         Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
     }
 
-    public void UpdateClearData(string stage, int achievement)
-    {
-        if(stageClearData.TryAdd(stage, achievement) == false)
-        {
-            if (stageClearData[stage] == 3) // 이미 3별이라면 추가로 값을 변동하지 않음
-            {
-                return;
-            }
-            stageClearData[stage] = achievement;
-        }
-        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
-    }
 }

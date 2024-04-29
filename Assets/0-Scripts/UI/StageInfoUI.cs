@@ -195,7 +195,7 @@ public class StageInfoUI : UIBase
             return;
         }
 
-        if (Managers.AccountData.stageClearData.TryGetValue(stage.stageNumber, out int starNum))
+        if (Managers.AccountData.stageClearData.TryGetValue(stage.stageId, out int starNum))
         {
             if (starNum < 3)
             {

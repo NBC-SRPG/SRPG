@@ -26,6 +26,15 @@ public static class Utility
         };
     }
 
+    public static T Id2SOWait<T>(int id) where T : ScriptableObject
+    {
+        // 어드레서블 경로
+        string path = typeof(T).ToString() + "/" + typeof(T).ToString() + "_" + id.ToString() + ".asset";
+
+        T result = Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
+        return result; 
+    }
+
     public static AudioClip GetAudioClip(string path)
     {
         AudioClip audioClip = Addressables.LoadAssetAsync<AudioClip>(path).WaitForCompletion();

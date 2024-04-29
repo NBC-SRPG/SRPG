@@ -7,6 +7,7 @@ using static Constants;
 public class StageSO : SerializedScriptableObject
 {
     [Header("StageInfo")]
+    public int stageId;
     public string stageName;
     public string stageNumber;
     public StageClear clear;
