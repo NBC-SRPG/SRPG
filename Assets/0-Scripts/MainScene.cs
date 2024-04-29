@@ -14,9 +14,11 @@ public class MainScene : MonoBehaviour
         Managers.UI.InitSortOrder();
         Debug.Log("MainSceneInit");
 
+        // 일간, 주간 미션 초기화
         Managers.Mission.DailyMissionInit();
         Managers.Mission.WeeklyMissionInit();
 
+        // 로그인
         Managers.Mission.NotifyMission(MissionType.Login, 0, 1);
     }
 }

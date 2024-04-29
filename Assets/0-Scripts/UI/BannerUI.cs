@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class BannerUI : UIBase
 {
     private enum Texts

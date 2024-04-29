@@ -225,30 +225,7 @@ public class AccountData
     {
         
     }
-    
-    /*
-    public void Init(
-        Dictionary<string, int> stageClearData,
-        Dictionary<int, Character> characterData,
-        PlayerData playerData,
-        //List<int> ongoingMissions,
-        //List<int> completeMissions,
-        //List<int> receiveMissions,
-        //Dictionary<int, int> inventory,
-        Dictionary<int, string[]> friendData,
-        Dictionary<int, FormationData> formationData,
-        List<MailSO> mailBox
-        )
-    {
-        this.stageClearData = stageClearData ?? new Dictionary<string, int>();
-        this.characterData = characterData ?? new Dictionary<int, Character>();
-        this.playerData = playerData ?? new PlayerData();
-        //this.inventory = inventory ?? new Dictionary<int, int>();
-        this.friendData = friendData ?? new Dictionary<int, string[]>();
-        this.formationData = formationData ?? new Dictionary<int, FormationData>();
-        this.mailBox = mailBox ?? new List<MailSO>();
-    }
-    */
+
     private void OngoingMissionInit(DataSnapshot snapshot)
     {
         // 데이터가 존재하는지 확인
@@ -339,9 +316,8 @@ public class AccountData
                 Managers.Mission.MissionStart(90003026);
                 Managers.Mission.MissionStart(90003029);
                 Managers.Mission.MissionStart(90004000);
-
-                Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
             }
+            Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
         }
     }
     #endregion
