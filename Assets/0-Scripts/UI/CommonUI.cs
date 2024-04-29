@@ -129,14 +129,15 @@ public class CommonUI : UIBase
 
     private void OnClickApButton()
     {
-        Debug.Log("OnClickApButton");
-
+        PurchaseApUI ui = Managers.UI.ShowUI<PurchaseApUI>();
+        ui.Init();
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ApChargeUI>();
     }
     private void OnClickGoldButton()
     {
-        Debug.Log("OnClickGoldButton");
+        PurchaseGoldUI ui = Managers.UI.ShowUI<PurchaseGoldUI>();
+        ui.Init();
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<GoldChargeUI>();
