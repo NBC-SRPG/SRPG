@@ -218,7 +218,7 @@ public class MissionManager
 
     // TODO
     // 월요일 0시 이후 첫 접속 시 주간 미션 초기화 해주기
-    private void WeeklyMissionInit()
+    public void WeeklyMissionInit()
     {
         // 현재 시간을 가져오기
         DateTime now = DateTime.Now;

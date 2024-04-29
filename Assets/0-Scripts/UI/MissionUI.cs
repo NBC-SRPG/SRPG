@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using static Constants;
@@ -18,17 +16,6 @@ public class MissionUI : UIBase
         Achievement,
         Beginner
     }
-
-    private enum Texts
-    {
-
-    }
-
-    private enum Images
-    {
-
-    }
-
     private enum Buttons
     {
         WholeButton,
@@ -38,11 +25,6 @@ public class MissionUI : UIBase
         BeginnerButton,
         GetAllButton,
         BackButton,
-
-        TestGetItemButton,
-        TestUseItemButton,
-        TestKillMonsterButton,
-        TestDailyResetButton
     }
 
     private enum GameObjects
@@ -79,8 +61,6 @@ public class MissionUI : UIBase
     {
         Managers.UI.SetCanvas(gameObject);
 
-        //BindText(typeof(Texts));
-        //BindImage(typeof(Images));
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
@@ -95,12 +75,6 @@ public class MissionUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
         ShowTab(PlayTab.Whole);
-
-        // 테스트 버튼
-        GetButton((int)Buttons.TestGetItemButton).onClick.AddListener(OnClickTestGetItemButton);
-        GetButton((int)Buttons.TestUseItemButton).onClick.AddListener(OnClickTestUseItemButton);
-        GetButton((int)Buttons.TestKillMonsterButton).onClick.AddListener(OnClickTestKillMonsterButton);
-        GetButton((int)Buttons.TestDailyResetButton).onClick.AddListener(OnClickTestDailyResetButton);
     }
 
     private void OnMissionUpdateUI(int missionId)
@@ -124,23 +98,6 @@ public class MissionUI : UIBase
                 break;
         }
     }
-    private void OnClickTestGetItemButton()
-    {
-        TestGameManager.Instance.GetItem(80001000);
-    }
-    private void OnClickTestUseItemButton()
-    {
-        TestGameManager.Instance.UseItem(80001001);
-    }
-    private void OnClickTestKillMonsterButton()
-    {
-        TestGameManager.Instance.KillMonster(70001000);
-    }
-    private void OnClickTestDailyResetButton()
-    {
-        TestGameManager.Instance.DailyReset();
-    }
-
     private void WholeTabInit()
     {
         foreach (Transform child in GetObject((int)GameObjects.WholeContent).transform)
