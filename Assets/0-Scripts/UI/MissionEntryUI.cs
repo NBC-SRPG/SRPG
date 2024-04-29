@@ -56,7 +56,7 @@ public class MissionEntryUI : UIBase
 
         missionData = Managers.Mission.missionDB.Get(missionId);
 
-        GetText((int)Texts.MissionNameText).text = missionData.name;
+        GetText((int)Texts.MissionNameText).text = missionData.missionName;
         GetText((int)Texts.MissionDescriptionText).text = missionData.missionDescription;
 
         // 경험치 보상 아이콘 생성

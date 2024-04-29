@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Constants;
 
 public class RewardGetUI : UIBase
 {
@@ -27,13 +26,13 @@ public class RewardGetUI : UIBase
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
 
         // 경험치 보상 아이콘 생성
-        CreateRewardIcon(missionData.exp, TestExpImage.ToString());
+        CreateRewardIcon(missionData.exp, "Exp");
         // ap 보상 아이콘 생성
-        CreateRewardIcon(missionData.ap, TestApImage.ToString());
+        CreateRewardIcon(missionData.ap, "AP");
         // 골드 보상 아이콘 생성
-        CreateRewardIcon(missionData.gold, TestGoldImage.ToString());
+        CreateRewardIcon(missionData.gold, "Gold");
         // 다이아 보상 아이콘 생성
-        CreateRewardIcon(missionData.diamond, TestDiamondImage.ToString());
+        CreateRewardIcon(missionData.diamond, "Diamond");
         // 아이템 리워드 아이콘 생성
         foreach (var itemReward in missionData.rewards)
         {
@@ -49,10 +48,10 @@ public class RewardGetUI : UIBase
 
         GetButton((int)Buttons.CheckButton).onClick.AddListener(OnClickCheckButton);
 
-        CreateRewardIcon(totalExp, TestExpImage.ToString());
-        CreateRewardIcon(totalAp, TestApImage.ToString());
-        CreateRewardIcon(totalGold, TestGoldImage.ToString());
-        CreateRewardIcon(totalDiamond, TestDiamondImage.ToString());
+        CreateRewardIcon(totalExp, "Exp");
+        CreateRewardIcon(totalAp, "AP");
+        CreateRewardIcon(totalGold, "Gold");
+        CreateRewardIcon(totalDiamond, "Daimond");
 
         foreach (var itemReward in itemRewards)
         {
