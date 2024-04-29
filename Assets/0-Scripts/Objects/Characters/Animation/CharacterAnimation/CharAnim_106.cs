@@ -37,6 +37,13 @@ public class CharAnim_106 : CharAnimBase
         Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_6/Attack_06.mp3");
     }
 
+    public override void PlayExtraAnimation(List<CharacterBase> victims, string anim)
+    {
+        base.PlayExtraAnimation(victims, anim);
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Character_6/Attack_06.mp3");
+    }
+
     public void SetSkilPosition()
     {
         CameraController.instance.ResetBattleGroup();
