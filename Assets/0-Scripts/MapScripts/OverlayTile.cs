@@ -72,6 +72,7 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             scaleTile.SetActive(true);
+            canMoveTile.SetActive(true);
             defaultTile.SetActive(!scaleTile.activeSelf);
         }
     }
@@ -95,6 +96,7 @@ public class OverlayTile : MonoBehaviour
     public void HideScale()
     {
         scaleTile.SetActive(false);
+        canMoveTile.SetActive(false);
     }
 
     public bool CheckCanMove()
