@@ -66,7 +66,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.exp.ToString(), "TestExpImage");
+            go.GetComponent<RewardIconUI>().Init(missionData.exp.ToString(), Managers.Resource.Load<Sprite>("Exp"));
         }
         // ap 보상 아이콘 생성
         if (missionData.ap > 0)
@@ -75,7 +75,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.ap.ToString(), "TestApImage");
+            go.GetComponent<RewardIconUI>().Init(missionData.ap.ToString(), Managers.Resource.Load<Sprite>("AP"));
         }
         // 골드 보상 아이콘 생성
         if (missionData.gold > 0)
@@ -84,7 +84,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.gold.ToString(), "TestGoldImage");
+            go.GetComponent<RewardIconUI>().Init(missionData.gold.ToString(), Managers.Resource.Load<Sprite>("Gold"));
         }
         // 다이아 보상 아이콘 생성
         if (missionData.diamond > 0)
@@ -93,10 +93,22 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.diamond.ToString(), "TestDiamondImage");
+            go.GetComponent<RewardIconUI>().Init(missionData.diamond.ToString(), Managers.Resource.Load<Sprite>("Diamond"));
         }
         // TODO
-        // 아이템 보상 아이콘 생성
+        foreach(var item in missionData.rewards)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.RewardContent).transform);
+            Utility.Id2SO<ItemSO>(item.Key, (result) =>
+            {
+                Debug.Log(item.Key);
+                Debug.Log((result as ItemSO).itemName);
+                go.GetComponent<RewardIconUI>().Init(item.Value.ToString(), (result as ItemSO).icon);
+            });
+
+        }
 
         // 수령 체크 이미지 끄기
         GetImage((int)Images.ReceiveCheckImage).gameObject.SetActive(false);
