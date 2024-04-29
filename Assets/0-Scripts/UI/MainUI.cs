@@ -41,6 +41,7 @@ public class MainUI : UIBase
 
     public void Init()
     {
+        Managers.Sound.Play(Constants.Sound.EffectBySource, "BGM/MainBGM");
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));

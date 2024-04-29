@@ -40,6 +40,7 @@ public class LoadingUI : UIBase
 
     private void Init()
     {
+        Managers.Sound.Play(Constants.Sound.EffectBySource, "BGM/LoadingBGM");
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));
