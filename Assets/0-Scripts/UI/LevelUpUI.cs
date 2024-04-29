@@ -121,10 +121,10 @@ public class LevelUpUI : UIBase
         BindEvent(GetButton((int)Buttons.LevelUpItemButton_3).gameObject, () => OnPressedLevelUpItemButton(3), UIEvent.Pressed);
         BindEvent(GetButton((int)Buttons.LevelUpItemButton_4).gameObject, () => OnPressedLevelUpItemButton(4), UIEvent.Pressed);
 
-        GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.inventory[LevelUpItem1Id]}";
-        GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";
-        GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.inventory[LevelUpItem3Id]}";
-        GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.inventory[LevelUpItem4Id]}";
+        GetText((int)Texts.LevelUpItemQuantity_1).text = $"x{Managers.AccountData.GetItemQuantity(LevelUpItem1Id)}";
+        GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.GetItemQuantity(LevelUpItem2Id)}";
+        GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.GetItemQuantity(LevelUpItem3Id)}";
+        GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.GetItemQuantity(LevelUpItem4Id)}";
 
         GetText((int)Texts.LevelUpGoldText).text = "0 G";
 
