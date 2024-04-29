@@ -85,7 +85,19 @@ public class LevelUpUI : UIBase
     {
         LevelUp,
         Awakening,
-        AwakeningLimitText
+        AwakeningLimitText,
+        StarBefore,
+        StarAfter,
+        LimitBefore,
+        LimitBefore_1,
+        LimitBefore_2,
+        LimitBefore_3,
+        LimitBefore_4,
+        LimitAfter,
+        LimitAfter_1,
+        LimitAfter_2,
+        LimitAfter_3,
+        LimitAfter_4
     }
 
     public void Init(Character character)
@@ -350,6 +362,8 @@ public class LevelUpUI : UIBase
         // GetText((int)Texts.AwakeningChangeText).text = "70레벨에 특성 개방";
 
         // TODO: 성급별 별, 한계돌파 이미지 변경
+        SetStar();
+        SetLimitBreak();
 
         Utility.Id2SO<ItemSO>(character.SO.id, (result) =>
         {
@@ -363,6 +377,92 @@ public class LevelUpUI : UIBase
         if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
         {
             AwakeningButtonActiveFalse();
+        }
+    }
+
+    private void SetStar()
+    {
+        int numberOfStars = character.Growth.star; // 별의 개수
+        int afterStars = numberOfStars == 5 ? 5 : numberOfStars+1;
+        float starWidth = 60f; // 별 이미지의 너비
+        float spacing = 0f; // 별 사이의 간격
+
+        // 기존에 생성된 별들 제거
+        foreach (Transform child in GetObject((int)GameObjects.StarBefore).transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in GetObject((int)GameObjects.StarAfter).transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 별 이미지들의 총 너비 계산
+        float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
+        // 첫 번째 별 이미지의 시작 위치 계산
+        float startX = -(totalWidth / 2) + (starWidth / 2);
+
+        for (int i = 0; i < numberOfStars; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.StarBefore).transform);
+            star.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+
+        totalWidth = afterStars * starWidth + (afterStars - 1) * spacing;
+        // 첫 번째 별 이미지의 시작 위치 계산
+        startX = -(totalWidth / 2) + (starWidth / 2);
+
+        for (int i = 0; i < afterStars; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.StarAfter).transform);
+            star.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+    }
+
+    private void SetLimitBreak()
+    {
+        GetObject((int)GameObjects.LimitBefore).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_1).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_2).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_3).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_4).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_1).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_2).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_3).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_4).SetActive(true);
+
+        if (character.Growth.star != 5)
+        {
+            GetObject((int)GameObjects.LimitBefore).SetActive(false);
+            GetObject((int)GameObjects.LimitAfter).SetActive(false);
+        }
+        else
+        {
+            switch (character.Growth.limitBreak)
+            {
+                case 0:
+                    GetObject((int)GameObjects.LimitBefore_1).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_2).SetActive(false);
+                    break;
+                case 1:
+                    GetObject((int)GameObjects.LimitBefore_2).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_3).SetActive(false);
+                    break;
+                case 2:
+                    GetObject((int)GameObjects.LimitBefore_3).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_4).SetActive(false);
+                    break;
+                case 3:
+                    GetObject((int)GameObjects.LimitBefore_4).SetActive(false);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
