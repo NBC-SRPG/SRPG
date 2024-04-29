@@ -15,6 +15,7 @@ public class StageSO : SerializedScriptableObject
     public List<EnemySO> enemiesInfo;
     public int recommendLevel;
     public bool isTutorial = false;
+    public string bgm;
 
     [Header("Enemy")]
     public List<EnemySO> enemies;
@@ -118,5 +119,10 @@ public class StageSO : SerializedScriptableObject
         }
 
         return detailString;
+    }
+
+    public string GetBGMPath()
+    {
+        return "BGM/" + bgm;
     }
 }

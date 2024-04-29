@@ -232,6 +232,8 @@ public class BattleUI : UIBase
         GetText((int)Texts.FisrtExtraText).text = stage.GetExtraGoalDetail(0);
         GetText((int)Texts.SecondExtraText).text = stage.GetExtraGoalDetail(1);
         GetText((int)Texts.ThirdExtraText).text = stage.GetExtraGoalDetail(2);
+
+        Managers.Sound.Play(Sound.Bgm, stage.GetBGMPath());
     }
 
     private void OnClickCancel()
@@ -903,6 +905,8 @@ public class BattleUI : UIBase
 
     private IEnumerator Result(bool win)
     {
+        Managers.Sound.Stop(Sound.Bgm);
+
         yield return new WaitWhile(() => AnimationController.instance.CheckAnimation() || AnimationController.instance.IsWalkingAnimation());
 
         yield return new WaitForSeconds(0.5f);
