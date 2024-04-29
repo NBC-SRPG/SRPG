@@ -8,6 +8,7 @@ public class OverlayTile : MonoBehaviour
     [SerializeField] private GameObject scaleTile;
     [SerializeField] private GameObject canMoveTile;
     [SerializeField] private GameObject attackRangeTile;
+    [SerializeField] private GameObject targetAttackRange;
 
     [HideInInspector] public bool canClick;//이동 가능 혹은 상호작용 가능한 타일
 
@@ -72,6 +73,7 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             scaleTile.SetActive(true);
+            canMoveTile.SetActive(true);
             defaultTile.SetActive(!scaleTile.activeSelf);
         }
     }
@@ -95,6 +97,17 @@ public class OverlayTile : MonoBehaviour
     public void HideScale()
     {
         scaleTile.SetActive(false);
+        canMoveTile.SetActive(false);
+    }
+
+    public void ShowTagetAttack()
+    {
+        targetAttackRange.SetActive(true);
+    }
+
+    public void HideTargetAttack()
+    {
+        targetAttackRange.SetActive(false);
     }
 
     public bool CheckCanMove()

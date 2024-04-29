@@ -12,6 +12,7 @@ public class WarningUI : UIBase
     private enum Buttons
     {
         BackImage,
+        CloseButton,
         WarningButton
     }
 
@@ -24,8 +25,8 @@ public class WarningUI : UIBase
         GetText((int)Texts.WarningText).text = text;
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.WarningButton).onClick.AddListener(CloseUI);
-
     }
 
     private void CloseUI()

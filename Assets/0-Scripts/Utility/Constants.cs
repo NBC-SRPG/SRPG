@@ -8,7 +8,9 @@ public static class Constants
     public enum Sound
     {
         Bgm,
-        Effect,
+        UI,     // UI작동시 사용할 효과음(Resources)
+        Effect,     // 전투시 사용할 효과음(Addressable)
+        EffectBySource, // resource에서 가져오는 효과음(Resources)
         Max,
     }
 
@@ -186,7 +188,8 @@ public static class Constants
         GetItem, // 아이템 획득
         UseItem, // 아이템 사용
         KillMonster, // 몬스터 처치
-        Login // 로그인
+        Login, // 로그인
+        StageClear // 스테이지 클리어
     }
     public enum MissionState
     {
@@ -223,14 +226,10 @@ public static class Constants
 
     public const int DEFAULT_AP = 20;
     public const int MAX_LEVEL = 90;
-    public const int MaxDiamond = 999999;
-    public const int MaxGold = 999999;
+    public const int MaxDiamond = 99999999;
+    public const int MaxGold = 99999999;
 
     public const int NONE_SELECTED = -1;
-    public const int TestApImage = 60001000;
-    public const int TestExpImage = 60001001;
-    public const int TestGoldImage = 60001002;
-    public const int TestDiamondImage = 60001003;
 
     public const int FriendTabs = 0;
     public const int ApplyingTabs = 1;
@@ -240,6 +239,7 @@ public static class Constants
     public const int AbilityTier3UnlockLevel = 70;
 
     public const int GachaPoint = 100;
+    public const int ConsumeAp = 5;
 
     [System.Serializable]
     public struct Dialog

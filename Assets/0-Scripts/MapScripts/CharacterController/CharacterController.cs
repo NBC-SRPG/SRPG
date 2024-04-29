@@ -34,6 +34,9 @@ public class CharacterController : MonoBehaviour
     private List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
     private List<OverlayTile> skillScale = new List<OverlayTile>();//스킬 범위 타일
 
+    private List<OverlayTile> targetAttackRange = new List<OverlayTile>();
+    private List<OverlayTile> prevAttackRange = new List<OverlayTile>();
+
     private List<CharacterBase> skillTargets = new List<CharacterBase>();
 
     private List<CharacterBase> characterList = new List<CharacterBase>();
@@ -195,6 +198,9 @@ public class CharacterController : MonoBehaviour
         Ui.ResetUI();
         Ui.ShowManaText();
 
+        ShowPrevAttackRange(null);
+        GetTargetAttackRange(null);
+
         if (phase != PlayerPhase.Idle)
         {
             CameraController.instance.ResetCamera();
@@ -254,6 +260,8 @@ public class CharacterController : MonoBehaviour
         }
 
         tileList.Clear();
+
+        ShowPrevAttackRange(null);
     }
 
     private void ResetTileOnSkill(List<OverlayTile> tileList)
@@ -261,6 +269,16 @@ public class CharacterController : MonoBehaviour
         foreach (OverlayTile tile in tileList)
         {
             tile.HideScale();
+        }
+
+        tileList.Clear();
+    }
+
+    private void ResetOnTarget(List<OverlayTile> tileList)
+    { 
+        foreach(OverlayTile tile in tileList)
+        {
+            tile.HideTargetAttack();
         }
 
         tileList.Clear();
@@ -339,6 +357,8 @@ public class CharacterController : MonoBehaviour
         Ui.ShowTargetInfo();
 
         CameraController.instance.AddGroup(curTargetCharacter);
+
+        GetTargetAttackRange(character);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -437,15 +457,15 @@ public class CharacterController : MonoBehaviour
 
                 if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
                 {
-                    SelectTargetCharacter(curTile.curStandingCharater);
-                    CameraController.instance.SetCameraOnSelected();
-
                     if (movePath.Count > 1)
                     {
                         ResetTileOnMove(movePath);
                         ResetTileOnMove(surroundPath);
                         movePath.Add(curSelectedCharacter.curStandingTile);
                     }
+
+                    SelectTargetCharacter(curTile.curStandingCharater);
+                    CameraController.instance.SetCameraOnSelected();
                 }
                 else
                 {
@@ -708,6 +728,11 @@ public class CharacterController : MonoBehaviour
 
                 CameraController.instance.SetCameraOnTile(movePath.Last());
             }
+
+            if(curSelectedCharacter.character.SO.attackMethod == Constants.AttackMethod.Range && !curSelectedCharacter.didAttack)
+            {
+                ShowPrevAttackRange(movePath.Last());
+            }
         }
 
         curSelectedCharacter.movePath = movePath;
@@ -766,6 +791,43 @@ public class CharacterController : MonoBehaviour
         }
 
         curSelectedCharacter.GetSkillScale(skillScale);
+    }
+
+    private void ShowPrevAttackRange(OverlayTile targetTile)
+    {
+        ResetOnTarget(prevAttackRange);
+
+        if(curSelectedCharacter != null && targetTile != null)
+        {
+            prevAttackRange = rangeFinder.GetTilesInRange(targetTile.grid2DLocation, curSelectedCharacter.character.SO.range, false);
+
+            foreach (OverlayTile tile in prevAttackRange)
+            {
+                tile.ShowTagetAttack();
+            }
+        }
+    }
+
+    private void GetTargetAttackRange(CharacterBase target)
+    {
+        ResetOnTarget(targetAttackRange);
+
+        if(target != null && target.CheckEnemyAsId(player) && phase != PlayerPhase.SkillTargetSelect)
+        {
+            if(target.character.SO.attackMethod == Constants.AttackMethod.Melee)
+            {
+                targetAttackRange = rangeFinder.GetTilesInRange(target.curStandingTile.grid2DLocation, target.Mov, true);
+            }
+            else
+            {
+                targetAttackRange = rangeFinder.GetTilesInRange(target.curStandingTile.grid2DLocation, target.character.SO.range, false);
+            }
+
+            foreach(OverlayTile tile in targetAttackRange)
+            {
+                tile.ShowTagetAttack();
+            }
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------------

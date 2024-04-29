@@ -95,28 +95,23 @@ public class GachaUI : UIBase
     // 클릭한 배너에 맞게 가챠 정보 세팅
     public void UpdateGachaInfoUI(GachaSO gachaSO)
     {
+        Debug.Log($"UpdateGachaInfoUI: {gachaSO.name}");
         curGacha = gachaSO;
 
         if (gachaSO.gachaType == Constants.GachaType.Common)
         {
             GetObject((int)GameObjects.PickUpInfo).SetActive(false);
             GetObject((int)GameObjects.GachaPointUI).SetActive(false);
-
             GetText((int)Texts.GachaName).text = "통상 계약";
-            //GetText((int)Texts.GachaInfo).text = "10연차 시 ★2 이상의 캐릭터 100% 계약";
-
             GetImage((int)Images.GachaImage).sprite = gachaSO.gachaImage;
         }
         else
         {
             GetObject((int)GameObjects.PickUpInfo).SetActive(true);
             GetObject((int)GameObjects.GachaPointUI).SetActive(true);
-
             GetText((int)Texts.GachaName).text = "픽업 계약";
             GetText((int)Texts.PickUpCharacterName).text = gachaSO.pickUpcharacterName;
-            //GetText((int)Texts.GachaInfo).text = "10연차 시 ★2 이상의 캐릭터 100% 계약";
             GetText((int)Texts.EndDate).text = $"남은 기간\n{gachaSO.GetRemainingTimeText()}";
-
             GetImage((int)Images.GachaImage).sprite = gachaSO.gachaImage;
         }
     }

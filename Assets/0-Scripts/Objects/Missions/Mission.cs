@@ -49,6 +49,16 @@ public class Mission
         return MissionProgress;
     }
 
+    public int StarUpdate(int amount)
+    {
+        if (MissionProgress < amount)
+        {
+            MissionProgress = amount;
+        }
+
+        return MissionProgress;
+    }
+
     public void Complete()
     {
         MissionState = MissionState.Complete;

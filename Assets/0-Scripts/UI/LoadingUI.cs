@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -12,6 +10,7 @@ public class LoadingUI : UIBase
 {
     private FirebaseAuth auth;
     private bool isDataLoaded = false;
+    public bool isMissionLoaded = false;
 
     private enum Texts
     {
@@ -55,7 +54,7 @@ public class LoadingUI : UIBase
 
     private void Update()
     {
-        if (isDataLoaded && Input.GetMouseButtonDown(0))
+        if (isDataLoaded && isMissionLoaded && Input.GetMouseButtonDown(0))
         {
             SceneManager.LoadScene("MainScene");
         }
@@ -63,6 +62,7 @@ public class LoadingUI : UIBase
 
     private void Init()
     {
+        Managers.Sound.Play(Constants.Sound.Bgm, "BGM/LoadingBGM");
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));

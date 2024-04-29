@@ -93,10 +93,23 @@ public class SoundManager
             audioSource.Play();
             return true;
         }
-        else if (type == Constants.Sound.Effect)
+        else if (type == Constants.Sound.UI || type == Constants.Sound.EffectBySource)
         {
             // 효과음은 캐싱 적용 
             AudioClip audioClip = GetAudioClip($"Sounds/{path}");
+            // 없으면 false
+            if (audioClip == null)
+            {
+                return false;
+            }
+            // 효과음은 한번만 재생
+            audioSource.PlayOneShot(audioClip);
+            return true;
+        }
+        else if (type == Constants.Sound.Effect)
+        {
+            // 캐싱 적용 
+            AudioClip audioClip = GetAudioClipFromAddressable(path);
             // 없으면 false
             if (audioClip == null)
             {
@@ -196,6 +209,20 @@ public class SoundManager
         }
         // 없으면 Load & 딕셔너리에 추가 후 return
         audioClip = Managers.Resource.Load<AudioClip>(path);
+        _audioClips.Add(path, audioClip);
+        return audioClip;
+    }
+
+    private AudioClip GetAudioClipFromAddressable(string path)
+    {
+        AudioClip audioClip = null;
+        // 캐싱 된 것이 있다면 return
+        if (_audioClips.TryGetValue(path, out audioClip))
+        {
+            return audioClip;
+        }
+        // 없으면 Load & 딕셔너리에 추가 후 return
+        audioClip = Utility.GetAudioClip(path);
         _audioClips.Add(path, audioClip);
         return audioClip;
     }

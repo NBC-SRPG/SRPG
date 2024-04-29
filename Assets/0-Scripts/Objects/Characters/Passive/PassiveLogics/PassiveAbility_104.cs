@@ -78,6 +78,8 @@ public class PassiveAbility_104 : PassiveLogic
             {
                     BattleManager.Instance.ExtraSkillHeal(character, healAmount, targetsToHeal, BattleKeyWords.AttackDamageType.Skill);
             }
+
+            Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_4/Passive_04.mp3");
         }
 
         // 치유 대상 목록 비우기

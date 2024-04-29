@@ -50,6 +50,7 @@ public class LevelUpUI : UIBase
         MaxLevelAfter,
         AwakeningPieceQuantity,
         AwakeningGoldText,
+        ExpText,
     }
 
     private enum Images
@@ -65,7 +66,7 @@ public class LevelUpUI : UIBase
 
     private enum Buttons
     {
-        LevelUpUICloseButton,
+        CloseButton,
         LevelUpItemButton_1,
         LevelUpItemButton_2,
         LevelUpItemButton_3,
@@ -73,14 +74,30 @@ public class LevelUpUI : UIBase
         LevelUpButton,
         LevelUpTab,
         AwakeningTab,
-        AwakeningButton
+        AwakeningButton,
+        ItemReduceButton_1,
+        ItemReduceButton_2,
+        ItemReduceButton_3,
+        ItemReduceButton_4
     }
 
     private enum GameObjects
     {
         LevelUp,
         Awakening,
-        AwakeningLimitText
+        AwakeningLimitText,
+        StarBefore,
+        StarAfter,
+        LimitBefore,
+        LimitBefore_1,
+        LimitBefore_2,
+        LimitBefore_3,
+        LimitBefore_4,
+        LimitAfter,
+        LimitAfter_1,
+        LimitAfter_2,
+        LimitAfter_3,
+        LimitAfter_4
     }
 
     public void Init(Character character)
@@ -126,14 +143,19 @@ public class LevelUpUI : UIBase
         GetObject((int)GameObjects.Awakening).SetActive(false);
         GetObject((int)GameObjects.AwakeningLimitText).gameObject.SetActive(false);
 
-        GetButton((int)Buttons.LevelUpUICloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(OnClickLevelUpUICloseButton);
         GetButton((int)Buttons.LevelUpItemButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1));
         GetButton((int)Buttons.LevelUpItemButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2));
         GetButton((int)Buttons.LevelUpItemButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3));
         GetButton((int)Buttons.LevelUpItemButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4));
 
+        GetButton((int)Buttons.ItemReduceButton_1).onClick.AddListener(() => OnClickLevelUpItemButton(1, false));
+        GetButton((int)Buttons.ItemReduceButton_2).onClick.AddListener(() => OnClickLevelUpItemButton(2, false));
+        GetButton((int)Buttons.ItemReduceButton_3).onClick.AddListener(() => OnClickLevelUpItemButton(3, false));
+        GetButton((int)Buttons.ItemReduceButton_4).onClick.AddListener(() => OnClickLevelUpItemButton(4, false));
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = (float)character.Growth.curExp / character.Growth.maxExp;
+        GetText((int)Texts.ExpText).text = $"{character.Growth.curExp}/{character.Growth.maxExp}";
         LevelUpCalc();
         LevelUpButtonActiveFalse();
 
@@ -156,20 +178,20 @@ public class LevelUpUI : UIBase
         Managers.UI.CloseUI(this);
     }
     // 아이템 1회 클릭
-    private void OnClickLevelUpItemButton(int itemNum)
+    private void OnClickLevelUpItemButton(int itemNum, bool up = true)
     {
         // 이미 맥스레벨
-        if (character.Growth.level >= character.Growth.GetMaxLevel())
+        if (character.Growth.level >= character.Growth.GetMaxLevel() && up)
         {
             return;
         }
         // 아이템 먹일 시 맥스레벨
-        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
+        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel() && up)
         {
             return;
         }
         // 아이템 사용 불가
-        if (canUseLevelUpItem == false)
+        if (canUseLevelUpItem == false && up)
         {
             return;
         }
@@ -180,38 +202,94 @@ public class LevelUpUI : UIBase
         {
             case 1:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem1Id])
+
+                if (up)
                 {
-                    break;
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem1Id])
+                    {
+                        break;
+                    }
+
+                    curNum++;
                 }
-                curNum++;
+                else
+                {
+                    curNum--;
+                    if(curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber1).text = curNum.ToString();
                 break;
             case 2:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem2Id])
+
+                if (up)
                 {
-                    break;
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem2Id])
+                    {
+                        break;
+                    }
+
+                    curNum++;
                 }
-                curNum++;
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber2).text = curNum.ToString();
                 break;
             case 3:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem3Id])
+
+                if (up)
                 {
-                    break;
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem3Id])
+                    {
+                        break;
+                    }
+
+                    curNum++;
                 }
-                curNum++;
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber3).text = curNum.ToString();
                 break;
             case 4:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem4Id])
+
+                if (up)
                 {
-                    break;
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem4Id])
+                    {
+                        break;
+                    }
+
+                    curNum++;
                 }
-                curNum++;
+                else
+                {
+                    curNum--;
+                    if (curNum < 0)
+                    {
+                        curNum = 0;
+                    }
+                }
+
                 GetText((int)Texts.LevelUpItemSelectNumber4).text = curNum.ToString();
                 break;
         }
@@ -284,6 +362,8 @@ public class LevelUpUI : UIBase
         // GetText((int)Texts.AwakeningChangeText).text = "70레벨에 특성 개방";
 
         // TODO: 성급별 별, 한계돌파 이미지 변경
+        SetStar();
+        SetLimitBreak();
 
         Utility.Id2SO<ItemSO>(character.SO.id, (result) =>
         {
@@ -297,6 +377,92 @@ public class LevelUpUI : UIBase
         if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
         {
             AwakeningButtonActiveFalse();
+        }
+    }
+
+    private void SetStar()
+    {
+        int numberOfStars = character.Growth.star; // 별의 개수
+        int afterStars = numberOfStars == 5 ? 5 : numberOfStars+1;
+        float starWidth = 60f; // 별 이미지의 너비
+        float spacing = 0f; // 별 사이의 간격
+
+        // 기존에 생성된 별들 제거
+        foreach (Transform child in GetObject((int)GameObjects.StarBefore).transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in GetObject((int)GameObjects.StarAfter).transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // 별 이미지들의 총 너비 계산
+        float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
+        // 첫 번째 별 이미지의 시작 위치 계산
+        float startX = -(totalWidth / 2) + (starWidth / 2);
+
+        for (int i = 0; i < numberOfStars; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.StarBefore).transform);
+            star.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+
+        totalWidth = afterStars * starWidth + (afterStars - 1) * spacing;
+        // 첫 번째 별 이미지의 시작 위치 계산
+        startX = -(totalWidth / 2) + (starWidth / 2);
+
+        for (int i = 0; i < afterStars; i++)
+        {
+            GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)GameObjects.StarAfter).transform);
+            star.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            RectTransform rt = star.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(startX + i * (starWidth + spacing), 0);
+        }
+    }
+
+    private void SetLimitBreak()
+    {
+        GetObject((int)GameObjects.LimitBefore).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_1).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_2).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_3).SetActive(true);
+        GetObject((int)GameObjects.LimitBefore_4).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_1).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_2).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_3).SetActive(true);
+        GetObject((int)GameObjects.LimitAfter_4).SetActive(true);
+
+        if (character.Growth.star != 5)
+        {
+            GetObject((int)GameObjects.LimitBefore).SetActive(false);
+            GetObject((int)GameObjects.LimitAfter).SetActive(false);
+        }
+        else
+        {
+            switch (character.Growth.limitBreak)
+            {
+                case 0:
+                    GetObject((int)GameObjects.LimitBefore_1).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_2).SetActive(false);
+                    break;
+                case 1:
+                    GetObject((int)GameObjects.LimitBefore_2).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_3).SetActive(false);
+                    break;
+                case 2:
+                    GetObject((int)GameObjects.LimitBefore_3).SetActive(false);
+                    GetObject((int)GameObjects.LimitAfter_4).SetActive(false);
+                    break;
+                case 3:
+                    GetObject((int)GameObjects.LimitBefore_4).SetActive(false);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -382,6 +548,11 @@ public class LevelUpUI : UIBase
                 yield break;
             }
 
+            if (isPressed == false)
+            {
+                yield break;
+            }
+
             switch (itemNum)
             {
                 case 1:
@@ -441,13 +612,16 @@ public class LevelUpUI : UIBase
         // 현재 레벨과 경험치를 먹인 레벨이 같을 때
         if (character.Growth.level == result[0])
         {
-            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+            GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(true);
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.GetMaxExp(result[0]);
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.GetMaxExp(result[0])}";
         }
         // 레벨업을 했을 때
         else
         {
             GetImage((int)Images.LevelUpBarFrontImage).gameObject.SetActive(false);
-            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.maxExp;
+            GetImage((int)Images.LevelUpBarChangeImage).fillAmount = (float)result[1] / character.Growth.GetMaxExp(result[0]);
+            GetText((int)Texts.ExpText).text = $"{result[1]}/{character.Growth.GetMaxExp(result[0])}";
             GetText((int)Texts.LevelAfter).gameObject.SetActive(true);
             GetText((int)Texts.HpAfter).gameObject.SetActive(true);
             GetText((int)Texts.AtkAfter).gameObject.SetActive(true);

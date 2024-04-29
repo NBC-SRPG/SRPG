@@ -67,6 +67,7 @@ public class CharacterBuf_TargetMarker : CharacterBuf //피유의 패시브 스�
 
                 //무한 공격하는 것을 방지하기 위해 패시브 데미지로 설정하겠습니다.
                 BattleManager.Instance.ExtraSkillAttack(Buffer, figure, characterSelf, BattleKeyWords.AttackDamageType.Passive, Constants.ElementType.Grass, "attack", true); //이 표적 디버프를 가진 캐릭터를 공격.
+
             }
         }
     }

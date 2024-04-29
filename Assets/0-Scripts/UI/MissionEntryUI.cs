@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using static Constants;
 
@@ -58,9 +54,9 @@ public class MissionEntryUI : UIBase
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
-        missionData = TestDatabase.Mission.Get(missionId);
+        missionData = Managers.Mission.missionDB.Get(missionId);
 
-        GetText((int)Texts.MissionNameText).text = missionData.name;
+        GetText((int)Texts.MissionNameText).text = missionData.missionName;
         GetText((int)Texts.MissionDescriptionText).text = missionData.missionDescription;
 
         // 경험치 보상 아이콘 생성
@@ -70,7 +66,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.exp.ToString(), TestExpImage);
+            go.GetComponent<RewardIconUI>().Init(missionData.exp.ToString(), Managers.Resource.Load<Sprite>("Exp"));
         }
         // ap 보상 아이콘 생성
         if (missionData.ap > 0)
@@ -79,7 +75,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.ap.ToString(), TestApImage);
+            go.GetComponent<RewardIconUI>().Init(missionData.ap.ToString(), Managers.Resource.Load<Sprite>("AP"));
         }
         // 골드 보상 아이콘 생성
         if (missionData.gold > 0)
@@ -88,7 +84,7 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.gold.ToString(), TestGoldImage);
+            go.GetComponent<RewardIconUI>().Init(missionData.gold.ToString(), Managers.Resource.Load<Sprite>("Gold"));
         }
         // 다이아 보상 아이콘 생성
         if (missionData.diamond > 0)
@@ -97,10 +93,20 @@ public class MissionEntryUI : UIBase
                 Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
                 GetObject((int)GameObjects.RewardContent).transform);
 
-            go.GetComponent<RewardIconUI>().Init(missionData.diamond.ToString(), TestDiamondImage);
+            go.GetComponent<RewardIconUI>().Init(missionData.diamond.ToString(), Managers.Resource.Load<Sprite>("Diamond"));
         }
         // TODO
-        // 아이템 보상 아이콘 생성
+        foreach(var item in missionData.rewards)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.RewardContent).transform);
+            Utility.Id2SO<ItemSO>(item.Key, (result) =>
+            {
+                go.GetComponent<RewardIconUI>().Init(item.Value.ToString(), (result as ItemSO).icon);
+            });
+
+        }
 
         // 수령 체크 이미지 끄기
         GetImage((int)Images.ReceiveCheckImage).gameObject.SetActive(false);
@@ -219,7 +225,7 @@ public class MissionEntryUI : UIBase
 
     private void NextMissionStart()
     {
-        foreach (var nextMission in TestDatabase.Mission.Get(missionId).nextMissions)
+        foreach (var nextMission in Managers.Mission.missionDB.Get(missionId).nextMissions)
         {
             Managers.Mission.MissionStart(nextMission);
         }

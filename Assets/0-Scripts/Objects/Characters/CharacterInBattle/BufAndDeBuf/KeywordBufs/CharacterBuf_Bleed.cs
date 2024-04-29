@@ -22,10 +22,16 @@ public class CharacterBuf_Bleed : CharacterBuf
     {
         base.OnEndActing();
 
+        int damage = power * stack;
+        
+        character.TakeDamageByInt(ref damage, null, BattleKeyWords.AttackDamageType.Buf);
+
+        /*
         for (int i = 0; i < stack; i++) //출혈에 걸린 상태에서 움직일 시, 피해량 power의 데미지를 중첩된 출혈 수 만큼 반복.
         {
             character.TakeDamageByInt(ref power, null, BattleKeyWords.AttackDamageType.Buf);
         }
+        */
 
         stack = stack/2; //그리고 스택이 절반으로 줄어든다.
         if (stack == 0)

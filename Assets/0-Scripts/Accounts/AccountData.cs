@@ -3,10 +3,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class AccountData
 {
-    public Dictionary<string, int> stageClearData { get; set; }
+    public Dictionary<int, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
     public Dictionary<int, int> inventory { get; set; }
@@ -30,8 +31,12 @@ public class AccountData
     #region Init
     public void InitStageClearData(DataSnapshot snapshot)
     {
-        Dictionary<string, int> data = snapshot.Exists ? JsonConvert.DeserializeObject<Dictionary<string, int>>(snapshot.GetRawJsonValue()) : new Dictionary<string, int>();
-        stageClearData = data;
+        stageClearData = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            stageClearData.Add(Convert.ToInt32(childSnapshot.Key), Convert.ToInt32(childSnapshot.Value));
+        }
     }
     public void InitCharacterData(DataSnapshot snapshot)
     {
@@ -99,6 +104,8 @@ public class AccountData
             );
             Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
         }
+
+        Managers.GameManager.player.playerId = playerData.uId;
     }
     public void InitInventoryData(DataSnapshot snapshot)
     {
@@ -121,9 +128,9 @@ public class AccountData
         List<string> applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
         List<string> waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
 
-        friendData.Add(Constants.FriendTabs, friendUids);
-        friendData.Add(Constants.ApplyingTabs, applyingUids);
-        friendData.Add(Constants.WaitingTabs, waitingUids);
+        friendData.Add(FriendTabs, friendUids);
+        friendData.Add(ApplyingTabs, applyingUids);
+        friendData.Add(WaitingTabs, waitingUids);
     }
     private List<string> ExtractUidsFromSnapshot(DataSnapshot snapshot)
     {
@@ -224,30 +231,7 @@ public class AccountData
     {
         
     }
-    
-    /*
-    public void Init(
-        Dictionary<string, int> stageClearData,
-        Dictionary<int, Character> characterData,
-        PlayerData playerData,
-        //List<int> ongoingMissions,
-        //List<int> completeMissions,
-        //List<int> receiveMissions,
-        //Dictionary<int, int> inventory,
-        Dictionary<int, string[]> friendData,
-        Dictionary<int, FormationData> formationData,
-        List<MailSO> mailBox
-        )
-    {
-        this.stageClearData = stageClearData ?? new Dictionary<string, int>();
-        this.characterData = characterData ?? new Dictionary<int, Character>();
-        this.playerData = playerData ?? new PlayerData();
-        //this.inventory = inventory ?? new Dictionary<int, int>();
-        this.friendData = friendData ?? new Dictionary<int, string[]>();
-        this.formationData = formationData ?? new Dictionary<int, FormationData>();
-        this.mailBox = mailBox ?? new List<MailSO>();
-    }
-    */
+
     private void OngoingMissionInit(DataSnapshot snapshot)
     {
         // 데이터가 존재하는지 확인
@@ -257,7 +241,7 @@ public class AccountData
             foreach (DataSnapshot mission in snapshot.Children)
             {
                 // 데이터의 키(미션Id)와 값(진행정도)으로 MissionStart를 메인쓰레드에서 실행 
-                MainThreadExecutor.ExecuteInMainThread(() => Managers.Mission.MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
+                Managers.Mission.MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value));
                 Debug.Log(mission.Key + ":" + mission.Value);
             }
             // 데이터가 있음을 체크
@@ -283,18 +267,16 @@ public class AccountData
             foreach (DataSnapshot mission in snapshot.Children)
             {
                 // 데이터의 키(미션Id)로 미션 시작, 진행 정도는 완료 미션이기 때문에 해당 미션의 count를 그대로 적용
-                MainThreadExecutor.ExecuteInMainThread(() => {
-                    Managers.Mission.MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count);
-                    // 바로 클리어 처리
-                    Managers.Mission.MissionClear(int.Parse(mission.Key));
+                Managers.Mission.MissionStart(int.Parse(mission.Key), Managers.Mission.missionDB.Get(int.Parse(mission.Key)).count);
+                // 바로 클리어 처리
+                Managers.Mission.MissionClear(int.Parse(mission.Key));
 
-                    // 데이터의 값이 true라면 보상 수령을 한 것
-                    if ((bool)mission.Value)
-                    {
-                        // 보상 수령 처리
-                        Managers.Mission.MissionReceive(int.Parse(mission.Key));
-                    }
-                });
+                // 데이터의 값이 true라면 보상 수령을 한 것
+                if ((bool)mission.Value)
+                {
+                    // 보상 수령 처리
+                    Managers.Mission.MissionReceive(int.Parse(mission.Key));
+                }
                 Debug.Log(mission.Key + ":" + mission.Value);
             }
             // 데이터가 있음을 체크
@@ -319,25 +301,41 @@ public class AccountData
             // 두 데이터가 모두 비어 있으면 기본 미션 설정
             if (!hasOngoingMissions && !hasCompleteMissions)
             {
-                MainThreadExecutor.ExecuteInMainThread(() =>
-                {
-                    // 기본 미션들을 설정
-                    Managers.Mission.MissionStart(90001000);
-                    Managers.Mission.MissionStart(90001001);
-                    Managers.Mission.MissionStart(90001002);
-                });
+                Managers.Mission.MissionStart(90001000);
+                Managers.Mission.MissionStart(90001001);
+                Managers.Mission.MissionStart(90001002);
+                Managers.Mission.MissionStart(90001003);
+                Managers.Mission.MissionStart(90002000);
+                Managers.Mission.MissionStart(90002001);
+                Managers.Mission.MissionStart(90002002);
+                Managers.Mission.MissionStart(90002003);
+                Managers.Mission.MissionStart(90002004);
+                Managers.Mission.MissionStart(90003000);
+                Managers.Mission.MissionStart(90003001);
+                Managers.Mission.MissionStart(90003002);
+                Managers.Mission.MissionStart(90003003);
+                Managers.Mission.MissionStart(90003004);
+                Managers.Mission.MissionStart(90003005);
+                Managers.Mission.MissionStart(90003006);
+                Managers.Mission.MissionStart(90003013);
+                Managers.Mission.MissionStart(90003023);
+                Managers.Mission.MissionStart(90003026);
+                Managers.Mission.MissionStart(90003029);
+                Managers.Mission.MissionStart(90004000);
+                Managers.Mission.MissionStart(90005001);
             }
+            Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
         }
     }
     #endregion
 
-    public void UpdateStageClearData(string stageName, int achievement)
+    public void UpdateStageClearData(int stageId, int achievement)
     {
-        if(stageClearData.TryAdd(stageName, achievement) == false)
+        if(stageClearData.TryAdd(stageId, achievement) == false)
         {
-            stageClearData[stageName] = achievement;
+            stageClearData[stageId] = achievement;
         }
-        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageName), achievement);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageId.ToString()), achievement);
     }
 
     public void AcquireCharacter(int id, bool isPickUp = false)
@@ -388,12 +386,14 @@ public class AccountData
         {
             inventory[id] += count;
         }
+        Managers.Mission.NotifyMission(MissionType.GetItem, id, count);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
     }
 
     public void ConsumeItems(int id, int count)
     {
         inventory[id] -= count;
+        Managers.Mission.NotifyMission(MissionType.UseItem, id, count);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
     }
 
@@ -435,19 +435,6 @@ public class AccountData
         formationData[presetIndex].characterId[characterIndex] = characterId;
 
         Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
-    }
-
-    public void UpdateClearData(string stage, int achievement)
-    {
-        if(stageClearData.TryAdd(stage, achievement) == false)
-        {
-            if (stageClearData[stage] == 3) // 이미 3별이라면 추가로 값을 변동하지 않음
-            {
-                return;
-            }
-            stageClearData[stage] = achievement;
-        }
-        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stage), stageClearData[stage]);
     }
 
 }

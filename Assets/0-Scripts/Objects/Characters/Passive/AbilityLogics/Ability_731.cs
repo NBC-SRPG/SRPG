@@ -41,6 +41,8 @@ public class Ability_731: PassiveLogic
         {
             int damageAmount = (int)((skillTarget.health.TotalHealth - skillTarget.health.CurHealth) * ((float)(coefficient["healthRate"]) / coefficient["denominator"])); //잃은 체력을 구한다
             BattleManager.Instance.ExtraSkillAttack(character, (int)((float)character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"])) + damageAmount, new List<CharacterBase> { skillTarget}); //추가 데미지
+
+            Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_7/Ability_731.mp3");
         }
 
         skillTarget = null;

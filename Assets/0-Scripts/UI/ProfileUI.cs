@@ -30,7 +30,8 @@ public class ProfileUI : UIBase
     private enum Images
     {
         CharacterProfileImage,
-        IllustrationImage
+        IllustrationImage,
+        PlayerLevelFrontImage
     }
 
     private void Start()
@@ -59,6 +60,7 @@ public class ProfileUI : UIBase
         GetText((int)Texts.UIDText).text = $"UID:{Managers.AccountData.playerData.uId}";
         GetText((int)Texts.LevelText).text = $"LV. {Managers.AccountData.playerData.Level}";
         GetText((int)Texts.ExpText).text = $"{Managers.AccountData.playerData.exp} / {Managers.AccountData.playerData.maxExp}";
+        GetImage((int)Images.PlayerLevelFrontImage).fillAmount = (float)Managers.AccountData.playerData.exp / (float)Managers.AccountData.playerData.maxExp;
 
         Get<TMP_InputField>((int)InputFields.NicknameInputField).text = $"{Managers.AccountData.playerData.playerName}";
         Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = $"{Managers.AccountData.playerData.birthday}";
@@ -66,6 +68,7 @@ public class ProfileUI : UIBase
 
         GetImage((int)Images.CharacterProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
         GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
+
     }
 
     private void OnClickEditNicknameButton()

@@ -30,6 +30,7 @@ public class CharacterEntryUI : UIBase
     private enum Images
     {
         CharacterImage,
+        CharacterOutline,
         CharacterAttributeImage,
         InFormationImage
     }
@@ -67,7 +68,7 @@ public class CharacterEntryUI : UIBase
         // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
         Character character = Managers.AccountData.characterData[characterId];
         GetImage((int)Images.CharacterImage).sprite = character.SO.icon;
-        GetImage((int)Images.CharacterAttributeImage).sprite = character.GetElementSprite();
+        GetImage((int)Images.CharacterAttributeImage).sprite = character.SO.GetElementSprite();
 
         UpdateLevel();
 
@@ -91,12 +92,38 @@ public class CharacterEntryUI : UIBase
             GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
         }
 
+        SetOutline();
         SetStar();
     }
 
     private void UpdateLevel()
     {
-        GetText((int)Texts.CharacterLevelText).text = $"Lv. {Managers.AccountData.characterData[characterId].Growth.level}";
+        GetText((int)Texts.CharacterLevelText).text = $"{Managers.AccountData.characterData[characterId].Growth.level}";
+    }
+
+    private void SetOutline()
+    {
+        switch (Managers.AccountData.characterData[characterId].SO.elementType)
+        {
+            case Constants.ElementType.Fire:
+                GetImage((int)Images.CharacterOutline).color = Color.red;
+                break;
+            case Constants.ElementType.Water:
+                GetImage((int)Images.CharacterOutline).color = Color.blue;
+                break;
+            case Constants.ElementType.Grass:
+                GetImage((int)Images.CharacterOutline).color = Color.green;
+                break;
+            case Constants.ElementType.Bolt:
+                GetImage((int)Images.CharacterOutline).color = Color.yellow;
+                break;
+            case Constants.ElementType.Dark:
+                GetImage((int)Images.CharacterOutline).color = Color.black;
+                break;
+            case Constants.ElementType.Light:
+                GetImage((int)Images.CharacterOutline).color = Color.white;
+                break;
+        }
     }
 
     private void SetStar()

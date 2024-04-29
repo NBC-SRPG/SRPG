@@ -7,6 +7,7 @@ using static Constants;
 public class StageSO : SerializedScriptableObject
 {
     [Header("StageInfo")]
+    public int stageId;
     public string stageName;
     public string stageNumber;
     public StageClear clear;
@@ -14,6 +15,7 @@ public class StageSO : SerializedScriptableObject
     public List<EnemySO> enemiesInfo;
     public int recommendLevel;
     public bool isTutorial = false;
+    public string bgm;
 
     [Header("Enemy")]
     public List<EnemySO> enemies;
@@ -44,6 +46,11 @@ public class StageSO : SerializedScriptableObject
 
     [Header("ExtraGoal")]
     public ExtraGoalDetail[] extraGoal = new ExtraGoalDetail[3];
+
+    [Header("Reward")]
+    public int exp;
+    public int gold;
+    public Dictionary<int, int> rewards = new();
 
     [HideInInspector] public List<Character> characterList;
 
@@ -112,5 +119,10 @@ public class StageSO : SerializedScriptableObject
         }
 
         return detailString;
+    }
+
+    public string GetBGMPath()
+    {
+        return "BGM/" + bgm;
     }
 }

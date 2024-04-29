@@ -26,10 +26,22 @@ public static class Utility
         };
     }
 
-    public static Character GetCharacter(int id)
+    public static T Id2SOWait<T>(int id) where T : ScriptableObject
     {
-        return Managers.AccountData.characterData[id];
+        // 어드레서블 경로
+        string path = typeof(T).ToString() + "/" + typeof(T).ToString() + "_" + id.ToString() + ".asset";
+
+        T result = Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
+        return result; 
     }
+
+    public static AudioClip GetAudioClip(string path)
+    {
+        AudioClip audioClip = Addressables.LoadAssetAsync<AudioClip>(path).WaitForCompletion();
+
+        return audioClip;
+    }
+
 
     //taskAsync
 
@@ -75,5 +87,4 @@ public static class Utility
             callback(handler.Result);
         };
     }
-
 }

@@ -28,7 +28,7 @@ public class StageSelectUI : UIBase
         Content
     }
 
-    public void Init(int chapter)
+    public void Init(int chapterId)
     {
         Managers.UI.SetCanvas(gameObject);
 
@@ -39,22 +39,23 @@ public class StageSelectUI : UIBase
 
         // TODO
         // 챕터 이름, 설명, 이미지는 어디에??
-        GetText((int)Texts.ChapterNameText).text = $"";
-        GetText((int)Texts.StageDescriptionText).text = $"";
+        ChapterSO chapter = Utility.Id2SOWait<ChapterSO>(chapterId);
+        GetText((int)Texts.ChapterNameText).text = $"{chapter.chapterName}";
+        GetText((int)Texts.StageDescriptionText).text = $"{chapter.description}";
 
-        GetImage((int)Images.StageImage);
+        GetImage((int)Images.StageImage).sprite = chapter.chapterImage;
 
         // TODO
         // Chapter에 스테이지가 몇개 있는지는 어떻게 알지?? 5개 고정?
-        for (int i = 1; i <= 5; i++)
+        foreach (var stageId in chapter.stageList)
         {
             GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/StageEntryUI");
             GameObject ui = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
-            ui.GetComponent<StageEntryUI>().Init($"{chapter}_{i}");
+            ui.GetComponent<StageEntryUI>().Init(stageId);
 
             int stageClearStars;
 
-            if (!Managers.AccountData.stageClearData.TryGetValue($"{chapter}_{i}", out stageClearStars))
+            if (!Managers.AccountData.stageClearData.TryGetValue(stageId, out stageClearStars))
             {
                 stageClearStars = 0;
             }
@@ -67,7 +68,6 @@ public class StageSelectUI : UIBase
         GetText((int)Texts.StageStarText).text = $"{numberOfStars} / 15";
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
-        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
     }
 
     private void OnClickBackButton()
@@ -75,8 +75,4 @@ public class StageSelectUI : UIBase
         Managers.UI.CloseUI(this);
     }
 
-    private void OnClickHomeButton()
-    {
-        Managers.UI.ReturnMainUI();
-    }
 }

@@ -35,7 +35,8 @@ public class EquipmentUpgradeUI : UIBase
     private enum Buttons
     {
         EquipmentUpgradeButton,
-        EquipmentUpgradeUICloseButton
+        EquipmentUpgradeUICloseButton,
+        CloseButton
     }
 
     private enum GameObjects
@@ -60,7 +61,8 @@ public class EquipmentUpgradeUI : UIBase
         StartCoroutine(InitEquip());
 
         GetButton((int)Buttons.EquipmentUpgradeButton).onClick.AddListener(OnClickEquipmentUpgradeButton);
-        GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(OnClickEquipmentUpgradeUICloseButton);
+        GetButton((int)Buttons.EquipmentUpgradeUICloseButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
     }
 
     private IEnumerator InitEquip()
@@ -238,7 +240,7 @@ public class EquipmentUpgradeUI : UIBase
         }
     }
 
-    private void OnClickEquipmentUpgradeUICloseButton()
+    private void CloseUI()
     {
         CharacterInfoUI ui = Managers.UI.FindUI<CharacterInfoUI>();
 

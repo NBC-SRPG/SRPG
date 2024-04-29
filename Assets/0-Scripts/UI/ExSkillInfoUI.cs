@@ -33,6 +33,7 @@ public class ExSkillInfoUI : UIBase
         //Managers.AccountData.characterData[characterId].characterGrowth.OnExSkillLevelChanged += UpdateDescription;
 
         BindText(typeof(Texts));
+        BindImage(typeof(Images));
         BindButton(typeof(Buttons));
 
         GetText((int)Texts.ExSkillNameText).text = $"{character.exSkill.skillName} / Lv.{character.Growth.exSkillLevel}";

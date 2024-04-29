@@ -17,6 +17,8 @@ public class CharAnim_103 : CharAnimBase
 
         CameraController.instance.ResetBattleGroup();
         CameraController.instance.AddBattleTargetGroup(particles.cameraTransform["Skill1"], 2);
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_3/ExSkill_03.mp3");
     }
 
     public void AtSlash()
@@ -63,6 +65,8 @@ public class CharAnim_103 : CharAnimBase
 
     public void MoveToPosition()
     {
+        Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_3/Attack_03.mp3");
+
         Vector3 moveTarget = new Vector3(
             (targetCharacter.transform.position.x - (Getdirection(targetCharacter.transform.position).x)),
             targetCharacter.transform.position.y, targetCharacter.transform.position.z);

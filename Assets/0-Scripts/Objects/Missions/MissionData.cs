@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "MissionData", fileName = "MissionSO_")]
-public class MissionSO : ScriptableObject
+public class MissionSO : SerializedScriptableObject
 {
     public int missionId; // 미션 id
     public string missionName; // 미션 이름

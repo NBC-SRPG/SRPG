@@ -25,7 +25,8 @@ public class MainUI : UIBase
 
     private enum Images
     {
-        IllustrationImage
+        IllustrationImage,
+        ProfileImage
     }
 
     private enum GameObjects
@@ -40,6 +41,7 @@ public class MainUI : UIBase
 
     public void Init()
     {
+        Managers.Sound.Play(Constants.Sound.Bgm, "BGM/MainBGM");
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
@@ -51,15 +53,16 @@ public class MainUI : UIBase
         GetButton((int)Buttons.FormationButton).onClick.AddListener(OnClickFormationButton);
         GetButton((int)Buttons.InventoryButton).onClick.AddListener(OnClickInventoryButton);
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
-        GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
+        //GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
         GetButton((int)Buttons.AdventureButton).onClick.AddListener(OnClickAdventureButton);
-        GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
+        //GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
         GetButton((int)Buttons.MailButton).onClick.AddListener(OnClickMailButton);
-        GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
+        //GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
 
         GetText((int)Texts.NameText).text = Managers.AccountData.playerData.playerName;
+        GetImage((int)Images.ProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
 
 
         // 선택한 캐릭터의 일러스트 표시

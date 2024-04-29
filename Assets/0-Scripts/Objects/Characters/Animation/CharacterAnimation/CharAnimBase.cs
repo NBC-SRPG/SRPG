@@ -148,7 +148,7 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Block);
     }
 
-    public void PlayExtraAnimation(List<CharacterBase> victims, string anim)
+    public virtual void PlayExtraAnimation(List<CharacterBase> victims, string anim)
     {
         this.targetList = victims;
         if(victims.Count == 1)

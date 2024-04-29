@@ -287,18 +287,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   temp:
-  - tempCharacter: {fileID: 11400000, guid: 3581614b38c1e5a439cf4c3ec1b2168c, type: 2}
+  - tempCharacter: {fileID: 11400000, guid: d7e6ccdbaca694840802d02d7f8b17dd, type: 2}
     startLevel: 40
     ability2: 1
     ability3: 1
     superClass: 0
   - tempCharacter: {fileID: 11400000, guid: f4851e09a194a974ebb3be6f64c725fe, type: 2}
-    startLevel: 20
-    ability2: 0
-    ability3: 0
+    startLevel: 40
+    ability2: 1
+    ability3: 1
     superClass: 1
   enemyTemp: []
-  stage: {fileID: 11400000, guid: 8a5289c782588bf4baf9fa47ae7554d1, type: 2}
+  stage: {fileID: 11400000, guid: 3721fac2aad9638429197756944e9fe9, type: 2}
 --- !u!4 &551698854
 Transform:
   m_ObjectHideFlags: 0
@@ -756,7 +756,6 @@ GameObject:
   - component: {fileID: 1430330367}
   - component: {fileID: 1430330366}
   - component: {fileID: 1430330365}
-  - component: {fileID: 1430330364}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -764,18 +763,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1430330364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1430330363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77a34274ac8dc1f4d91ff968cc8fdd49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1430330365
 MonoBehaviour:
   m_ObjectHideFlags: 0

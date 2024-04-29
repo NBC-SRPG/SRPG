@@ -125,14 +125,20 @@ public class UIManager
     // Main + Common UI만 남기고 닫기
     public void ReturnMainUI()
     {
-        // MainUI가 맨 아래, 그 위에 CommonUI가 있음
-        // 카운트가 2면 MainUI + CommonUI만 남은 상태
-        while (uiStack.Count > 2) 
+        while (true) 
         {
-            UIBase ui = uiStack.Pop();
+            UIBase ui = PeekUI<UIBase>();
+            
+            if (ui.name == "MainUI" || ui.name == "CommonUI")
+            {
+                break;
+            }
+
+            ui = uiStack.Pop();
             Object.Destroy(ui.gameObject);
         }
-        order = -20;
+
+        InitSortOrder();
     }
 
     public void InitSortOrder()
