@@ -281,7 +281,7 @@ public class PlayerData
     {
         exp -= maxExp;
         Level += 1;
-        maxExp = Constants.dataTables["playerExpTable"][Level];
+        maxExp = dataTables["playerExpTable"][Level];
         maxAp = DEFAULT_AP + Level*2;
         AddAP(maxAp);
 
