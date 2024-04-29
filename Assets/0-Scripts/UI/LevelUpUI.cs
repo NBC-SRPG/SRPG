@@ -169,17 +169,17 @@ public class LevelUpUI : UIBase
     private void OnClickLevelUpItemButton(int itemNum, bool up = true)
     {
         // 이미 맥스레벨
-        if (character.Growth.level >= character.Growth.GetMaxLevel())
+        if (character.Growth.level >= character.Growth.GetMaxLevel() && up)
         {
             return;
         }
         // 아이템 먹일 시 맥스레벨
-        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel())
+        if (character.Growth.CalcExp(totalExp)[0] >= character.Growth.GetMaxLevel() && up)
         {
             return;
         }
         // 아이템 사용 불가
-        if (canUseLevelUpItem == false)
+        if (canUseLevelUpItem == false && up)
         {
             return;
         }
@@ -190,13 +190,14 @@ public class LevelUpUI : UIBase
         {
             case 1:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber1).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem1Id])
-                {
-                    break;
-                }
 
                 if (up)
                 {
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem1Id])
+                    {
+                        break;
+                    }
+
                     curNum++;
                 }
                 else
@@ -212,13 +213,14 @@ public class LevelUpUI : UIBase
                 break;
             case 2:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber2).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem2Id])
-                {
-                    break;
-                }
 
                 if (up)
                 {
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem2Id])
+                    {
+                        break;
+                    }
+
                     curNum++;
                 }
                 else
@@ -234,13 +236,14 @@ public class LevelUpUI : UIBase
                 break;
             case 3:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber3).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem3Id])
-                {
-                    break;
-                }
 
                 if (up)
                 {
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem3Id])
+                    {
+                        break;
+                    }
+
                     curNum++;
                 }
                 else
@@ -256,13 +259,14 @@ public class LevelUpUI : UIBase
                 break;
             case 4:
                 curNum = int.Parse(GetText((int)Texts.LevelUpItemSelectNumber4).text);
-                if (curNum >= Managers.AccountData.inventory[LevelUpItem4Id])
-                {
-                    break;
-                }
 
                 if (up)
                 {
+                    if (curNum >= Managers.AccountData.inventory[LevelUpItem4Id])
+                    {
+                        break;
+                    }
+
                     curNum++;
                 }
                 else
@@ -440,6 +444,11 @@ public class LevelUpUI : UIBase
         while (true)
         {
             if (canUseLevelUpItem == false)
+            {
+                yield break;
+            }
+
+            if (isPressed == false)
             {
                 yield break;
             }
