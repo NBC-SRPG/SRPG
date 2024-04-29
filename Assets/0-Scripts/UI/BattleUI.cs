@@ -29,6 +29,8 @@ public class BattleUI : UIBase
         TargetAtkText,
         TargetDefText,
         TargetHealthText,
+        TargetMovText,
+        TargetRangeText,
         RoundText,
         TurnText,
         GoalText,
@@ -55,6 +57,7 @@ public class BattleUI : UIBase
         LeftWalkObject,
         SelectCharacterInfo,
         TargetCharacterInfo,
+        TargetRange,
         RangeObject,
         GameResult,
         Win,
@@ -800,6 +803,19 @@ public class BattleUI : UIBase
 
         GetText((int)Texts.TargetAtkText).text = curTargetCharacter.Attack.ToString();
         GetText((int)Texts.TargetDefText).text = curTargetCharacter.Defend.ToString();
+        GetText((int)Texts.TargetMovText).text = curTargetCharacter.Mov.ToString();
+        GetText((int)Texts.TargetRangeText).text = curTargetCharacter.character.SO.range.ToString();
+
+        if (curTargetCharacter.character.SO.attackMethod == AttackMethod.Range)
+        {
+            GetObject((int)GameObjects.TargetRange).SetActive(true);
+            GetText((int)Texts.TargetRangeText).gameObject.SetActive(true);
+        }
+        else
+        {
+            GetObject((int)GameObjects.TargetRange).SetActive(false);
+            GetText((int)Texts.TargetRangeText).gameObject.SetActive(false);
+        }
 
         GetText((int)Texts.TargetHealthText).text = curTargetCharacter.health.CurHealth.ToString() +
             ((curTargetCharacter.health.GetShield() > 0) ? " + " + curTargetCharacter.health.GetShield().ToString() : "");
