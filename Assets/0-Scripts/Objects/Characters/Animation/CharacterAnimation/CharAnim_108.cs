@@ -35,6 +35,8 @@ public class CharAnim_108 : CharAnimBase
 
         targetCharacter.characterAnim.ShakeCharacter();
         Damage();
+
+        Managers.Sound.Play(Constants.Sound.Effect, "Sounds/Effects/Common/Hit.mp3");
     }
 
     public void PlayAttackSound()
