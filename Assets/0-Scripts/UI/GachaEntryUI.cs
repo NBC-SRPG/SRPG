@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using UnityEngine;
 using static Constants;
 
@@ -45,26 +43,26 @@ public class GachaEntryUI : UIBase
 
 
 
-    private void SetOutline(Constants.ElementType elementType)
+    private void SetOutline(ElementType elementType)
     {
         switch (elementType)
         {
-            case Constants.ElementType.Fire:
+            case ElementType.Fire:
                 GetImage((int)Images.CharacterOutline).color = Color.red;
                 break;
-            case Constants.ElementType.Water:
+            case ElementType.Water:
                 GetImage((int)Images.CharacterOutline).color = Color.blue;
                 break;
-            case Constants.ElementType.Grass:
+            case ElementType.Grass:
                 GetImage((int)Images.CharacterOutline).color = Color.green;
                 break;
-            case Constants.ElementType.Bolt:
+            case ElementType.Bolt:
                 GetImage((int)Images.CharacterOutline).color = Color.yellow;
                 break;
-            case Constants.ElementType.Dark:
+            case ElementType.Dark:
                 GetImage((int)Images.CharacterOutline).color = Color.black;
                 break;
-            case Constants.ElementType.Light:
+            case ElementType.Light:
                 GetImage((int)Images.CharacterOutline).color = Color.white;
                 break;
         }

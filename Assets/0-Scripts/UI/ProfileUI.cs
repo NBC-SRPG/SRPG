@@ -24,7 +24,7 @@ public class ProfileUI : UIBase
         EditNicknameButton,
         EditBirthdayButton,
         EditComentButton,
-        BackButton
+        BackButton,
     }
 
     private enum Images
@@ -39,6 +39,11 @@ public class ProfileUI : UIBase
         Init();
     }
 
+    private void OnDestroy()
+    {
+        Managers.AccountData.playerData.OnLobbyCharacterChanged -= RefreshCharacter;
+    }
+
     private void Init()
     {
         Managers.UI.SetCanvas(gameObject);
@@ -49,6 +54,7 @@ public class ProfileUI : UIBase
         Bind<TMP_InputField>(typeof(InputFields));
 
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
+        GetButton((int)Buttons.CharacterProfileButton).onClick.AddListener(OnClickCharacterProfileButton);
         GetButton((int)Buttons.EditNicknameButton).onClick.AddListener(OnClickEditNicknameButton);
         GetButton((int)Buttons.EditBirthdayButton).onClick.AddListener(OnClickEditBirthdayButton);
         GetButton((int)Buttons.EditComentButton).onClick.AddListener(OnClickEditComentButton);
@@ -66,11 +72,21 @@ public class ProfileUI : UIBase
         Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = $"{Managers.AccountData.playerData.birthday}";
         Get<TMP_InputField>((int)InputFields.ComentInputField).text = $"{Managers.AccountData.playerData.playerComment}";
 
-        GetImage((int)Images.CharacterProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
-        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
+        RefreshCharacter(Managers.AccountData.playerData.lobbyCharacter);
 
+        Managers.AccountData.playerData.OnLobbyCharacterChanged += RefreshCharacter;
     }
 
+    private void RefreshCharacter(int characterId)
+    {
+        GetImage((int)Images.CharacterProfileImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[characterId].SO.standingImage;
+    }
+
+    private void OnClickCharacterProfileButton()
+    {
+        Managers.UI.ShowUI<CharacterListPopUpUI>();
+    }
     private void OnClickEditNicknameButton()
     {
         Debug.Log("OnClickEditNicknameButton");
@@ -125,11 +141,7 @@ public class ProfileUI : UIBase
     {
         if (!string.IsNullOrEmpty(newBirthday))
         {
-            // TODO
-            // 계정 데이터의 생일 업데이트
-            // 올바른 날짜형식인지 체크 필요
             Debug.Log("New birthday: " + newBirthday);
-
 
             // 생일이 가능한지 체크
             if (Managers.AccountData.playerData.SetBirthDay(newBirthday) == false)
