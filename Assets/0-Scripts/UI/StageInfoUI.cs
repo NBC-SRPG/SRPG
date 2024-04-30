@@ -216,20 +216,18 @@ public class StageInfoUI : UIBase
         // 보상 획득
         if (stage.exp > 0)
         {
-            Managers.AccountData.playerData.AddExp(stage.exp);
+            Managers.AccountData.playerData.AddExp(stageClearCount * stage.exp);
         }
 
         if (stage.gold > 0)
         {
-            Managers.AccountData.playerData.AddExp(stage.gold);
+            Managers.AccountData.playerData.AddGold(stageClearCount * stage.gold);
         }
 
         foreach (var reward in stage.rewards)
         {
-            Managers.AccountData.AcquireItems(reward.Key, reward.Value);
+            Managers.AccountData.AcquireItems(reward.Key, stageClearCount * reward.Value);
         }
-
-        // Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
 
         Managers.UI.ShowUI<RewardGetUI>().Init(stage, stageClearCount);
     }
