@@ -1,5 +1,4 @@
 using UnityEngine;
-using static Constants;
 public class StageEntryUI : UIBase
 {
     private StageSO stageSO;
@@ -34,7 +33,7 @@ public class StageEntryUI : UIBase
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
             GetText((int)Texts.StageNumText).text = stageSO.stageNumber;
-            GetButton((int)Buttons.StageTitleText).onClick.AddListener(() => OnClickStageTitle(stageSO));
+            GetButton((int)Buttons.StageTitleText).onClick.AddListener(OnClickStageTitle);
 
             InitStar(stageSO.stageId);
 
@@ -74,10 +73,9 @@ public class StageEntryUI : UIBase
         }
     }
     
-    private void OnClickStageTitle(StageSO stage)
+    private void OnClickStageTitle()
     {
-        StageInfoUI ui = Managers.UI.ShowUI<StageInfoUI>();
-        ui.Init(stage);
+        Managers.UI.ShowUI<StageInfoUI>().Init(stageSO);
     }
 
     private void OnClickStageClearButton()
@@ -85,7 +83,7 @@ public class StageEntryUI : UIBase
         Debug.Log("OnClickStageClearButton");
 
         // AP 감소
-        Managers.AccountData.playerData.ReduceAP(ConsumeAp);
+        Managers.AccountData.playerData.ReduceAP(stageSO.apUsage);
         // 보상 획득
         if (stageSO.exp > 0)
         {

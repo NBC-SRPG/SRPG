@@ -13,6 +13,7 @@ public class StageInfoUI : UIBase
         StageNameText,
         StageLevelText,
         ClearCountText,
+        ClearApText,
         Goal
     }
 
@@ -163,10 +164,9 @@ public class StageInfoUI : UIBase
         }
 
         stageClearCount--;
-        
-        // TODO
-        // 한 판당 소모 AP는 어디에??
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
+
+        GetText((int)Texts.ClearCountText).text = stageClearCount.ToString();
+        GetText((int)Texts.ClearApText).text = $"소모 AP : {stageClearCount * stage.apUsage}";
     }
     private void OnClickClearIncreButton()
     {
@@ -177,16 +177,18 @@ public class StageInfoUI : UIBase
 
         stageClearCount++;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
+        GetText((int)Texts.ClearCountText).text = stageClearCount.ToString();
+        GetText((int)Texts.ClearApText).text = $"소모 AP : {stageClearCount * stage.apUsage}";
     }
 
     private void OnClickClearMaxButton()
     {
-        int maxCount = Managers.AccountData.playerData.Ap / ConsumeAp;
+        int maxCount = Managers.AccountData.playerData.Ap / stage.apUsage;
 
         stageClearCount = maxCount;
 
-        GetText((int)Texts.ClearCountText).text = $"{stageClearCount * ConsumeAp}";
+        GetText((int)Texts.ClearCountText).text = stageClearCount.ToString();
+        GetText((int)Texts.ClearApText).text = $"소모 AP : {stageClearCount * stage.apUsage}";
     }
     private void OnClickClearButton()
     {
@@ -212,7 +214,7 @@ public class StageInfoUI : UIBase
         }
 
         // AP 감소
-        Managers.AccountData.playerData.ReduceAP(stageClearCount * ConsumeAp);
+        Managers.AccountData.playerData.ReduceAP(stageClearCount * stage.apUsage);
         // 보상 획득
         if (stage.exp > 0)
         {
@@ -230,6 +232,10 @@ public class StageInfoUI : UIBase
         }
 
         Managers.UI.ShowUI<RewardGetUI>().Init(stage, stageClearCount);
+
+        stageClearCount = 0;
+        GetText((int)Texts.ClearCountText).text = stageClearCount.ToString();
+        GetText((int)Texts.ClearApText).text = $"소모 AP : {stageClearCount * stage.apUsage}";
     }
 
     private void OnClickFormationButton()

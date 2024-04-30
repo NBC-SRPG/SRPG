@@ -33,8 +33,7 @@ public class PurchaseGoldUI : UIBase
     {
         if (Managers.AccountData.playerData.ReduceDiamond(50) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("다이아가 부족합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("다이아가 부족합니다.");
             return;
         }
         Managers.AccountData.playerData.AddGold(100000);

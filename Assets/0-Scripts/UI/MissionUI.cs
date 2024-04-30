@@ -608,8 +608,7 @@ public class MissionUI : UIBase
         ClaimReward();
 
         // 보상 획득 완료 UI 생성
-        RewardGetUI ui = Managers.UI.ShowUI<RewardGetUI>();
-        ui.InitWithMultipleRewards(exp, ap, gold, diamond, rewards);
+        Managers.UI.ShowUI<RewardGetUI>().InitWithMultipleRewards(exp, ap, gold, diamond, rewards);
 
         // 해당 미션 엔트리 수령 처리
         AllMissionReceive();
@@ -724,8 +723,7 @@ public class MissionUI : UIBase
         // 골드 획득 가능 체크
         if (Managers.AccountData.playerData.CanAddGold(gold) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
+            Managers.UI.ShowUI<WarningUI>().Init(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
 
             return false;
         }
@@ -733,8 +731,7 @@ public class MissionUI : UIBase
         // 다이아 획득 가능 체크
         if (Managers.AccountData.playerData.CanAddDiamond(diamond) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
+            Managers.UI.ShowUI<WarningUI>().Init(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
 
             return false;
         }

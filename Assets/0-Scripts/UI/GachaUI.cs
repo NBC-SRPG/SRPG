@@ -125,8 +125,7 @@ public class GachaUI : UIBase
     {
         if (Managers.AccountData.playerData.ReduceDiamond(250) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("다이아가 부족합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("다이아가 부족합니다.");
             return;
         }
         ShowResult(Draw(curGacha.tableId));
@@ -136,8 +135,7 @@ public class GachaUI : UIBase
     {
         if (Managers.AccountData.playerData.ReduceDiamond(2500) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("다이아가 부족합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("다이아가 부족합니다.");
             return;
         }
         ShowResult(Draw10Times(curGacha.tableId));
@@ -311,7 +309,6 @@ public class GachaUI : UIBase
     private void ShowResult(List<int> result)
     {
         // 전달받은 리스트로 가차 결과창(GachaResultUI) 보여주기
-        GachaResultUI GachaResultUI = Managers.UI.ShowUI<GachaResultUI>();
-        GachaResultUI.Init(result);
+        Managers.UI.ShowUI<GachaResultUI>().Init(result);
     }
 }

@@ -87,16 +87,14 @@ public class MailEntryUI : UIBase
 
         if (mailSO.isExpired())
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("수령기간이 만료되었습니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("수령기간이 만료되었습니다.");
             DeleteMailEntry();
         }
         else
         {
             mailSO.GetRewards();
 
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("수령 완료");
+            Managers.UI.ShowUI<WarningUI>().Init("수령 완료");
             DeleteMailEntry();
         }
     }

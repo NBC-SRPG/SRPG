@@ -34,7 +34,6 @@ public class ItemEntryUI : UIBase
     private void OnClickSelectButton()
     {
         Debug.Log("OnClickSelectButton");
-        ItemInfoUI ui = Managers.UI.ShowUI<ItemInfoUI>();
-        ui.Init(item);
+        Managers.UI.ShowUI<ItemInfoUI>().Init(item);
     }
 }
