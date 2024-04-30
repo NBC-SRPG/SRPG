@@ -33,17 +33,15 @@ public class EquipmentUpgradeMaterialUI : UIBase
 
         yield return new WaitUntil(() => isLoaded);
 
-        if (itemCount > Managers.AccountData.inventory[itemId])
+        GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"{Managers.AccountData.GetItemQuantity(item.id)}/{itemCount}";
+
+        if (itemCount > Managers.AccountData.GetItemQuantity(itemId))
         {
-            GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"<color=red>{Managers.AccountData.inventory[itemId]}</color>/{itemCount}";
-        }
-        else
-        {
-            GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"{Managers.AccountData.inventory[itemId]}/{itemCount}";
+            GetText((int)Texts.EquipmentUpgradeMaterialQuantity).color = Color.red;
         }
 
         GetText((int)Texts.EquipmentUpgradeMaterialName).text = item.itemName;
-        GetText((int)Texts.EquipmentUpgradeMaterialQuantity).text = $"{Managers.AccountData.GetItemQuantity(item.id)}/{itemCount}";
+
         GetImage((int)Images.EquipmentUpgradeMaterialImage).sprite = item.icon;
     }
 }

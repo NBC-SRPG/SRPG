@@ -342,7 +342,7 @@ public class LevelUpUI : UIBase
 
     private void AwakeningCalc()
     {
-        AwakeningButtonActiveTrue();
+        GetButton((int)Buttons.AwakeningButton).onClick.AddListener(OnClickAwakeningButton);
         int nowStar =  character.Growth.star;
         int nowLimit = character.Growth.limitBreak;
         int maxLevel = character.Growth.GetMaxLevel();
@@ -360,7 +360,6 @@ public class LevelUpUI : UIBase
         // TODO: 성급별 변경점 
         // GetText((int)Texts.AwakeningChangeText).text = "70레벨에 특성 개방";
 
-        // TODO: 성급별 별, 한계돌파 이미지 변경
         SetStar();
         SetLimitBreak();
 
@@ -370,21 +369,23 @@ public class LevelUpUI : UIBase
         });
         int[] costs = GetCost(nowStar+nowLimit);
 
+        GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+
         if (costs[0] > Managers.AccountData.GetItemQuantity(character.SO.id))
         {
-            GetText((int)Texts.AwakeningPieceQuantity).text = $"<color=red>{Managers.AccountData.GetItemQuantity(character.SO.id)}</color> / {costs[0]}";
+            GetText((int)Texts.AwakeningPieceQuantity).color = Color.red;
+            AwakeningButtonActiveFalse();
         }
-        else
-        {
-            GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
-        }
+
         
         GetText((int)Texts.AwakeningGoldText).text = costs[1].ToString();
 
-        if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
+        if (Managers.AccountData.playerData.Gold < costs[1])
         {
+            GetText((int)Texts.AwakeningGoldText).color = Color.red;
             AwakeningButtonActiveFalse();
         }
+
     }
 
     private void SetStar()
@@ -532,18 +533,10 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.AwakeningButton).onClick.RemoveAllListeners();
         GetButton((int)Buttons.AwakeningButton).enabled = false;
         Color newColor = GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color;
-        newColor.a = 0.5f;
+        newColor.a = 0.2f;
         GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color = newColor;
     }
-    private void AwakeningButtonActiveTrue()
-    {
-        GetButton((int)Buttons.AwakeningButton).onClick.RemoveAllListeners();
-        GetButton((int)Buttons.AwakeningButton).onClick.AddListener(OnClickAwakeningButton);
-        GetButton((int)Buttons.AwakeningButton).enabled = true;
-        Color newColor = GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color;
-        newColor.a = 1f;
-        GetButton((int)Buttons.AwakeningButton).GetComponent<Image>().color = newColor;
-    }
+
 
     // 0.02초마다 아이템 1개씩 추가
     private IEnumerator LevelUpItem(int itemNum)
@@ -660,13 +653,14 @@ public class LevelUpUI : UIBase
 
         int goldRequired = int.Parse(digits);
 
-        // 총 경험치량이 0보다 크고 필요 골드가 소지 골드 보다 적다면 활성화
-        if (totalExp > 0 && goldRequired <= Managers.AccountData.playerData.Gold)
+        LevelUpButtonActiveTrue();
+        if (totalExp == 0)
         {
-            LevelUpButtonActiveTrue();
+            LevelUpButtonActiveFalse();
         }
-        else
+        if (goldRequired > Managers.AccountData.playerData.Gold)
         {
+            GetText((int)Texts.LevelUpGoldText).color = Color.red;
             LevelUpButtonActiveFalse();
         }
 
@@ -678,7 +672,7 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.LevelUpButton).onClick.RemoveAllListeners();
         GetButton((int)Buttons.LevelUpButton).enabled = false;
         Color newColor = GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color;
-        newColor.a = 0.5f;
+        newColor.a = 0.2f;
         GetButton((int)Buttons.LevelUpButton).GetComponent<Image>().color = newColor;
     }
 
