@@ -9,6 +9,8 @@ public class PlayerData
     public event Action<int> OnGoldChanged;
     public event Action<int> OnApChanged;
     public event Action<int> OnGachaPointChanged;
+    public event Action<int> OnPlayerLevelChanged;
+    public event Action<string> OnPlayerNameChanged;
 
     public string uId { get; private set; } // UID
     public string playerName { get; private set; } // 닉네임
@@ -127,6 +129,7 @@ public class PlayerData
         {
             this.playerName = playerName;
             Managers.DB.Write<string>(Managers.DB.userDB.Child("playerData").Child("playerName"), playerName);
+            OnPlayerNameChanged?.Invoke(playerName);
             return true; // 글자 수 제한 조건을 만족하면 true 반환
         }
         else
@@ -288,6 +291,8 @@ public class PlayerData
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("maxExp"), maxExp);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("maxAp"), maxAp);
         Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("Level"), Level);
+
+        OnPlayerLevelChanged?.Invoke(Level);
     }
     public bool SetBirthDay(string MMDD) //생일값 설정 메서드. 유효한 생일 값인지 검사한다.
     {
