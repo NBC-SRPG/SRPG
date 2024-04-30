@@ -13,6 +13,7 @@ public class PurchaseApUI : UIBase
     {
         BackImage,
         CancelButton,
+        CloseButton,
         PurchaseButton
     }
 
@@ -24,6 +25,7 @@ public class PurchaseApUI : UIBase
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.CancelButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.PurchaseButton).onClick.AddListener(PurchaseAp);
     }
 
