@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PurchaseApUI : UIBase
 {
+    public int exchangeCount = 0;
     private enum Texts
     {
-        
+        ExchangeCount,
+        DiamondCount,
+        ApCount
     }
 
     private enum Buttons
@@ -14,7 +17,9 @@ public class PurchaseApUI : UIBase
         BackImage,
         CancelButton,
         CloseButton,
-        PurchaseButton
+        PurchaseButton,
+        AddButton,
+        ReduceButton
     }
 
     public void Init()
@@ -27,6 +32,8 @@ public class PurchaseApUI : UIBase
         GetButton((int)Buttons.CancelButton).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.PurchaseButton).onClick.AddListener(PurchaseAp);
+        GetButton((int)Buttons.AddButton).onClick.AddListener(OnClickAddButton);
+        GetButton((int)Buttons.ReduceButton).onClick.AddListener(OnClickReduceButton);
     }
 
     private void PurchaseAp()
@@ -40,6 +47,33 @@ public class PurchaseApUI : UIBase
         Managers.AccountData.playerData.AddAP(100);
 
         CloseUI();
+    }
+
+    private void OnClickReduceButton()
+    {
+        if (exchangeCount == 0)
+        {
+            return;
+        }
+
+        exchangeCount--;
+
+        GetText((int)Texts.ExchangeCount).text = exchangeCount.ToString();
+        GetText((int)Texts.DiamondCount).text = $"{exchangeCount * 50}";
+        GetText((int)Texts.ApCount).text = $"{exchangeCount * 100}";
+    }
+    private void OnClickAddButton()
+    {
+        if ((exchangeCount + 1) * 50 > Managers.AccountData.playerData.Diamond)
+        {
+            return;
+        }
+
+        exchangeCount++;
+
+        GetText((int)Texts.ExchangeCount).text = exchangeCount.ToString();
+        GetText((int)Texts.DiamondCount).text = $"{exchangeCount * 50}";
+        GetText((int)Texts.ApCount).text = $"{exchangeCount * 100}";
     }
 
     private void CloseUI()
