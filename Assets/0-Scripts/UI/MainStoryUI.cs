@@ -35,7 +35,6 @@ public class MainStoryUI : UIBase
     {
         Debug.Log($"OnClickChapterButton: {chapter}");
 
-        StageSelectUI ui = Managers.UI.ShowUI<StageSelectUI>();
-        ui.Init(chapter);
+        Managers.UI.ShowUI<StageSelectUI>().Init(chapter);
     }
 }

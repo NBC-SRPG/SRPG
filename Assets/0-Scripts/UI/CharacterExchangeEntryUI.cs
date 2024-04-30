@@ -43,7 +43,6 @@ public class CharacterExchangeEntryUI : UIBase
 
         // 캐릭터 획득 UI
         List<int> gachaResultList = new List<int> { gachaSO.id };
-        GachaResultUI GachaResultUI = Managers.UI.ShowUI<GachaResultUI>();
-        GachaResultUI.Init(gachaResultList);
+        Managers.UI.ShowUI<GachaResultUI>().Init(gachaResultList);
     }
 }
