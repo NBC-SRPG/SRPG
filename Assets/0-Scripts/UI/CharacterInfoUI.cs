@@ -100,6 +100,8 @@ public class CharacterInfoUI : UIBase
     private void OnDestroy()
     {
         character.Growth.OnLevelUp -= UpdateStat;
+        character.Growth.OnLevelUp -= InitClassTab;
+        character.Growth.OnAwake -= UpdateStat;
     }
 
     public void Init(Character character)
