@@ -55,8 +55,8 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
     }
 
 
-    // 현재 캐릭터가 레벨업 가능한 최대 레벨을 반환
-    public int GetMaxLevel()
+    // 성급&한계돌파에서 가능한 최대 레벨
+    public int CalcMaxLevel()
     {
         int maxLevel;
         switch(star)
@@ -94,12 +94,13 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
                 }
                 break;
         }
+        return maxLevel;
+    }
 
-        if (maxLevel > Managers.AccountData.playerData.Level)
-        {
-            maxLevel = Managers.AccountData.playerData.Level;
-        }
-
+    // 현재 캐릭터가 레벨업 가능한 최대 레벨을 반환
+    public int GetMaxLevel()
+    {
+        int maxLevel = CalcMaxLevel() > Managers.AccountData.playerData.Level ? Managers.AccountData.playerData.Level : CalcMaxLevel();
         return maxLevel;
     }
 
@@ -140,6 +141,7 @@ public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기
                 result[1] = 0;
                 exp -= expRequired;
             }
+
 
             if(result[0] >= GetMaxLevel())
             {
