@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PurchaseApUI : UIBase
 {
     public int exchangeCount = 0;
+    private int reduceDiamond = 50;
+    private int addAp = 100;
+
     private enum Texts
     {
         ExchangeCount,
@@ -19,12 +20,13 @@ public class PurchaseApUI : UIBase
         CloseButton,
         PurchaseButton,
         AddButton,
-        ReduceButton
+        ReduceButton,
+        MaxButton,
+        MinButton
     }
 
     public void Init()
     {
-
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
@@ -34,17 +36,19 @@ public class PurchaseApUI : UIBase
         GetButton((int)Buttons.PurchaseButton).onClick.AddListener(PurchaseAp);
         GetButton((int)Buttons.AddButton).onClick.AddListener(OnClickAddButton);
         GetButton((int)Buttons.ReduceButton).onClick.AddListener(OnClickReduceButton);
+        GetButton((int)Buttons.MaxButton).onClick.AddListener(OnClickMaxButton);
+        GetButton((int)Buttons.MinButton).onClick.AddListener(OnClickMinButton);
     }
 
     private void PurchaseAp()
     {
-        if (Managers.AccountData.playerData.ReduceDiamond(50) == false)
+        if (Managers.AccountData.playerData.ReduceDiamond(reduceDiamond * exchangeCount) == false)
         {
             Managers.UI.ShowUI<WarningUI>().Init("다이아가 부족합니다.");
 
             return;
         }
-        Managers.AccountData.playerData.AddAP(100);
+        Managers.AccountData.playerData.AddAP(addAp * exchangeCount);
 
         CloseUI();
     }
@@ -58,22 +62,36 @@ public class PurchaseApUI : UIBase
 
         exchangeCount--;
 
-        GetText((int)Texts.ExchangeCount).text = exchangeCount.ToString();
-        GetText((int)Texts.DiamondCount).text = $"{exchangeCount * 50}";
-        GetText((int)Texts.ApCount).text = $"{exchangeCount * 100}";
+        TextUpdate();
     }
     private void OnClickAddButton()
     {
-        if ((exchangeCount + 1) * 50 > Managers.AccountData.playerData.Diamond)
+        if ((exchangeCount + 1) * reduceDiamond > Managers.AccountData.playerData.Diamond)
         {
             return;
         }
 
         exchangeCount++;
 
+        TextUpdate();
+    }
+    private void OnClickMaxButton()
+    {
+        exchangeCount = Managers.AccountData.playerData.Diamond / reduceDiamond;
+
+        TextUpdate();
+    }
+    private void OnClickMinButton()
+    {
+        exchangeCount = 0;
+
+        TextUpdate();
+    }
+    private void TextUpdate()
+    {
         GetText((int)Texts.ExchangeCount).text = exchangeCount.ToString();
-        GetText((int)Texts.DiamondCount).text = $"{exchangeCount * 50}";
-        GetText((int)Texts.ApCount).text = $"{exchangeCount * 100}";
+        GetText((int)Texts.DiamondCount).text = (reduceDiamond * exchangeCount).ToString();
+        GetText((int)Texts.ApCount).text = (addAp * exchangeCount).ToString();
     }
 
     private void CloseUI()

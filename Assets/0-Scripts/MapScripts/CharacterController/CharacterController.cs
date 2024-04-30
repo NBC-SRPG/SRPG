@@ -474,7 +474,7 @@ public class CharacterController : MonoBehaviour
                 }
                 else
                 {
-                    //SelectTargetCharacter(null); // 모바일에서 실행 시 버튼이 제대로 안눌리는 버그가 있음
+                    SelectTargetCharacter(null); // 모바일에서 실행 시 버튼이 제대로 안눌리는 버그가 있음
                 }
             }
 
@@ -866,7 +866,7 @@ public class CharacterController : MonoBehaviour
     {
         RaycastHit2D hit = new RaycastHit2D();
 
-        if (EventSystem.current.IsPointerOverGameObject() == false)
+        if (EventSystem.current.IsPointerOverGameObject(0) == false && EventSystem.current.IsPointerOverGameObject() == false)
         {
             if ((Input.GetMouseButtonDown(0) && canClick))
             {
