@@ -102,15 +102,10 @@ public class CharacterInfoUI : UIBase
         character.Growth.OnLevelUp -= UpdateStat;
     }
 
-    public void SetCharacter(Character character)
+    public void Init(Character character)
     {
         this.character = character;
-        Debug.Log(character);
-        Init();
-    }
 
-    private void Init()
-    {
         Managers.UI.SetCanvas(gameObject);
 
         BindText(typeof(Texts));
