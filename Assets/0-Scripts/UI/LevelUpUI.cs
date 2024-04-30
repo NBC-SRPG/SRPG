@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -371,7 +370,15 @@ public class LevelUpUI : UIBase
         });
         int[] costs = GetCost(nowStar+nowLimit);
 
-        GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+        if (costs[0] > Managers.AccountData.GetItemQuantity(character.SO.id))
+        {
+            GetText((int)Texts.AwakeningPieceQuantity).text = $"<color=red>{Managers.AccountData.GetItemQuantity(character.SO.id)}</color> / {costs[0]}";
+        }
+        else
+        {
+            GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+        }
+        
         GetText((int)Texts.AwakeningGoldText).text = costs[1].ToString();
 
         if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
@@ -697,8 +704,7 @@ public class LevelUpUI : UIBase
         // TODO: 비활성화 or 경고UI??
         if (Managers.AccountData.playerData.ReduceGold(gold) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("골드가 부족합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("골드가 부족합니다.");
 
             return;
         }
@@ -712,8 +718,6 @@ public class LevelUpUI : UIBase
         GetText((int)Texts.LevelUpItemQuantity_2).text = $"x{Managers.AccountData.inventory[LevelUpItem2Id]}";
         GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.inventory[LevelUpItem3Id]}";
         GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.inventory[LevelUpItem4Id]}";
-
-        Managers.AccountData.characterData[character.SO.id].Growth.LevelUp(totalExp);
 
         GetText((int)Texts.LevelUpGoldText).text = "0 G";
 
@@ -734,6 +738,8 @@ public class LevelUpUI : UIBase
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = GetImage((int)Images.LevelUpBarChangeImage).fillAmount;
         GetImage((int)Images.LevelUpBarChangeImage).fillAmount = 0;
+
+        Managers.AccountData.characterData[character.SO.id].Growth.LevelUp(totalExp);
 
         LevelUpCalc();
     }

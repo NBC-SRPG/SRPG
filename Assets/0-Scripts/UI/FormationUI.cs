@@ -342,9 +342,7 @@ public class FormationUI : UIBase
 
         if (pressedTimer > 1f && !hasShownCharacterInfo)
         {
-            CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
-
-            ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
+            Managers.UI.ShowUI<CharacterInfoUI>().Init(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
             hasShownCharacterInfo = true;
         }
     }

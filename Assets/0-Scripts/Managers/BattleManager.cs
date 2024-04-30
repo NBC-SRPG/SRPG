@@ -75,8 +75,7 @@ public class BattleManager : MonoBehaviour
 
         isShowAnimation = false;
 
-        Managers.UI.ShowUI<BattleUI>();
-        Ui = Managers.UI.FindUI<BattleUI>();
+        Ui = Managers.UI.ShowUI<BattleUI>();
 
         if (stage.isTutorial)
         {

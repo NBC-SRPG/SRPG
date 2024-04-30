@@ -110,11 +110,10 @@ public class InventoryUI : UIBase
 
         yield return new WaitUntil(() => loadedCount == itemsCount);
 
-        foreach (var ItemSO in loadedItems)
+        foreach (var itemSO in loadedItems)
         {
-            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/ItemEntryUI");
-            var instance = Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
-            instance.GetComponent<ItemEntryUI>().Init(ItemSO);
+            GameObject go = Managers.Resource.Instantiate("UI/ItemEntryUI", GetObject((int)GameObjects.Content).transform);
+            go.GetComponent<ItemEntryUI>().Init(itemSO);
         }
 
         // 아이템 다 생성 후 기본 정렬(Id 오름차순)
@@ -212,17 +211,16 @@ public class InventoryUI : UIBase
     // 필터에 맞는 아이템 재생성
     private void UpdateItemList(List<ItemSO> items)
     {
-        Transform contentPanel = GetObject((int)GameObjects.Content).transform;
-        foreach (Transform child in contentPanel)
+        Transform content = GetObject((int)GameObjects.Content).transform;
+        foreach (Transform child in content)
         {
             Destroy(child.gameObject);
         }
 
         foreach (var itemSO in items)
         {
-            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/ItemEntryUI");
-            var instance = Managers.Resource.Instantiate(go, contentPanel);
-            instance.GetComponent<ItemEntryUI>().Init(itemSO);
+            GameObject go = Managers.Resource.Instantiate("UI/ItemEntryUI", content);
+            go.GetComponent<ItemEntryUI>().Init(itemSO);
         }
     }
 }

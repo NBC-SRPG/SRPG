@@ -9,8 +9,8 @@ public class CharacterEntryUI : UIBase
     public static bool isFormation;
     // 편성의 몇번째 인덱스 클린한 것인지 체크 변수
     public static int formationIndex;
-    // 캐릭터 id
-    public int characterId;
+    // 캐릭터
+    public Character character;
     // 1초 이상 눌렀는지를 체크하는 변수
     private float pressedTimer;
     // 1초 이상 눌렀을 때 캐릭터 정보창이 켜져있는지 체크하는 변수
@@ -40,21 +40,16 @@ public class CharacterEntryUI : UIBase
         Star
     }
 
-    private void Start()
-    {
-        Init();
-        Managers.AccountData.characterData[characterId].Growth.OnLevelUp += UpdateLevel;
-        Managers.AccountData.characterData[characterId].Growth.OnLevelUp += SetStar;
-    }
-
     private void OnDestroy()
     {
-        Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= UpdateLevel;
-        Managers.AccountData.characterData[characterId].Growth.OnLevelUp -= SetStar;
+        character.Growth.OnLevelUp -= UpdateLevel;
+        character.Growth.OnLevelUp -= SetStar;
     }
 
-    private void Init()
+    public void Init(Character character)
     {
+        this.character = character;
+
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
@@ -64,9 +59,6 @@ public class CharacterEntryUI : UIBase
         BindEvent(GetButton((int)Buttons.CharacterButton).gameObject, OnPointerUpCharacterButton, UIEvent.PointerUp);
         BindEvent(GetButton((int)Buttons.CharacterButton).gameObject, OnPressedCharacterButton, UIEvent.Pressed);
 
-        // TODO
-        // 캐릭터 정보에서 이미지나 이름 레벨등을 꺼내와서 세팅
-        Character character = Managers.AccountData.characterData[characterId];
         GetImage((int)Images.CharacterImage).sprite = character.SO.icon;
         GetImage((int)Images.CharacterAttributeImage).sprite = character.SO.GetElementSprite();
 
@@ -78,7 +70,7 @@ public class CharacterEntryUI : UIBase
             // ui.presetIndex를 사용하여 현재 선택된 프리셋(파티)를 참조
             FormationData currentFormation = Managers.AccountData.formationData[ui.presetIndex];
             // 주어진 characterId가 현재 파티에 포함되어 있는지 확인
-            isCharacterInFormation = currentFormation.characterId.Contains(characterId);
+            isCharacterInFormation = currentFormation.characterId.Contains(character.SO.id);
 
             // 편성에 포함되어 있지 않다면 편성됨 이미지 끄기
             if (isCharacterInFormation == false)
@@ -94,33 +86,36 @@ public class CharacterEntryUI : UIBase
 
         SetOutline();
         SetStar();
+
+        character.Growth.OnLevelUp += UpdateLevel;
+        character.Growth.OnLevelUp += SetStar;
     }
 
     private void UpdateLevel()
     {
-        GetText((int)Texts.CharacterLevelText).text = $"{Managers.AccountData.characterData[characterId].Growth.level}";
+        GetText((int)Texts.CharacterLevelText).text = $"{character.Growth.level}";
     }
 
     private void SetOutline()
     {
-        switch (Managers.AccountData.characterData[characterId].SO.elementType)
+        switch (character.SO.elementType)
         {
-            case Constants.ElementType.Fire:
+            case ElementType.Fire:
                 GetImage((int)Images.CharacterOutline).color = Color.red;
                 break;
-            case Constants.ElementType.Water:
+            case ElementType.Water:
                 GetImage((int)Images.CharacterOutline).color = Color.blue;
                 break;
-            case Constants.ElementType.Grass:
+            case ElementType.Grass:
                 GetImage((int)Images.CharacterOutline).color = Color.green;
                 break;
-            case Constants.ElementType.Bolt:
+            case ElementType.Bolt:
                 GetImage((int)Images.CharacterOutline).color = Color.yellow;
                 break;
-            case Constants.ElementType.Dark:
+            case ElementType.Dark:
                 GetImage((int)Images.CharacterOutline).color = Color.black;
                 break;
-            case Constants.ElementType.Light:
+            case ElementType.Light:
                 GetImage((int)Images.CharacterOutline).color = Color.white;
                 break;
         }
@@ -128,7 +123,7 @@ public class CharacterEntryUI : UIBase
 
     private void SetStar()
     {
-        int numberOfStars = Managers.AccountData.characterData[characterId].Growth.star;
+        int numberOfStars = character.Growth.star;
         float starWidth = 25f; // 별 이미지의 너비
 
         // 기존에 생성된 별들 제거
@@ -168,9 +163,7 @@ public class CharacterEntryUI : UIBase
     {
         Debug.Log("ShowCharacterInfo");
 
-        CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
-
-        ui.SetCharacter(Managers.AccountData.characterData[characterId]);
+        Managers.UI.ShowUI<CharacterInfoUI>().Init(character);
     }
 
     // 편성에 추가하기
@@ -184,7 +177,7 @@ public class CharacterEntryUI : UIBase
         if (isCharacterInFormation)
         {
             // 해당 캐릭터가 있는 인덱스
-            int characterIndex = Array.IndexOf(Managers.AccountData.formationData[ui.presetIndex].characterId, characterId);
+            int characterIndex = Array.IndexOf(Managers.AccountData.formationData[ui.presetIndex].characterId, character.SO.id);
             // 편성 이미지 비활성화
             GetImage((int)Images.InFormationImage).gameObject.SetActive(false);
             // 편성 데이터 업데이트
@@ -200,7 +193,7 @@ public class CharacterEntryUI : UIBase
         // 편성 UI 뽑아서 formationIndex에 해당하는 곳에 캐릭터 정보 전달
         Debug.Log(ui.presetIndex);
         Debug.Log(formationIndex);
-        Managers.AccountData.SetFormationCharacter(ui.presetIndex, formationIndex, Managers.AccountData.characterData[characterId].SO.id);
+        Managers.AccountData.SetFormationCharacter(ui.presetIndex, formationIndex, character.SO.id);
         ui.UpdateFormationMember(formationIndex);
 
         Managers.UI.CloseUI(Managers.UI.PeekUI<CharacterUI>());

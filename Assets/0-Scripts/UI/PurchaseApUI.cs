@@ -13,6 +13,7 @@ public class PurchaseApUI : UIBase
     {
         BackImage,
         CancelButton,
+        CloseButton,
         PurchaseButton
     }
 
@@ -24,6 +25,7 @@ public class PurchaseApUI : UIBase
 
         GetButton((int)Buttons.BackImage).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.CancelButton).onClick.AddListener(CloseUI);
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
         GetButton((int)Buttons.PurchaseButton).onClick.AddListener(PurchaseAp);
     }
 
@@ -31,8 +33,8 @@ public class PurchaseApUI : UIBase
     {
         if (Managers.AccountData.playerData.ReduceDiamond(50) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.Init("다이아가 부족합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("다이아가 부족합니다.");
+
             return;
         }
         Managers.AccountData.playerData.AddAP(100);

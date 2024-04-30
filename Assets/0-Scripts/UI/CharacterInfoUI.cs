@@ -100,17 +100,14 @@ public class CharacterInfoUI : UIBase
     private void OnDestroy()
     {
         character.Growth.OnLevelUp -= UpdateStat;
+        character.Growth.OnLevelUp -= InitClassTab;
+        character.Growth.OnAwake -= UpdateStat;
     }
 
-    public void SetCharacter(Character character)
+    public void Init(Character character)
     {
         this.character = character;
-        Debug.Log(character);
-        Init();
-    }
 
-    private void Init()
-    {
         Managers.UI.SetCanvas(gameObject);
 
         BindText(typeof(Texts));
@@ -151,8 +148,7 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnClickLevelUpButton");
 
-        LevelUpUI ui = Managers.UI.ShowUI<LevelUpUI>();
-        ui.Init(character);
+        Managers.UI.ShowUI<LevelUpUI>().Init(character);
     }
 
     
@@ -481,24 +477,21 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnClickExSkillButton");
 
-        ExSkillInfoUI ui = Managers.UI.ShowUI<ExSkillInfoUI>();
-        ui.Init(character);
+        Managers.UI.ShowUI<ExSkillInfoUI>().Init(character);
     }
 
     private void OnClickPassiveSkillButton()
     {
         Debug.Log("OnClickPassiveSkillButton");
 
-        PassiveSkillInfoUI ui = Managers.UI.ShowUI<PassiveSkillInfoUI>();
-        ui.Init(character.SO.id);
+        Managers.UI.ShowUI<PassiveSkillInfoUI>().Init(character.SO.id);
     }
 
     private void OnClickAbilityButton(int AbilityTier, int AbilityIndex)
     {
         Debug.Log("OnClickAbilityButton");
 
-        AbilityInfoUI ui = Managers.UI.ShowUI<AbilityInfoUI>();
-        ui.Init(character, AbilityTier, AbilityIndex);
+        Managers.UI.ShowUI<AbilityInfoUI>().Init(character, AbilityTier, AbilityIndex);
     }
 
     private void OnClickClassButton(int classTier, int classIndex, ClassSO classSO)
@@ -540,15 +533,13 @@ public class CharacterInfoUI : UIBase
     {
         Debug.Log("OnClickWeaponButton");
 
-        EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
-        ui.Init(character, EquipType.Weapon);
+        Managers.UI.ShowUI<EquipmentUpgradeUI>().Init(character, EquipType.Weapon);
     }
     private void OnClickArmorButton()
     {
         Debug.Log("OnClickArmorButton");
 
-        EquipmentUpgradeUI ui = Managers.UI.ShowUI<EquipmentUpgradeUI>();
-        ui.Init(character, EquipType.Armor);
+        Managers.UI.ShowUI<EquipmentUpgradeUI>().Init(character, EquipType.Armor);
     }
     
     private void OnClickHomeButton()

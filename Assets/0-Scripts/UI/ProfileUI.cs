@@ -110,8 +110,7 @@ public class ProfileUI : UIBase
             if (Managers.AccountData.playerData.SetPlayerName(newNickname) == false)
             {
                 // 불가능하면 경고 UI 생성
-                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-                warningUi.Init("8글자 이하의 닉네임만 가능합니다.");
+                Managers.UI.ShowUI<WarningUI>().Init("8글자 이하의 닉네임만 가능합니다.");
 
                 // 설정 전 닉네임으로 변경
                 Get<TMP_InputField>((int)InputFields.NicknameInputField).text = Managers.AccountData.playerData.playerName;
@@ -136,8 +135,7 @@ public class ProfileUI : UIBase
             if (Managers.AccountData.playerData.SetBirthDay(newBirthday) == false)
             {
                 // 불가능하면 경고 UI 생성
-                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-                warningUi.Init("올바른 날짜 형식이 아닙니다.");
+                Managers.UI.ShowUI<WarningUI>().Init("올바른 날짜 형식이 아닙니다.");
 
                 // 설정 전 생일로 변경
                 Get<TMP_InputField>((int)InputFields.BirthdayInputField).text = Managers.AccountData.playerData.birthday;
@@ -158,8 +156,7 @@ public class ProfileUI : UIBase
             if (Managers.AccountData.playerData.SetPlayerComment(newComent) == false)
             {
                 // 불가능하면 경고 UI 생성
-                WarningUI warningUi = Managers.UI.ShowUI<WarningUI>();
-                warningUi.Init("40글자 이하의 코멘트만 가능합니다.");
+                Managers.UI.ShowUI<WarningUI>().Init("40글자 이하의 코멘트만 가능합니다.");
 
                 // 설정 전 코멘트로 변경
                 Get<TMP_InputField>((int)InputFields.ComentInputField).text = Managers.AccountData.playerData.playerComment;
