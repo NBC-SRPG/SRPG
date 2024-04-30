@@ -62,6 +62,7 @@ public class BattleManager : MonoBehaviour
         goldRewards = stage.gold;
         expRewards = stage.exp;
         itemRewards = new Dictionary<int, int>();
+        itemRewards = stage.rewards;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
