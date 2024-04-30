@@ -345,7 +345,7 @@ public class LevelUpUI : UIBase
         GetButton((int)Buttons.AwakeningButton).onClick.AddListener(OnClickAwakeningButton);
         int nowStar =  character.Growth.star;
         int nowLimit = character.Growth.limitBreak;
-        int maxLevel = character.Growth.GetMaxLevel();
+        int maxLevel = character.Growth.CalcMaxLevel();
 
         // 풀돌일 때, 텍스트 출력
         if (nowStar+nowLimit == 9)
