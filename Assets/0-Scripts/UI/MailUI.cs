@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class MailUI : UIBase
@@ -27,6 +26,8 @@ public class MailUI : UIBase
             title = "운영자의 선물",
             dateSent = DateTime.Now,
             diamond = 30,
+            gold = 1000,
+            ap = 10,
             expiration = 7
         };
         Managers.DB.PushChild(Managers.DB.userDB.Child("mailBox"), so);
@@ -49,7 +50,7 @@ public class MailUI : UIBase
         foreach (var mail in Managers.AccountData.mailBox)
         {
             GameObject go = Managers.Resource.Instantiate("UI/MailEntryUI", GetObject((int)GameObjects.Content).transform);
-            go.GetComponent<MailEntryUI>().SetMailSO(mail);
+            go.GetComponent<MailEntryUI>().Init(mail);
         }
     }
 

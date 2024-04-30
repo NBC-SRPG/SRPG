@@ -1,8 +1,4 @@
-using Firebase.Database;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MailEntryUI : UIBase
@@ -13,7 +9,6 @@ public class MailEntryUI : UIBase
     private enum Texts
     {
         MailTitleText,
-        MailSenderText,
         MailDateText,
         MailRemainingTimeText
     }
@@ -23,38 +18,67 @@ public class MailEntryUI : UIBase
         ReceiveButton
     }
 
-    private enum Images
+    private enum GameObjects
     {
-        MailItemImage
+        Content
     }
 
-    private void Start()
+    public void Init(MailSO mailSO)
     {
-        Init();
-    }
+        this.mailSO = mailSO;
 
-    private void Init()
-    {
         expiration = mailSO.dateSent.AddDays(mailSO.expiration) - DateTime.Now;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
-        BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
         Debug.Log(mailSO.title);
         GetText((int)Texts.MailTitleText).text = mailSO.title;
         GetText((int)Texts.MailDateText).text = "받은 날짜 " + mailSO.dateSent.ToString("yyyy-MM-dd");
         GetText((int)Texts.MailRemainingTimeText).text = "수령 기한 " + GetExpiration();
 
-        // TODO
-        // MailItemImage를 아이템 데이터의 아이콘 이미지로 업데이트
+        // ap 보상 아이콘 생성
+        if (mailSO.ap > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.ap.ToString(), "AP");
+        }
+        // 골드 보상 아이콘 생성
+        if (mailSO.gold > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.gold.ToString(), "Gold");
+        }
+        // 다이아 보상 아이콘 생성
+        if (mailSO.diamond > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.diamond.ToString(), "Diamond");
+        }
+        // 아이템 보상 아이콘 생성
+        foreach (var item in mailSO.rewards)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+            Utility.Id2SO<ItemSO>(item.Key, (result) =>
+            {
+                go.GetComponent<RewardIconUI>().Init(item.Value.ToString(), (result as ItemSO).icon);
+            });
+
+        }
 
         GetButton((int)Buttons.ReceiveButton).onClick.AddListener(OnClickReceiveButton);
-    }
-
-    public void SetMailSO(MailSO mailSO)
-    {
-        this.mailSO = mailSO;
     }
 
     public void OnClickReceiveButton()
