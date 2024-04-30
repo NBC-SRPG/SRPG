@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Constants;
 
 public class EquipmentUpgradeUI : UIBase
@@ -136,7 +137,7 @@ public class EquipmentUpgradeUI : UIBase
         if (nextEquip.gold > Managers.AccountData.playerData.Gold)
         {
             GetText((int)Texts.EquipmentUpgradeGoldText).text = $"<color=red>{nextEquip.gold} G</color>";
-            GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
+            EquipmentUpgradeButtonActiveFalse();
         }
         else
         {
@@ -165,7 +166,7 @@ public class EquipmentUpgradeUI : UIBase
 
             if (material.Value > materialCount)
             {
-                GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
+                EquipmentUpgradeButtonActiveFalse();
             }
         }
     }
@@ -176,6 +177,14 @@ public class EquipmentUpgradeUI : UIBase
         {
             Destroy(material.gameObject);
         }
+    }
+
+    private void EquipmentUpgradeButtonActiveFalse()
+    {
+        Color newColor = GetButton((int)Buttons.EquipmentUpgradeButton).GetComponent<Image>().color;
+        newColor.a = 0.2f;
+        GetButton((int)Buttons.EquipmentUpgradeButton).GetComponent<Image>().color = newColor;
+        GetButton((int)Buttons.EquipmentUpgradeButton).enabled = false;
     }
 
     private void DisplayMaxUpgradeMessage()
