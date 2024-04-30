@@ -19,6 +19,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
     - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
     - {fileID: 11400000, guid: ee1fc30c53460cf4baf4d162721e9bd8, type: 2}
+    - {fileID: 11400000, guid: b4365d892034c314fabebc72ef853195, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -114,7 +115,7 @@ MonoBehaviour:
       Data: 600
     - Name: mov
       Entry: 3
-      Data: 8
+      Data: 6
     - Name: atkIncrease
       Entry: 4
       Data: 1
@@ -195,7 +196,7 @@ MonoBehaviour:
       Data: 600
     - Name: mov
       Entry: 3
-      Data: 8
+      Data: 6
     - Name: atkIncrease
       Entry: 4
       Data: 1
@@ -264,19 +265,19 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: hp
       Entry: 3
-      Data: 2800
+      Data: 2600
     - Name: atk
       Entry: 3
-      Data: 800
+      Data: 900
     - Name: def
       Entry: 3
-      Data: 600
+      Data: 560
     - Name: mov
       Entry: 3
-      Data: 8
+      Data: 5
     - Name: atkIncrease
       Entry: 4
       Data: 1
@@ -507,19 +508,19 @@ MonoBehaviour:
       Data: 
     - Name: enemySO
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: hp
       Entry: 3
-      Data: 2600
+      Data: 2800
     - Name: atk
       Entry: 3
-      Data: 900
+      Data: 800
     - Name: def
       Entry: 3
-      Data: 560
+      Data: 600
     - Name: mov
       Entry: 3
-      Data: 5
+      Data: 6
     - Name: atkIncrease
       Entry: 4
       Data: 1
@@ -623,8 +624,8 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: passiveSkill
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 3
     - Name: abilityT1
       Entry: 6
       Data: 
@@ -670,9 +671,9 @@ MonoBehaviour:
   enemies:
   - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
   - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
+  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
+  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
   - {fileID: 11400000, guid: a2c4adfee19f446468db2441fb39beac, type: 2}
-  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
-  - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
   - {fileID: 11400000, guid: 9d07aa474d51781409a7637ebf5e3863, type: 2}
   - {fileID: 11400000, guid: ee1fc30c53460cf4baf4d162721e9bd8, type: 2}
   spawnType: 0
