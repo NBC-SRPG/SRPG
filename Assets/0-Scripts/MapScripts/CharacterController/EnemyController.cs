@@ -172,6 +172,12 @@ public class EnemyController : MonoBehaviour
             }
         }
 
+
+        if (!characterWave.ContainsKey(nowWave))
+        {
+            return;
+        }
+
         if (MapManager.instance.enemyStartTiles.Count > 1)// 특정 웨이브는 특정 위치에 소환
         {
             BattleManager.Instance.SpawnEnemy(characterWave[nowWave], nowWave - 1);
@@ -251,7 +257,10 @@ public class EnemyController : MonoBehaviour
     private IEnumerator WaitForaSecond()
     {
         CameraController.instance.ResetGroup();
-        CameraController.instance.AddGroupRange(new List<CharacterBase>(characterWave[nowWave].FindAll(x => !x.isDead)));
+        if (characterWave.ContainsKey(nowWave))
+        {
+            CameraController.instance.AddGroupRange(new List<CharacterBase>(characterWave[nowWave].FindAll(x => !x.isDead)));
+        }
         CameraController.instance.SetCameraOnSelected();
 
         yield return new WaitForSeconds(1f);
@@ -264,6 +273,12 @@ public class EnemyController : MonoBehaviour
     {
         if (BattleManager.Instance.gameEnd)
         {
+            return;
+        }
+
+        if (!characterWave.ContainsKey(nowWave))
+        {
+            Invoke(nameof(TurnEnd), 0.1f);
             return;
         }
 

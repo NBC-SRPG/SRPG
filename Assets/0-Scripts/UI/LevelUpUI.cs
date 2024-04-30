@@ -712,8 +712,6 @@ public class LevelUpUI : UIBase
         GetText((int)Texts.LevelUpItemQuantity_3).text = $"x{Managers.AccountData.inventory[LevelUpItem3Id]}";
         GetText((int)Texts.LevelUpItemQuantity_4).text = $"x{Managers.AccountData.inventory[LevelUpItem4Id]}";
 
-        Managers.AccountData.characterData[character.SO.id].Growth.LevelUp(totalExp);
-
         GetText((int)Texts.LevelUpGoldText).text = "0 G";
 
         GetText((int)Texts.LevelUpItemSelectNumber1).text = "0";
@@ -733,6 +731,8 @@ public class LevelUpUI : UIBase
 
         GetImage((int)Images.LevelUpBarFrontImage).fillAmount = GetImage((int)Images.LevelUpBarChangeImage).fillAmount;
         GetImage((int)Images.LevelUpBarChangeImage).fillAmount = 0;
+
+        Managers.AccountData.characterData[character.SO.id].Growth.LevelUp(totalExp);
 
         LevelUpCalc();
     }
