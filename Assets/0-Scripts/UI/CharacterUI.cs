@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using static Constants;
 
 public class CharacterUI : UIBase
 {
+    private List<Character> characters = new();
     private enum Buttons
     {
         BackButton
@@ -24,14 +26,16 @@ public class CharacterUI : UIBase
         // 타입? 진영? 클래스?
         // 전체, 세부
         Option1,
-        Option2
+        Option2,
+        Option3
     }
     // 실제 게임에서 보이게 할 한글 목록
     // 한글로 List를 만들어서 넘겨주어도 되지만 가독성 때문에 해당 방법 채택
     private Dictionary<FilterType, string> filterDic = new Dictionary<FilterType, string>
     {
         { FilterType.Option1, "전체" },
-        { FilterType.Option2, "필터 옵션 2" }
+        { FilterType.Option2, "근거리" },
+        { FilterType.Option3, "원거리" }
     };
     // 정렬 타입
     private enum SortType
@@ -40,13 +44,17 @@ public class CharacterUI : UIBase
         // 편성된 애들은 따로 Sort
         // 별 순으로 오름차순, 내림차순
         Option1,
-        Option2
+        Option2,
+        Option3,
+        Option4
     }
     // 실제 게임에서 보이게 할 한글 목록
     private Dictionary<SortType, string> sortDic = new Dictionary<SortType, string>
     {
-        { SortType.Option1, "기본" },
-        { SortType.Option2, "정렬 옵션 2" }
+        { SortType.Option1, "별 내림차순" },
+        { SortType.Option2, "별 오름차순" },
+        { SortType.Option3, "레벨 내림차순" },
+        { SortType.Option4, "레벨 오름차순" }
     };
 
     private void Start()
@@ -57,16 +65,6 @@ public class CharacterUI : UIBase
     private void Init()
     {
         Managers.UI.SetCanvas(gameObject);
-        // TODO
-        // 캐릭터 UI 생성 시 보유 캐릭터 정보를 가지고 초기화
-        // 캐릭터 버튼 UI를 새로 만들기
-        // 캐릭터 UI 생성 시 보유 캐릭터부터 시작해서 캐릭터 버튼 UI를 동적 생성
-        // 가지고 있지 않은 캐릭터도 보게 한다면 가지고 있지 않은 캐릭터도 버튼 UI 동적 생성
-        // 1. 플레이어 데이터에서 가지고있는 캐릭터 목록을 가져온다.
-        // 2. 정렬 타입에 맞게 정렬한다.
-        // 3. 플레이어 버튼 UI를 생성한다.
-        // 4. 이 때 버튼 UI에게 정보를 넘겨준다.
-        // 5. 똑같이 갖고 있지 않는 캐릭터 목록에도 적용
 
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
@@ -78,10 +76,13 @@ public class CharacterUI : UIBase
 
         foreach (Character character in Managers.AccountData.characterData.Values)
         {
-            GameObject go = Managers.Resource.Load<GameObject>("Prefabs/UI/CharacterEntryUI");
-            go.GetComponent<CharacterEntryUI>().characterId = character.SO.id;
-            Managers.Resource.Instantiate(go, GetObject((int)GameObjects.Content).transform);
+            GameObject go = Managers.Resource.Instantiate("UI/CharacterEntryUI", GetObject((int)GameObjects.Content).transform);
+            go.GetComponent<CharacterEntryUI>().Init(character);
+
+            characters.Add(character);
         }
+
+        SortSelect();
     }
 
     private void InitDropdown()
@@ -116,15 +117,26 @@ public class CharacterUI : UIBase
         // 현재 선택된 필터 타입 Get
         FilterType filterType = (FilterType)Get<TMP_Dropdown>((int)Dropdowns.FilterDropdown).value;
         // 필터 타입에 따라 필터 실행
+        List<Character> filteredCharacters = new();
         switch (filterType)
         {
             case FilterType.Option1:
                 Debug.Log("Selected option: " + filterDic[filterType]);
+                UpdateCharacterList(characters);
                 break;
             case FilterType.Option2:
                 Debug.Log("Selected option: " + filterDic[filterType]);
+                filteredCharacters = characters.Where(character => character.SO.attackMethod == AttackMethod.Melee).ToList();
+                UpdateCharacterList(filteredCharacters);
+                break;
+            case FilterType.Option3:
+                Debug.Log("Selected option: " + filterDic[filterType]);
+                filteredCharacters = characters.Where(character => character.SO.attackMethod == AttackMethod.Range).ToList();
+                UpdateCharacterList(filteredCharacters);
                 break;
         }
+
+        SortSelect();
     }
 
     // 정렬 선택
@@ -132,15 +144,46 @@ public class CharacterUI : UIBase
     {
         // 현재 선택된 정렬 타입 Get
         SortType sortType = (SortType)Get<TMP_Dropdown>((int)Dropdowns.SortDropdown).value;
+        List<CharacterEntryUI> entries = GetObject((int)GameObjects.Content).GetComponentsInChildren<CharacterEntryUI>().ToList();
         // 정렬 타입에 따라 정렬 실행
         switch (sortType)
         {
             case SortType.Option1:
+                entries.Sort((x, y) => y.character.Growth.star.CompareTo(x.character.Growth.star));
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
             case SortType.Option2:
+                entries.Sort((x, y) => x.character.Growth.star.CompareTo(y.character.Growth.star));
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
+            case SortType.Option3:
+                entries.Sort((x, y) => y.character.Growth.level.CompareTo(x.character.Growth.level));
+                Debug.Log("Selected option: " + sortDic[sortType]);
+                break;
+            case SortType.Option4:
+                entries.Sort((x, y) => x.character.Growth.level.CompareTo(y.character.Growth.level));
+                Debug.Log("Selected option: " + sortDic[sortType]);
+                break;
+        }
+
+        foreach (var entry in entries)
+        {
+            entry.transform.SetAsLastSibling();
+        }
+    }
+
+    private void UpdateCharacterList(List<Character> characters)
+    {
+        Transform content = GetObject((int)GameObjects.Content).transform;
+        foreach (Transform child in content)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var character in characters)
+        {
+            GameObject go = Managers.Resource.Instantiate("UI/CharacterEntryUI", content);
+            go.GetComponent<CharacterEntryUI>().Init(character);
         }
     }
 }
