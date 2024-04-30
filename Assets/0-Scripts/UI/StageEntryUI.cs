@@ -94,15 +94,13 @@ public class StageEntryUI : UIBase
 
         if (stageSO.gold > 0)
         {
-            Managers.AccountData.playerData.AddExp(stageSO.gold);
+            Managers.AccountData.playerData.AddGold(stageSO.gold);
         }
 
         foreach (var reward in stageSO.rewards)
         {
             Managers.AccountData.AcquireItems(reward.Key, reward.Value);
         }
-
-        // Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
 
         Managers.UI.ShowUI<RewardGetUI>().Init(stageSO, 1);
     }

@@ -221,15 +221,13 @@ public class StageInfoUI : UIBase
 
         if (stage.gold > 0)
         {
-            Managers.AccountData.playerData.AddExp(stageClearCount * stage.gold);
+            Managers.AccountData.playerData.AddGold(stageClearCount * stage.gold);
         }
 
         foreach (var reward in stage.rewards)
         {
             Managers.AccountData.AcquireItems(reward.Key, stageClearCount * reward.Value);
         }
-
-        // Managers.UI.ShowUI<WarningUI>().Init("소탕 완료");
 
         Managers.UI.ShowUI<RewardGetUI>().Init(stage, stageClearCount);
     }
