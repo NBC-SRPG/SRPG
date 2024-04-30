@@ -11,6 +11,7 @@ public class PlayerData
     public event Action<int> OnGachaPointChanged;
     public event Action<int> OnPlayerLevelChanged;
     public event Action<string> OnPlayerNameChanged;
+    public event Action<int> OnLobbyCharacterChanged;
 
     public string uId { get; private set; } // UID
     public string playerName { get; private set; } // 닉네임
@@ -336,6 +337,8 @@ public class PlayerData
         {
             lobbyCharacter = 0;
         }
+        OnLobbyCharacterChanged?.Invoke(lobbyCharacter);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("playerData").Child("lobbyCharacter"), lobbyCharacter);
     }
     /*
     public void SetCharacterIcon(int? a) //아이콘 설정. null 체크

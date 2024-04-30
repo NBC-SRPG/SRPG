@@ -17,6 +17,7 @@ public class ExSkillSO : ScriptableObject
 
     [Header("Skill_description")]
     public string skillName;
+    [TextArea]
     public string description;
     public Sprite icon;
 

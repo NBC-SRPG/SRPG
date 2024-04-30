@@ -9,6 +9,7 @@ public class EquipSO : PassiveSO
 
     [Header("Equip_description")]
     public string equipName;
+    [TextArea]
     public string description;
     public int star;
 

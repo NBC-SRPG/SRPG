@@ -38,6 +38,7 @@ public class MainUI : UIBase
     {
         Managers.AccountData.playerData.OnPlayerLevelChanged -= RefreshLevel;
         Managers.AccountData.playerData.OnPlayerNameChanged -= RefreshName;
+        Managers.AccountData.playerData.OnLobbyCharacterChanged -= RefreshCharacter;
     }
 
     public void Init()
@@ -61,22 +62,19 @@ public class MainUI : UIBase
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
         
-        GetImage((int)Images.ProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
-
-
-        // 선택한 캐릭터의 일러스트 표시
-        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.standingImage;
 
         RefreshUI();
 
         Managers.AccountData.playerData.OnPlayerLevelChanged += RefreshLevel;
         Managers.AccountData.playerData.OnPlayerNameChanged += RefreshName;
+        Managers.AccountData.playerData.OnLobbyCharacterChanged += RefreshCharacter;
     }
 
     private void RefreshUI()
     {
         RefreshLevel(Managers.AccountData.playerData.Level);
         RefreshName(Managers.AccountData.playerData.playerName);
+        RefreshCharacter(Managers.AccountData.playerData.lobbyCharacter);
     }
 
     // Level 텍스트 업데이트
@@ -88,6 +86,12 @@ public class MainUI : UIBase
     private void RefreshName(string newName)
     {
         GetText((int)Texts.NameText).text = newName;
+    }
+    
+    private void RefreshCharacter(int characterId)
+    {
+        GetImage((int)Images.ProfileImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[characterId].SO.standingImage;
     }
 
     private void OnClickCharacterButton()

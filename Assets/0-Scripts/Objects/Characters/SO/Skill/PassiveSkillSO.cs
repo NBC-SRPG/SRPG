@@ -10,6 +10,7 @@ public class PassiveSkillSO : PassiveSO
     
     [Header("Description")]
     public string passiveName;
+    [TextArea]
     public string description;
     public Sprite icon;
 

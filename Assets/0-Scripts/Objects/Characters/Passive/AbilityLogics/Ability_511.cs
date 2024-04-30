@@ -29,11 +29,11 @@ public class Ability_511: PassiveLogic
 
             if (enemyHealthPercentage <= coefficient["percentageCondition"]) //체력 30%이하이면
             {
-                BattleManager.Instance.ExtraSkillAttack(character, (int)(character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"]) * coefficient["multiplier2"]), list, BattleKeyWords.AttackDamageType.Extra);  //추가 데미지 (2배)
+                BattleManager.Instance.ExtraSkillAttack(character, (int)(character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"]) * coefficient["multiplier2"]), list, BattleKeyWords.AttackDamageType.Extra, Constants.ElementType.Bolt);  //추가 데미지 (2배)
             }
             else
             {
-                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (1배)
+                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra, Constants.ElementType.Bolt); //추가 데미지 (1배)
             }
 
             Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/Ability_511.mp3");
@@ -55,11 +55,11 @@ public class Ability_511: PassiveLogic
 
             if (enemyHealthPercentage <= coefficient["percentageCondition"]) //체력 30%이하이면
             {
-                BattleManager.Instance.ExtraSkillAttack(character, (int)(character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"]) * coefficient["multiplier2"]), list, BattleKeyWords.AttackDamageType.Extra);  //추가 데미지 (2배)
+                BattleManager.Instance.ExtraSkillAttack(character, (int)(character.Attack * ((float)(coefficient["damageCoefficient"]) / coefficient["denominator"]) * coefficient["multiplier2"]), list, BattleKeyWords.AttackDamageType.Extra, Constants.ElementType.Bolt);  //추가 데미지 (2배)
             }
             else
             {
-                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra); //추가 데미지 (1배)
+                BattleManager.Instance.ExtraSkillAttack(character, character.Attack * (coefficient["damageCoefficient"]), enemyList, BattleKeyWords.AttackDamageType.Extra, Constants.ElementType.Bolt); //추가 데미지 (1배)
             }
 
             Managers.Sound.Play(Constants.Sound.Effect, "Effects/Character_5/Ability_511.mp3");
