@@ -36,6 +36,7 @@ public class CameraController : MonoBehaviour
     private CinemachineConfiner2D mainConfinder;
 
     [HideInInspector] public bool canMove;
+    [HideInInspector] public bool isSelected;
     [HideInInspector] public float moveSpeed;
 
     private Vector2 lastTouchPosition;
@@ -182,7 +183,7 @@ public class CameraController : MonoBehaviour
 
     private void CameraMoveWithTouch()
     {
-        if(Input.touchCount == 1 && EventSystem.current.IsPointerOverGameObject() == false)
+        if(Input.touchCount == 1 && EventSystem.current.IsPointerOverGameObject() == false && !isSelected)
         {
             Touch touch = Input.GetTouch(0);
 
@@ -196,7 +197,7 @@ public class CameraController : MonoBehaviour
             {
                 moveDelta = Camera.main.ScreenToWorldPoint(lastTouchPosition) - Camera.main.ScreenToWorldPoint(touch.position);
 
-                Vector2 move = moveDelta * (moveSpeed * 0.1f);
+                Vector2 move = moveDelta * (moveSpeed * 0.05f);
 
                 if (mainCamera.transform.position.x >= mainConfinder.m_BoundingShape2D.bounds.min.x && mainCamera.transform.position.x <= mainConfinder.m_BoundingShape2D.bounds.max.x &&
                     mainCamera.transform.position.y >= mainConfinder.m_BoundingShape2D.bounds.min.y && mainCamera.transform.position.y <= mainConfinder.m_BoundingShape2D.bounds.max.y)

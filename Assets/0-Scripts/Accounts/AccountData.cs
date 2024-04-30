@@ -27,7 +27,6 @@ public class AccountData
     private bool hasOngoingMissions = false;
     private bool hasCompleteMissions = false;
 
-
     #region Init
     public void InitStageClearData(DataSnapshot snapshot)
     {

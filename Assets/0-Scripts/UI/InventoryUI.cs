@@ -8,15 +8,6 @@ using static Constants;
 public class InventoryUI : UIBase
 {
     private List<ItemSO> loadedItems = new();
-    private enum Texts
-    {
-
-    }
-
-    private enum Images
-    {
-
-    }
 
     private enum Buttons
     {
@@ -69,8 +60,8 @@ public class InventoryUI : UIBase
 
     private Dictionary<SortType, string> sortDic = new Dictionary<SortType, string>
     {
-        { SortType.Option1, "기본" },
-        { SortType.Option2, "정렬 옵션 2" }
+        { SortType.Option1, "오름차순" },
+        { SortType.Option2, "내림차순" }
     };
 
     private void Start()
@@ -82,8 +73,6 @@ public class InventoryUI : UIBase
     {
         Managers.UI.SetCanvas(gameObject);
 
-        BindText(typeof(Texts));
-        BindImage(typeof(Images));
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
         Bind<TMP_Dropdown>(typeof(Dropdowns));
@@ -102,6 +91,13 @@ public class InventoryUI : UIBase
 
         foreach (var item in Managers.AccountData.inventory)
         {
+            Debug.Log(item.Key + ": " + item.Value);
+            if (item.Value <= 0)
+            {
+                itemsCount--;
+                continue;
+            }
+
             Utility.Id2SO<ItemSO>(item.Key, (result) =>
             {
                 if (result != null)
@@ -164,6 +160,7 @@ public class InventoryUI : UIBase
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
             case SortType.Option2:
+                SortByIdDescending();
                 Debug.Log("Selected option: " + sortDic[sortType]);
                 break;
         }
@@ -179,6 +176,19 @@ public class InventoryUI : UIBase
             item.transform.SetAsLastSibling();
         }
     }
+
+    private void SortByIdDescending()
+    {
+        var items = GetObject((int)GameObjects.Content).GetComponentsInChildren<ItemEntryUI>().ToList();
+        items.Sort((x, y) => y.GetComponent<ItemEntryUI>().item.id.CompareTo(x.GetComponent<ItemEntryUI>().item.id));
+
+        foreach (var item in items)
+        {
+            item.transform.SetAsLastSibling();
+        }
+    }
+
+
     // 필터 선택
     private void FilterItems()
     {

@@ -29,14 +29,15 @@ public class MainUI : UIBase
         ProfileImage
     }
 
-    private enum GameObjects
-    {
-
-    }
-
     private void Start()
     {
         Init();
+    }
+
+    private void OnDestroy()
+    {
+        Managers.AccountData.playerData.OnPlayerLevelChanged -= RefreshLevel;
+        Managers.AccountData.playerData.OnPlayerNameChanged -= RefreshName;
     }
 
     public void Init()
@@ -46,7 +47,6 @@ public class MainUI : UIBase
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickCharacterButton);
@@ -60,8 +60,7 @@ public class MainUI : UIBase
         //GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
-
-        GetText((int)Texts.NameText).text = Managers.AccountData.playerData.playerName;
+        
         GetImage((int)Images.ProfileImage).sprite = Managers.AccountData.characterData[Managers.AccountData.playerData.lobbyCharacter].SO.icon;
 
 
@@ -70,19 +69,25 @@ public class MainUI : UIBase
 
         RefreshUI();
 
-        // BGM 재생 (SoundManager)
-        // Managers.Sound(Sound.BGM, "BGM_Main");
+        Managers.AccountData.playerData.OnPlayerLevelChanged += RefreshLevel;
+        Managers.AccountData.playerData.OnPlayerNameChanged += RefreshName;
     }
 
     private void RefreshUI()
     {
-        RefreshLevel();
+        RefreshLevel(Managers.AccountData.playerData.Level);
+        RefreshName(Managers.AccountData.playerData.playerName);
     }
 
     // Level 텍스트 업데이트
-    private void RefreshLevel()
+    private void RefreshLevel(int newLevel)
     {
-        GetText((int)Texts.LevelText).text = $"LV.{Managers.AccountData.playerData.Level}";
+        GetText((int)Texts.LevelText).text = $"LV.{newLevel}";
+    }
+
+    private void RefreshName(string newName)
+    {
+        GetText((int)Texts.NameText).text = newName;
     }
 
     private void OnClickCharacterButton()

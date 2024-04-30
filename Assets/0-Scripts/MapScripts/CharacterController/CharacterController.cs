@@ -31,7 +31,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private List<OverlayTile> movePath = new List<OverlayTile>();//이동 경로 타일
     private List<OverlayTile> attackRangeTiles = new List<OverlayTile>();//공격 가능한 타일
     private List<OverlayTile> moveRangeTiles = new List<OverlayTile>();//이동 가능한 타일
-    private List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
+    public List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
     private List<OverlayTile> skillScale = new List<OverlayTile>();//스킬 범위 타일
 
     private List<OverlayTile> targetAttackRange = new List<OverlayTile>();
@@ -206,6 +206,8 @@ public class CharacterController : MonoBehaviour
             CameraController.instance.ResetCamera();
         }
 
+        CameraController.instance.isSelected = false;
+
         switch (phase)
         {
             case PlayerPhase.Idle:
@@ -227,10 +229,13 @@ public class CharacterController : MonoBehaviour
                 GetMoveAndAttackTiles();
                 Ui.ShowAtMoveAndAttackPhase();
                 CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
+                CameraController.instance.isSelected = true;
                 break;
             case PlayerPhase.SkillTargetSelect:
                 Ui.ShowAtSkillTargetPhase();
                 Ui.SetManaText();
+
+                CameraController.instance.isSelected = true;
                 break;
         }
 
@@ -455,7 +460,7 @@ public class CharacterController : MonoBehaviour
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
+                if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter && !movePath.Contains(curTile))
                 {
                     if (movePath.Count > 1)
                     {
