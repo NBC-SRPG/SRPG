@@ -370,7 +370,15 @@ public class LevelUpUI : UIBase
         });
         int[] costs = GetCost(nowStar+nowLimit);
 
-        GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+        if (costs[0] > Managers.AccountData.GetItemQuantity(character.SO.id))
+        {
+            GetText((int)Texts.AwakeningPieceQuantity).text = $"<color=red>{Managers.AccountData.GetItemQuantity(character.SO.id)}</color> / {costs[0]}";
+        }
+        else
+        {
+            GetText((int)Texts.AwakeningPieceQuantity).text = $"{Managers.AccountData.GetItemQuantity(character.SO.id)} / {costs[0]}";
+        }
+        
         GetText((int)Texts.AwakeningGoldText).text = costs[1].ToString();
 
         if (Managers.AccountData.GetItemQuantity(character.SO.id) < costs[0] || Managers.AccountData.playerData.Gold < costs[1])
