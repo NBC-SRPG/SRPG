@@ -201,14 +201,14 @@ public class StageInfoUI : UIBase
         {
             if (starNum < 3)
             {
-                Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+                Managers.UI.ShowUI<WarningUI>().Init("별 3개로 클리어 후 소탕이 가능합니다.");
 
                 return;
             }
         }
         else
         {
-            Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("별 3개로 클리어 후 소탕이 가능합니다.");
             
             return;
         }

@@ -12,8 +12,7 @@ public class StageEntryUI : UIBase
 
     private enum Buttons
     {
-        StageClearButton,
-        StageTitleText
+        StageEntryButton,
     }
 
     private enum GameObjects
@@ -33,10 +32,11 @@ public class StageEntryUI : UIBase
 
             GetText((int)Texts.StageTitleText).text = stageSO.stageName;
             GetText((int)Texts.StageNumText).text = stageSO.stageNumber;
-            GetButton((int)Buttons.StageTitleText).onClick.AddListener(OnClickStageTitle);
+            GetButton((int)Buttons.StageEntryButton).onClick.AddListener(OnClickStageEntryButton);
 
             InitStar(stageSO.stageId);
 
+            /*
             if (numberOfStars != 3)
             {
                 GetButton((int)Buttons.StageClearButton).gameObject.SetActive(false);
@@ -45,6 +45,7 @@ public class StageEntryUI : UIBase
             {
                 GetButton((int)Buttons.StageClearButton).onClick.AddListener(OnClickStageClearButton);
             }
+            */
         });
     }
 
@@ -56,7 +57,7 @@ public class StageEntryUI : UIBase
         }
 
         float starWidth = 40f; // 별 이미지의 너비
-        float spacing = 10f; // 별 사이의 간격
+        float spacing = 0f; // 별 사이의 간격
 
         // 별 이미지들의 총 너비 계산
         float totalWidth = numberOfStars * starWidth + (numberOfStars - 1) * spacing;
@@ -73,33 +74,9 @@ public class StageEntryUI : UIBase
         }
     }
     
-    private void OnClickStageTitle()
+    private void OnClickStageEntryButton()
     {
         Managers.UI.ShowUI<StageInfoUI>().Init(stageSO);
     }
 
-    private void OnClickStageClearButton()
-    {
-        Debug.Log("OnClickStageClearButton");
-
-        // AP 감소
-        Managers.AccountData.playerData.ReduceAP(stageSO.apUsage);
-        // 보상 획득
-        if (stageSO.exp > 0)
-        {
-            Managers.AccountData.playerData.AddExp(stageSO.exp);
-        }
-
-        if (stageSO.gold > 0)
-        {
-            Managers.AccountData.playerData.AddGold(stageSO.gold);
-        }
-
-        foreach (var reward in stageSO.rewards)
-        {
-            Managers.AccountData.AcquireItems(reward.Key, reward.Value);
-        }
-
-        Managers.UI.ShowUI<RewardGetUI>().Init(stageSO, 1);
-    }
 }

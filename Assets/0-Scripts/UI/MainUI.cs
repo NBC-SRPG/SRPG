@@ -54,7 +54,7 @@ public class MainUI : UIBase
         GetButton((int)Buttons.FormationButton).onClick.AddListener(OnClickFormationButton);
         GetButton((int)Buttons.InventoryButton).onClick.AddListener(OnClickInventoryButton);
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
-        //GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
+        GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
         GetButton((int)Buttons.AdventureButton).onClick.AddListener(OnClickAdventureButton);
         //GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
         GetButton((int)Buttons.MailButton).onClick.AddListener(OnClickMailButton);
@@ -129,8 +129,8 @@ public class MainUI : UIBase
     }
     private void OnClickShopButton()
     {
-        Debug.Log("OnClickShopButton");
-
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ShopUI>();
     }
