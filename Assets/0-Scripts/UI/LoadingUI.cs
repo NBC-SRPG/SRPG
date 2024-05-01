@@ -27,6 +27,7 @@ public class LoadingUI : UIBase
     private enum Buttons
     {
         GoogleLogInButton,
+        DebugLogIn,
         Background
     }
 
@@ -75,11 +76,17 @@ public class LoadingUI : UIBase
         Database.OnLoadingProgressChanged += UpdateProgress;
 
         GetButton((int)Buttons.GoogleLogInButton).onClick.AddListener(OnClickLogIn);
+        GetButton((int)Buttons.DebugLogIn).onClick.AddListener(OnClickDebug);
 
         //StartCoroutine(Managers.DB.DataLoad());
         //StartCoroutine(LoadAllData());
     }
 
+    private void OnClickDebug()
+    {
+        Managers.DB.isDebug = true;
+        StartCoroutine(LoadData());
+    }
     private void OnClickLogIn()
     {
         GoogleLogin();

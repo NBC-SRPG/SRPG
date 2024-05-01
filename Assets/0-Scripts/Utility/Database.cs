@@ -16,6 +16,7 @@ public class Database
     private string uid;
     private const int dataCount = 7;
     public bool isInited = false;
+    public bool isDebug = false;
     public delegate void Func(DataSnapshot snapshot);
     public static event Action<float> OnLoadingProgressChanged;
 
@@ -39,6 +40,19 @@ public class Database
         reference = FirebaseDatabase.DefaultInstance.RootReference;
 
 
+        if (isDebug)
+        {
+            uid = "uid";
+            userDB = reference.Child("users").Child(uid);
+
+            // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
+            userDB.Child("friendData").ValueChanged += FriendDataValueChange;
+            userDB.Child("mailBox").ChildAdded += MailBoxValueChange;
+            isInited = true;
+            DataTableLoad();
+            return;
+        }
+
         Read(reference.Child("UIDs").Child(user.UserId), (snapshot) =>
         {
             if (snapshot.Value == null)
@@ -54,7 +68,6 @@ public class Database
             }
 
             userDB = reference.Child("users").Child(uid);
-            Debug.Log(userDB.ToString());
 
             // 친구, 메일 등 실시간 업데이트가 필요한 데이터 업데이트 시 이벤트
             userDB.Child("friendData").ValueChanged += FriendDataValueChange;
