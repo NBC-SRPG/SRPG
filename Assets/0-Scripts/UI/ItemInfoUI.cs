@@ -10,7 +10,8 @@ public class ItemInfoUI : UIBase
     {
         NameText,
         DescriptionText,
-        NumberText
+        NumberText,
+        LocationText
     }
 
     private enum Images
@@ -41,6 +42,15 @@ public class ItemInfoUI : UIBase
         GetText((int)Texts.DescriptionText).text = item.itemDescription;
         GetText((int)Texts.NumberText).text = "보유 수량 : " + Managers.AccountData.inventory[item.id].ToString();
         GetImage((int)Images.ItemImage).sprite = item.icon;
+
+        if (item.values.ContainsKey("location"))
+        {
+            GetText((int)Texts.LocationText).text = $"획득장소 : {Utility.Id2SOWait<StageSO>(item.values["location"]).stageNumber}";
+        }
+        else
+        {
+            GetText((int)Texts.LocationText).gameObject.SetActive(false);
+        }
 
         if (item.itemType != Constants.ItemType.Consumable)
         {
