@@ -19,24 +19,21 @@ public class DownloadUI : UIBase
 
     private enum Images
     {
-        ProgressBar
+        Fill
     }
 
     private enum Buttons
     {
+        Background,
         DownloadButton,
         CloseButton
     }
 
     private enum GameObjects
     {
-        PopUp
+        PopUp,
+        ProgressBar
     }
-
-
-    [Header("Label")] // 다운로드받을 애셋들의 라벨
-    //public AssetLabelReference defaultLabel;
-    //public AssetLabelReference matLabel;
 
     // 다운받을 애셋들의 파일 크기
     private long _patchSize;
@@ -45,22 +42,23 @@ public class DownloadUI : UIBase
 
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Init();
     }
 
     private void Init()
     {
-        //Managers.UI.SetCanvas(gameObject);
+        Managers.UI.SetCanvas(gameObject);
 
         BindButton(typeof(Buttons));
         BindText(typeof(Texts));
         BindImage(typeof(Images));
-
-        GetObject((int)GameObjects.PopUp).SetActive(false);
+        BindObject(typeof(GameObjects));
 
         GetButton((int)Buttons.DownloadButton).onClick.AddListener(OnClickDownloadButton);
+        GetObject((int)GameObjects.PopUp).SetActive(false);
+        GetObject((int)GameObjects.ProgressBar).SetActive(false);
         GetText((int)Texts.StatusText).gameObject.SetActive(false);
 
 
@@ -69,11 +67,23 @@ public class DownloadUI : UIBase
 
     }
 
+    public void OnClickDownloadButton()
+    {
+        GetObject((int)GameObjects.PopUp).SetActive(false);
+        StartCoroutine(PatchFiles());
+    }
+    private void OnClickBackground()
+    {
+        Debug.Log("OnClickBg");
+        Managers.UI.ShowUI<LoadingUI>();
+    }
+
     // 어드레서블을 초기화해주는 코루틴
     private IEnumerator InitAddressable()
     {
         var init = Addressables.InitializeAsync();
         yield return init;
+        Debug.Log("Addressable Inited");
     }
 
     // 업데이트할 파일을 체크하는 코루틴
@@ -81,8 +91,7 @@ public class DownloadUI : UIBase
     // 아니면 로딩 씬을 거쳐 샘플신을 로드하게끔 실행
     private IEnumerator CheckUpdateFiles()
     {
-        var labels = new List<string>() { "SO", "Image" };
-
+        var labels = new List<string>() { "SO", "Image", "Sound" };
         _patchSize = default;
 
         foreach (var label in labels)
@@ -90,6 +99,7 @@ public class DownloadUI : UIBase
             var handle = Addressables.GetDownloadSizeAsync(label);
             yield return handle;
             _patchSize += handle.Result;
+            Debug.Log($"patch size : {_patchSize}");
 
             if (_patchSize > Decimal.Zero)
             {
@@ -98,25 +108,21 @@ public class DownloadUI : UIBase
             }
             else
             {
-                SceneManager.LoadScene("LoadingScene");
+                Debug.Log("No file to patch");
+                yield return new WaitForSeconds(2f);
+                Managers.UI.ShowUI<LoadingUI>();
             }
         }
     }
 
-    public void OnClickDownloadButton()
-    {
-        GetObject((int)GameObjects.PopUp).SetActive(false);
-        StartCoroutine(PatchFiles());
-    }
 
     // 새 파일에 대한 패치를 실시하는 코루틴
     // 각 라벨에 대해 다운로드 여부를 파악한 후 다운로드할 파일이 있으면 다운로드 코루틴 시작
     // 직후 다운로드 상태 코루틴 시작
     private IEnumerator PatchFiles()
     {
-        var labels = new List<string>() { "SO", "Image" };
-
-        _patchSize = default;
+        GetObject((int)GameObjects.ProgressBar).SetActive(true);
+        var labels = new List<string>() { "SO", "Image", "Sound" };
 
         foreach (var label in labels)
         {
@@ -143,6 +149,7 @@ public class DownloadUI : UIBase
         while (!handle.IsDone)
         {
             _patchMap[label] = handle.GetDownloadStatus().DownloadedBytes;
+            Debug.Log(_patchMap[label]);
             yield return new WaitForEndOfFrame();
         }
 
@@ -155,6 +162,7 @@ public class DownloadUI : UIBase
     private IEnumerator CheckDownloadStatus()
     {
         var total = 0f;
+        GetText((int)Texts.StatusText).gameObject.SetActive(true);
         GetText((int)Texts.DownloadPercent).text = "0 %";
 
         while (true)
@@ -162,12 +170,15 @@ public class DownloadUI : UIBase
             total += _patchMap.Sum(tmp => tmp.Value);
 
             var perValue = total / _patchSize;
-            GetImage((int)Images.ProgressBar).fillAmount += perValue;
+            GetImage((int)Images.Fill).fillAmount = perValue;
             GetText((int)Texts.DownloadPercent).text = string.Format("{0:##.##}", perValue * 100) + " %";
 
-            if (total.Equals(_patchSize))
+            if (total >= _patchSize * 0.98)
             {
-                SceneManager.LoadScene("LoadingScene");
+                Debug.Log("patch Done");
+                GetText((int)Texts.StatusText).text = "Download Complete!";
+                Managers.UI.ShowUI<LoadingUI>();
+                //GetButton((int)Buttons.Background).onClick.AddListener(OnClickBackground);
                 break;
             }
 
