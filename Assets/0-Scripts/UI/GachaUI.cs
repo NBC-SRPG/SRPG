@@ -156,11 +156,15 @@ public class GachaUI : UIBase
     private void OnClickPercentageInfoButton()
     {
         // TODO: 확률정보 UI 제작 후 작성
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
 
     private void OnClickCharacterInfoButton()
     {
         // TODO: 픽업 캐릭터 정보 UI 제작 후 작성
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
 
     private void OnClickPointExchangeButton()

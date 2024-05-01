@@ -29,13 +29,13 @@ public class AdventureUI : UIBase
 
     private void OnClickPVPButton()
     {
-        Debug.Log("OnClickPVPButton");
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
     private void OnClickSpecialButtonButton()
     {
-        Debug.Log("OnClickSpecialButtonButton");
-
-        Managers.UI.ShowUI<SpecialUI>();
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
     private void OnClickMainStoryButton()
     {

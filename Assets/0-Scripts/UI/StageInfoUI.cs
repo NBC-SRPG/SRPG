@@ -14,7 +14,8 @@ public class StageInfoUI : UIBase
         StageLevelText,
         ClearCountText,
         ClearApText,
-        Goal
+        Goal,
+        PartyLevel
     }
 
     private enum Images
@@ -48,7 +49,7 @@ public class StageInfoUI : UIBase
         // 편성에 갔다가 다시 왔을 때 이미지 업데이트
         if (isInit)
         {
-            InitImage();
+            InitParty();
         }
     }
 
@@ -97,7 +98,7 @@ public class StageInfoUI : UIBase
         GetButton((int)Buttons.EnemyInfoButton).onClick.AddListener(OnClickEnemyInfoButton);
         GetButton((int)Buttons.CloseButton).onClick.AddListener(CloseUI);
 
-        InitImage();
+        InitParty();
         InitReward();
 
         isInit = true;
@@ -105,8 +106,9 @@ public class StageInfoUI : UIBase
         Managers.GameManager.thisStage = stage;
     }
 
-    private void InitImage()
+    private void InitParty()
     {
+        int averageLv = 0;
         for (int i = 0; i < 5; i++)
         {
             Images partyImageEnum = (Images)Enum.Parse(typeof(Images), $"Party{i + 1}Image");
@@ -120,6 +122,12 @@ public class StageInfoUI : UIBase
 
             Sprite icon = Managers.AccountData.characterData[characterId].SO.icon;
             GetImage((int)partyImageEnum).sprite = icon;
+            averageLv += Managers.AccountData.characterData[characterId].Growth.level;
+        }
+        GetText((int)Texts.PartyLevel).text = $"평균레벨 : {averageLv/5}";
+        if (averageLv/5 < stage.recommendLevel)
+        {
+            GetText((int)Texts.PartyLevel).color = Color.red;
         }
     }
 
@@ -201,14 +209,14 @@ public class StageInfoUI : UIBase
         {
             if (starNum < 3)
             {
-                Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+                Managers.UI.ShowUI<WarningUI>().Init("별 3개로 클리어 후 소탕이 가능합니다.");
 
                 return;
             }
         }
         else
         {
-            Managers.UI.ShowUI<WarningUI>().Init("스테이지 별 3개로 클리어 후 소탕이 가능합니다.");
+            Managers.UI.ShowUI<WarningUI>().Init("별 3개로 클리어 후 소탕이 가능합니다.");
             
             return;
         }
