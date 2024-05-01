@@ -31,7 +31,8 @@ public class DownloadUI : UIBase
 
     private enum GameObjects
     {
-        PopUp
+        PopUp,
+        ProgressBar
     }
 
     // 다운받을 애셋들의 파일 크기
@@ -57,6 +58,7 @@ public class DownloadUI : UIBase
 
         GetButton((int)Buttons.DownloadButton).onClick.AddListener(OnClickDownloadButton);
         GetObject((int)GameObjects.PopUp).SetActive(false);
+        GetObject((int)GameObjects.ProgressBar).SetActive(false);
         GetText((int)Texts.StatusText).gameObject.SetActive(false);
 
 
@@ -119,6 +121,7 @@ public class DownloadUI : UIBase
     // 직후 다운로드 상태 코루틴 시작
     private IEnumerator PatchFiles()
     {
+        GetObject((int)GameObjects.ProgressBar).SetActive(true);
         var labels = new List<string>() { "SO", "Image", "Sound" };
 
         foreach (var label in labels)
@@ -170,7 +173,7 @@ public class DownloadUI : UIBase
             GetImage((int)Images.Fill).fillAmount = perValue;
             GetText((int)Texts.DownloadPercent).text = string.Format("{0:##.##}", perValue * 100) + " %";
 
-            if (total.Equals(_patchSize))
+            if (total >= _patchSize * 0.98)
             {
                 Debug.Log("patch Done");
                 GetText((int)Texts.StatusText).text = "Download Complete!";
