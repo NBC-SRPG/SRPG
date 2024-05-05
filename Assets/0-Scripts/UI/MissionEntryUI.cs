@@ -17,7 +17,7 @@ public class MissionEntryUI : UIBase
         MissionFrontProgressImage,
         GetOrGoImage,
         ReceiveCheckImage,
-        ReceiveBackImage
+        CompleteImage
     }
 
     private enum Buttons
@@ -110,7 +110,7 @@ public class MissionEntryUI : UIBase
         GetImage((int)Images.ReceiveCheckImage).gameObject.SetActive(false);
 
         // 수령 체크 배경 끄기
-        GetImage((int)Images.ReceiveBackImage).gameObject.SetActive(false);
+        GetImage((int)Images.CompleteImage).gameObject.SetActive(false);
 
         // 진행 중인 미션
         if (Managers.AccountData.ongoingMissions.ContainsKey(missionId))
@@ -169,7 +169,7 @@ public class MissionEntryUI : UIBase
         GetImage((int)Images.ReceiveCheckImage).gameObject.SetActive(true);
 
         // 수령 체크 배경 켜기
-        GetImage((int)Images.ReceiveBackImage).gameObject.SetActive(true);
+        GetImage((int)Images.CompleteImage).gameObject.SetActive(false);
     }
 
     // 미션이 업데이트 되면 UI 업데이트 해주기
@@ -217,7 +217,7 @@ public class MissionEntryUI : UIBase
             GetImage((int)Images.ReceiveCheckImage).gameObject.SetActive(true);
 
             // 수령 체크 배경 켜기
-            GetImage((int)Images.ReceiveBackImage).gameObject.SetActive(true);
+            GetImage((int)Images.CompleteImage).gameObject.SetActive(true);
         }
     }
 
