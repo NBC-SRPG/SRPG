@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharAnimBase : MonoBehaviour
@@ -10,7 +11,6 @@ public class CharAnimBase : MonoBehaviour
     protected CharacterBase targetCharacter;
     protected List<CharacterBase> targetList;
     protected SpriteRenderer sprite;
-    private Color color;
     protected Rigidbody2D rb;
     protected Particles particles;
 
@@ -35,6 +35,7 @@ public class CharAnimBase : MonoBehaviour
     public int Block { get; private set; }
 
     protected Queue<BattleKeyWords.Damage> damages;
+    protected Queue<BattleKeyWords.Damage> extraDamages;
 
     public void Init(HealthSystem characterHealth)
     {
@@ -50,15 +51,17 @@ public class CharAnimBase : MonoBehaviour
         Block = Animator.StringToHash(blockParameter);
 
         sprite = GetComponent<SpriteRenderer>();
-        color = sprite.color;
 
         rb = GetComponentInParent<Rigidbody2D>();
         particles = GetComponent<Particles>();
         particles.Init();
 
         damages = new Queue<BattleKeyWords.Damage>();
+        extraDamages = new Queue<BattleKeyWords.Damage>();
 
         healthSystem = characterHealth;
+
+        AnimationController.instance.OnCharacterReleased += OnCharacterReleased;
 
         LoadParticles();
     }
@@ -75,12 +78,19 @@ public class CharAnimBase : MonoBehaviour
 
     public void Activate()
     {
-        sprite.color = color;
+        sprite.color = new Color(1f, 1f, 1f, 1f);
     }
 
     public void SetDamage(BattleKeyWords.Damage damage)
     {
-        damages.Enqueue(damage);
+        if (damage.attackType == BattleKeyWords.AttackDamageType.Extra)
+        {
+            extraDamages.Enqueue(damage);
+        }
+        else
+        {
+            damages.Enqueue(damage);
+        }
     }
 
     public virtual void ShowDamage()
@@ -90,6 +100,26 @@ public class CharAnimBase : MonoBehaviour
             BattleKeyWords.Damage damage = damages.Dequeue();
             Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
         }
+        ShowExtraDamage();
+    }
+
+    public void ShowExtraDamage()
+    {
+        if (extraDamages.Count > 0)
+        {
+            BattleKeyWords.Damage damage = extraDamages.Dequeue();
+            Managers.UI.FindUI<BattleUI>().ShowDamageText(damage, transform.parent, damage.damage > 0);
+        }
+    }
+
+    public int GetDamageFigure()
+    {
+        if(damages.Count > 0)
+        {
+            return damages.First().damage;
+        }
+
+        return 0;
     }
 
     public virtual void PlayAttackAnimation(CharacterBase targetCharacter)
@@ -98,6 +128,10 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Attack);
     }
 
+    public void SetTarget(CharacterBase targetCharacter)
+    {
+        this.targetCharacter = targetCharacter;
+    }
 
     public virtual void PlaySkillAnimation(List<CharacterBase> targets)
     {
@@ -114,9 +148,13 @@ public class CharAnimBase : MonoBehaviour
         Animator.SetTrigger(Block);
     }
 
-    public void PlayExtraAnimation(List<CharacterBase> victims, string anim)
+    public virtual void PlayExtraAnimation(List<CharacterBase> victims, string anim)
     {
         this.targetList = victims;
+        if(victims.Count == 1)
+        {
+            targetCharacter = victims[0];
+        }
         Animator.SetTrigger(anim);
     }
 
@@ -125,21 +163,21 @@ public class CharAnimBase : MonoBehaviour
         Managers.UI.FindUI<BattleUI>().ShowBlockText(targetCharacter.transform);
     }
 
-    public virtual void AttackEnemy()
+    public virtual void AttackEnemy(CharacterBase targetCharacter)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
         targetCharacter.characterAnim.ShowHitParticle();
     }
 
-    public virtual void KnockBackEnemy(int scale)
+    public virtual void KnockBackEnemy(CharacterBase targetCharacter ,int scale)
     {
         targetCharacter.characterAnim.PlayHitAnimation();
-        targetCharacter.characterAnim.GetKnockBack(transform.parent.position, scale);
+        targetCharacter.characterAnim.GetKnockBackByLerp(GetDirectionOfCharacter(), scale, 0.25f);
     }
 
     public void ShowHitParticle()
     {
-        particles.PlayHitParticle();
+        particles.HitParticle();
     }
 
     public void PlayMoveAnimation()
@@ -193,11 +231,11 @@ public class CharAnimBase : MonoBehaviour
     {
         if (transform.localScale.x >= 0)
         {
-            return Vector2.right;
+            return Vector2.left;
         }
         else
         {
-            return Vector2.left;
+            return Vector2.right;
         }
     }
 
@@ -271,25 +309,42 @@ public class CharAnimBase : MonoBehaviour
 
         FlipCharacter(knockBackDirection, true);
 
-        //StartCoroutine(KnockBack(knockBackDirection));
         StartCoroutine(MoveToTarget(targetposition));
     }
 
-    protected IEnumerator KnockBack(Vector2 direction)
+    public void GetKnockBackByLerp(Vector2 direction, int scale, float duration)
     {
-        float timeSet = 0;
-        while (true)
+        Vector2 knockBackDirection = direction * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
+
+        FlipCharacterDirection(-knockBackDirection);
+
+
+        StartCoroutine(MoveToTargetByLerp(targetposition, duration));
+    }
+
+    public void GetKnockBackByLerpToPosition(Vector2 target, int scale, float duration)
+    {
+        Vector2 knockBackDirection = ((Vector2)transform.parent.position - target).normalized * scale;
+        Vector3 targetposition = new Vector3(transform.parent.position.x + knockBackDirection.x, transform.parent.position.y, transform.parent.position.z);
+
+        FlipCharacter(knockBackDirection, true);
+
+        StartCoroutine(MoveToTargetByLerp(targetposition, duration));
+    }
+
+    protected IEnumerator MoveToTargetByLerp(Vector3 targetPosition, float duration)
+    {
+        float time = 0;
+        while (time <= duration)
         {
-            rb.AddRelativeForce(direction / 2, ForceMode2D.Impulse);
-            timeSet += Time.deltaTime;
-            if (timeSet > 0.25f)
-            {
-                Debug.Log("111");
-                rb.velocity = Vector2.zero;
-                break;
-            }
+            transform.parent.position = Vector3.Lerp(transform.parent.position, targetPosition, time / duration);
+            time += Time.deltaTime;
+
             yield return null;
         }
+
+        transform.parent.position = targetPosition;
     }
 
     protected IEnumerator MoveToTarget(Vector3 targetPosition, float speed = 100f)
@@ -301,5 +356,29 @@ public class CharAnimBase : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    protected virtual void OnCharacterReleased()
+    {
+        CameraController.instance.ResetBattleGroup();
+        CameraController.instance.SetMinOrtho(9);
+    }
+
+    public void Damage()
+    {
+        targetCharacter.characterAnim.ShowDamage();
+    }
+
+    public void DamageAll()
+    {
+        foreach (CharacterBase targets in targetList)
+        {
+            targets.characterAnim.ShowDamage();
+        }
+    }
+
+    public void SetRangePosition(CharacterBase target, Vector2 direction, float distance)
+    {
+        target.transform.position = new Vector3(target.transform.position.x + (direction.x * distance), target.transform.position.y, target.transform.position.z);
     }
 }

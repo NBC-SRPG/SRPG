@@ -1,14 +1,16 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Constants
+public static class Constants
 {
-
-    public static Dictionary<int, int> characterExpTable = new Dictionary<int, int>();
+    public static Dictionary<string, Dictionary<int, int>> dataTables = new();
 
     public enum Sound
     {
         Bgm,
-        Effect,
+        UI,     // UI작동시 사용할 효과음(Resources)
+        Effect,     // 전투시 사용할 효과음(Addressable)
+        EffectBySource, // resource에서 가져오는 효과음(Resources)
         Max,
     }
 
@@ -66,15 +68,6 @@ public class Constants
         AllExceptME //피아 미식별 대신 자신은 제외
     }
 
-
-    public enum PlayerCons
-    {
-        DefaltLevel = 100,
-        DefaltMaxExp = 100,
-        MaxLevel = 90,
-        DefaltMaxAp = 160
-    }
-    
 
 
     public enum UIEvent
@@ -146,14 +139,12 @@ public class Constants
     //아이템 분류 선별 기준 = '인벤토리에 표시되고 정보를 볼 수 있어야 하는지? 여부가 성립하면 아이템'
     public enum ItemType
     {
-        Ticket, //캐릭터 뽑기 티켓류 
-        Piece, //캐릭터 조각류
+        Piece = 0, //캐릭터 조각류
+        LevelUp = 1, //캐릭터 경험치, 스킬 레벨업 등 강화에 필요한 아이템
+        Material = 2, //장비 등급 상승에 필요한 아이템류. = Material
+        Consumable = 3, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
+        Ticket, //캐릭터 뽑기 티켓류
         Token, //토큰류 = 이벤트 상점 교환 재화
-        Consumable, //사용 가능하고 사용 시 보상을 지급하는 아이템류 == AP 충전아이템, 골드 보물상자, 다이아 꾸러미, 캐릭터 선택권, 아이템 박스 등
-        //RankUp_character, //캐릭터 돌파에 필요한 아이템류. 일단은 조각이 그 역할을 하므로 더미 데이터.
-        ExpUp_character, //캐릭터 경험치를 상승시켜주는 아이템류. 캐릭터 육성 창에서 사용 가능
-        RankUp_skill, //캐릭터 스킬 레벨업에 필요한 아이템류.
-        RankUp_equip, //장비 등급 상승에 필요한 아이템류. = Material
         Gift, //호감도 상승에 필요한 아이템류. 선물.
         Memorial, //특별한 기능은 없지만 보관 자체로 의미가 있는 기념품/중요한 아이템류. = 트로피, 훈장, 스토리에서 중요한 의미를 가진 아이템 등.
     }
@@ -175,6 +166,15 @@ public class Constants
         Character,
         Item
     }
+
+    public enum Status
+    {
+        Atk,
+        Def,
+        Health,
+        Mov,
+    }
+
     public enum MissionCategory
     {
         Daily, // 일일 퀘스트
@@ -188,7 +188,8 @@ public class Constants
         GetItem, // 아이템 획득
         UseItem, // 아이템 사용
         KillMonster, // 몬스터 처치
-        Login // 로그인
+        Login, // 로그인
+        StageClear // 스테이지 클리어
     }
     public enum MissionState
     {
@@ -198,12 +199,72 @@ public class Constants
         Receive // 보상 수령
     }
 
-    public const int MaxDiamond = 999999;
-    public const int MaxGold = 999999;
+    public enum StageClear
+    {
+        ClearAll,// 섬멸
+        Assasinate, // 특정 적 처치
+        Run, // 특정 위치로 이동
+        Defence // 방어
+    }
+
+    public enum EnemySpawnType
+    {
+        Wave,
+        Infinite
+    }
+
+    public enum StageType
+    {
+        MainStory,
+        GoldFarming,
+        EquipFarming,
+        CharacterFarming,
+        GrowthFarming
+    }
+
+    public static int presetIndex = 0;
+
+    public const int DEFAULT_AP = 20;
+    public const int MAX_LEVEL = 90;
+    public const int MaxDiamond = 99999999;
+    public const int MaxGold = 99999999;
 
     public const int NONE_SELECTED = -1;
-    public const int TestApImage = 60001000;
-    public const int TestExpImage = 60001001;
-    public const int TestGoldImage = 60001002;
-    public const int TestDiamondImage = 60001003;
+
+    public const int FriendTabs = 0;
+    public const int ApplyingTabs = 1;
+    public const int WaitingTabs = 2;
+    public const int AbilityTier2 = 50;
+    public const int AbilityTier2UnlockLevel = 50;
+    public const int AbilityTier3UnlockLevel = 70;
+
+    public const int GachaPoint = 100;
+
+    [System.Serializable]
+    public struct Dialog
+    {
+        public string characterName;
+        public string spriteName;
+        [TextArea(3, 5)]
+        public string dialog;
+    }
+
+    public enum ExtraGoal
+    {
+        Clear,
+        InnerTurn,
+        KillOver,
+        KillSomeone,
+        NoDie,
+        Empty
+    }
+
+    [System.Serializable]
+    public struct ExtraGoalDetail
+    {
+        public ExtraGoal type;
+        public int value;
+    }
+
+
 }

@@ -8,11 +8,14 @@ public class OverlayTile : MonoBehaviour
     [SerializeField] private GameObject scaleTile;
     [SerializeField] private GameObject canMoveTile;
     [SerializeField] private GameObject attackRangeTile;
+    [SerializeField] private GameObject targetAttackRange;
 
     [HideInInspector] public bool canClick;//이동 가능 혹은 상호작용 가능한 타일
 
     public Vector3Int gridLocation;//타일 위치(월드 위치랑 다름)
     public Vector2Int grid2DLocation { get { return new Vector2Int(gridLocation.x, gridLocation.y); } }
+
+    public bool isEnemySpawn;
 
     public int H { get; set; }//목적지까지 거리
     public int G { get; set; }//목적지까지 걷는 횟수
@@ -38,6 +41,16 @@ public class OverlayTile : MonoBehaviour
         }
     }
 
+    public void ResetTileOnMove()
+    {
+        if (canClick)
+        {
+            defaultTile.SetActive(true);
+            scaleTile.SetActive(false);
+            canMoveTile.SetActive(false);
+        }
+    }
+
     public void ShowTile()//기본 타일 보기(하얀색)
     {
         if (canClick)
@@ -60,6 +73,7 @@ public class OverlayTile : MonoBehaviour
         if (canClick)
         {
             scaleTile.SetActive(true);
+            canMoveTile.SetActive(true);
             defaultTile.SetActive(!scaleTile.activeSelf);
         }
     }
@@ -83,5 +97,28 @@ public class OverlayTile : MonoBehaviour
     public void HideScale()
     {
         scaleTile.SetActive(false);
+        canMoveTile.SetActive(false);
+    }
+
+    public void ShowTagetAttack()
+    {
+        targetAttackRange.SetActive(true);
+    }
+
+    public void HideTargetAttack()
+    {
+        targetAttackRange.SetActive(false);
+    }
+
+    public bool CheckCanMove()
+    {
+        if (curStandingCharater != null || isEnemySpawn)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }

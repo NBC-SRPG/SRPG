@@ -1,13 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
-
 public class MainUI : UIBase
 {
     private enum Texts
     {
+        NameText,
         LevelText
     }
 
@@ -28,12 +25,8 @@ public class MainUI : UIBase
 
     private enum Images
     {
-
-    }
-
-    private enum GameObjects
-    {
-
+        IllustrationImage,
+        ProfileImage
     }
 
     private void Start()
@@ -41,21 +34,20 @@ public class MainUI : UIBase
         Init();
     }
 
-    private void Update()
+    private void OnDestroy()
     {
-        // TODO
-        // AP가 MAX가 아니라면 타이머 작동
-        // AP, Gold, Diamond를 각 UI마다 둘 것인지? or AP, Gold, Diamond만 있는 UI 생성 후 가장 위에 두기
+        Managers.AccountData.playerData.OnPlayerLevelChanged -= RefreshLevel;
+        Managers.AccountData.playerData.OnPlayerNameChanged -= RefreshName;
+        Managers.AccountData.playerData.OnLobbyCharacterChanged -= RefreshCharacter;
     }
 
     public void Init()
     {
-        Managers.UI.SetCanvas(gameObject);
+        Managers.Sound.Play(Constants.Sound.Bgm, "BGM/MainBGM");
         // UI 내의 텍스트, 버튼, 이미지, 오브젝트 바인딩
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.CharacterButton).onClick.AddListener(OnClickCharacterButton);
@@ -64,29 +56,43 @@ public class MainUI : UIBase
         GetButton((int)Buttons.GachaButton).onClick.AddListener(OnClickGachaButton);
         GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
         GetButton((int)Buttons.AdventureButton).onClick.AddListener(OnClickAdventureButton);
-        GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
+        //GetButton((int)Buttons.FriendButton).onClick.AddListener(OnClickFriendButton);
         GetButton((int)Buttons.MailButton).onClick.AddListener(OnClickMailButton);
-        GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
+        //GetButton((int)Buttons.NoticeButton).onClick.AddListener(OnClickNoticeButton);
         GetButton((int)Buttons.MissionButton).onClick.AddListener(OnClickMissionButton);
         GetButton((int)Buttons.ProfileButtton).onClick.AddListener(OnClickProfileButton);
+        
 
         RefreshUI();
 
-        // BGM 재생 (SoundManager)
-        // Managers.Sound(Sound.BGM, "BGM_Main");
+        Managers.AccountData.playerData.OnPlayerLevelChanged += RefreshLevel;
+        Managers.AccountData.playerData.OnPlayerNameChanged += RefreshName;
+        Managers.AccountData.playerData.OnLobbyCharacterChanged += RefreshCharacter;
     }
 
     private void RefreshUI()
     {
-        RefreshLevel();
+        RefreshLevel(Managers.AccountData.playerData.Level);
+        RefreshName(Managers.AccountData.playerData.playerName);
+        RefreshCharacter(Managers.AccountData.playerData.lobbyCharacter);
     }
 
     // Level 텍스트 업데이트
-    private void RefreshLevel()
+    private void RefreshLevel(int newLevel)
     {
-
+        GetText((int)Texts.LevelText).text = $"LV.{newLevel}";
     }
 
+    private void RefreshName(string newName)
+    {
+        GetText((int)Texts.NameText).text = newName;
+    }
+    
+    private void RefreshCharacter(int characterId)
+    {
+        GetImage((int)Images.ProfileImage).sprite = Managers.AccountData.characterData[characterId].SO.icon;
+        GetImage((int)Images.IllustrationImage).sprite = Managers.AccountData.characterData[characterId].SO.standingImage;
+    }
 
     private void OnClickCharacterButton()
     {
@@ -112,19 +118,19 @@ public class MainUI : UIBase
         Debug.Log("OnClickInventoryButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<InventoryUI>();
+        Managers.UI.ShowUI<InventoryUI>();
     }
     private void OnClickGachaButton()
     {
         Debug.Log("OnClickGachaButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<GachaUI>();
+        Managers.UI.ShowUI<GachaUI>();
     }
     private void OnClickShopButton()
     {
-        Debug.Log("OnClickShopButton");
-
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
         // Managers.Sound(Sound.Effect, "ButtonClick");
         // Managers.UI.ShowUI<ShopUI>();
     }
@@ -147,8 +153,18 @@ public class MainUI : UIBase
         Debug.Log("OnClickMailButton");
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
+
+        // 메일은 게임 진행 중에 새로 올 수도 있음
+        // 메일을 열 때마다 데이터 받아오기
+        StartCoroutine(ShowMailUI());
+        //Managers.UI.ShowUI<MailUI>();
+    }
+    private IEnumerator ShowMailUI()
+    {
+        yield return Managers.DB.MailLoad();
         Managers.UI.ShowUI<MailUI>();
     }
+
     private void OnClickNoticeButton()
     {
         Debug.Log("OnClickNoticeButton");

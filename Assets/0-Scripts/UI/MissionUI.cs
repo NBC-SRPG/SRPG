@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using static Constants;
@@ -18,17 +16,6 @@ public class MissionUI : UIBase
         Achievement,
         Beginner
     }
-
-    private enum Texts
-    {
-
-    }
-
-    private enum Images
-    {
-
-    }
-
     private enum Buttons
     {
         WholeButton,
@@ -38,11 +25,6 @@ public class MissionUI : UIBase
         BeginnerButton,
         GetAllButton,
         BackButton,
-
-        TestGetItemButton,
-        TestUseItemButton,
-        TestKillMonsterButton,
-        TestDailyResetButton
     }
 
     private enum GameObjects
@@ -79,8 +61,6 @@ public class MissionUI : UIBase
     {
         Managers.UI.SetCanvas(gameObject);
 
-        //BindText(typeof(Texts));
-        //BindImage(typeof(Images));
         BindButton(typeof(Buttons));
         BindObject(typeof(GameObjects));
 
@@ -95,12 +75,6 @@ public class MissionUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
         ShowTab(PlayTab.Whole);
-
-        // 테스트 버튼
-        GetButton((int)Buttons.TestGetItemButton).onClick.AddListener(OnClickTestGetItemButton);
-        GetButton((int)Buttons.TestUseItemButton).onClick.AddListener(OnClickTestUseItemButton);
-        GetButton((int)Buttons.TestKillMonsterButton).onClick.AddListener(OnClickTestKillMonsterButton);
-        GetButton((int)Buttons.TestDailyResetButton).onClick.AddListener(OnClickTestDailyResetButton);
     }
 
     private void OnMissionUpdateUI(int missionId)
@@ -124,68 +98,6 @@ public class MissionUI : UIBase
                 break;
         }
     }
-    /*
-    private void OnMissionCompletedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-
-    private void OnMissionReceivedUpdateUI(int missionId)
-    {
-        switch (playTab)
-        {
-            case PlayTab.Whole:
-                WholeTabInit();
-                break;
-            case PlayTab.Daily:
-                DailyTabInit();
-                break;
-            case PlayTab.Weekly:
-                WeeklyTabInit();
-                break;
-            case PlayTab.Achievement:
-                AchievementTabInit();
-                break;
-            case PlayTab.Beginner:
-                BeginnerTabInit();
-                break;
-        }
-    }
-    */
-    private void OnClickTestGetItemButton()
-    {
-        TestGameManager.Instance.GetItem(80001000);
-    }
-    private void OnClickTestUseItemButton()
-    {
-        TestGameManager.Instance.UseItem(80001001);
-    }
-    private void OnClickTestKillMonsterButton()
-    {
-        TestGameManager.Instance.KillMonster(70001000);
-    }
-    private void OnClickTestDailyResetButton()
-    {
-        TestGameManager.Instance.DailyReset();
-    }
-
     private void WholeTabInit()
     {
         foreach (Transform child in GetObject((int)GameObjects.WholeContent).transform)
@@ -231,7 +143,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Daily )
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Daily )
             {
                 continue;
             }
@@ -246,7 +158,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Daily)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Daily)
             {
                 continue;
             }
@@ -261,7 +173,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 일일 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Daily)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Daily)
             {
                 continue;
             }
@@ -283,7 +195,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -298,7 +210,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -313,7 +225,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 주간 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Weekly)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Weekly)
             {
                 continue;
             }
@@ -335,7 +247,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -350,7 +262,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -365,7 +277,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 업적이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Achievement)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Achievement)
             {
                 continue;
             }
@@ -387,7 +299,7 @@ public class MissionUI : UIBase
         foreach (var completeMissionId in Managers.AccountData.completeMissions)
         {
             // 완료 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(completeMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(completeMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -402,7 +314,7 @@ public class MissionUI : UIBase
         foreach (var ongoingMissionId in Managers.AccountData.ongoingMissions.Keys)
         {
             // 진행 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(ongoingMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(ongoingMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -417,7 +329,7 @@ public class MissionUI : UIBase
         foreach (var receiveMissionId in Managers.AccountData.receiveMissions)
         {
             // 수령 미션 중 초보자 미션이 아니라면 통과
-            if (TestDatabase.Mission.Get(receiveMissionId).missionCategory != MissionCategory.Beginner)
+            if (Managers.Mission.missionDB.Get(receiveMissionId).missionCategory != MissionCategory.Beginner)
             {
                 continue;
             }
@@ -532,7 +444,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -541,13 +453,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -563,7 +475,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -572,13 +484,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -594,7 +506,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -603,13 +515,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -625,7 +537,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -634,13 +546,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -656,7 +568,7 @@ public class MissionUI : UIBase
                         continue;
                     }
 
-                    MissionData missionData = TestDatabase.Mission.Get(missionId);
+                    MissionSO missionData = Managers.Mission.missionDB.Get(missionId);
 
                     exp += missionData.exp;
                     ap += missionData.ap;
@@ -665,13 +577,13 @@ public class MissionUI : UIBase
 
                     foreach (var reward in missionData.rewards)
                     {
-                        if (rewards.ContainsKey(reward.rewardId))
+                        if (rewards.ContainsKey(reward.Key))
                         {
-                            rewards[reward.rewardId] += reward.rewardCount;
+                            rewards[reward.Key] += reward.Value;
                         }
                         else
                         {
-                            rewards.Add(reward.rewardId, reward.rewardCount);
+                            rewards.Add(reward.Key, reward.Value);
                         }
                     }
                 }
@@ -696,8 +608,7 @@ public class MissionUI : UIBase
         ClaimReward();
 
         // 보상 획득 완료 UI 생성
-        RewardGetUI ui = Managers.UI.ShowUI<RewardGetUI>();
-        ui.InitWithMultipleRewards(exp, ap, gold, diamond, rewards);
+        Managers.UI.ShowUI<RewardGetUI>().InitWithMultipleRewards(exp, ap, gold, diamond, rewards);
 
         // 해당 미션 엔트리 수령 처리
         AllMissionReceive();
@@ -756,7 +667,7 @@ public class MissionUI : UIBase
 
                 foreach (Transform child in GetObject((int)GameObjects.WholeContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -766,7 +677,7 @@ public class MissionUI : UIBase
             case PlayTab.Daily:
                 foreach (Transform child in GetObject((int)GameObjects.DailyContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -776,7 +687,7 @@ public class MissionUI : UIBase
             case PlayTab.Weekly:
                 foreach (Transform child in GetObject((int)GameObjects.WeeklyContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -786,7 +697,7 @@ public class MissionUI : UIBase
             case PlayTab.Achievement:
                 foreach (Transform child in GetObject((int)GameObjects.AchievementContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -796,7 +707,7 @@ public class MissionUI : UIBase
             case PlayTab.Beginner:
                 foreach (Transform child in GetObject((int)GameObjects.BeginnerContent).transform)
                 {
-                    foreach (var nextMission in TestDatabase.Mission.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
+                    foreach (var nextMission in Managers.Mission.missionDB.Get(child.GetComponent<MissionEntryUI>().missionId).nextMissions)
                     {
                         Managers.Mission.MissionStart(nextMission);
                     }
@@ -812,8 +723,7 @@ public class MissionUI : UIBase
         // 골드 획득 가능 체크
         if (Managers.AccountData.playerData.CanAddGold(gold) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
+            Managers.UI.ShowUI<WarningUI>().Init(gold < 0 ? "골드 보상이 음수입니다." : "골드 보유 한도 초과");
 
             return false;
         }
@@ -821,8 +731,7 @@ public class MissionUI : UIBase
         // 다이아 획득 가능 체크
         if (Managers.AccountData.playerData.CanAddDiamond(diamond) == false)
         {
-            WarningUI ui = Managers.UI.ShowUI<WarningUI>();
-            ui.SetText(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
+            Managers.UI.ShowUI<WarningUI>().Init(diamond < 0 ? "다이아 보상이 음수입니다." : "다이아 보유 한도 초과");
 
             return false;
         }

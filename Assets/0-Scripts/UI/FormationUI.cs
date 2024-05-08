@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UI;
 using static Constants;
 
 public class FormationUI : UIBase
@@ -22,6 +19,10 @@ public class FormationUI : UIBase
         FormationLevelText4,
         FormationLevelText5
     }
+    private enum InputFields
+    {
+        PartyNameInputField
+    }
     private enum Buttons
     {
         PresetButton1,
@@ -36,7 +37,6 @@ public class FormationUI : UIBase
         FormationButton5,
         LeftArrowButton,
         RightArrowButton,
-        //PartyNameButton,
         ResetButton,
         BackButton
     }
@@ -64,7 +64,12 @@ public class FormationUI : UIBase
         FormationStar2,
         FormationStar3,
         FormationStar4,
-        FormationStar5
+        FormationStar5,
+        CharacterData1,
+        CharacterData2,
+        CharacterData3,
+        CharacterData4,
+        CharacterData5,
     }
     private void Start()
     {
@@ -79,6 +84,7 @@ public class FormationUI : UIBase
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
         BindObject(typeof(GameObjects));
+        Bind<TMP_InputField>(typeof(InputFields));
 
         Buttons presetButton;
         Buttons formationButton;
@@ -98,20 +104,25 @@ public class FormationUI : UIBase
 
         GetButton((int)Buttons.LeftArrowButton).onClick.AddListener(OnClickLeftArrowButton);
         GetButton((int)Buttons.RightArrowButton).onClick.AddListener(OnClickRightArrowButton);
-        //GetButton((int)Buttons.PartyNameButton).onClick.AddListener(OnClickPartyNameButton);
         GetButton((int)Buttons.ResetButton).onClick.AddListener(OnClickResetButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
 
-        presetIndex = 0;
+        Get<TMP_InputField>((int)InputFields.PartyNameInputField).onEndEdit.AddListener(ChangePartyName);
+
+
+        if (Constants.presetIndex == 0)
+        {
+            presetIndex = 0;
+        }
+        else
+        {
+            presetIndex = Constants.presetIndex;
+        }
 
         UpdateFormationToPreset(presetIndex);
-
-        // TODO
-        // 저장되어 있는 프리셋이 있는지 체크해서 로드
     }
 
     // 프리셋 변경 시 업데이트
-    // 프리셋 버튼 클릭이랑 같은 역할을 하게 될 것 같음 -> 둘이 합치고 함수명 고민
     private void UpdateFormationToPreset(int index)
     {
         // TODO
@@ -128,16 +139,41 @@ public class FormationUI : UIBase
 
         presetImage = (Images)Enum.Parse(typeof(Images), $"PresetImage{index + 1}");
         GetImage((int)presetImage).color = Color.green;
-        // 딕셔너리에서 index에 해당하는 캐릭터 정보 들고오기
-        // 편성에 채우기
 
         presetIndex = index;
+        Constants.presetIndex = index;
+
+        // 파티 이름 불러오기
+        string partyName;
+        if (!Managers.AccountData.formationData.TryGetValue(presetIndex, out var formation))
+        {
+            // 키 값이 없다면 기본 이름
+            partyName = "레이드용 파티";
+            Managers.AccountData.SetFormationPartyName(presetIndex, partyName);
+        }
+        else
+        {
+            partyName = formation.partyName;
+        }
+
+        Get<TMP_InputField>((int)InputFields.PartyNameInputField).text = partyName;
 
         // 바뀐 프리셋 편성 데이터 업데이트
         for (int i = 0; i < 5; i++)
         {
             UpdateFormationMember(i);
         }
+
+        // AccountData의 formationData 업데이트
+        if (formation == null)
+        {
+            formation = new FormationData();
+        }
+
+        formation.partyName = partyName;
+        Managers.AccountData.formationData[presetIndex] = formation;
+
+        Managers.GameManager.UpdateParty(Managers.AccountData.formationData[presetIndex]);
     }
 
     // 편성의 index에 해당하는 부분 업데이트
@@ -149,24 +185,32 @@ public class FormationUI : UIBase
         Texts formationLevelTextEnum = (Texts)Enum.Parse(typeof(Texts), $"FormationLevelText{index + 1}");
 
         // 해당 index값 존재 시 세팅 -> 캐릭터 id는 0 존재하면 안됨
-        if (Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
+        if (Managers.AccountData.formationData.ContainsKey(presetIndex) && Managers.AccountData.formationData[presetIndex].characterId[index] != 0)
         {
-            Sprite characterSprite = Managers.Resource.Load<Sprite>($"{Managers.AccountData.formationData[presetIndex].characterId[index]}");
+            GameObjects characterData = (GameObjects)Enum.Parse(typeof(GameObjects), $"CharacterData{index + 1}");
+            GetObject((int)characterData).gameObject.SetActive(true);
+
+            Character character = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]];
+            Sprite characterSprite = character.SO.illustration;
             GetImage((int)formationImageEnum).sprite = characterSprite;
-            // TODO
-            // 아웃라인 활성화 및 색상 설정
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = true;
-            // GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().effectColor = Color.red;
+
             // 속성 이미지 변경
-            GetImage((int)formationAttributeImageEnum).color = Color.red;
+            GetImage((int)formationAttributeImageEnum).sprite = character.SO.GetElementSprite();
 
             // 캐릭터 레벨 설정
             int characterLevel = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.level;
             GetText((int)formationLevelTextEnum).text = $"Lv. {characterLevel}";
 
             // 별 개수 꺼내오기 및 설정
-            int numberOfStars = 3; // 테스트 데이터, 실제 값으로 교체 필요
+            int numberOfStars = Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]].Growth.star; // 테스트 데이터, 실제 값으로 교체 필요
             float starWidth = 50f; // 별 이미지의 너비
+
+            for (int i = GetObject((int)formationStarEnum).transform.childCount - 1; i >= 0; i--)
+            {
+                GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
+                Destroy(child);
+            }
+
             for (int starIndex = 0; starIndex < numberOfStars; starIndex++)
             {
                 GameObject star = Managers.Resource.Instantiate("Star", GetObject((int)formationStarEnum).transform);
@@ -177,13 +221,17 @@ public class FormationUI : UIBase
                 rt.pivot = new Vector2(0f, 0f);
                 rt.anchoredPosition = new Vector2(starIndex * starWidth, 0);
             }
+
         }
         // 없다면(0이라면) 빈칸으로 밀어버리기
         else
         {
+            GameObjects characterData = (GameObjects)Enum.Parse(typeof(GameObjects), $"CharacterData{index + 1}");
+            GetObject((int)characterData).gameObject.SetActive(false);
+            
+            /*
             GetImage((int)formationImageEnum).sprite = null;
-            GetImage((int)formationImageEnum).transform.parent.GetComponent<Outline>().enabled = false;
-            GetImage((int)formationAttributeImageEnum).color = Color.white;
+            GetImage((int)formationAttributeImageEnum).sprite = null;
             GetText((int)formationLevelTextEnum).text = "";
 
             for (int i = GetObject((int)formationStarEnum).transform.childCount - 1; i >= 0; i--)
@@ -191,6 +239,19 @@ public class FormationUI : UIBase
                 GameObject child = GetObject((int)formationStarEnum).transform.GetChild(i).gameObject;
                 Destroy(child);
             }
+            */
+            Managers.GameManager.player.party[index] = null;
+            
+        }
+    }
+
+    private void ChangePartyName(string newPartyName)
+    {
+        if (!string.IsNullOrEmpty(newPartyName))
+        {
+            Debug.Log("New PartyName: " + newPartyName);
+
+            Managers.AccountData.SetFormationPartyName(presetIndex, newPartyName);
         }
     }
 
@@ -234,14 +295,6 @@ public class FormationUI : UIBase
         UpdateFormationToPreset(presetIndex);
     }
 
-    private void OnClickPartyNameButton()
-    {
-        Debug.Log("OnClickPartyNameButton");
-        // TODO
-        // 키보드창 뜨기
-        // 입력한 문자열로 업데이트
-    }
-
     private void OnClickResetButton()
     {
         Debug.Log("OnClickResetButton");
@@ -257,6 +310,13 @@ public class FormationUI : UIBase
     private void OnClickBackButton()
     {
         Debug.Log("OnClickBackButton");
+
+        StageInfoUI ui = Managers.UI.FindUI<StageInfoUI>();
+
+        if (ui != null)
+        {
+            ui.gameObject.SetActive(true);
+        }
 
         Managers.UI.CloseUI(this);
     }
@@ -282,10 +342,7 @@ public class FormationUI : UIBase
 
         if (pressedTimer > 1f && !hasShownCharacterInfo)
         {
-            CharacterInfoUI ui = Managers.UI.ShowUI<CharacterInfoUI>();
-
-
-            ui.SetCharacter(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
+            Managers.UI.ShowUI<CharacterInfoUI>().Init(Managers.AccountData.characterData[Managers.AccountData.formationData[presetIndex].characterId[index]]);
             hasShownCharacterInfo = true;
         }
     }

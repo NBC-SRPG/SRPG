@@ -12,7 +12,7 @@ public class PathFinder
 
         List<OverlayTile> surroundTiles = new List<OverlayTile>();
 
-        foreach (OverlayTile path in Managers.MapManager.GetSurroundingTiles(tile.grid2DLocation, true))
+        foreach (OverlayTile path in MapManager.instance.GetSurroundingTiles(tile.grid2DLocation, true))
         {
             if (!prevTiles.Contains(path))
             {
@@ -46,7 +46,7 @@ public class PathFinder
                 return GetPathList(startTile, targetTile);
             }
 
-            List<OverlayTile> surroundTile = Managers.MapManager.GetSurroundingTiles(curTile.grid2DLocation, true);
+            List<OverlayTile> surroundTile = MapManager.instance.GetSurroundingTiles(curTile.grid2DLocation, true);
 
             foreach(OverlayTile tile in surroundTile)
             {
@@ -94,7 +94,7 @@ public class PathFinder
                 return GetPathList(startTile, targetTile);
             }
 
-            List<OverlayTile> surroundTile = Managers.MapManager.GetSurroundingTiles(curTile.grid2DLocation, true);
+            List<OverlayTile> surroundTile = MapManager.instance.GetSurroundingTiles(curTile.grid2DLocation, true);
 
             foreach (OverlayTile tile in surroundTile)
             {

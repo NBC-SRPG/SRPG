@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
 
-[CreateAssetMenu(menuName = "CharacterData/CharacterData", fileName ="Character_")]
+[CreateAssetMenu(menuName = "CharacterData/CharacterData", fileName ="CharacterSO_")]
 public class CharacterSO : ScriptableObject
 {
     public AttackMethod attackMethod;     //공격 타입
@@ -9,6 +10,12 @@ public class CharacterSO : ScriptableObject
     
     [Header("Develope")]
     public int id;      //캐릭터 식별자
+
+    [Header("Sprites")]
+    public Sprite icon;
+    public Sprite illustration;
+    public Sprite standingImage;
+
 
     [Header("Status")]      //캐릭터 능력치
     public int hp;
@@ -29,17 +36,17 @@ public class CharacterSO : ScriptableObject
 
     [Header("Ability")]      //특성SO.
     public int abilityT1;
-    public int[] abilityT2; //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장.
-    public int[] abilityT3;
+    public List<int> abilityT2 = new(); //티어 2와 티어 3 특성, 상위 클래스는 여러 개 중 선택해야하므로 '선택 가능한 특성 / 클래스 폭'을 배열로 저장.
+    public List<int> abilityT3 = new();
 
     [Header("Class")]       //클래스SO.
     public int basicClass;
-    public int[] superiorClass;
+    public List<int> superiorClass = new();
 
 
     [Header("EquipList")]
-    public int[] weapon;
-    public int[] armor;
+    public List<int> weapon = new();
+    public List<int> armor = new();
 
 
     [Header("Star")]
@@ -47,4 +54,13 @@ public class CharacterSO : ScriptableObject
 
     [Header("Animator")]
     public string animatorName;
+
+
+    public Sprite GetElementSprite()
+    {
+        string elementName = "Element_" + elementType.ToString();
+        Sprite elementSprite = Managers.Resource.Load<Sprite>(elementName);
+
+        return elementSprite;
+    }
 }

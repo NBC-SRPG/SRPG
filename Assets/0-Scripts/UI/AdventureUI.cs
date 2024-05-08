@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AdventureUI : UIBase
@@ -7,8 +5,7 @@ public class AdventureUI : UIBase
     private enum Buttons
     {
         PVPButton,
-        WeeklyContentButton,
-        CommodityFarmingButton,
+        SpecialButton,
         MainStoryButton,
         BackButton
     }
@@ -25,27 +22,26 @@ public class AdventureUI : UIBase
         BindButton(typeof(Buttons));
 
         GetButton((int)Buttons.PVPButton).onClick.AddListener(OnClickPVPButton);
-        GetButton((int)Buttons.WeeklyContentButton).onClick.AddListener(OnClickWeeklyContentButton);
-        GetButton((int)Buttons.CommodityFarmingButton).onClick.AddListener(OnClickCommodityFarmingButton);
+        GetButton((int)Buttons.SpecialButton).onClick.AddListener(OnClickSpecialButtonButton);
         GetButton((int)Buttons.MainStoryButton).onClick.AddListener(OnClickMainStoryButton);
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
     }
 
     private void OnClickPVPButton()
     {
-        Debug.Log("OnClickPVPButton");
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
-    private void OnClickWeeklyContentButton()
+    private void OnClickSpecialButtonButton()
     {
-        Debug.Log("OnClickWeeklyContentButton");
-    }
-    private void OnClickCommodityFarmingButton()
-    {
-        Debug.Log("OnClickCommodityFarmingButton");
+        var ui = Managers.UI.ShowUI<WarningUI>();
+        ui.Init("준비 중");
     }
     private void OnClickMainStoryButton()
     {
         Debug.Log("OnClickMainStoryButton");
+
+        Managers.UI.ShowUI<MainStoryUI>();
     }
     private void OnClickBackButton()
     {

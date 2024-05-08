@@ -1,14 +1,7 @@
-using GooglePlayGames.BasicApi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static BattleKeyWords;
-using static Constants;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class CharacterBase : MonoBehaviour
 {
@@ -16,11 +9,11 @@ public class CharacterBase : MonoBehaviour
     public GameObject characterObject;
     public CharAnimBase characterAnim;
     public HealthSystem health;
+    public GamePlayer player;
     public string playerId;
 
     public ExSkillBase curCharacterSkill;
     public List<PassiveLogic> curCharacterPassive;
-    
 
     public CharacterBufList curCharacterBufList;
     public TempBonusStat tempBonusStat;
@@ -46,8 +39,9 @@ public class CharacterBase : MonoBehaviour
     [HideInInspector] public bool canMoveSkil;
 
     [HideInInspector] public bool hasAnimationBeforDIe = false;
+    private bool onDiePassive = false;
 
-    [HideInInspector] public List<OverlayTile> skillScale = new List<OverlayTile>();
+    public List<OverlayTile> skillScale = new List<OverlayTile>();
     public List<OverlayTile> movePath = new List<OverlayTile>();
     private Stack<OverlayTile> pathedTiles = new Stack<OverlayTile>();
 
@@ -66,8 +60,9 @@ public class CharacterBase : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------
     // 시작 시 설정
 
-    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent)
+    public void SpawnCharacter(OverlayTile spawnPosition, Transform parent, Vector2 direction)
     {
+        gameObject.SetActive(true);
         transform.SetParent(parent);
 
         curStandingTile = spawnPosition;
@@ -75,29 +70,25 @@ public class CharacterBase : MonoBehaviour
 
         transform.position = curStandingTile.transform.position;
 
-        Managers.BattleManager.charactersInBattle.Add(this);
-        Managers.BattleManager.charactersAsTeam[playerId].Add(this);
+        BattleManager.Instance.charactersInBattle.Add(this);
+        BattleManager.Instance.charactersAsTeam[playerId].Add(this);
+
+        characterAnim.FlipCharacterDirection(direction);
+        characterAnim.Activate();
+
+        OnStageStart();
     }
 
-    public virtual void InitCharacter(Character charac, string id)
+    public virtual void InitCharacter(Character charac, GamePlayer gamePlayer)
     {
         character = charac;
-        playerId = id;
+        player = gamePlayer;
+        playerId = gamePlayer.playerId;
 
-        Managers.MapManager.OnCompleteMove += CheckCurTile;
+        MapManager.instance.OnCompleteMove += CheckCurTile;
         characterObject = Managers.Resource.Instantiate("character", transform);
         characterObject.GetComponent<Animator>().runtimeAnimatorController = Managers.Resource.Load<AnimatorOverrideController>("Animation/" + character.SO.id);
         characterObject.AddComponent(Type.GetType("CharAnim_" + character.SO.animatorName));
-
-        //character.CharacterInit();
-
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(health);
-
-        health = GetComponent<HealthSystem>();
-        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
-        health.Die += CharacterDie;
-        health.DieAnimation += DieAnimation;
 
         // 캐릭터 클래스로 부터 Ex스킬을 생성해서 받아옴
         curCharacterSkill = new ExSkillBase(character.exSkill);
@@ -107,7 +98,14 @@ public class CharacterBase : MonoBehaviour
         SetSkillOwner();
 
         leftWalkRange = Mov;
-        skillCost = curCharacterSkill.skillData.cost;
+        if (curCharacterSkill != null  && curCharacterSkill.skillData != null)
+        {
+            skillCost = curCharacterSkill.skillData.cost;
+        }
+        else
+        {
+            skillCost = 0;
+        }
 
         isDead = false;
         isWalking = false;
@@ -124,15 +122,18 @@ public class CharacterBase : MonoBehaviour
         pathFinder = new PathFinder();
         rangeFinder = new RangeFinder();
 
-        health = GetComponent<HealthSystem>();
-        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList);
+        health = GetComponentInChildren<HealthSystem>();
+        characterAnim = GetComponentInChildren<CharAnimBase>();
+
+        health.InitHealth(character.hp, tempBonusStat, curCharacterBufList, characterAnim);
+        characterAnim.Init(health);
+
         health.Die += CharacterDie;
         health.DieAnimation += DieAnimation;
 
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-        characterAnim.Init(health);
-
         historyCurrentRound = new CharacterHistory();
+
+        gameObject.SetActive(false);
     }
 
     // 캐릭터가 가질 수 있는 모든 패시브 효과 추가
@@ -141,7 +142,6 @@ public class CharacterBase : MonoBehaviour
         PassiveSO[] passiveList = {character.passiveSkill, character.abilityT1, character.abilityT2, character.abilityT3,
                                 character.basicClass, character.superiorClass, character.weapon, character.armor};
 
-        int index = 0;
         foreach (PassiveSO so in passiveList)
         {
             if (so == null)
@@ -160,6 +160,9 @@ public class CharacterBase : MonoBehaviour
     //스킬 및 패시브 시전자 설정
     private void SetSkillOwner()
     {
+        curCharacterBufList = new CharacterBufList(this);
+        tempBonusStat = new TempBonusStat();
+
         if (curCharacterSkill != null)
         {
             curCharacterSkill.Init(this);
@@ -173,36 +176,52 @@ public class CharacterBase : MonoBehaviour
             }
         }
 
-
-
-        curCharacterBufList = new CharacterBufList(this);
-        tempBonusStat = new TempBonusStat();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 스탯 관련 함수
 
+    public float AtkIncrease
+    {
+        get
+        {
+            float increase = character.atkIncrease * curCharacterBufList.GetAdditionalStat().ExtraAtk * tempBonusStat.GetTempStat().ExtraAtk;
+            if(increase < 0)
+            {
+                increase = 1f;
+            }
+
+            return increase;
+        }
+    }
+
     public int Attack
     {
         get
         {
-            return (int)((float)character.atk * (float)(100f + (curCharacterBufList.GetAdditionalStat().ExtraAtk + tempBonusStat.GetTempStat().ExtraAtk)) / 100f);
-        } 
+            return (int)((float)character.atk * AtkIncrease);
+        }
+    }
+
+    public float DefIncrease
+    {
+        get
+        {
+            float increase = character.defIncrease * curCharacterBufList.GetAdditionalStat().ExtraDefend * tempBonusStat.GetTempStat().ExtraDefend;
+            if (increase < 0)
+            {
+                increase = 1f;
+            }
+
+            return increase;
+        }
     }
 
     public int Defend
     {
         get
         {
-            return character.def + curCharacterBufList.GetAdditionalStat().ExtraDefend + tempBonusStat.GetTempStat().ExtraDefend;
-        }
-    }
-
-    public int Health
-    {
-        get
-        {
-            return character.hp;
+            return (int)((float)character.def * DefIncrease);
         }
     }
 
@@ -210,9 +229,91 @@ public class CharacterBase : MonoBehaviour
     {
         get
         {
-            return character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov;
+            int mov = character.mov + curCharacterBufList.GetAdditionalStat().ExtraMov + tempBonusStat.GetTempStat().ExtraMov;
+            if(mov < 0)
+            {
+                mov = 0;
+            }
+
+            return mov;
         }
     }
+
+    public int CritRate
+    {
+        get
+        {
+            int extraCritRate = character.critRate + curCharacterBufList.GetAdditionalStat().EXCritRate + tempBonusStat.GetTempStat().EXCritRate;
+            if(extraCritRate < 0)
+            {
+                extraCritRate = 0;
+            }
+
+            return extraCritRate;
+        }
+    }
+
+    public float CritDMG
+    {
+        get
+        {
+            int extraCritDMG = character.critDmg + curCharacterBufList.GetAdditionalStat().EXCritDMG + tempBonusStat.GetTempStat().EXCritDMG;
+            if(extraCritDMG < 0)
+            {
+                extraCritDMG = 0;
+            }
+
+            return (100f+extraCritDMG)/100f;
+        }
+    }
+
+    public float PenetrateDef//방어력 관통(곱연산)
+    {
+        get
+        {
+            float penetrate = 1 * curCharacterBufList.GetAdditionalStat().PenetrateDef * tempBonusStat.GetTempStat().PenetrateDef;
+            if(penetrate > 1f)
+            {
+                penetrate = 1f;
+            }
+            else if( penetrate < 0f)
+            {
+                penetrate = 1f;
+            }
+
+            return penetrate;
+        }
+    }
+
+    public float EnhanceDMG
+    {
+        get
+        {
+            float enhance = character.EnhancedDmg * curCharacterBufList.GetAdditionalStat().EnhancedDmg * tempBonusStat.GetTempStat().EnhancedDmg;
+            if (enhance < 0)
+            {
+                enhance = 1f;
+            }
+
+            return enhance;
+        }
+    }
+
+    public float ReduceDMG
+    {
+        get
+        {
+            float reduce = 1 * character.ReducedDmg * curCharacterBufList.GetAdditionalStat().ReducedDmg * tempBonusStat.GetTempStat().ReducedDmg;
+
+            if (reduce < 0)
+            {
+                reduce = 0.1f;
+            }
+
+            return reduce;
+        }
+    }
+
 
     //-----------------------------------------------------------------------------------------------------------------------
     // Update
@@ -222,7 +323,7 @@ public class CharacterBase : MonoBehaviour
         {
                 passive?.OnUpdate();
         }
-        curCharacterSkill.skillAbility?.OnUpdate();
+        curCharacterSkill?.skillAbility?.OnUpdate();
         curCharacterBufList.OnUpdate();
     }
 
@@ -243,6 +344,12 @@ public class CharacterBase : MonoBehaviour
         curStandingTile.curStandingCharater = this;
     }
 
+    public void MoveTileAndPosition(OverlayTile newTile)// 타일 이동하면서 캐릭터 위치도 이동
+    {
+        MoveTile(newTile);
+        transform.position = newTile.transform.position;
+    }
+
     public void MoveCharacter()//캐릭터 이동
     {
         curStandingTile.curStandingCharater = null;
@@ -259,7 +366,7 @@ public class CharacterBase : MonoBehaviour
             if (movePath[i].curStandingCharater != null)
             {
                 target = movePath[i].curStandingCharater;
-                Managers.BattleManager.OnPassCharacter(this, target);
+                BattleManager.Instance.OnPassCharacter(this, target);
             }
 
             historyCurrentRound.moveFigure++;
@@ -276,11 +383,6 @@ public class CharacterBase : MonoBehaviour
         MoveTile(curStandingTile);
 
         OnEndMoving();
-
-        if (isDead)
-        {
-            OnDie();
-        }
 
         AnimationController.instance.StartAnimationQueue();
     }
@@ -320,6 +422,14 @@ public class CharacterBase : MonoBehaviour
 
     //---------------------------------------------------------------------------
     // 유틸 관련
+    public void OnStageStart()// 스테이지 시작 시 발동
+    {
+        foreach (PassiveLogic passive in curCharacterPassive)
+        {
+            passive?.OnStageStart();
+        }
+    }
+
     public void OnRoundStart()
     {
         historyPrevRound = new CharacterHistory(historyCurrentRound);
@@ -331,7 +441,6 @@ public class CharacterBase : MonoBehaviour
         }
         curCharacterBufList?.OnRoundStart();
 
-        tempBonusStat.ClearAllStat();
     }
 
     public virtual void OnStartPlayerTurn()// 턴 시작 시
@@ -405,8 +514,8 @@ public class CharacterBase : MonoBehaviour
 
     public void OnEndMoving()// 이동 끝난 직후
     {
-        Managers.MapManager.CompleteMove();
-        
+        MapManager.instance.CompleteMove();
+
 
         if (!isDead)
         {
@@ -430,6 +539,8 @@ public class CharacterBase : MonoBehaviour
         OnEndActing();
 
         OnEndWalk?.Invoke();
+
+        BattleManager.Instance.CheckWin(null, curStandingTile);
     }
 
     public void OnEndActing()// 행동이 끝난 뒤
@@ -460,6 +571,8 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTurnEnd();
         }
         curCharacterBufList?.OnTurnEnd();
+
+        
     }
 
     public void OnRoundEnd()// 턴이 끝날 때
@@ -475,7 +588,7 @@ public class CharacterBase : MonoBehaviour
     {
         if(didAttack || didWalk)
         {
-            canSkill = false;
+            DeActivateSkill();
         }
 
         if((didAttack && didWalk) || didUseSkill)
@@ -486,15 +599,27 @@ public class CharacterBase : MonoBehaviour
 
     private void CheckActivated()
     {
-        if (!canActing && Managers.BattleManager.nowPlayer.playerId == playerId)
+        if (!canActing && BattleManager.Instance.nowPlayer == player && gameObject.activeInHierarchy)
         {
             characterAnim.DeActivate();
         }
     }
 
-    public bool CheckEnenmy(CharacterBase target)// 적인지 확인
+    public bool CheckEnemy(CharacterBase target)// 적인지 확인
     {
         if(target.playerId != playerId)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool CheckEnemyAsId(GamePlayer player)// 적인지 확인
+    {
+        if (player.playerId != playerId)
         {
             return true;
         }
@@ -510,7 +635,7 @@ public class CharacterBase : MonoBehaviour
     public void SetAttackTarget(CharacterBase enemy)// 공격 시작
     {
         target = enemy;
-        Managers.BattleManager.Attack(this, target);
+        BattleManager.Instance.Attack(this, target);
     }
 
     public void AfterTakeAttacked(CharacterBase enemy)// 공격 받은 이후에
@@ -519,18 +644,19 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.AfterTakeAttacked(enemy);
         }
+        curCharacterBufList.AfterTakeAttacked(enemy);
     }
 
     public void AttackTarget(CharacterBase enemy)// 캐릭터 공격
     {
         target = enemy;
-        Managers.BattleManager.DoAttack(this, target);
+        BattleManager.Instance.DoAttack(this, target);
     }
 
     public void CounterAttack(CharacterBase enemy)// 반격
     {
         target = enemy;
-        Managers.BattleManager.CounterAttack(this, target);
+        BattleManager.Instance.CounterAttack(this, target);
     }
 
     public void OnStartAttack(CharacterBase enemy)// 공격 시작 시
@@ -557,6 +683,12 @@ public class CharacterBase : MonoBehaviour
         {
             historyCurrentRound.dealDamageCount++;
         }
+
+        if (!historyCurrentRound.gainManaByAttack)
+        {
+            player.GainMana(5);
+            historyCurrentRound.gainManaByAttack = true;
+        }
     }
 
     public void OnEndAttack(CharacterBase enemy)// 공격 종료 시
@@ -566,7 +698,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnEndAttack(enemy);
         }
         curCharacterBufList?.OnEndAttack(enemy);
-        
+
         historyCurrentRound.attackCount++;
 
         EndAttacking();
@@ -597,7 +729,7 @@ public class CharacterBase : MonoBehaviour
     {
         List<OverlayTile> temp = new List<OverlayTile>();
 
-        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+        temp = movePath.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
 
         foreach (OverlayTile scale in temp)
         {
@@ -608,7 +740,7 @@ public class CharacterBase : MonoBehaviour
     //---------------------------------------------------------------------------
     // 데미지 관련
 
-    public void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
+    public virtual void OnTakeDamage(ref BattleKeyWords.Damage damage, CharacterBase enemy,
         BattleKeyWords.AttackDamageType damageType = BattleKeyWords.AttackDamageType.None,
         Constants.ElementType elementType = Constants.ElementType.None)// 공격 받았을 때
     {
@@ -668,7 +800,7 @@ public class CharacterBase : MonoBehaviour
             passive?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
         }
         curCharacterBufList?.OnTakeHeal(ref heal, skillUser, damageType, elementType);
-        
+
         health.HealHealthByInt(heal);
 
         AfterTakeHeal(heal, skillUser, damageType, elementType);
@@ -712,9 +844,12 @@ public class CharacterBase : MonoBehaviour
 
     public void UseSkill()// 스킬 사용
     {
-        GetSkillTarget();
+        if (targets == null || targets.Count == 0)
+        {
+            GetSkillTarget();
+        }
 
-        Managers.BattleManager.UseSkill(this, targets);
+        BattleManager.Instance.UseSkill(this, targets);
 
         historyCurrentRound.useSkillCount++;
     }
@@ -735,10 +870,10 @@ public class CharacterBase : MonoBehaviour
                 targets.Add(this);
                 break;
             case Constants.SkillTargetType.Enemy:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.Ally:
-                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnenmy(this));
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
                 break;
             case Constants.SkillTargetType.All:
                 temp = skillScale.FindAll(x => x.curStandingCharater != null);
@@ -754,7 +889,40 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시 
+    protected List<CharacterBase> GetSkillTargetList()
+    {
+        List<OverlayTile> temp = new List<OverlayTile>();
+        List<CharacterBase> tempTargets = new List<CharacterBase>();
+        curCharacterSkill.targetTiles = skillScale;
+
+        switch (curCharacterSkill.skillData.targetType)
+        {
+            case Constants.SkillTargetType.Me:
+                tempTargets.Add(this);
+                break;
+            case Constants.SkillTargetType.Enemy:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater.CheckEnemy(this));
+                break;
+            case Constants.SkillTargetType.Ally:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && !x.curStandingCharater.CheckEnemy(this));
+                break;
+            case Constants.SkillTargetType.All:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null);
+                break;
+            case Constants.SkillTargetType.AllExceptME:
+                temp = skillScale.FindAll(x => x.curStandingCharater != null && x.curStandingCharater != this);
+                break;
+        }
+
+        foreach (OverlayTile scale in temp)
+        {
+            tempTargets.Add(scale.curStandingCharater);
+        }
+
+        return tempTargets;
+    }
+
+    public void OnUseSkill(List<CharacterBase> target)// 스킬 사용 시
     {
 
         curCharacterBufList?.OnUseSkill(target);
@@ -840,6 +1008,8 @@ public class CharacterBase : MonoBehaviour
         {
             passive?.OnKillEnemy(target, elementType);
         }
+
+        player.GainMana(4);
     }
 
     private void CharacterDie()// 캐릭터 사망
@@ -865,20 +1035,27 @@ public class CharacterBase : MonoBehaviour
         OnDie();
     }
 
-    public void OnDie()// 사망 시
+    public virtual void OnDie()// 사망 시
     {
-        foreach(PassiveLogic passive in curCharacterPassive)
+        if (!onDiePassive)
         {
-            passive?.OnDie();
+            player.GainMana(10);
+
+            foreach (PassiveLogic passive in curCharacterPassive)
+            {
+                passive?.OnDie();
+            }
+            curCharacterBufList?.OnDie();
+
+            Debug.Log("die");
+
+            BattleManager.Instance.CharacterDie(this);
+
+            onDiePassive = true;
         }
-        curCharacterBufList?.OnDie();
-
-        Debug.Log("die");
-
-        Managers.BattleManager.CheckRemainCharacter();
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         if(curStandingTile == null)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TempBonusStat
 {
-    private List<BonusStat> statList;
+    public List<BonusStat> statList;
 
     public TempBonusStat()
     {
@@ -13,11 +13,18 @@ public class TempBonusStat
 
     public BonusStat GetTempStat()
     {
-        BonusStat stat = new BonusStat();
-
-        foreach(BonusStat bonusStat in statList)
+        BonusStat stat = new BonusStat
         {
-            stat.AddStat(bonusStat);
+            ExtraAtk = 1f,
+            ExtraDefend = 1f,
+            PenetrateDef = 1f,
+            EnhancedDmg = 1f,
+            ReducedDmg = 1f,
+        };// 곱연산인 변수들은 초기값 1로
+
+        foreach (BonusStat bonusStat in statList)
+        {
+            stat.AddBonusStat(bonusStat);
         }
 
         return stat;
@@ -41,6 +48,7 @@ public class TempBonusStat
         statList.Add(bonusStat);
     }
 
+   
     public void RemoveBonusStat(BonusStat bonusStat)
     {
         statList.Remove(bonusStat);
@@ -50,4 +58,5 @@ public class TempBonusStat
     {
         statList.Clear();
     }
+
 }

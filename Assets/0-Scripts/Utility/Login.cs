@@ -9,7 +9,7 @@ using Firebase.Auth;
 public class Login : MonoBehaviour
 {
     private FirebaseAuth auth;
-
+    
     void Awake()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()

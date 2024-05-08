@@ -1,19 +1,19 @@
 using Firebase.Database;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class AccountData
 {
-    public Dictionary<string, int> stageClearData { get; set; }
+    public Dictionary<int, int> stageClearData { get; set; }
     public Dictionary<int, Character> characterData { get; set; }
     public PlayerData playerData { get; set; }
- 
-    //public Dictionary<int, int> inventory { get; set; }  Todo: 아이템 데이터 추가 시 활성화 필요
-    public Dictionary<int, string[]> friendData { get; set; }
+    public Dictionary<int, int> inventory { get; set; }
+    public Dictionary<int, List<string>> friendData { get; set; }
     public Dictionary<int, FormationData> formationData { get; set; }
     public VersionData versionData { get; set; }
-    public int gachaPoint { get; set; }
     public List<MailSO> mailBox { get; set; }
 
     public Dictionary<int, Mission> ongoingMissions { get; set; } = new(); // 진행중인 미션들
@@ -22,53 +22,213 @@ public class AccountData
 
     public HashSet<int> receiveMissions { get; set; } = new();// 보상 수령한 미션들
 
-    //public IReadOnlyDictionary<int, Mission> OngoingMissions => ongoingMissions;
-    //public IReadOnlyCollection<int> CompleteMissions => completeMissions;
-    //public IReadOnlyCollection<int> ReceiveMissions => receiveMissions;
-
-    private bool isInit = false;
     private bool isOngoingMissionsLoaded = false;
     private bool isCompleteMissionsLoaded = false;
     private bool hasOngoingMissions = false;
     private bool hasCompleteMissions = false;
 
-    /*
+    #region Init
+    public void InitStageClearData(DataSnapshot snapshot)
+    {
+        stageClearData = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            stageClearData.Add(Convert.ToInt32(childSnapshot.Key), Convert.ToInt32(childSnapshot.Value));
+        }
+    }
+    public void InitCharacterData(DataSnapshot snapshot)
+    {
+        characterData = new();
+        foreach (var character in snapshot.Children)
+        {
+
+            CharacterGrowth growth = JsonConvert.DeserializeObject<CharacterGrowth>(character.GetRawJsonValue());
+
+            Utility.Id2SO<CharacterSO>(growth.id, (result) =>
+            {
+                CharacterSO so = (CharacterSO)result;
+                characterData.Add(growth.id, new Character(so, growth));
+
+
+                Debug.Log(growth.id);
+            });
+        }
+
+    }
+    public void InitPlayerData(DataSnapshot snapshot)
+    {
+        if (playerData == null)
+        {
+            playerData = new();
+        }
+
+        if (snapshot.Exists)
+        {
+            playerData.Init(
+                snapshot.Child("uId").Value as string,
+                snapshot.Child("playerName").Value as string,
+                snapshot.Child("playerComment").Value as string,
+                Convert.ToInt32(snapshot.Child("Diamond").Value),
+                Convert.ToInt32(snapshot.Child("Gold").Value),
+                Convert.ToInt32(snapshot.Child("Ap").Value),
+                Convert.ToInt32(snapshot.Child("maxAp").Value),
+                Convert.ToInt32(snapshot.Child("Level").Value),
+                Convert.ToInt32(snapshot.Child("exp").Value),
+                Convert.ToInt32(snapshot.Child("maxExp").Value),
+                snapshot.Child("birthday").Value as string,
+                //snapshot.Child("favoriteCharacter").Value as int[],
+                Convert.ToInt32(snapshot.Child("lobbyCharacter").Value),
+                Convert.ToInt32(snapshot.Child("gachaPoint").Value)
+            );
+        }
+        else
+        {
+            // TODO
+            // 저장된 값이 없을 때 기본 세팅
+            playerData.Init(
+                Managers.DB.GetUID(),
+                "의문의 유저",
+                "잘 부탁드립니다",
+                0,
+                0,
+                20,
+                20,
+                1,
+                0,
+                8,
+                "",
+                3,
+                0
+            );
+            Managers.DB.WriteWithJson(Managers.DB.userDB.Child("playerData"), playerData);
+        }
+
+        Managers.GameManager.player.playerId = playerData.uId;
+    }
+    public void InitInventoryData(DataSnapshot snapshot)
+    {
+        inventory = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            inventory.Add(Convert.ToInt32(childSnapshot.Key), Convert.ToInt32(childSnapshot.Value));
+        }
+    }
+    public void InitFriendData(DataSnapshot snapshot)
+    {
+        friendData = new();
+
+        DataSnapshot friendSnapshot = snapshot.Child("Friend");
+        DataSnapshot applyingSnapshot = snapshot.Child("Applying");
+        DataSnapshot waitingSnapshot = snapshot.Child("Waiting");
+
+        List<string> friendUids = ExtractUidsFromSnapshot(friendSnapshot);
+        List<string> applyingUids = ExtractUidsFromSnapshot(applyingSnapshot);
+        List<string> waitingUids = ExtractUidsFromSnapshot(waitingSnapshot);
+
+        friendData.Add(FriendTabs, friendUids);
+        friendData.Add(ApplyingTabs, applyingUids);
+        friendData.Add(WaitingTabs, waitingUids);
+    }
+    private List<string> ExtractUidsFromSnapshot(DataSnapshot snapshot)
+    {
+        List<string> uids = new();
+
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            string uid = childSnapshot.Value.ToString();
+            uids.Add(uid);
+        }
+
+        return uids;
+    }
+    public void InitFormationData(DataSnapshot snapshot)
+    {
+        formationData = new();
+
+        foreach (var formation in snapshot.Children)
+        {
+            FormationData formationdata = new();
+
+            formationdata.partyName = formation.Child("partyName").Value.ToString();
+            
+            foreach (var character in formation.Child("characterId").Children)
+            {
+                formationdata.characterId[int.Parse(character.Key)] = Convert.ToInt32(character.Value);
+            }
+
+            formationData.Add(int.Parse(formation.Key), formationdata);
+        }
+    }
+    public void InitVersionData(DataSnapshot snapshot)
+    {
+        versionData = new();
+        versionData.curGacha = new();
+        versionData.curEvents = new();
+
+        versionData.version = snapshot.Child("version").Value.ToString();
+
+        foreach (var curGacha in snapshot.Child("curGacha").Children)
+        {
+            versionData.curGacha.Add(Convert.ToInt32(curGacha.Value));
+        }
+
+        foreach (var curEvent in snapshot.Child("curEvent").Children)
+        {
+            versionData.curEvents.Add((string)curEvent.Value);
+        }
+    }
+
+    // TODO
+    // 메일을 받았을 때 이벤트를 걸어서 업데이트 하는걸로 변경
+    public void InitMailBox(DataSnapshot snapshot)
+    {
+        if (mailBox == null)
+        {
+            mailBox = new();
+        }
+        else
+        {
+            mailBox.Clear();
+        }
+
+
+        foreach (var mail in snapshot.Children)
+        {
+            MailSO mailSO = ScriptableObject.CreateInstance<MailSO>();
+            mailSO.key = mail.Key;
+            mailSO.title = mail.Child("title").Value.ToString();
+            foreach (var reward in mail.Child("rewards").Children)
+            {
+                mailSO.rewards.Add(int.Parse(reward.Key), int.Parse(reward.Value.ToString()));
+            }
+            mailSO.ap = int.Parse(mail.Child("ap").Value.ToString());
+            mailSO.gold = int.Parse(mail.Child("gold").Value.ToString());
+            mailSO.diamond = int.Parse(mail.Child("diamond").Value.ToString());
+
+            mailSO.dateSent = DateTime.Parse(mail.Child("dateSent").Value.ToString());
+            mailSO.expiration = int.Parse(mail.Child("expiration").Value.ToString());
+
+            if (!mailSO.isExpired())
+            {
+                mailBox.Add(mailSO);
+            }
+            else
+            {
+                Managers.DB.Delete(Managers.DB.userDB.Child("mailBox").Child(mail.Key));
+            }
+        }
+    }
+    public void InitMissionData(DataSnapshot snapshot)
+    {
+        OngoingMissionInit(snapshot.Child("ongoingMissionsData"));
+        CompleteMissionInit(snapshot.Child("completeMissionsData"));
+    }
+    
     public void Init()
     {
         
-    }
-    */
-
-    public void Init(
-        Dictionary<string, int> stageClearData,
-        Dictionary<int, Character> characterData,
-        PlayerData playerData,
-        //List<int> ongoingMissions,
-        //List<int> completeMissions,
-        //List<int> receiveMissions,
-        //Dictionary<int, int> inventory,
-        Dictionary<int, string[]> friendData,
-        Dictionary<int, FormationData> formationData,
-        List<MailSO> mailBox
-        )
-    {
-        this.stageClearData = stageClearData ?? new Dictionary<string, int>();
-        this.characterData = characterData ?? new Dictionary<int, Character>();
-        this.playerData = playerData ?? new PlayerData();
-        //this.inventory = inventory ?? new Dictionary<int, int>();
-        this.friendData = friendData ?? new Dictionary<int, string[]>();
-        this.formationData = formationData ?? new Dictionary<int, FormationData>();
-        this.mailBox = mailBox ?? new List<MailSO>();
-
-        if (isInit == true)
-        {
-            return;
-        }
-
-        isInit = true;
-
-        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("ongoingMissionsData"), OngoingMissionInit);
-        Managers.DB.Read(Managers.DB.userDB.Child("missionData").Child("completeMissionsData"), CompleteMissionInit);
     }
 
     private void OngoingMissionInit(DataSnapshot snapshot)
@@ -80,7 +240,7 @@ public class AccountData
             foreach (DataSnapshot mission in snapshot.Children)
             {
                 // 데이터의 키(미션Id)와 값(진행정도)으로 MissionStart를 메인쓰레드에서 실행 
-                MainThreadExecutor.ExecuteInMainThread(() => Managers.Mission.MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value)));
+                Managers.Mission.MissionStart(int.Parse(mission.Key), Convert.ToInt32(mission.Value));
                 Debug.Log(mission.Key + ":" + mission.Value);
             }
             // 데이터가 있음을 체크
@@ -106,18 +266,16 @@ public class AccountData
             foreach (DataSnapshot mission in snapshot.Children)
             {
                 // 데이터의 키(미션Id)로 미션 시작, 진행 정도는 완료 미션이기 때문에 해당 미션의 count를 그대로 적용
-                MainThreadExecutor.ExecuteInMainThread(() => {
-                    Managers.Mission.MissionStart(int.Parse(mission.Key), TestDatabase.Mission.Get(int.Parse(mission.Key)).count);
-                    // 바로 클리어 처리
-                    Managers.Mission.MissionClear(int.Parse(mission.Key));
+                Managers.Mission.MissionStart(int.Parse(mission.Key), Managers.Mission.missionDB.Get(int.Parse(mission.Key)).count);
+                // 바로 클리어 처리
+                Managers.Mission.MissionClear(int.Parse(mission.Key));
 
-                    // 데이터의 값이 true라면 보상 수령을 한 것
-                    if ((bool)mission.Value)
-                    {
-                        // 보상 수령 처리
-                        Managers.Mission.MissionReceive(int.Parse(mission.Key));
-                    }
-                });
+                // 데이터의 값이 true라면 보상 수령을 한 것
+                if ((bool)mission.Value)
+                {
+                    // 보상 수령 처리
+                    Managers.Mission.MissionReceive(int.Parse(mission.Key));
+                }
                 Debug.Log(mission.Key + ":" + mission.Value);
             }
             // 데이터가 있음을 체크
@@ -142,14 +300,138 @@ public class AccountData
             // 두 데이터가 모두 비어 있으면 기본 미션 설정
             if (!hasOngoingMissions && !hasCompleteMissions)
             {
-                MainThreadExecutor.ExecuteInMainThread(() =>
-                {
-                    // 기본 미션들을 설정
-                    Managers.Mission.MissionStart(90001000);
-                    Managers.Mission.MissionStart(90001001);
-                    Managers.Mission.MissionStart(90001002);
-                });
+                Managers.Mission.MissionStart(90001000);
+                Managers.Mission.MissionStart(90001001);
+                Managers.Mission.MissionStart(90001002);
+                Managers.Mission.MissionStart(90001003);
+                Managers.Mission.MissionStart(90002000);
+                Managers.Mission.MissionStart(90002001);
+                Managers.Mission.MissionStart(90002002);
+                Managers.Mission.MissionStart(90002003);
+                Managers.Mission.MissionStart(90002004);
+                Managers.Mission.MissionStart(90003000);
+                Managers.Mission.MissionStart(90003001);
+                Managers.Mission.MissionStart(90003002);
+                Managers.Mission.MissionStart(90003003);
+                Managers.Mission.MissionStart(90003004);
+                Managers.Mission.MissionStart(90003005);
+                Managers.Mission.MissionStart(90003006);
+                Managers.Mission.MissionStart(90003013);
+                Managers.Mission.MissionStart(90003023);
+                Managers.Mission.MissionStart(90003026);
+                Managers.Mission.MissionStart(90003029);
+                Managers.Mission.MissionStart(90004000);
+                Managers.Mission.MissionStart(90005001);
             }
+            Managers.UI.FindUI<LoadingUI>().isMissionLoaded = true;
         }
     }
+    #endregion
+
+    public void UpdateStageClearData(int stageId, int achievement)
+    {
+        if(stageClearData.TryAdd(stageId, achievement) == false)
+        {
+            stageClearData[stageId] = achievement;
+        }
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("stageClearData").Child(stageId.ToString()), achievement);
+    }
+
+    public void AcquireCharacter(int id, bool isPickUp = false)
+    {
+        if(!characterData.ContainsKey(id))
+        {
+            CharacterSO characterSO = Utility.Id2SOWait<CharacterSO>(id);
+            CharacterGrowth characterGrowth = new CharacterGrowth(characterSO);
+            if (characterData.TryAdd(id, new Character(characterSO, characterGrowth)))
+            {
+                Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), characterGrowth);
+                AcquireItems(id, 0);
+                return;
+            }
+        }
+
+        // 이미 보유중인 캐릭터라면 조각 획득
+        int pieceCount = 0;
+        switch(characterData[id].SO.basicStar)
+        {
+            case 1:
+                pieceCount = 1;
+                break;
+            case 2:
+                pieceCount = 5;
+                break;
+            case 3:
+                pieceCount = isPickUp ? 100 : 30;
+                break;
+        }
+        AcquireItems(id, pieceCount);
+
+    }
+
+    public int GetItemQuantity(int id)
+    {
+        if(!inventory.ContainsKey(id))
+        {
+            AcquireItems(id, 0);
+        }
+        return inventory[id];
+    }
+    public void AcquireItems(int id, int count)
+    {
+        if(inventory.TryAdd(id, count) == false)
+        {
+            inventory[id] += count;
+        }
+        Managers.Mission.NotifyMission(MissionType.GetItem, id, count);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
+    }
+
+    public void ConsumeItems(int id, int count)
+    {
+        inventory[id] -= count;
+        Managers.Mission.NotifyMission(MissionType.UseItem, id, count);
+        Managers.DB.Write<int>(Managers.DB.userDB.Child("inventory").Child(id.ToString()), inventory[id]);
+    }
+
+    public void DeleteMail(MailSO mail)
+    {
+        Managers.DB.Delete(Managers.DB.userDB.Child("mailBox").Child(mail.key));
+        mailBox.Remove(mail);
+    }
+
+    public void SetFormationPartyName(int presetIndex, string partyName)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = partyName,
+                characterId = new int[5]
+            };
+        }
+        else
+        {
+            formationData[presetIndex].partyName = partyName;
+        }
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
+
+    public void SetFormationCharacter(int presetIndex, int characterIndex, int characterId)
+    {
+        if (!formationData.ContainsKey(presetIndex))
+        {
+            formationData[presetIndex] = new FormationData()
+            {
+                partyName = "레이드용 파티",
+                characterId = new int[5]
+            };
+        }
+
+        formationData[presetIndex].characterId[characterIndex] = characterId;
+
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("formationData").Child(presetIndex.ToString()), formationData[presetIndex]);
+    }
+
 }

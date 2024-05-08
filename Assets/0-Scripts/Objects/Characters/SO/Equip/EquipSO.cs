@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Constants;
 
-
-
-[CreateAssetMenu(menuName = "EquipData", fileName = "Equip_")]
+[CreateAssetMenu(menuName = "EquipData", fileName = "EquipSO_")]
 public class EquipSO : PassiveSO
 {
     [Header("Develope")]
@@ -12,8 +9,11 @@ public class EquipSO : PassiveSO
 
     [Header("Equip_description")]
     public string equipName;
+    [TextArea]
     public string description;
     public int star;
+
+    public Sprite sprite;
     
     [Header("VisibleStatus")]
     public int hp;
@@ -22,6 +22,8 @@ public class EquipSO : PassiveSO
     public int mov;
 
     [Header("InvisibleStatus")]
+
+    public string additionalOption;   // 추가효과를 UI에 나타내기 위한 설명
     public int atkIncrease;     // 공격력 %증가량 (곱연산)
     public int defIncrease;     // 방어력 %증가량 (곱연산)
 
@@ -34,7 +36,6 @@ public class EquipSO : PassiveSO
 
     [Header("Upgrade")]
     public int upgradeLevel;
-    public Dictionary<int, int> upgradeMaterials;
+    public Dictionary<int, int> upgradeMaterials = new();
     public int gold;
-
 }

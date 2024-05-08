@@ -1,14 +1,10 @@
-using System;
-using Unity.Mathematics;
 using UnityEngine;
-using static Constants;
 
 public class Character
 {
     public CharacterSO SO;
     public CharacterGrowth Growth;
     public EnemySO enemySO;     // enemy로 사용할 경우에만 사용
-
 
     [Header("VisibleStatus")]
     public int hp;
@@ -18,14 +14,14 @@ public class Character
 
 
     [Header("InvisibleStatus")]
-    public int atkIncrease;     // 공격력 %증가량 (곱연산)
-    public int defIncrease;     // 방어력 %증가량 (곱연산)
+    public float atkIncrease;     // 공격력 %증가량 (곱연산)
+    public float defIncrease;     // 방어력 %증가량 (곱연산)
 
     public int critRate;       // 치명타 확률 (합연산)
     public int critDmg;         // 치명타 데미지 (합연산)
 
-    public int EnhancedDmg;     // 데미지 증가 (합연산)
-    public int ReducedDmg;     // 받는 데미지 감소 (곱연산)
+    public float EnhancedDmg;     // 데미지 증가 (합연산)
+    public float ReducedDmg;     // 받는 데미지 감소 (곱연산)
 
 
     [Header("Skill")]
@@ -52,14 +48,14 @@ public class Character
 
         mov = SO.mov;
 
-        atkIncrease = 0;
-        defIncrease = 0;
+        atkIncrease = 1f;
+        defIncrease = 1f;
 
         critRate = 20;      // 기본 치명타 확률 20%
         critDmg = 50;       // 기본 치명타 데미지 50%
 
-        EnhancedDmg = 0;
-        ReducedDmg = 0;
+        EnhancedDmg = 1f;
+        ReducedDmg = 1f;
 
         // EX스킬 초기화
         Utility.Id2SO<ExSkillSO>(SO.id, (result) =>
@@ -78,23 +74,8 @@ public class Character
         {
             abilityT1 = (AbilitySO)result;
         });
-
-        if (Growth.abilityT2 !=-1)
-        {
-            Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
-        {
-            abilityT2 = (AbilitySO)result;
-        });
-
-        }
-
-        if (Growth.abilityT3 !=-1)
-        {
-            Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
-        {
-            abilityT3 = (AbilitySO)result;
-        });
-        }
+        LoadAbilityT2();
+        LoadAbilityT3();
 
 
         // 클래스 초기화
@@ -106,44 +87,59 @@ public class Character
         if (Growth.superiorClass !=-1)
         {
             Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
-        {
-            superiorClass = (ClassSO)result;
-        });
+            {
+                superiorClass = (ClassSO)result;
+            });
         }
 
         // 장비 초기화
         Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
         {
             weapon = (EquipSO)result;
-
-            Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
-            {
-                armor = (EquipSO)result;
-                CalculateStat();
-            });
+            LoadArmor();
         });
 
+        // TODO
+        // MonoBehaviour를 상속받지 않아 해당 이벤트를 언제 해제 할지??
+        Growth.OnLevelUp += CalculateStat;
+        Growth.OnAbilityT2Changed += LoadAbilityT2;
+        Growth.OnAbilityT3Changed += LoadAbilityT3;
+        Growth.OnSuperiorClassChanged += LoadSuperiorClass;
+        Growth.OnWeaponChanged += LoadWeapon;
+        Growth.OnArmorChanged += LoadArmor;
     }
 
     public Character(EnemySO so)
     {
-        SO = null;
-        Growth = null;
+        Growth = new CharacterGrowth { level = so.level };
         enemySO = so;
+
+        SO = new CharacterSO();
+
+        SO.range = so.range;
+        SO.attackMethod = so.attackMethod;
+        SO.elementType = so.elementType;
+
+        SO.id = enemySO.id;
+        SO.animatorName = enemySO.animatorName;
+        SO.icon = enemySO.icon;
+        SO.characterName = enemySO.characterName;
+        SO.story = enemySO.story;
+        SO.faction = enemySO.faction;
 
         hp = so.hp;
         atk = so.atk;
         def = so.def;
         mov = so.mov;
 
-        atkIncrease = 0;
-        defIncrease = 0;
+        atkIncrease = 1f;
+        defIncrease = 1f;
 
         critRate = 20;      // 기본 치명타 확률 20%
         critDmg = 50;       // 기본 치명타 데미지 50%
 
-        EnhancedDmg = 0;
-        ReducedDmg = 0;
+        EnhancedDmg = 1f;
+        ReducedDmg = 1f;
 
         exSkill = so.exSkillSO;
         passiveSkill =  so.passiveSkillSO;
@@ -162,5 +158,66 @@ public class Character
         atk = SO.atk + SO.atkPerLv * Growth.level + weapon.atk + armor.atk;
         def = SO.def + SO.defPerLv * Growth.level + weapon.def + armor.def;
     }
+
+    private void LoadAbilityT2()
+    {
+        if (Growth.abilityT2 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT2[Growth.abilityT2], (result) =>
+            {
+                abilityT2 = (AbilitySO)result;
+            });
+        }
+    }
+
+    private void LoadAbilityT3()
+    {
+        if (Growth.abilityT3 !=-1)
+        {
+            Utility.Id2SO<AbilitySO>(SO.abilityT3[Growth.abilityT3], (result) =>
+            {
+                abilityT3 = (AbilitySO)result;
+            });
+        }
+    }
+
+    private void LoadSuperiorClass()
+    {
+        if (Growth.superiorClass != -1)
+        {
+            Utility.Id2SO<ClassSO>(SO.superiorClass[Growth.superiorClass], (result) =>
+            {
+                superiorClass = (ClassSO)result;
+            });
+        }
+    }
+
+    private void LoadWeapon()
+    {
+        Utility.Id2SO<EquipSO>(SO.weapon[Growth.weapon], (result) =>
+        {
+            weapon = (EquipSO)result;
+            CalculateStat();
+        });
+    }
+
+    private void LoadArmor()
+    {
+        Utility.Id2SO<EquipSO>(SO.armor[Growth.armor], (result) =>
+        {
+            armor = (EquipSO)result;
+            CalculateStat();
+        });
+    }
+
+    public (int hp, int atk, int def) PreviewEnhancedStats(EquipSO newWeapon, EquipSO newArmor)
+    {
+        int previewHp = SO.hp + SO.hpPerLv * Growth.level + newWeapon.hp + newArmor.hp;
+        int previewAtk = SO.atk + SO.atkPerLv * Growth.level + newWeapon.atk + newArmor.atk;
+        int previewDef = SO.def + SO.defPerLv * Growth.level + newWeapon.def + newArmor.def;
+
+        return (previewHp, previewAtk, previewDef);
+    }
+
 
 }

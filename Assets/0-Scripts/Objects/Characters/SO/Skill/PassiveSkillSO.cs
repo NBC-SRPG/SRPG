@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "SkillData/PassiveData", fileName = "Passive_")]
+[CreateAssetMenu(menuName = "SkillData/PassiveData", fileName = "PassiveSkillSO_")]
 public class PassiveSkillSO : PassiveSO
 {
     [Header("Develope")]
@@ -10,6 +10,8 @@ public class PassiveSkillSO : PassiveSO
     
     [Header("Description")]
     public string passiveName;
+    [TextArea]
     public string description;
+    public Sprite icon;
 
 }

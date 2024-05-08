@@ -10,11 +10,11 @@ public class CharacterBuf_Bind : CharacterBuf
 
     public override string Keyword { get; protected set; } = "Bind";
 
-    public override void Init(CharacterBase character, CharacterBase buffer)
+    public override void Init(CharacterBase character, CharacterBase buffer, int _duration, int _power, int _stack)
     {
-        base.Init(character, buffer);
+        base.Init(character, buffer, duration, power, stack);
 
-        cantStack = true;
+        onlyOne = true;
     }
 
     public override void OnAddBuf()
@@ -39,7 +39,21 @@ public class CharacterBuf_Bind : CharacterBuf
 
         if (turnCnt > 0)
         {
-            DecreaseStack(1);
+            DecreaseDuration(1);
         }
+    }
+
+    public override string GetName()
+    {
+        BufName = "속박";
+
+        return base.GetName();
+    }
+
+    public override string GetDescription()
+    {
+        Description = $"{duration}턴 동안, 캐릭터의 이동거리가 0이 됩니다.";
+
+        return base.GetDescription();
     }
 }

@@ -30,9 +30,6 @@ public class AnimationController : MonoBehaviour
     [SerializeField] private GameObject attackerPosition;
     [SerializeField] private GameObject victimPosition;
     [SerializeField] private GameObject backGround;
-    [SerializeField] private GameObject battleCanvas;
-
-    [SerializeField] private CinemachineTargetGroup group;
 
     private CharacterBase attacker;
     private List<CharacterBase> attackTargets;
@@ -45,6 +42,7 @@ public class AnimationController : MonoBehaviour
     private bool isSetting;
 
     public event Action onAnimationEnd;
+    public event Action OnCharacterReleased;
 
     private Action prevAnimation;
 
@@ -59,7 +57,6 @@ public class AnimationController : MonoBehaviour
 
         foreach(Transform child in character.GetComponentInChildren<Transform>())
         {
-            //child.gameObject.layer = layerNum;
             SetCharacterLayer(child, layerNum);
         }
     }
@@ -70,8 +67,9 @@ public class AnimationController : MonoBehaviour
 
         CameraController.instance.SetCharacterCameraMove(2);
 
+        Managers.UI.FindUI<BattleUI>().ResetUI();
+
         backGround.gameObject.SetActive(true);
-        battleCanvas.gameObject.SetActive(true);
 
         this.attacker = attacker;
         this.attackTargets = victims.ConvertAll(data => data);
@@ -86,9 +84,9 @@ public class AnimationController : MonoBehaviour
         attacker.characterAnim.Activate();
         attacker.characterAnim.FlipCharacterDirection(Vector2.right);
 
-        attacker.health.healthBarCanvas.SetActive(false);
+        SetCharacterLayer(attacker.health.healthBarCanvas.transform, 30);
 
-        group.AddMember(attacker.transform, 1, 2);
+        CameraController.instance.AddBattleTargetGroup(attacker.transform, 2);
 
         for (int i = 0; i < this.attackTargets.Count; i++)
         {
@@ -107,30 +105,21 @@ public class AnimationController : MonoBehaviour
             this.attackTargets[i].characterAnim.Activate();
             this.attackTargets[i].characterAnim.FlipCharacterDirection(Vector2.left);
 
-            this.attackTargets[i].health.healthBarCanvas.SetActive(false);
+            SetCharacterLayer(this.attackTargets[i].health.healthBarCanvas.transform, 30);
 
-            group.AddMember(this.attackTargets[i].transform, 1, 2);
+            CameraController.instance.AddBattleTargetGroup(this.attackTargets[i].transform, 2);
         }
     }
 
     private void CharacterRelease() // 캐릭터 제자리로
     {
-        isSetting = false;
-
         CameraController.instance.SetCharacterCameraMove(0);
 
         backGround.gameObject.SetActive(false);
-        battleCanvas.gameObject.SetActive(false);
 
-        if(group.m_Targets.Length > 0)
-        {
-            foreach(var target in group.m_Targets)
-            {
-                group.RemoveMember(target.target);
-            }
-        }
+        CameraController.instance.ResetBattleGroup();
 
-        if(attacker == null)
+        if (attacker == null)
         {
             return;
         }
@@ -142,9 +131,6 @@ public class AnimationController : MonoBehaviour
 
         attacker.characterAnim.ReleaseTargets();
         attacker.characterAnim.EndAnimation(attacker.isWalking);
-        //attacker.characterAnim.SetDamage(0);
-
-        attacker.health.healthBarCanvas.SetActive(true);
 
         if(attackTargets.Count == 0)
         {
@@ -160,9 +146,6 @@ public class AnimationController : MonoBehaviour
 
             attackTargets[i].characterAnim.EndAnimation(attackTargets[i].isWalking);
             attackTargets[i].characterAnim.FlipCharacter(attacker.transform.position, false);
-            //victims[i].characterAnim.SetDamage(0);
-
-            attackTargets[i].health.healthBarCanvas.SetActive(true);
         }
 
         attacker.characterAnim.FlipCharacter(attackTargets[0].transform.position, false);
@@ -170,10 +153,27 @@ public class AnimationController : MonoBehaviour
         attackTargets.Clear();
         originPos.Clear();
 
-        while (animationAtRelease.Count > 0)
+        if (!isSetting)
         {
-            animationAtRelease.Dequeue()?.Invoke();
+            while (animationAtRelease.Count > 0)
+            {
+                animationAtRelease.Dequeue()?.Invoke();
+            }
+
+            OnCharacterReleased?.Invoke();
         }
+    }
+
+    public void ChracterReleaseOne(CharacterBase character)
+    {
+        character.transform.position = originPos[character];
+        character.transform.localScale = new Vector3(1, 1, 0);
+
+        SetCharacterLayer(character.transform, 0);
+
+        character.characterAnim.EndAnimation(character.isWalking);
+
+        attackTargets.Remove(character);
     }
 
     public void EndAimation()
@@ -435,6 +435,7 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayMoveAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 이동 애니메이션
     {
+        isSetting = false;
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);
@@ -473,6 +474,7 @@ public class AnimationController : MonoBehaviour
 
     public IEnumerator PlayBackAnimation(CharacterBase mover, OverlayTile prevTile, OverlayTile targetTile)// 튕겨 나가는 애니메이션
     {
+        isSetting = false;
         CharacterRelease();
 
         CameraController.instance.SetCameraOnCharacter(mover);
@@ -520,7 +522,7 @@ public class AnimationController : MonoBehaviour
     {
         Action animation = null;
 
-        if (stitchedAnim.ContainsKey(prevAnimation))
+        if (prevAnimation != null && stitchedAnim.ContainsKey(prevAnimation))
         {
             if (isSetting)
             {
@@ -548,6 +550,7 @@ public class AnimationController : MonoBehaviour
         }
         else
         {
+            isSetting = false;
             CharacterRelease();
             animation?.Invoke();
             EndAimation();
@@ -599,6 +602,12 @@ public class AnimationController : MonoBehaviour
 
     //-----------------------------------------------------------------------------------------------------------------------
     // 기타 함수들
+
+    public void ClearAnimationQueue()
+    {
+        animationQueue.Clear();
+        stitchedAnim.Clear();
+    }
 
     public bool CheckSetting()
     {

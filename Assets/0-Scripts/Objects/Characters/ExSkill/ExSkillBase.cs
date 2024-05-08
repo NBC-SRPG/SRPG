@@ -15,8 +15,33 @@ public class ExSkillBase
 
     public int SkillFigure
     {
-        get { return (int)(skillData.coefficient * character.character.atk); }
+        get
+        {
+            float damage = 0;
+            
+            foreach(ExSkillSO.SkillCoefficient coefficient in skillData.coefficient)
+            {
+                switch (coefficient.status)
+                {
+                    case Constants.Status.Atk:
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Attack);
+                        break;
+                    case Constants.Status.Def:
+                        damage += (int)(( (coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Defend);
+                        break;
+                    case Constants.Status.Health:
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.health.TotalHealth);
+                        break;
+                    case Constants.Status.Mov:
+                        damage += (int)( ((coefficient.value) + (skillData.growthCoefficient * character.character.Growth.exSkillLevel)) / 100f * character.Mov);
+                        break;
+                }
+            }
+
+            return (int)damage;
+        }
     }
+
 
     //스킬 시전자 설정
     public void Init(CharacterBase character)
@@ -39,9 +64,19 @@ public class ExSkillBase
         InitSkillAbility();
     }
 
+    public ExSkillBase()
+    {
+
+    }
+
     //스킬 특수 능력 생성자
     private void InitSkillAbility()
     {
+        if(skillData == null)
+        {
+            return;
+        }
+
         Type skillAbillityType = Type.GetType("SkillAbility_" + skillData.abilityID);
 
         if (skillAbillityType == null)
@@ -55,6 +90,11 @@ public class ExSkillBase
 
     private void InitSkillRange()//스킬 범위 생성자
     {
+        if (skillData == null)
+        {
+            return;
+        }
+
         Constants.SkillScaleType scaletype = skillData.scaleType;
         int scale = skillData.skillScale;
 

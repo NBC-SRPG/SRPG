@@ -1,42 +1,39 @@
-using Firebase.Database;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using UnityEngine;
 using static Constants;
 
 public class MissionManager
 {
     public event Action<int> OnMissionStartCallback;
-    public event Action<int, int> OnMissionUpdateCallback; // TODO : 업데이트 콜백에서 미션 저장
+    public event Action<int, int> OnMissionUpdateCallback;
     public event Action<int> OnMissionCompleteCallback;
     public event Action<int> OnMissionReceiveCallback;
+    public MissionDB missionDB { get; set; }
 
     // 구독중인 미션들
-    private Dictionary<MissionType, List<MissionData>> subscribeMissions = new();
+    private Dictionary<MissionType, List<MissionSO>> subscribeMissions = new();
 
     // 마지막 일일 미션 초기화 날짜
     private DateTime lastDailyReset;
     // 마지막 주간 미션 초기화 날짜
     private DateTime lastWeeklyReset;
 
-
-
     public void Init()
     {
-
+        missionDB = new();
     }
 
     public void SubscribeMission(int missionId)
     {
         Debug.Log("SubscribeMission " + missionId);
 
-        var missionData = TestDatabase.Mission.Get(missionId);
+        var missionData = missionDB.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
         {
-            subscribeMissions[missionData.missionType] = new List<MissionData>();
+            subscribeMissions[missionData.missionType] = new List<MissionSO>();
         }
 
         subscribeMissions[missionData.missionType].Add(missionData);
@@ -46,7 +43,7 @@ public class MissionManager
     {
         Debug.Log("UnsubscribeQuest " + missionId);
 
-        var missionData = TestDatabase.Mission.Get(missionId);
+        var missionData = missionDB.Get(missionId);
 
         if (subscribeMissions.ContainsKey(missionData.missionType) == false)
         {
@@ -62,12 +59,22 @@ public class MissionManager
         {
             return;
         }
-            
         var filteredMissions = subscribeMissions[type];
         var targetMissions = filteredMissions.FindAll(q => q.target == target);
-        foreach (var mission in targetMissions)
+
+        if (type == MissionType.StageClear)
         {
-            MissionUpdate(mission.missionId, count);
+            foreach (var mission in targetMissions)
+            {
+                StageStarMissionUpdate(mission.missionId, count);
+            }
+        }
+        else
+        {
+            foreach (var mission in targetMissions)
+            {
+                MissionUpdate(mission.missionId, count);
+            }
         }
     }
 
@@ -102,6 +109,8 @@ public class MissionManager
         SubscribeMission(missionId);
 
         OnMissionStartCallback?.Invoke(missionId);
+
+        SaveOngoingMission(missionId);
     }
 
     public void MissionUpdate(int missionId, int amount)
@@ -111,7 +120,7 @@ public class MissionManager
             return;
         }
 
-        var missiontData = TestDatabase.Mission.Get(missionId);
+        var missiontData = missionDB.Get(missionId);
 
         int currentCount = Managers.AccountData.ongoingMissions[missionId].Update(amount);
 
@@ -121,8 +130,31 @@ public class MissionManager
         {
             MissionClear(missionId);
         }
+
+        SaveOngoingMission(missionId);
     }
 
+    public void StageStarMissionUpdate(int missionId, int amount)
+    {
+        Debug.Log($"MissionId: {missionId} amount: {amount}");
+        if (Managers.AccountData.ongoingMissions.ContainsKey(missionId) == false)
+        {
+            return;
+        }
+
+        var missiontData = missionDB.Get(missionId);
+
+        int currentCount = Managers.AccountData.ongoingMissions[missionId].StarUpdate(amount);
+
+        OnMissionUpdateCallback?.Invoke(missionId, amount);
+
+        if (currentCount >= missiontData.count)
+        {
+            MissionClear(missionId);
+        }
+
+        SaveOngoingMission(missionId);
+    }
 
     public void MissionClear(int missionId)
     {
@@ -137,6 +169,9 @@ public class MissionManager
         Managers.AccountData.completeMissions.Add(missionId);
 
         OnMissionCompleteCallback?.Invoke(missionId);
+
+        SaveOngoingMission(missionId);
+        SaveCompleteMission(missionId);
     }
 
     public void MissionReceive(int missionId)
@@ -150,6 +185,8 @@ public class MissionManager
         Managers.AccountData.receiveMissions.Add(missionId);
 
         OnMissionReceiveCallback?.Invoke(missionId);
+
+        SaveReceiveMission(missionId);
     }
 
     public bool IsClear(int id)
@@ -157,123 +194,154 @@ public class MissionManager
         return Managers.AccountData.completeMissions.Contains(id);
     }
 
-    // TODO
+
     // 0시 이후 첫 접속 시 일일 미션 초기화 해주기
     public void DailyMissionInit()
     {
-        Debug.Log($"DailyMissionInit: last - {lastDailyReset.Date}");
-        // 현재 시간 가져오기
-        DateTime now = DateTime.Now;
+        DateTime now;
 
-        // TODO
-        // DB에서 마지막 초기화 시간 가져와서 비교하기
-        if (now.Date > lastDailyReset.Date)
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData/lastDailyReset"), snapshot =>
         {
-            // 일일 미션 초기화 로직
-            List<int> completeMissionsList = new();
-            foreach (var mission in Managers.AccountData.completeMissions)
+            // DB에서 마지막 초기화 시간 가져와서 비교하기
+            if (snapshot.Exists && DateTime.TryParse(snapshot.Value.ToString(), out lastDailyReset))
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
+                now = DateTime.Now;
+
+                Debug.Log($"DailyMissionInit: last - {lastDailyReset.Date}");
+
+                if (now.Date > lastDailyReset.Date)
                 {
-                    completeMissionsList.Add(mission);
+                    // 일일 미션 초기화 로직
+                    List<int> completeMissionsList = new();
+                    foreach (var mission in Managers.AccountData.completeMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            completeMissionsList.Add(mission);
+                        }
+                    }
+
+                    foreach (var mission in completeMissionsList)
+                    {
+                        // 완료 미션 중 일일 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            Managers.AccountData.completeMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    List<int> receiveMissionsList = new();
+                    foreach (var mission in Managers.AccountData.receiveMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            receiveMissionsList.Add(mission);
+                        }
+                    }
+                    foreach (var mission in receiveMissionsList)
+                    {
+                        // 수령한 미션 중 일일 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Daily)
+                        {
+                            Managers.AccountData.receiveMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    // 마지막 초기화 시간 업데이트
+                    lastDailyReset = now;
+                    // DB에 마지막 초기화 시간 저장
+                    Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastDailyReset"), lastDailyReset.ToString());
+                    // 미션 시작 이벤트
+                    OnMissionStartCallback?.Invoke(0);
                 }
             }
-
-            foreach (var mission in completeMissionsList)
+            else
             {
-                // 완료 미션 중 일일 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    Managers.AccountData.completeMissions.Remove(mission);
+                Debug.Log("lastDailyReset");
+                lastDailyReset = DateTime.Now;
+                Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastDailyReset"), lastDailyReset.ToString());
 
-                    MissionStart(mission);
-                }
+                return;
             }
-
-            List<int> receiveMissionsList = new();
-            foreach (var mission in Managers.AccountData.receiveMissions)
-            {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    receiveMissionsList.Add(mission);
-                }
-            }
-            foreach (var mission in receiveMissionsList)
-            {
-                // 수령한 미션 중 일일 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Daily)
-                {
-                    Managers.AccountData.receiveMissions.Remove(mission);
-
-                    MissionStart(mission);
-                }
-            }
-
-            // 마지막 초기화 시간 업데이트
-            lastDailyReset = now;
-            // TODO
-            // DB에 마지막 초기화 시간 저장
-
-            // 미션 시작 이벤트
-            OnMissionStartCallback?.Invoke(0);
-        }
+        });
     }
 
-    // TODO
     // 월요일 0시 이후 첫 접속 시 주간 미션 초기화 해주기
-    private void WeeklyMissionInit()
+    public void WeeklyMissionInit()
     {
-        // 현재 시간을 가져오기
-        DateTime now = DateTime.Now;
+        DateTime now;
 
-        // 현재 요일이 월요일이고, 마지막 초기화한 주가 현재 주와 다른 경우
-        if (now.DayOfWeek == DayOfWeek.Monday && GetWeekOfYear(now) != GetWeekOfYear(lastWeeklyReset))
+        Managers.DB.Read(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), snapshot =>
         {
-            // 주간 미션 초기화 로직
-            List<int> completeMissionsList = new();
-            foreach (var mission in Managers.AccountData.completeMissions)
+            // DB에서 마지막 초기화 시간 가져와서 비교하기
+            if (snapshot.Exists && DateTime.TryParse(snapshot.Value.ToString(), out lastWeeklyReset))
             {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
+                now = DateTime.Now;
+
+                // 현재 요일이 월요일이고, 마지막 초기화한 주가 현재 주와 다른 경우
+                if (now.DayOfWeek == DayOfWeek.Monday && GetWeekOfYear(now) != GetWeekOfYear(lastWeeklyReset))
                 {
-                    completeMissionsList.Add(mission);
+                    Debug.Log($"WeeklyMissionInit: last - {lastWeeklyReset.Date}");
+
+                    // 주간 미션 초기화 로직
+                    List<int> completeMissionsList = new();
+                    foreach (var mission in Managers.AccountData.completeMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            completeMissionsList.Add(mission);
+                        }
+                    }
+
+                    foreach (var mission in completeMissionsList)
+                    {
+                        // 완료 미션 중 주간 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            Managers.AccountData.completeMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    List<int> receiveMissionsList = new();
+                    foreach (var mission in Managers.AccountData.receiveMissions)
+                    {
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            receiveMissionsList.Add(mission);
+                        }
+                    }
+                    foreach (var mission in receiveMissionsList)
+                    {
+                        // 수령한 미션 중 주간 미션인 경우
+                        if (missionDB.Get(mission).missionCategory == MissionCategory.Weekly)
+                        {
+                            Managers.AccountData.receiveMissions.Remove(mission);
+
+                            MissionStart(mission);
+                        }
+                    }
+
+                    // 마지막 초기화 날짜 업데이트
+                    lastWeeklyReset = now;
+
+                    // DB에 마지막 초기화 시간 저장
+                    Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), lastWeeklyReset.ToString());
                 }
             }
-
-            foreach (var mission in completeMissionsList)
+            else
             {
-                // 완료 미션 중 주간 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    Managers.AccountData.completeMissions.Remove(mission);
+                lastWeeklyReset = DateTime.Now;
+                Managers.DB.Write<string>(Managers.DB.userDB.Child("missionData/lastWeeklyReset"), lastWeeklyReset.ToString());
 
-                    MissionStart(mission);
-                }
+                return;
             }
-
-            List<int> receiveMissionsList = new();
-            foreach (var mission in Managers.AccountData.receiveMissions)
-            {
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    receiveMissionsList.Add(mission);
-                }
-            }
-            foreach (var mission in receiveMissionsList)
-            {
-                // 수령한 미션 중 주간 미션인 경우
-                if (TestDatabase.Mission.Get(mission).missionCategory == MissionCategory.Weekly)
-                {
-                    Managers.AccountData.receiveMissions.Remove(mission);
-
-                    MissionStart(mission);
-                }
-            }
-
-            // 마지막 초기화 날짜 업데이트
-            lastWeeklyReset = now;
-            // TODO
-            // DB에 마지막 초기화 시간 저장
-        }
+        });
     }
 
     // 현재 날짜가 속한 주의 번호를 반환하는 메서드
@@ -283,5 +351,27 @@ public class MissionManager
         // date가 포함된 주 가져오기
         int weekNum = ciCurr.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         return weekNum;
+    }
+
+    private void SaveOngoingMission(int missionId)
+    {
+        if (Managers.AccountData.ongoingMissions.TryGetValue(missionId, out Mission mission))
+        {
+            Managers.DB.Write<int>(Managers.DB.userDB.Child("missionData/ongoingMissionsData").Child(missionId.ToString()), mission.MissionProgress);
+        }
+        else
+        {
+            Managers.DB.Delete(Managers.DB.userDB.Child("missionData/ongoingMissionsData").Child(missionId.ToString()));
+        }
+    }
+
+    private void SaveCompleteMission(int missionId)
+    {
+        Managers.DB.Write<bool>(Managers.DB.userDB.Child("missionData/completeMissionsData").Child(missionId.ToString()), false);
+    }
+
+    private void SaveReceiveMission(int missionId)
+    {
+        Managers.DB.Write<bool>(Managers.DB.userDB.Child("missionData/completeMissionsData").Child(missionId.ToString()), true);
     }
 }

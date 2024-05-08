@@ -11,6 +11,7 @@ public class CharacterController : MonoBehaviour
 {
     private enum PlayerPhase
     {
+        Wait,
         Idle,
         CharacterSetting,
         CharacterSelect,
@@ -30,8 +31,11 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private List<OverlayTile> movePath = new List<OverlayTile>();//이동 경로 타일
     private List<OverlayTile> attackRangeTiles = new List<OverlayTile>();//공격 가능한 타일
     private List<OverlayTile> moveRangeTiles = new List<OverlayTile>();//이동 가능한 타일
-    private List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
+    public List<OverlayTile> surroundPath = new List<OverlayTile>();//클릭 가능한 타일
     private List<OverlayTile> skillScale = new List<OverlayTile>();//스킬 범위 타일
+
+    private List<OverlayTile> targetAttackRange = new List<OverlayTile>();
+    private List<OverlayTile> prevAttackRange = new List<OverlayTile>();
 
     private List<CharacterBase> skillTargets = new List<CharacterBase>();
 
@@ -54,6 +58,7 @@ public class CharacterController : MonoBehaviour
         phase = PlayerPhase.CharacterSetting;
 
         targetTiles = Instantiate(targetTiles, transform);
+
     }
 
     private void Start()
@@ -63,13 +68,13 @@ public class CharacterController : MonoBehaviour
 
         player = Managers.GameManager.player;
 
-        if (!Managers.BattleManager.players.Contains(player))
+        if (!BattleManager.Instance.players.Contains(player))
         {
-            Managers.BattleManager.players.Add(player);
+            BattleManager.Instance.players.Add(player);
         }
-        Managers.BattleManager.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
+        BattleManager.Instance.charactersAsTeam.Add(player.playerId, new List<CharacterBase>());
 
-        Managers.BattleManager.TurnStart += GetPlayerTurn;
+        BattleManager.Instance.TurnStart += GetPlayerTurn;
 
         foreach(Character charac in Managers.GameManager.player.party)
         {
@@ -79,12 +84,14 @@ public class CharacterController : MonoBehaviour
             }
 
             CharacterBase character = Instantiate(chaPrefabs, transform);
-            character.InitCharacter(charac, player.playerId);
+            character.InitCharacter(charac, player);
 
             characterList.Add(character);
         }
 
         Ui = Managers.UI.FindUI<BattleUI>();
+
+        BattleManager.Instance.Lose += EndGame;
     }
 
     private void Update()
@@ -127,12 +134,14 @@ public class CharacterController : MonoBehaviour
 
     private void GetPlayerTurn()
     {
-        if (Managers.BattleManager.nowPlayer.playerId == player.playerId)
+        if (BattleManager.Instance.nowPlayer == player)
         {
             canClick = true;
             nowPlayerTurn = true;
 
-            player.manaCost += 2;
+            player.OnstartTurn();
+
+            player.GainMana(10);
 
             //-----------------------------------------
 
@@ -150,6 +159,8 @@ public class CharacterController : MonoBehaviour
             //버튼 연결은 UiManager를 통해 BattleUI에 이벤트에 연결하는 식으로 진행
             //----------------------------------------
         }
+
+        Ui.ShowTurn(BattleManager.Instance.nowPlayer == player);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -161,30 +172,14 @@ public class CharacterController : MonoBehaviour
 
     public void InitiateCharacter()//캐릭터 스폰위치에 캐릭터 생성
     {
-        int i = 0;
-
-        foreach (CharacterBase character in characterList)
-        {
-            if (i < Managers.MapManager.startTiles[player.playerNumber].Count)
-            {
-                character.transform.SetParent(transform);
-
-                character.SpawnCharacter(Managers.MapManager.map[Managers.MapManager.startTiles[player.playerNumber][i]], transform);
-                i++;
-            }
-            else
-            {
-                character.gameObject.SetActive(false);
-                i++;
-            }
-        }
+        BattleManager.Instance.SpawnCharacters(characterList, player);
 
         ChangePhase(PlayerPhase.Idle);
 
-        player.manaCost = 4;
+        player.manaCost = 0;
 
         player.isReady = true;
-        Managers.BattleManager.GetReady();
+        BattleManager.Instance.GetReady();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -201,7 +196,17 @@ public class CharacterController : MonoBehaviour
         skillTargets.Clear();
 
         Ui.ResetUI();
-        CameraController.instance.ResetCamera();
+        Ui.ShowManaText();
+
+        ShowPrevAttackRange(null);
+        GetTargetAttackRange(null);
+
+        if (phase != PlayerPhase.Idle)
+        {
+            CameraController.instance.ResetCamera();
+        }
+
+        CameraController.instance.isSelected = false;
 
         switch (phase)
         {
@@ -223,10 +228,14 @@ public class CharacterController : MonoBehaviour
 
                 GetMoveAndAttackTiles();
                 Ui.ShowAtMoveAndAttackPhase();
-                CameraController.instance.SetCameraOnSelected();
+                CameraController.instance.SetCameraOnTile(curSelectedCharacter.curStandingTile);
+                CameraController.instance.isSelected = true;
                 break;
             case PlayerPhase.SkillTargetSelect:
                 Ui.ShowAtSkillTargetPhase();
+                Ui.SetManaText();
+
+                CameraController.instance.isSelected = true;
                 break;
         }
 
@@ -248,7 +257,7 @@ public class CharacterController : MonoBehaviour
     {
         foreach (OverlayTile tile in tileList)
         {
-            tile.ResetTile();
+            tile.ResetTileOnMove();
             if (!moveRangeTiles.Contains(tile))
             {
                 tile.HideTile();
@@ -256,6 +265,8 @@ public class CharacterController : MonoBehaviour
         }
 
         tileList.Clear();
+
+        ShowPrevAttackRange(null);
     }
 
     private void ResetTileOnSkill(List<OverlayTile> tileList)
@@ -263,6 +274,16 @@ public class CharacterController : MonoBehaviour
         foreach (OverlayTile tile in tileList)
         {
             tile.HideScale();
+        }
+
+        tileList.Clear();
+    }
+
+    private void ResetOnTarget(List<OverlayTile> tileList)
+    { 
+        foreach(OverlayTile tile in tileList)
+        {
+            tile.HideTargetAttack();
         }
 
         tileList.Clear();
@@ -341,6 +362,8 @@ public class CharacterController : MonoBehaviour
         Ui.ShowTargetInfo();
 
         CameraController.instance.AddGroup(curTargetCharacter);
+
+        GetTargetAttackRange(character);
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -354,6 +377,8 @@ public class CharacterController : MonoBehaviour
             return;
         }
 
+        Ui.ActingSelect(curSelectedCharacter.canActing);
+
         RaycastHit2D hit = GetTouchOnce();
 
         if (hit)
@@ -365,10 +390,6 @@ public class CharacterController : MonoBehaviour
                 if (curTile.curStandingCharater.playerId == player.playerId && curTile.curStandingCharater != curSelectedCharacter)// 해당 캐릭터가 내 캐릭터일 때
                 {
                     SelectCurCharacter(curTile.curStandingCharater);
-                    if (curSelectedCharacter.canActing)// 해당 캐릭터가 아직 행동하지 않았을 때
-                    {
-                        ChangePhase(PlayerPhase.ActingSelect);
-                    }
                 }
                 
                 if(curTile.curStandingCharater.playerId != player.playerId)
@@ -382,8 +403,7 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost >= curSelectedCharacter?.skillCost);
-        Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
+        Ui.SetDidUseSkill(curSelectedCharacter.canSkill);
     }
 
     private void OnClickMoveAndAttack()
@@ -440,21 +460,21 @@ public class CharacterController : MonoBehaviour
             {
                 OverlayTile curTile = hit.transform.GetComponent<OverlayTile>();
 
-                if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter)
+                if(curTile.curStandingCharater != null && curTile.curStandingCharater != curSelectedCharacter && !movePath.Contains(curTile))
                 {
-                    SelectTargetCharacter(curTile.curStandingCharater);
-                    CameraController.instance.SetCameraOnSelected();
-
                     if (movePath.Count > 1)
                     {
                         ResetTileOnMove(movePath);
                         ResetTileOnMove(surroundPath);
                         movePath.Add(curSelectedCharacter.curStandingTile);
                     }
+
+                    SelectTargetCharacter(curTile.curStandingCharater);
+                    CameraController.instance.SetCameraOnSelected();
                 }
                 else
                 {
-                    SelectTargetCharacter(null);
+                    SelectTargetCharacter(null); // 모바일에서 실행 시 버튼이 제대로 안눌리는 버그가 있음
                 }
             }
 
@@ -463,7 +483,7 @@ public class CharacterController : MonoBehaviour
         //원거리 캐릭터가 공격 가능한 범위 내에 있는 적 터치 시
         Ui.ShowMove(movePath.Count > 1 && curTargetCharacter == null && !curSelectedCharacter.isWalking);
         Ui.ShowAttack(movePath.Count <= 1 && curTargetCharacter != null && attackRangeTiles.Contains(curTargetCharacter.curStandingTile)
-            && curTargetCharacter.CheckEnenmy(curSelectedCharacter) && !curSelectedCharacter.isAttacking);
+            && curTargetCharacter.CheckEnemy(curSelectedCharacter) && !curSelectedCharacter.isAttacking);
     }
 
     private void AttackTarget()// 캐릭터 공격
@@ -479,7 +499,7 @@ public class CharacterController : MonoBehaviour
 
     private void MoveCharacter()// 캐릭터 이동
     {
-        if (movePath.Last().curStandingCharater == null)
+        if (movePath.Last().CheckCanMove())
         {
             canClick = false;
             ResetTileOnMove(surroundPath);
@@ -602,13 +622,13 @@ public class CharacterController : MonoBehaviour
                     //캐릭터가 공격 가능한 범위 내에 있는 캐릭터 터치 시
                     if (attackRangeTiles.Contains(curTile) && curTile.curStandingCharater != null)
                     {
-                        if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Enemy && curTile.curStandingCharater.CheckEnemy(curSelectedCharacter))
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
                             CameraController.instance.SetCameraOnSelected();
                         }
-                        else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnenmy(curSelectedCharacter))
+                        else if (curSelectedCharacter.curCharacterSkill.skillData.targetType == Constants.SkillTargetType.Ally && !curTile.curStandingCharater.CheckEnemy(curSelectedCharacter))
                         {
                             SelectTargetCharacter(curTile.curStandingCharater);
                             GetSkillScaleTile(curTargetCharacter.curStandingTile.grid2DLocation, 0);
@@ -625,7 +645,8 @@ public class CharacterController : MonoBehaviour
             }
         }
 
-        Ui.SetCanConfirm(skillScale.Count > 0);
+        Ui.SetCanUseSkill(curSelectedCharacter.canSkill && player.manaCost - curSelectedCharacter?.skillCost >= 0 && skillScale.Count > 0);
+        Ui.SetNoManaText(player.manaCost < curSelectedCharacter?.skillCost);
     }
 
     private void UseSkill()// 스킬 사용
@@ -634,7 +655,7 @@ public class CharacterController : MonoBehaviour
         {
             canClick = false;
 
-            player.manaCost -= curSelectedCharacter.skillCost;
+            player.UseMana(curSelectedCharacter.skillCost);
             curSelectedCharacter.historyCurrentRound.useCostCount += curSelectedCharacter.skillCost;
 
             AnimationController.instance.onAnimationEnd += EndSkill;
@@ -712,6 +733,11 @@ public class CharacterController : MonoBehaviour
 
                 CameraController.instance.SetCameraOnTile(movePath.Last());
             }
+
+            if(curSelectedCharacter.character.SO.attackMethod == Constants.AttackMethod.Range && !curSelectedCharacter.didAttack)
+            {
+                ShowPrevAttackRange(movePath.Last());
+            }
         }
 
         curSelectedCharacter.movePath = movePath;
@@ -750,10 +776,7 @@ public class CharacterController : MonoBehaviour
 
         foreach (OverlayTile tile in attackRangeTiles)
         {
-            if (!moveRangeTiles.Contains(tile))
-            {
-                tile.ShowAsAttack();
-            }
+            tile.ShowAsAttack();
         }
 
     }
@@ -775,6 +798,43 @@ public class CharacterController : MonoBehaviour
         curSelectedCharacter.GetSkillScale(skillScale);
     }
 
+    private void ShowPrevAttackRange(OverlayTile targetTile)
+    {
+        ResetOnTarget(prevAttackRange);
+
+        if(curSelectedCharacter != null && targetTile != null)
+        {
+            prevAttackRange = rangeFinder.GetTilesInRange(targetTile.grid2DLocation, curSelectedCharacter.character.SO.range, false);
+
+            foreach (OverlayTile tile in prevAttackRange)
+            {
+                tile.ShowTagetAttack();
+            }
+        }
+    }
+
+    private void GetTargetAttackRange(CharacterBase target)
+    {
+        ResetOnTarget(targetAttackRange);
+
+        if(target != null && target.CheckEnemyAsId(player) && phase != PlayerPhase.SkillTargetSelect)
+        {
+            if(target.character.SO.attackMethod == Constants.AttackMethod.Melee)
+            {
+                targetAttackRange = rangeFinder.GetTilesInRange(target.curStandingTile.grid2DLocation, target.Mov, true);
+            }
+            else
+            {
+                targetAttackRange = rangeFinder.GetTilesInRange(target.curStandingTile.grid2DLocation, target.character.SO.range, false);
+            }
+
+            foreach(OverlayTile tile in targetAttackRange)
+            {
+                tile.ShowTagetAttack();
+            }
+        }
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------
     //IdlePhase 관련
 
@@ -782,8 +842,21 @@ public class CharacterController : MonoBehaviour
     {
         if (nowPlayerTurn && canClick)
         {
-            ChangePhase(PlayerPhase.CharacterSelect);
+            ChangePhase(PlayerPhase.Wait);
+            StartCoroutine(nameof(ShowAlly));
         }
+    }
+
+    private IEnumerator ShowAlly()
+    {
+        CameraController.instance.ResetGroup();
+        CameraController.instance.AddGroupRange(characterList.FindAll(x => !x.isDead));
+        CameraController.instance.SetCameraOnSelected();
+
+        yield return new WaitForSeconds(1f);
+
+        ChangePhase(PlayerPhase.CharacterSelect);
+        CameraController.instance.ResetGroup();
     }
 
     //-----------------------------------------------------------------------------------------------------------------------
@@ -793,9 +866,9 @@ public class CharacterController : MonoBehaviour
     {
         RaycastHit2D hit = new RaycastHit2D();
 
-        if (EventSystem.current.IsPointerOverGameObject() == false)
+        if (EventSystem.current.IsPointerOverGameObject(0) == false && EventSystem.current.IsPointerOverGameObject() == false)
         {
-            if (Input.GetMouseButtonDown(0) && canClick)
+            if ((Input.GetMouseButtonDown(0) && canClick))
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -806,6 +879,20 @@ public class CharacterController : MonoBehaviour
         }
 
         return hit;
+    }
+
+    public bool TouchOnce()
+    {
+        if(Input.touchCount == 1 && canClick)
+        {
+            Touch touch = Input.GetTouch(0);
+            if(touch.phase == TouchPhase.Began)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public RaycastHit2D GetTouching()// 드래그 방식
@@ -861,7 +948,16 @@ public class CharacterController : MonoBehaviour
 
             canClick = false;
             nowPlayerTurn = false;
-            Managers.BattleManager.PlayerTurnEnd();
+            BattleManager.Instance.PlayerTurnEnd();
         }
     }
+
+    public void EndGame(string playerId)
+    {
+        if(player.playerId != playerId)
+        {
+            player.isWin = true;
+        }
+    }
+
 }

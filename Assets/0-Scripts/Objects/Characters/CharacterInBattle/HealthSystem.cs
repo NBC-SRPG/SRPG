@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static BattleKeyWords;
+using static Constants;
 
 public class HealthSystem : MonoBehaviour
 {
@@ -14,25 +15,39 @@ public class HealthSystem : MonoBehaviour
     private TempBonusStat tempBonus;
     private CharacterBufList characterBufList;
 
-    private List<ShieldStat> shieldList;
+    public List<ShieldStat> shieldList;
 
     [SerializeField] private Image healthBar;
     [SerializeField] private Image backHealBar;
     [SerializeField] private Image shieldBar;
     [SerializeField] private TextMeshPro healthText;
 
+    private bool takeDmgByHeal = false;
+
     public int MaxHealth { get; set; }
     public int CurHealth { get; set; }
+    public float AddHealth
+    {
+        get
+        {
+            float addHealth = characterBufList.GetAdditionalStat().ExtraHealth + tempBonus.GetTempStat().ExtraHealth;
+            return (100 + addHealth) / 100;
+        }
+    }
+
+    public int TotalHealth
+    {
+        get
+        {
+            int health = (int)((float)MaxHealth * AddHealth);
+            return health;
+        }
+    }
 
     public event Action Die;
     public event Action DieAnimation;
 
-    private void Start()
-    {
-        characterAnim = GetComponentInChildren<CharAnimBase>();
-    }
-
-    public void InitHealth(int health, TempBonusStat stat, CharacterBufList buflist)
+    public void InitHealth(int health, TempBonusStat stat, CharacterBufList buflist, CharAnimBase charAnim)
     {
         shieldList = new List<ShieldStat>();
 
@@ -41,9 +56,15 @@ public class HealthSystem : MonoBehaviour
 
         tempBonus = stat;
         characterBufList = buflist;
+        characterAnim = charAnim;
 
         healthBar.fillAmount = HealthRatio;
         UpdateText();
+    }
+
+    public void SetHealthSameAsTotal()
+    {
+        CurHealth = TotalHealth;
     }
 
     public float HealthRatio
@@ -53,13 +74,13 @@ public class HealthSystem : MonoBehaviour
             float health;
             int shield = GetShield();
 
-            if (CurHealth + shield > MaxHealth)
+            if (CurHealth + shield > TotalHealth)
             {
                 health = (float)(CurHealth) / (float)(CurHealth + shield);
             }
             else
             {
-                health = (float)CurHealth / (float)MaxHealth;
+                health = (float)CurHealth / (float)TotalHealth;
             }
 
             return health;
@@ -73,13 +94,13 @@ public class HealthSystem : MonoBehaviour
             float health;
             int shield = GetShield();
 
-            if (CurHealth + shield > MaxHealth)
+            if (CurHealth + shield > TotalHealth)
             {
                 health = (float)(shield + CurHealth) / (float)(CurHealth + shield);
             }
             else
             {
-                health = (float)shield + (float)CurHealth / (float)MaxHealth;
+                health = (float)(shield + CurHealth) / (float)TotalHealth;
             }
 
             return health;
@@ -95,9 +116,9 @@ public class HealthSystem : MonoBehaviour
 
         characterAnim.SetDamage(damage);
 
-        damage.damage = TakeShiledDamage(damage.damage);
+        int actualDamage = TakeShiledDamage(damage.damage);
 
-        ChangeHealth(damage);
+        ChangeHealth(actualDamage);
 
         if (CurHealth == 0)
         {
@@ -133,13 +154,14 @@ public class HealthSystem : MonoBehaviour
 
     public void HealHealth(Damage n)// 실제 체력 회복
     {
-        if (n.damage < 0)
+        if (n.damage < 0 || characterBufList.FindBuf(BufKeyword.HealReversal) != null)
         {
+            takeDmgByHeal = true;
             TakeDamage(n);
             return;
         }
 
-        ChangeHealth(n);
+        ChangeHealth(n.damage);
 
         characterAnim.SetDamage(n);
 
@@ -168,13 +190,13 @@ public class HealthSystem : MonoBehaviour
         HealHealth(damage);
     }
 
-    public void ChangeHealth(Damage n)//체력 변화
+    public void ChangeHealth(int n)//체력 변화
     {
-        CurHealth += n.damage;
+        CurHealth += n;
 
-        if (CurHealth > MaxHealth)
+        if (CurHealth > TotalHealth)
         {
-            CurHealth = MaxHealth;
+            CurHealth = TotalHealth;
         }
 
         if (CurHealth < 0)
@@ -189,11 +211,17 @@ public class HealthSystem : MonoBehaviour
 
         UpdateText();
 
+        if (n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
+
         characterAnim.ShowDamage();
 
-        if (CurHealth <= 0)
+        if (takeDmgByHeal)
         {
-            DieAnimation?.Invoke();
+            Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Healedreversal");
+            takeDmgByHeal = false;
         }
     }
 
@@ -203,7 +231,14 @@ public class HealthSystem : MonoBehaviour
 
         UpdateText();
 
+        if(n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
+
         characterAnim.ShowDamage();
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Healed");
     }
 
     public void ChangeHealthBar()
@@ -217,15 +252,20 @@ public class HealthSystem : MonoBehaviour
 
     private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
     {
+        shieldBar.fillAmount = ShieldRatio;
+
+        float time = 0f;
+
         if (!heal)
         {
             backHealBar.color = Color.yellow;
             backHealBar.fillAmount = healthBar.fillAmount;
             healthBar.fillAmount = HealthRatio;
 
-            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
+            while (time <= 0.25)
             {
-                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, Time.deltaTime * 2f);
+                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
 
                 yield return null;
             }
@@ -237,17 +277,21 @@ public class HealthSystem : MonoBehaviour
             backHealBar.color = Color.green;
             backHealBar.fillAmount = HealthRatio;
 
-            while (backHealBar.fillAmount * 0.9 > healthBar.fillAmount)
+            while (time <= 0.25)
             {
-                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, Time.deltaTime * 2f);
+                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
 
                 yield return null;
             }
 
-            healthBar.fillAmount = backHealBar.fillAmount;
+            healthBar.fillAmount = HealthRatio;
         }
 
-        shieldBar.fillAmount = ShieldRatio;
+        if (healthBar.fillAmount == 0)
+        {
+            DieAnimation?.Invoke();
+        }
     }
 
     public void UpdateText()
@@ -266,23 +310,24 @@ public class HealthSystem : MonoBehaviour
 
     public int TakeShiledDamage(int damage)
     {
+        int actualDamage = damage;
         while (shieldList.Count > 0)
         {
-            shieldList[0].Shield += damage;
+            shieldList[0].Shield += actualDamage;
 
             if (shieldList[0].Shield <= 0)
             {
-                damage = shieldList[0].Shield;
+                actualDamage = shieldList[0].Shield;
                 shieldList.RemoveAt(0);
             }
             else
             {
-                damage = 0;
+                actualDamage = 0;
                 break;
             }
         }
 
-        return damage;
+        return actualDamage;
     }
 
     public int GetShield()
@@ -333,7 +378,9 @@ public class HealthSystem : MonoBehaviour
         }
         else
         {
+            Debug.Log("noShiled");
             return;
         }
     }
+
 }

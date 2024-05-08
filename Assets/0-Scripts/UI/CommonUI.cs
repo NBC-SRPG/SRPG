@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CommonUI : UIBase
@@ -23,7 +21,8 @@ public class CommonUI : UIBase
         ApButton,
         GoldButton,
         DiamondButton,
-        SettingButton
+        SettingButton,
+        HomeButton
     }
 
     private enum Images
@@ -59,13 +58,13 @@ public class CommonUI : UIBase
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
         BindImage(typeof(Images));
-        //BindObject(typeof(GameObjects));
 
         // 버튼에 클릭 이벤트 추가
         GetButton((int)Buttons.ApButton).onClick.AddListener(OnClickApButton);
         GetButton((int)Buttons.GoldButton).onClick.AddListener(OnClickGoldButton);
         GetButton((int)Buttons.DiamondButton).onClick.AddListener(OnClickDiamondButton);
         GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
+        GetButton((int)Buttons.HomeButton).onClick.AddListener(OnClickHomeButton);
 
         // TODO
         // 게임을 종료하기 전 시간을 저장하고 게임을 새로 시작했을 때와의 시간과 비교하여 Ap 타이머 세팅 & 지급
@@ -104,6 +103,8 @@ public class CommonUI : UIBase
         // AP가 MAX라면 타이머 끄기
         else
         {
+            // 회복 외의 방법으로 MAX가 되었을 경우 타이머 초기화 해주어야 함
+            recoveryTimer = recoveryApTime;
             GetText((int)Texts.ApTimerText).text = "";
         }
     }
@@ -112,7 +113,7 @@ public class CommonUI : UIBase
     private void UpdateApUI(int newAp)
     {
         GetText((int)Texts.ApText).text = $"{newAp} / {playerData.maxAp}";
-        GetImage((int)Images.ApFillImage).fillAmount = (float)newAp / playerData.maxAp;
+        //GetImage((int)Images.ApFillImage).fillAmount = (float)newAp / playerData.maxAp;
     }
     private void UpdateGoldUI(int newGold)
     {
@@ -128,17 +129,14 @@ public class CommonUI : UIBase
 
     private void OnClickApButton()
     {
-        Debug.Log("OnClickApButton");
-
+        Managers.UI.ShowUI<PurchaseApUI>().Init();
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<ApChargeUI>();
     }
     private void OnClickGoldButton()
     {
-        Debug.Log("OnClickGoldButton");
+        Managers.UI.ShowUI<PurchaseGoldUI>().Init();
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
-        // Managers.UI.ShowUI<GoldChargeUI>();
     }
     private void OnClickDiamondButton()
     {
@@ -159,5 +157,12 @@ public class CommonUI : UIBase
 
         // Managers.Sound(Sound.Effect, "ButtonClick");
         Managers.UI.ShowUI<SettingUI>();
+    }
+
+    private void OnClickHomeButton()
+    {
+        Debug.Log("OnClickHomeButton");
+
+        Managers.UI.ReturnMainUI();
     }
 }

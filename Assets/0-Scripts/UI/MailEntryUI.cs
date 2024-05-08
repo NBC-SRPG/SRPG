@@ -1,20 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MailEntryUI : UIBase
 {
     private MailSO mailSO; // 메일 정보
-    private DateTime expireDate; // 메일 만료 날짜
-    private string formattedTime; // 날짜 -> 일 시 분 포맷 변경용
-    private int curMin; // 현재 시간
-    private int lastMin = -1; // 이전 시간 (현재 시간과 다르면 남은 시간 업데이트용)
+    private TimeSpan expiration; // 만료까지 남은 시간
 
     private enum Texts
     {
         MailTitleText,
-        MailSenderText,
         MailDateText,
         MailRemainingTimeText
     }
@@ -24,66 +18,105 @@ public class MailEntryUI : UIBase
         ReceiveButton
     }
 
-    private enum Images
+    private enum GameObjects
     {
-        MailItemImage
+        Content
     }
 
-    private void Start()
+    public void Init(MailSO mailSO)
     {
-        Init();
-    }
+        this.mailSO = mailSO;
 
-    private void Update()
-    {
-        // 메일의 남은 날짜 업데이트
-        mailSO.remainingTime = expireDate - DateTime.Now;
-
-        // 현재 남은 시간 업데이트
-        curMin = mailSO.remainingTime.Days * 24 * 60 + mailSO.remainingTime.Hours * 60 + mailSO.remainingTime.Minutes;
-
-        // 이전 남은 시간과 다르다면 (분이 바뀌었다면)
-        if (lastMin != curMin)
-        {
-            // 남은 날짜 일 시 분 포맷에 맞춰 업데이트
-            formattedTime = $"{mailSO.remainingTime.Days}일 {mailSO.remainingTime.Hours}시간 {mailSO.remainingTime.Minutes}분";
-            GetText((int)Texts.MailRemainingTimeText).text = formattedTime;
-            lastMin = curMin;
-        }
-    }
-
-    private void Init()
-    {
-        expireDate = mailSO.dateSent.AddDays(14);
+        expiration = mailSO.dateSent.AddDays(mailSO.expiration) - DateTime.Now;
 
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
-        BindImage(typeof(Images));
+        BindObject(typeof(GameObjects));
 
+        Debug.Log(mailSO.title);
         GetText((int)Texts.MailTitleText).text = mailSO.title;
-        GetText((int)Texts.MailSenderText).text = mailSO.sender;
-        GetText((int)Texts.MailDateText).text = mailSO.dateSent.ToString();
+        GetText((int)Texts.MailDateText).text = "받은 날짜 " + mailSO.dateSent.ToString("yyyy-MM-dd");
+        GetText((int)Texts.MailRemainingTimeText).text = "수령 기한 " + GetExpiration();
 
-        // TODO
-        // MailItemImage를 아이템 데이터의 아이콘 이미지로 업데이트
+        // ap 보상 아이콘 생성
+        if (mailSO.ap > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.ap.ToString(), "AP");
+        }
+        // 골드 보상 아이콘 생성
+        if (mailSO.gold > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.gold.ToString(), "Gold");
+        }
+        // 다이아 보상 아이콘 생성
+        if (mailSO.diamond > 0)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+
+            go.GetComponent<RewardIconUI>().Init(mailSO.diamond.ToString(), "Diamond");
+        }
+        // 아이템 보상 아이콘 생성
+        foreach (var item in mailSO.rewards)
+        {
+            GameObject go = Managers.Resource.Instantiate(
+                Managers.Resource.Load<GameObject>("Prefabs/UI/RewardIconUI"),
+                GetObject((int)GameObjects.Content).transform);
+            Utility.Id2SO<ItemSO>(item.Key, (result) =>
+            {
+                go.GetComponent<RewardIconUI>().Init(item.Value.ToString(), (result as ItemSO).icon);
+            });
+
+        }
 
         GetButton((int)Buttons.ReceiveButton).onClick.AddListener(OnClickReceiveButton);
-    }
-
-    public void SetMailSO(MailSO mailSO)
-    {
-        this.mailSO = mailSO;
     }
 
     public void OnClickReceiveButton()
     {
         Debug.Log("OnClickReceiveButton");
 
-        // TODO
-        // 아이템 인벤토리에 수령
-        // 수령 완료 팝업
-        Managers.AccountData.mailBox.Remove(mailSO);
-        Managers.UI.PeekUI<MailUI>().UpdateReceiveText();
+        if (mailSO.isExpired())
+        {
+            Managers.UI.ShowUI<WarningUI>().Init("수령기간이 만료되었습니다.");
+            DeleteMailEntry();
+        }
+        else
+        {
+            mailSO.GetRewards();
+
+            Managers.UI.ShowUI<WarningUI>().Init("수령 완료");
+            DeleteMailEntry();
+        }
+    }
+
+    private void DeleteMailEntry()
+    {
+        Managers.AccountData.DeleteMail(mailSO);
+        Managers.UI.FindUI<MailUI>().UpdateReceiveText();
+
         Destroy(gameObject);
+    }
+
+    private string GetExpiration()
+    {
+        if (expiration > TimeSpan.FromHours(24))
+        {
+            return expiration.ToString("%d") + "일";
+        }
+        else if (expiration > TimeSpan.FromHours(1))
+        {
+            return expiration.ToString("%h") + "시간";
+        }
+        else return "1시간 미만";
     }
 }

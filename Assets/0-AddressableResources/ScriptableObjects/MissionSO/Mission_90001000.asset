@@ -12,6 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765afc04af1b54b4a803e59ad9f8f63a, type: 3}
   m_Name: Mission_90001000
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: rewards
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[System.Int32,
+        mscorlib]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+        mscorlib]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 90000
+    - Name: $v
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   missionId: 90001000
   missionName: "\uC77C\uC77C \uC811\uC18D"
   missionDescription: "\uAC8C\uC784 \uC811\uC18D\uD558\uAE30"
@@ -19,11 +60,8 @@ MonoBehaviour:
   missionCategory: 0
   target: 0
   count: 1
-  exp: 0
-  ap: 0
-  gold: 0
-  diamond: 0
-  rewards:
-  - rewardId: 0
-    rewardCount: 0
-  nextMissions: 00000000
+  exp: 300
+  ap: 100
+  gold: 500
+  diamond: 20
+  nextMissions: 

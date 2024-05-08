@@ -26,12 +26,12 @@ public class SkillScale_Cross : SkillScaleBase
         {
             for (int j = 0; j < 4; j++)
             {
-                TileToCheck = new Vector2Int(location.x + (Managers.MapManager.direction[j].x * i), location.y + (Managers.MapManager.direction[j].y * i));
-                if (Managers.MapManager.map.ContainsKey(TileToCheck))
+                TileToCheck = new Vector2Int(location.x + (MapManager.instance.direction[j].x * i), location.y + (MapManager.instance.direction[j].y * i));
+                if (MapManager.instance.map.ContainsKey(TileToCheck))
                 {
-                    if (Managers.MapManager.map[TileToCheck].canClick && !skillScale.Contains(Managers.MapManager.map[TileToCheck]))
+                    if (MapManager.instance.map[TileToCheck].canClick && !skillScale.Contains(MapManager.instance.map[TileToCheck]))
                     {
-                        skillScale.Add(Managers.MapManager.map[TileToCheck]);
+                        skillScale.Add(MapManager.instance.map[TileToCheck]);
                     }
                 }
             }

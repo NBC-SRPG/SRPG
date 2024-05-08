@@ -1,16 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Constants;
+using static BattleKeyWords;
 
-[CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "Enemy_")]
-public class EnemySO
+[CreateAssetMenu(menuName = "CharacterData/EnemyData", fileName = "EnemySO_")]
+public class EnemySO : ScriptableObject
 {
+    public EnemyState startState = EnemyState.Finding;
+
     public AttackMethod attackMethod;     //공격 타입
     public ElementType elementType;      //캐릭터 속성
+
+    public int level;
     
     [Header("Develope")]
     public int id;      //캐릭터 식별자
+
+    [Header("Sprites")]
+    public Sprite icon;
 
     [Header("Status")]      //캐릭터 능력치
     public int hp;
@@ -18,7 +24,6 @@ public class EnemySO
     public int def;
     public int mov;
     public int range;     //공격 사정거리(근거리의 경우 0으로)
-    public Faction faction;     //캐릭터 소속
 
     public ExSkillSO exSkillSO;
     public PassiveSkillSO passiveSkillSO;
@@ -32,6 +37,10 @@ public class EnemySO
     public ClassSO basicClass;
     public ClassSO superiorClass;
 
+    [Header("Story")]
+    public string characterName;        //캐릭터 이름
+    public string story;        //캐릭터 스토리
+    public Faction faction;     //캐릭터 소속
 
     [Header("EquipList")]
     public EquipSO weapon;

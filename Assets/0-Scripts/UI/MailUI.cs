@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 public class MailUI : UIBase
@@ -23,6 +19,19 @@ public class MailUI : UIBase
 
     private void Start()
     {
+        /*
+        // 테스트용 더미메일
+        MailSO so = new()
+        {
+            title = "운영자의 선물",
+            dateSent = DateTime.Now,
+            diamond = 30,
+            gold = 1000,
+            ap = 10,
+            expiration = 7
+        };
+        Managers.DB.PushChild(Managers.DB.userDB.Child("mailBox"), so);
+        */
         Init();
     }
 
@@ -38,11 +47,10 @@ public class MailUI : UIBase
         GetButton((int)Buttons.BackButton).onClick.AddListener(OnClickBackButton);
         GetText((int)Texts.WaitingReceiveText).text = $"수령대기 {Managers.AccountData.mailBox.Count}건";
 
-        // 테스트 데이터
         foreach (var mail in Managers.AccountData.mailBox)
         {
             GameObject go = Managers.Resource.Instantiate("UI/MailEntryUI", GetObject((int)GameObjects.Content).transform);
-            go.GetComponent<MailEntryUI>().SetMailSO(mail);
+            go.GetComponent<MailEntryUI>().Init(mail);
         }
     }
 
@@ -62,6 +70,9 @@ public class MailUI : UIBase
         {
             MailEntryUI mailEntryUI = child.GetComponent<MailEntryUI>();
             mailEntryUI.OnClickReceiveButton();
+
+            // TODO
+            // 모두 수령은 보상을 한번에 보여주어야 함
         }
     }
 
