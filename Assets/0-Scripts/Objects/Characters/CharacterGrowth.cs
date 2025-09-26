@@ -1,0 +1,211 @@
+using System;
+using static Constants;
+
+public class CharacterGrowth  //캐릭터의 성장 / 특성 및 클래스 / 기타 등등 캐릭터 객체의 개인적인 고유 데이터만을 저장하는 클래스.
+{
+    public int id { get; set; }
+    public int level { get; set; }
+    public int curExp { get; set; }
+    public int maxExp { get; set; }
+    public int star { get; set; }        //성급
+    public int limitBreak { get; set; }      //현재 한계 돌파 정도. 0 = 한돌x
+    public int exSkillLevel { get; set; }        //Ex스킬 레벨 //Todo: 스킬 레벨에 따라 스킬 계수 적용시키기, 실제 인게임에서 스킬 레벨에 따라 효과 달라지게 하기
+
+    public int abilityT2 { get; set; }
+    public int abilityT3 { get; set; }
+
+    public int superiorClass { get; set; }
+    
+    
+    public int weapon;
+    public int armor;
+
+    public event Action OnLevelUp;
+    public event Action OnAwake;
+    public event Action OnAbilityT2Changed;
+    public event Action OnAbilityT3Changed;
+    public event Action OnSuperiorClassChanged;
+    public event Action OnWeaponChanged;
+    public event Action OnArmorChanged;
+
+
+    public CharacterGrowth() {}
+
+    //최초 초기화 메서드
+    //캐릭터를 계정에서 최초로 획득 시 호출
+    public CharacterGrowth(CharacterSO SO) 
+    {
+        id = SO.id;
+        level = 1;
+        curExp = 0;
+        maxExp = 100;
+        //maxExp = GetMaxExp(level);
+        star = SO.basicStar;
+        limitBreak = 0;
+
+        exSkillLevel = 1;
+
+        abilityT2 = NONE_SELECTED;
+        abilityT3 = NONE_SELECTED;
+
+        superiorClass = NONE_SELECTED;
+
+        weapon = 0;
+        armor = 0;
+    }
+
+
+    // 성급&한계돌파에서 가능한 최대 레벨
+    public int CalcMaxLevel()
+    {
+        int maxLevel;
+        switch(star)
+        {
+            case 1:
+                maxLevel = 30;
+                break;
+            case 2:
+                maxLevel = 40;
+                break;
+            case 3:
+                maxLevel = 50;
+                break;
+            case 4:
+                maxLevel = 60;
+                break;
+            default:
+                switch(limitBreak)
+                {
+                    default:
+                        maxLevel = 70;
+                        break;
+                    case 1:
+                        maxLevel = 75;
+                        break;
+                    case 2:
+                        maxLevel = 80;
+                        break;
+                    case 3:
+                        maxLevel = 85;
+                        break;
+                    case 4:
+                        maxLevel = 90;
+                        break;
+                }
+                break;
+        }
+        return maxLevel;
+    }
+
+    // 현재 캐릭터가 레벨업 가능한 최대 레벨을 반환
+    public int GetMaxLevel()
+    {
+        int maxLevel = CalcMaxLevel() > Managers.AccountData.playerData.Level ? Managers.AccountData.playerData.Level : CalcMaxLevel();
+        return maxLevel;
+    }
+
+    // Constants의 경험치테이블을 참조해 특정 level에서의 최대 경험치를 반환
+    public int GetMaxExp(int level)
+    {
+        return dataTables["characterExpTable"][level];
+    }
+
+    // CalcExp를 바탕으로 레벨업 진행
+    public void LevelUp(int exp)
+    {
+        int[] result = CalcExp(exp);
+        level = result[0];
+        curExp = result[1];
+        maxExp = GetMaxExp(result[0]);
+        UpdateToDB();
+        OnLevelUp?.Invoke();
+    }
+
+    // exp만큼의 경험치를 획득했을 때의 level과 curExp를 배열로 반환
+    public int[] CalcExp(int exp)
+    {
+        int[] result = new int[2] { level, curExp };
+
+        while (true)
+        {
+            int expRequired = GetMaxExp(result[0]) - result[1];
+
+            if (expRequired > exp)
+            {
+                result[1] += exp;
+                break;
+            }
+            else
+            {
+                result[0]++;
+                result[1] = 0;
+                exp -= expRequired;
+            }
+
+
+            if(result[0] >= GetMaxLevel())
+            {
+                result[0] = GetMaxLevel();
+                result[1] = 0;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void Awake()
+    {
+        if (star < 5)
+        {
+            star++;
+        }
+        else
+        {
+            limitBreak++;
+        }
+
+        OnAwake?.Invoke();
+        UpdateToDB();
+    }
+
+    public void UpgradeWeapon()
+    {
+        weapon++;
+        OnWeaponChanged?.Invoke();
+        UpdateToDB();
+    }
+    public void UpgradeArmor()
+    {
+        armor++;
+        OnArmorChanged?.Invoke();
+        UpdateToDB();
+    }
+
+    public void SelectAbility(int tier, int index)
+    {
+        if (tier == 2)
+        {
+            abilityT2 = index;
+            OnAbilityT2Changed?.Invoke();
+        }
+        else if (tier == 3)
+        {
+            abilityT3 = index;
+            OnAbilityT3Changed?.Invoke();
+        }
+        UpdateToDB();
+    }
+
+    public void SelectClass(int index)
+    {
+        superiorClass = index;
+        OnSuperiorClassChanged?.Invoke();
+
+        UpdateToDB();
+    }
+
+    private void UpdateToDB()
+    {
+        Managers.DB.WriteWithJson(Managers.DB.userDB.Child("characterData").Child(id.ToString()), this);
+    }
+}

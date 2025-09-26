@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 724241b3d5b42bc48b5dc55ed5056de4, type: 3}
+  m_Name: ExSkillSO_9
+  m_EditorClassIdentifier: 
+  skill_ID: 9
+  skillName: "\uC808\uC0AD"
+  description: "4\uCE78 \uBC94\uC704 \uB0B4\uC758 \uC9C0\uC815\uD55C \uC801\uC758
+    \uB4A4\uB85C \uC774\uB3D9\uD560 \uC218 \uC788\uC744 \uB54C\uB9CC \uC2DC\uC804\uD560
+    \uC218 \uC788\uB2E4.  \uC801\uC758 \uB4A4\uB85C \uC21C\uAC04 \uC774\uB3D9\uD574\uC11C,
+    \uB300\uC0C1\uC758 \uC783\uC740 \uCCB4\uB825\uC5D0 \uBE44\uB840\uD574 E-03 \uACF5\uACA9\uB825\uC758
+    150 % ~ 250% \uAD11\uC18D\uC131 \uD53C\uD574\uB97C \uC785\uD78C\uB2E4."
+  icon: {fileID: 21300000, guid: 7932cef536215af49919c7f0a0eb517d, type: 3}
+  targetType: 1
+  cost: 30
+  coefficient:
+  - status: 0
+    value: 150
+  growthCoefficient: 10
+  onhit: 0
+  skillRange: 4
+  scaleType: 0
+  skillScale: 0
+  abilityID: 109

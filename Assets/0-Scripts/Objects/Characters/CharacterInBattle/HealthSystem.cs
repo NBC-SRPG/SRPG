@@ -1,0 +1,386 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using static BattleKeyWords;
+using static Constants;
+
+public class HealthSystem : MonoBehaviour
+{
+    public GameObject healthBarCanvas;
+    private CharAnimBase characterAnim;
+
+    private TempBonusStat tempBonus;
+    private CharacterBufList characterBufList;
+
+    public List<ShieldStat> shieldList;
+
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image backHealBar;
+    [SerializeField] private Image shieldBar;
+    [SerializeField] private TextMeshPro healthText;
+
+    private bool takeDmgByHeal = false;
+
+    public int MaxHealth { get; set; }
+    public int CurHealth { get; set; }
+    public float AddHealth
+    {
+        get
+        {
+            float addHealth = characterBufList.GetAdditionalStat().ExtraHealth + tempBonus.GetTempStat().ExtraHealth;
+            return (100 + addHealth) / 100;
+        }
+    }
+
+    public int TotalHealth
+    {
+        get
+        {
+            int health = (int)((float)MaxHealth * AddHealth);
+            return health;
+        }
+    }
+
+    public event Action Die;
+    public event Action DieAnimation;
+
+    public void InitHealth(int health, TempBonusStat stat, CharacterBufList buflist, CharAnimBase charAnim)
+    {
+        shieldList = new List<ShieldStat>();
+
+        MaxHealth = health;
+        CurHealth = health;
+
+        tempBonus = stat;
+        characterBufList = buflist;
+        characterAnim = charAnim;
+
+        healthBar.fillAmount = HealthRatio;
+        UpdateText();
+    }
+
+    public void SetHealthSameAsTotal()
+    {
+        CurHealth = TotalHealth;
+    }
+
+    public float HealthRatio
+    {
+        get
+        {
+            float health;
+            int shield = GetShield();
+
+            if (CurHealth + shield > TotalHealth)
+            {
+                health = (float)(CurHealth) / (float)(CurHealth + shield);
+            }
+            else
+            {
+                health = (float)CurHealth / (float)TotalHealth;
+            }
+
+            return health;
+        }
+    }
+
+    public float ShieldRatio
+    {
+        get
+        {
+            float health;
+            int shield = GetShield();
+
+            if (CurHealth + shield > TotalHealth)
+            {
+                health = (float)(shield + CurHealth) / (float)(CurHealth + shield);
+            }
+            else
+            {
+                health = (float)(shield + CurHealth) / (float)TotalHealth;
+            }
+
+            return health;
+        }
+    }
+
+    public void TakeDamage(Damage damage)// 실제 데미지 입힘
+    {
+        if (damage.damage >= 0)
+        {
+            damage.damage = -damage.damage;
+        }
+
+        characterAnim.SetDamage(damage);
+
+        int actualDamage = TakeShiledDamage(damage.damage);
+
+        ChangeHealth(actualDamage);
+
+        if (CurHealth == 0)
+        {
+            Die?.Invoke();
+        }
+
+        if (!AnimationController.instance.CheckAnimation())// 애니메이션 재생중이 아니면 곧바로 체력바 갱신
+        {
+            characterAnim.ShowDamage();
+            TakeDamageHealthBar(damage);
+        }
+        else
+        {
+            AnimationController.instance.StitchAnimation(() => TakeDamageHealthBar(damage));
+        }
+    }
+
+    public void TakeDamageByInt(int n)// int만 입력받아 데미지
+    {
+        Damage damage = new Damage();
+
+        if (damage.damage >= 0)
+        {
+            damage.damage = -n;
+        }
+        else
+        {
+            damage.damage = n;
+        }
+
+        TakeDamage(damage);
+    }
+
+    public void HealHealth(Damage n)// 실제 체력 회복
+    {
+        if (n.damage < 0 || characterBufList.FindBuf(BufKeyword.HealReversal) != null)
+        {
+            takeDmgByHeal = true;
+            TakeDamage(n);
+            return;
+        }
+
+        ChangeHealth(n.damage);
+
+        characterAnim.SetDamage(n);
+
+        if (!AnimationController.instance.CheckAnimation())
+        {
+            HealHealthBar(n);
+        }
+        else
+        {
+            AnimationController.instance.StitchAnimation(() => HealHealthBar(n));
+        }
+    }
+
+    public void HealHealthByInt(int n)// int만 입력받아 체력 회복
+    {
+        if (n < 0)
+        {
+            TakeDamageByInt(n);
+            return;
+        }
+
+        Damage damage = new Damage();
+
+        damage.damage = n;
+
+        HealHealth(damage);
+    }
+
+    public void ChangeHealth(int n)//체력 변화
+    {
+        CurHealth += n;
+
+        if (CurHealth > TotalHealth)
+        {
+            CurHealth = TotalHealth;
+        }
+
+        if (CurHealth < 0)
+        {
+            CurHealth = 0;
+        }
+    }
+
+    public void TakeDamageHealthBar(Damage n)// 데미지 입힘
+    {
+        StartCoroutine(TakeHealthBar(false));
+
+        UpdateText();
+
+        if (n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
+
+        characterAnim.ShowDamage();
+
+        if (takeDmgByHeal)
+        {
+            Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Damaged_Healedreversal");
+            takeDmgByHeal = false;
+        }
+    }
+
+    public void HealHealthBar(Damage n)// 체력 회복함
+    {
+        StartCoroutine(TakeHealthBar(true));
+
+        UpdateText();
+
+        if(n.attackType == AttackDamageType.Extra)
+        {
+            characterAnim.ShowExtraDamage();
+        }
+
+        characterAnim.ShowDamage();
+
+        Managers.Sound.Play(Sound.EffectBySource, "SE/Battle_CommonSE/Healed");
+    }
+
+    public void ChangeHealthBar()
+    {
+        healthBar.fillAmount = HealthRatio;
+        shieldBar.fillAmount = ShieldRatio;
+
+        UpdateText();
+    }
+
+
+    private IEnumerator TakeHealthBar(bool heal)// 체력바 변화
+    {
+        shieldBar.fillAmount = ShieldRatio;
+
+        float time = 0f;
+
+        if (!heal)
+        {
+            backHealBar.color = Color.yellow;
+            backHealBar.fillAmount = healthBar.fillAmount;
+            healthBar.fillAmount = HealthRatio;
+
+            while (time <= 0.25)
+            {
+                backHealBar.fillAmount = Mathf.Lerp(backHealBar.fillAmount, healthBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
+
+                yield return null;
+            }
+
+            backHealBar.fillAmount = healthBar.fillAmount;
+        }
+        else if (heal)
+        {
+            backHealBar.color = Color.green;
+            backHealBar.fillAmount = HealthRatio;
+
+            while (time <= 0.25)
+            {
+                healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, backHealBar.fillAmount, time / 0.25f);
+                time += Time.deltaTime;
+
+                yield return null;
+            }
+
+            healthBar.fillAmount = HealthRatio;
+        }
+
+        if (healthBar.fillAmount == 0)
+        {
+            DieAnimation?.Invoke();
+        }
+    }
+
+    public void UpdateText()
+    {
+        if (GetShield() > 0)
+        {
+            healthText.text = GetShield().ToString();
+            healthText.color = Color.blue;
+        }
+        else
+        {
+            healthText.text = CurHealth.ToString();
+            healthText.color = Color.white;
+        }
+    }
+
+    public int TakeShiledDamage(int damage)
+    {
+        int actualDamage = damage;
+        while (shieldList.Count > 0)
+        {
+            shieldList[0].Shield += actualDamage;
+
+            if (shieldList[0].Shield <= 0)
+            {
+                actualDamage = shieldList[0].Shield;
+                shieldList.RemoveAt(0);
+            }
+            else
+            {
+                actualDamage = 0;
+                break;
+            }
+        }
+
+        return actualDamage;
+    }
+
+    public int GetShield()
+    {
+        if(shieldList.Count == 0)
+        {
+            return 0;
+        }
+
+        int s = 0;
+
+        foreach(ShieldStat shield in shieldList)
+        {
+            s += shield.Shield;
+        }
+
+        return s;
+    }
+
+    public void AddShield(ShieldStat shield)
+    {
+        shieldList.Add(shield);
+
+        if (!AnimationController.instance.CheckAnimation())// 애니메이션 재생중이 아니면 곧바로 체력바 갱신
+        {
+            ChangeHealthBar();
+        }
+        else
+        {
+            AnimationController.instance.StitchAnimation(() => ChangeHealthBar());
+        }
+    }
+
+    public void RemoveShield(ShieldStat shield)
+    {
+        if (shieldList.Contains(shield))
+        {
+            shieldList.Remove(shield);
+
+            if (!AnimationController.instance.CheckAnimation())// 애니메이션 재생중이 아니면 곧바로 체력바 갱신
+            {
+                ChangeHealthBar();
+            }
+            else
+            {
+                AnimationController.instance.StitchAnimation(() => ChangeHealthBar());
+            }
+        }
+        else
+        {
+            Debug.Log("noShiled");
+            return;
+        }
+    }
+
+}
