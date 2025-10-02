@@ -57,8 +57,9 @@
 
 # 전투 시스템
 
-
-<img width="2400" height="1080" alt="image" src="https://github.com/user-attachments/assets/c10f6fa9-3f30-41c2-a39d-60c7a6c06ceb" />
+| 근거리 | 원거리 |
+| --- | --- |
+| ![근거리](https://github.com/user-attachments/assets/3149e44b-7dce-45e9-9684-8ca12358b2bb) | ![원거리](https://github.com/user-attachments/assets/2a34ad3c-eaa3-41f2-a1e1-15602dff3d3d) |
 
 
 대충 멋진 SRPG의 전투 방식은 근거리와 원거리 두가지 타입으로 나뉩니다.
@@ -76,12 +77,12 @@
 
 현재 시점에서 7종류의 캐릭터가 구현되어 있습니다.
 
-| 이름 | 속성 | 클래스 |  |  |
-| --- | --- | --- | --- | --- |
-| 제네 | 불 | 전사 |  |  |
-| 포르테 | 빛 | 성직자 |  |  |
-| 레인 | 물 | 마법사 |  |  |
-| 피유 | 나무 | 사수 |  |  |
-| 시스 | 번개 | 암살자 |  |  |
-| 아메 | 어둠 | 전사 |  |  |
-| E-03 | 빛 | 암살자 |  |  |
+| 이름 | 속성 | 클래스 | Ex스킬 컷신 |
+| --- | --- | --- | --- |
+| 제네 | 불 | 전사 | ![작열](https://github.com/user-attachments/assets/10308323-0f78-4fbc-b688-6bc200e251fd) |
+| 포르테 | 빛 | 성직자 | ![치유의 빛](https://github.com/user-attachments/assets/85b60137-a317-491d-9251-27e5e35de243) |
+| 레인 | 물 | 마법사 | ![비바라기](https://github.com/user-attachments/assets/9e303a87-cc1a-4597-bdf9-6a94c65c4fff) |
+| 피유 | 나무 | 사수 | ![신록의 화살](https://github.com/user-attachments/assets/32926e98-4e9b-402d-a83e-5ff71a229d9c) |
+| 시스 | 번개 | 암살자 | ![번개](https://github.com/user-attachments/assets/111af3a0-2d4a-4253-bf95-2579ba81357e) |
+| 아메 | 어둠 | 전사 | ![자수정방패](https://github.com/user-attachments/assets/cc9f1dca-fe4a-46d6-8e7b-d3b0aee3ce41) |
+| E-03 | 빛 | 암살자 | ![절삭](https://github.com/user-attachments/assets/2c4bdb7e-7dad-4dd4-b380-5997248b0269) |
